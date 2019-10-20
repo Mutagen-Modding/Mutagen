@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Fluff
         ReadOnlySpan<Byte> Fluff { get; }
 
@@ -475,11 +475,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this ScriptMetaSummary lhs,
-            ScriptMetaSummary rhs)
+        public static void DeepCopyFieldsFrom(
+            this IScriptMetaSummary lhs,
+            IScriptMetaSummaryGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -488,13 +488,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this ScriptMetaSummary lhs,
-            ScriptMetaSummary rhs,
-            ScriptMetaSummary_CopyMask copyMask,
-            ScriptMetaSummary def = null)
+        public static void DeepCopyFieldsFrom(
+            this IScriptMetaSummary lhs,
+            IScriptMetaSummaryGetter rhs,
+            ScriptMetaSummary_TranslationMask copyMask,
+            IScriptMetaSummaryGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -503,16 +503,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this ScriptMetaSummary lhs,
-            ScriptMetaSummary rhs,
+        public static void DeepCopyFieldsFrom(
+            this IScriptMetaSummary lhs,
+            IScriptMetaSummaryGetter rhs,
             out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null,
+            ScriptMetaSummary_TranslationMask copyMask = null,
+            IScriptMetaSummaryGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ScriptMetaSummarySetterCopyCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -521,14 +521,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ScriptMetaSummary_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this ScriptMetaSummary lhs,
-            ScriptMetaSummary rhs,
+        public static void DeepCopyFieldsFrom(
+            this IScriptMetaSummary lhs,
+            IScriptMetaSummaryGetter rhs,
             ErrorMaskBuilder errorMask,
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null)
+            ScriptMetaSummary_TranslationMask copyMask = null,
+            IScriptMetaSummaryGetter def = null)
         {
-            ((ScriptMetaSummarySetterCopyCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -536,12 +536,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static ScriptMetaSummary Copy(
-            this ScriptMetaSummary item,
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null)
+        public static ScriptMetaSummary DeepCopy(
+            this IScriptMetaSummaryGetter item,
+            ScriptMetaSummary_TranslationMask copyMask = null,
+            IScriptMetaSummaryGetter def = null)
         {
-            return ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()).Copy(
+            return ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IScriptMetaSummary item,
             string path,
@@ -737,6 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -998,19 +1000,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new ScriptMetaSummary();
         }
         
-        public ScriptMetaSummary Copy(
-            ScriptMetaSummary item,
-            ScriptMetaSummary_CopyMask copyMask = null,
-            ScriptMetaSummary def = null)
-        {
-            ScriptMetaSummary ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IScriptMetaSummary item,
@@ -1265,45 +1254,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class ScriptMetaSummarySetterCopyCommon
+    public partial class ScriptMetaSummarySetterTranslationCommon
     {
-        public static readonly ScriptMetaSummarySetterCopyCommon Instance = new ScriptMetaSummarySetterCopyCommon();
+        public static readonly ScriptMetaSummarySetterTranslationCommon Instance = new ScriptMetaSummarySetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            ScriptMetaSummary item,
-            ScriptMetaSummary rhs,
-            ScriptMetaSummary def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IScriptMetaSummary item,
+            IScriptMetaSummaryGetter rhs,
+            IScriptMetaSummaryGetter def,
             ErrorMaskBuilder errorMask,
-            ScriptMetaSummary_CopyMask copyMask)
+            ScriptMetaSummary_TranslationMask copyMask)
         {
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
-                item.Fluff = rhs.Fluff;
-                errorMask?.PopIndex();
+                item.Fluff = rhs.Fluff.ToArray();
             }
             if (copyMask?.RefCount ?? true)
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
                 item.RefCount = rhs.RefCount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.VariableCount ?? true)
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
                 item.VariableCount = rhs.VariableCount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
                 item.Type = rhs.Type;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public ScriptMetaSummary DeepCopy(
+            IScriptMetaSummaryGetter item,
+            ScriptMetaSummary_TranslationMask copyMask = null,
+            IScriptMetaSummaryGetter def = null)
+        {
+            ScriptMetaSummary ret = ScriptMetaSummarySetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1326,9 +1320,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ScriptMetaSummarySetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return ScriptMetaSummarySetterCopyCommon.Instance;
+            return ScriptMetaSummarySetterTranslationCommon.Instance;
         }
         object IScriptMetaSummaryGetter.CommonInstance()
         {
@@ -1338,9 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IScriptMetaSummaryGetter.CommonSetterCopyInstance()
+        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2090,31 +2084,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class ScriptMetaSummary_CopyMask
-    {
-        public ScriptMetaSummary_CopyMask()
-        {
-        }
-
-        public ScriptMetaSummary_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Fluff = defaultOn;
-            this.RefCount = defaultOn;
-            this.CompiledSize = defaultOn;
-            this.VariableCount = defaultOn;
-            this.Type = defaultOn;
-        }
-
-        #region Members
-        public bool Fluff;
-        public bool RefCount;
-        public bool CompiledSize;
-        public bool VariableCount;
-        public bool Type;
-        #endregion
-
-    }
-
     public class ScriptMetaSummary_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2345,6 +2314,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ScriptMetaSummaryCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ScriptMetaSummarySetterTranslationCommon.Instance;
+        }
         object IScriptMetaSummaryGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2353,9 +2326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IScriptMetaSummaryGetter.CommonSetterCopyInstance()
+        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

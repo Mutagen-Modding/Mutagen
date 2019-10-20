@@ -55,4 +55,25 @@ namespace Mutagen.Bethesda
         new bool HasBeenSet { get; set; }
         void SetLink(ISetLinkGetter<T> rhs, ISetLinkGetter<T> def);
     }
+
+    public static class ILinkExt
+    {
+        public static void SetToFormKey<T, R>(this ISetLink<T> link, ISetLinkGetter<R> rhs, ISetLinkGetter<R> def)
+            where R : IMajorRecordCommonGetter
+            where T : R
+        {
+            if (rhs.HasBeenSet)
+            {
+                link.Set(rhs.FormKey);
+            }
+            else if (def.HasBeenSet)
+            {
+                link.Set(def.FormKey);
+            }
+            else
+            {
+                link.Unset();
+            }
+        }
+    }
 }

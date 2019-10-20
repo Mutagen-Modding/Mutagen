@@ -414,13 +414,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMajorRecord lhs,
-            OblivionMajorRecord rhs,
-            OblivionMajorRecord_CopyMask copyMask,
-            OblivionMajorRecord def = null)
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMajorRecordInternal lhs,
+            IOblivionMajorRecordGetter rhs,
+            OblivionMajorRecord_TranslationMask copyMask,
+            IOblivionMajorRecordGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -429,16 +429,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMajorRecord lhs,
-            OblivionMajorRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMajorRecordInternal lhs,
+            IOblivionMajorRecordGetter rhs,
             out OblivionMajorRecord_ErrorMask errorMask,
-            OblivionMajorRecord_CopyMask copyMask = null,
-            OblivionMajorRecord def = null,
+            OblivionMajorRecord_TranslationMask copyMask = null,
+            IOblivionMajorRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -447,14 +447,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMajorRecord lhs,
-            OblivionMajorRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMajorRecordInternal lhs,
+            IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMajorRecord_CopyMask copyMask = null,
-            OblivionMajorRecord def = null)
+            OblivionMajorRecord_TranslationMask copyMask = null,
+            IOblivionMajorRecordGetter def = null)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -511,6 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IOblivionMajorRecordInternal item,
             string path,
@@ -665,6 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1282,19 +1284,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionMajorRecordSetterCopyCommon : MajorRecordSetterCopyCommon
+    public partial class OblivionMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
     {
-        public new static readonly OblivionMajorRecordSetterCopyCommon Instance = new OblivionMajorRecordSetterCopyCommon();
+        public new static readonly OblivionMajorRecordSetterTranslationCommon Instance = new OblivionMajorRecordSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            OblivionMajorRecord item,
-            OblivionMajorRecord rhs,
-            OblivionMajorRecord def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            IOblivionMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
-            OblivionMajorRecord_CopyMask copyMask)
+            OblivionMajorRecord_TranslationMask copyMask)
         {
-            ((MajorRecordSetterCopyCommon)((IMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1302,9 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.OblivionMajorRecordFlags ?? true)
             {
-                errorMask?.PushIndex((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags);
                 item.OblivionMajorRecordFlags = rhs.OblivionMajorRecordFlags;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1331,9 +1331,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return OblivionMajorRecordSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return OblivionMajorRecordSetterCopyCommon.Instance;
+            return OblivionMajorRecordSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1789,23 +1789,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class OblivionMajorRecord_CopyMask : MajorRecord_CopyMask
-    {
-        public OblivionMajorRecord_CopyMask()
-        {
-        }
-
-        public OblivionMajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.OblivionMajorRecordFlags = defaultOn;
-        }
-
-        #region Members
-        public bool OblivionMajorRecordFlags;
-        #endregion
-
-    }
-
     public class OblivionMajorRecord_TranslationMask : MajorRecord_TranslationMask
     {
         #region Members
@@ -1956,6 +1939,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return OblivionMajorRecordCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return OblivionMajorRecordSetterTranslationCommon.Instance;
         }
 
         #endregion

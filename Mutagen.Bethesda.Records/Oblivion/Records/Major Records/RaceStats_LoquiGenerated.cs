@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Strength
         Byte Strength { get; }
 
@@ -497,11 +497,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RaceStats lhs,
-            RaceStats rhs)
+        public static void DeepCopyFieldsFrom(
+            this IRaceStats lhs,
+            IRaceStatsGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -510,13 +510,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this RaceStats lhs,
-            RaceStats rhs,
-            RaceStats_CopyMask copyMask,
-            RaceStats def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRaceStats lhs,
+            IRaceStatsGetter rhs,
+            RaceStats_TranslationMask copyMask,
+            IRaceStatsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -525,16 +525,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RaceStats lhs,
-            RaceStats rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRaceStats lhs,
+            IRaceStatsGetter rhs,
             out RaceStats_ErrorMask errorMask,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null,
+            RaceStats_TranslationMask copyMask = null,
+            IRaceStatsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RaceStatsSetterCopyCommon)((IRaceStatsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -543,14 +543,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RaceStats lhs,
-            RaceStats rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRaceStats lhs,
+            IRaceStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
+            RaceStats_TranslationMask copyMask = null,
+            IRaceStatsGetter def = null)
         {
-            ((RaceStatsSetterCopyCommon)((IRaceStatsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -558,12 +558,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RaceStats Copy(
-            this RaceStats item,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
+        public static RaceStats DeepCopy(
+            this IRaceStatsGetter item,
+            RaceStats_TranslationMask copyMask = null,
+            IRaceStatsGetter def = null)
         {
-            return ((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).Copy(
+            return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -618,6 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRaceStats item,
             string path,
@@ -759,6 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1056,19 +1058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new RaceStats();
         }
         
-        public RaceStats Copy(
-            RaceStats item,
-            RaceStats_CopyMask copyMask = null,
-            RaceStats def = null)
-        {
-            RaceStats ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRaceStats item,
@@ -1305,69 +1294,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RaceStatsSetterCopyCommon
+    public partial class RaceStatsSetterTranslationCommon
     {
-        public static readonly RaceStatsSetterCopyCommon Instance = new RaceStatsSetterCopyCommon();
+        public static readonly RaceStatsSetterTranslationCommon Instance = new RaceStatsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RaceStats item,
-            RaceStats rhs,
-            RaceStats def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRaceStats item,
+            IRaceStatsGetter rhs,
+            IRaceStatsGetter def,
             ErrorMaskBuilder errorMask,
-            RaceStats_CopyMask copyMask)
+            RaceStats_TranslationMask copyMask)
         {
             if (copyMask?.Strength ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Strength);
                 item.Strength = rhs.Strength;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Intelligence ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Intelligence);
                 item.Intelligence = rhs.Intelligence;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Willpower ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Willpower);
                 item.Willpower = rhs.Willpower;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Agility ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Agility);
                 item.Agility = rhs.Agility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Speed);
                 item.Speed = rhs.Speed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Endurance ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Endurance);
                 item.Endurance = rhs.Endurance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Personality ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Personality);
                 item.Personality = rhs.Personality;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Luck ?? true)
             {
-                errorMask?.PushIndex((int)RaceStats_FieldIndex.Luck);
                 item.Luck = rhs.Luck;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public RaceStats DeepCopy(
+            IRaceStatsGetter item,
+            RaceStats_TranslationMask copyMask = null,
+            IRaceStatsGetter def = null)
+        {
+            RaceStats ret = RaceStatsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1390,9 +1376,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RaceStatsSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return RaceStatsSetterCopyCommon.Instance;
+            return RaceStatsSetterTranslationCommon.Instance;
         }
         object IRaceStatsGetter.CommonInstance()
         {
@@ -1402,9 +1388,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IRaceStatsGetter.CommonSetterCopyInstance()
+        object IRaceStatsGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2360,37 +2346,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RaceStats_CopyMask
-    {
-        public RaceStats_CopyMask()
-        {
-        }
-
-        public RaceStats_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-        }
-
-        #region Members
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        #endregion
-
-    }
-
     public class RaceStats_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2580,6 +2535,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RaceStatsCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return RaceStatsSetterTranslationCommon.Instance;
+        }
         object IRaceStatsGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2588,9 +2547,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IRaceStatsGetter.CommonSetterCopyInstance()
+        object IRaceStatsGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

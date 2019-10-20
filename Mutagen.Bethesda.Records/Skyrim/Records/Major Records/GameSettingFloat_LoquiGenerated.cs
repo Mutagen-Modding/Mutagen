@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingFloat lhs,
-            GameSettingFloat rhs,
-            GameSettingFloat_CopyMask copyMask,
-            GameSettingFloat def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingFloatInternal lhs,
+            IGameSettingFloatGetter rhs,
+            GameSettingFloat_TranslationMask copyMask,
+            IGameSettingFloatGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingFloat lhs,
-            GameSettingFloat rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingFloatInternal lhs,
+            IGameSettingFloatGetter rhs,
             out GameSettingFloat_ErrorMask errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null,
+            GameSettingFloat_TranslationMask copyMask = null,
+            IGameSettingFloatGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingFloatSetterCopyCommon)((IGameSettingFloatGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSettingFloat_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingFloat lhs,
-            GameSettingFloat rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingFloatInternal lhs,
+            IGameSettingFloatGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_CopyMask copyMask = null,
-            GameSettingFloat def = null)
+            GameSettingFloat_TranslationMask copyMask = null,
+            IGameSettingFloatGetter def = null)
         {
-            ((GameSettingFloatSetterCopyCommon)((IGameSettingFloatGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -568,6 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGameSettingFloatInternal item,
             string path,
@@ -709,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1310,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new GameSettingFloat(getNextFormKey());
-            ret.CopyFieldsFrom((GameSettingFloat)item);
+            ret.DeepCopyFieldsFrom((GameSettingFloat)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GameSettingFloat)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1319,19 +1321,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GameSettingFloatSetterCopyCommon : GameSettingSetterCopyCommon
+    public partial class GameSettingFloatSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
-        public new static readonly GameSettingFloatSetterCopyCommon Instance = new GameSettingFloatSetterCopyCommon();
+        public new static readonly GameSettingFloatSetterTranslationCommon Instance = new GameSettingFloatSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GameSettingFloat item,
-            GameSettingFloat rhs,
-            GameSettingFloat def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGameSettingFloat item,
+            IGameSettingFloatGetter rhs,
+            IGameSettingFloatGetter def,
             ErrorMaskBuilder errorMask,
-            GameSettingFloat_CopyMask copyMask)
+            GameSettingFloat_TranslationMask copyMask)
         {
-            ((GameSettingSetterCopyCommon)((IGameSettingGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1392,9 +1394,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GameSettingFloatSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GameSettingFloatSetterCopyCommon.Instance;
+            return GameSettingFloatSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1881,23 +1883,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class GameSettingFloat_CopyMask : GameSetting_CopyMask
-    {
-        public GameSettingFloat_CopyMask()
-        {
-        }
-
-        public GameSettingFloat_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Data = defaultOn;
-        }
-
-        #region Members
-        public bool Data;
-        #endregion
-
-    }
-
     public class GameSettingFloat_TranslationMask : GameSetting_TranslationMask
     {
         #region Members
@@ -2094,6 +2079,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return GameSettingFloatCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GameSettingFloatSetterTranslationCommon.Instance;
         }
 
         #endregion

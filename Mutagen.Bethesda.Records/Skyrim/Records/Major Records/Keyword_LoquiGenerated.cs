@@ -473,13 +473,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Keyword lhs,
-            Keyword rhs,
-            Keyword_CopyMask copyMask,
-            Keyword def = null)
+        public static void DeepCopyFieldsFrom(
+            this IKeywordInternal lhs,
+            IKeywordGetter rhs,
+            Keyword_TranslationMask copyMask,
+            IKeywordGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -488,16 +488,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Keyword lhs,
-            Keyword rhs,
+        public static void DeepCopyFieldsFrom(
+            this IKeywordInternal lhs,
+            IKeywordGetter rhs,
             out Keyword_ErrorMask errorMask,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null,
+            Keyword_TranslationMask copyMask = null,
+            IKeywordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((KeywordSetterCopyCommon)((IKeywordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -506,14 +506,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Keyword lhs,
-            Keyword rhs,
+        public static void DeepCopyFieldsFrom(
+            this IKeywordInternal lhs,
+            IKeywordGetter rhs,
             ErrorMaskBuilder errorMask,
-            Keyword_CopyMask copyMask = null,
-            Keyword def = null)
+            Keyword_TranslationMask copyMask = null,
+            IKeywordGetter def = null)
         {
-            ((KeywordSetterCopyCommon)((IKeywordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -570,6 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IKeywordInternal item,
             string path,
@@ -711,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1271,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Keyword(getNextFormKey());
-            ret.CopyFieldsFrom((Keyword)item);
+            ret.DeepCopyFieldsFrom((Keyword)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Keyword)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1280,19 +1282,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeywordSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class KeywordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly KeywordSetterCopyCommon Instance = new KeywordSetterCopyCommon();
+        public new static readonly KeywordSetterTranslationCommon Instance = new KeywordSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Keyword item,
-            Keyword rhs,
-            Keyword def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IKeyword item,
+            IKeywordGetter rhs,
+            IKeywordGetter def,
             ErrorMaskBuilder errorMask,
-            Keyword_CopyMask copyMask)
+            Keyword_TranslationMask copyMask)
         {
-            ((SkyrimMajorRecordSetterCopyCommon)((ISkyrimMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1353,9 +1355,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return KeywordSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return KeywordSetterCopyCommon.Instance;
+            return KeywordSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1827,23 +1829,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class Keyword_CopyMask : SkyrimMajorRecord_CopyMask
-    {
-        public Keyword_CopyMask()
-        {
-        }
-
-        public Keyword_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Color = defaultOn;
-        }
-
-        #region Members
-        public bool Color;
-        #endregion
-
-    }
-
     public class Keyword_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
@@ -2026,6 +2011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return KeywordCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return KeywordSetterTranslationCommon.Instance;
         }
 
         #endregion

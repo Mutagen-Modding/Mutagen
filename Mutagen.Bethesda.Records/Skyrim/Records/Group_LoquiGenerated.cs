@@ -400,8 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new();
+        object CommonSetterTranslationInstance();
         #region GroupType
         GroupTypeEnum GroupType { get; }
 
@@ -499,13 +498,14 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this Group<T> lhs,
-            Group<T> rhs)
-            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IGroup<T> lhs,
+            IGroupGetter<TGetter> rhs)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            CopyFieldsFrom<T, SkyrimMajorRecord_ErrorMask, T_CopyMask>(
+            DeepCopyFieldsFrom<T, TGetter, SkyrimMajorRecord_ErrorMask, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -514,15 +514,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this Group<T> lhs,
-            Group<T> rhs,
-            Group_CopyMask<T_CopyMask> copyMask,
-            Group<T> def = null)
-            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IGroup<T> lhs,
+            IGroupGetter<TGetter> rhs,
+            Group_TranslationMask<T_TranslMask> copyMask,
+            IGroupGetter<TGetter> def = null)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            CopyFieldsFrom<T, SkyrimMajorRecord_ErrorMask, T_CopyMask>(
+            DeepCopyFieldsFrom<T, TGetter, SkyrimMajorRecord_ErrorMask, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -531,19 +532,20 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-            this Group<T> lhs,
-            Group<T> rhs,
+        public static void DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
+            this IGroup<T> lhs,
+            IGroupGetter<TGetter> rhs,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null,
+            Group_TranslationMask<T_TranslMask> copyMask = null,
+            IGroupGetter<TGetter> def = null,
             bool doMasks = true)
-            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GroupSetterCopyCommon)((IGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -552,16 +554,17 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this Group<T> lhs,
-            Group<T> rhs,
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IGroup<T> lhs,
+            IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
-            Group_CopyMask<T_CopyMask> copyMask = null,
-            Group<T> def = null)
-            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+            Group_TranslationMask<T_TranslMask> copyMask = null,
+            IGroupGetter<TGetter> def = null)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ((GroupSetterCopyCommon)((IGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -624,6 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml<T, T_TranslMask>(
             this IGroup<T> item,
             string path,
@@ -799,6 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1348,39 +1353,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GroupSetterCopyCommon
+    public partial class GroupSetterTranslationCommon
     {
-        public static readonly GroupSetterCopyCommon Instance = new GroupSetterCopyCommon();
+        public static readonly GroupSetterTranslationCommon Instance = new GroupSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom<T, T_CopyMask>(
-            Group<T> item,
-            Group<T> rhs,
-            Group<T> def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            IGroup<T> item,
+            IGroupGetter<TGetter> rhs,
+            IGroupGetter<TGetter> def,
             ErrorMaskBuilder errorMask,
-            Group_CopyMask<T_CopyMask> copyMask)
-            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+            Group_TranslationMask<T_TranslMask> copyMask)
+            where T : ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
             if (copyMask?.GroupType ?? true)
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
                 item.GroupType = rhs.GroupType;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
                 item.LastModified = rhs.LastModified;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown ?? true)
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
                 item.Unknown = rhs.Unknown;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Items.Overall != CopyOption.Skip)
+            if (copyMask?.Items.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Group_FieldIndex.Items);
                 try
@@ -1390,15 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         def?.Items,
                         (r, d) =>
                         {
-                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
-                            }
+                            return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null, d);
                         });
                 }
                 catch (Exception ex)
@@ -1436,10 +1428,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GroupSetterCommon<T>.Instance;
         }
-        protected object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
+        protected object CommonSetterTranslationInstance()
         {
-            return GroupSetterCopyCommon.Instance;
+            return GroupSetterTranslationCommon.Instance;
         }
         object IGroupGetter<T>.CommonInstance()
         {
@@ -1449,9 +1440,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return this.CommonSetterInstance();
         }
-        object IGroupGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        object IGroupGetter<T>.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance<T_CopyMask>();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2272,30 +2263,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class Group_CopyMask<T_CopyMask>
-        where T_CopyMask : SkyrimMajorRecord_CopyMask, new()
-    {
-        public Group_CopyMask()
-        {
-        }
-
-        public Group_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Unknown = defaultOn;
-            this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool GroupType;
-        public bool LastModified;
-        public bool Unknown;
-        public MaskItem<CopyOption, T_CopyMask> Items;
-        #endregion
-
-    }
-
     public class Group_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
     {
@@ -2558,6 +2525,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return GroupCommon<T>.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return GroupSetterTranslationCommon.Instance;
+        }
         object IGroupGetter<T>.CommonInstance()
         {
             return this.CommonInstance();
@@ -2566,9 +2537,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return null;
         }
-        object IGroupGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        object IGroupGetter<T>.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

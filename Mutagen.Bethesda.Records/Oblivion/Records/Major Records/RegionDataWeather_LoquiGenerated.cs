@@ -454,13 +454,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataWeather lhs,
-            RegionDataWeather rhs,
-            RegionDataWeather_CopyMask copyMask,
-            RegionDataWeather def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataWeatherInternal lhs,
+            IRegionDataWeatherGetter rhs,
+            RegionDataWeather_TranslationMask copyMask,
+            IRegionDataWeatherGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -469,16 +469,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataWeather lhs,
-            RegionDataWeather rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataWeatherInternal lhs,
+            IRegionDataWeatherGetter rhs,
             out RegionDataWeather_ErrorMask errorMask,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null,
+            RegionDataWeather_TranslationMask copyMask = null,
+            IRegionDataWeatherGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataWeatherSetterCopyCommon)((IRegionDataWeatherGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -487,14 +487,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataWeather lhs,
-            RegionDataWeather rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataWeatherInternal lhs,
+            IRegionDataWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
+            RegionDataWeather_TranslationMask copyMask = null,
+            IRegionDataWeatherGetter def = null)
         {
-            ((RegionDataWeatherSetterCopyCommon)((IRegionDataWeatherGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -502,12 +502,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RegionDataWeather Copy(
-            this RegionDataWeather item,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
+        public static RegionDataWeather DeepCopy(
+            this IRegionDataWeatherGetter item,
+            RegionDataWeather_TranslationMask copyMask = null,
+            IRegionDataWeatherGetter def = null)
         {
-            return ((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).Copy(
+            return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -562,6 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             string path,
@@ -703,6 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -920,19 +922,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionDataWeather GetNew()
         {
             return new RegionDataWeather();
-        }
-        
-        public new RegionDataWeather Copy(
-            RegionDataWeather item,
-            RegionDataWeather_CopyMask copyMask = null,
-            RegionDataWeather def = null)
-        {
-            RegionDataWeather ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1250,45 +1239,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RegionDataWeatherSetterCopyCommon : RegionDataSetterCopyCommon
+    public partial class RegionDataWeatherSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
-        public new static readonly RegionDataWeatherSetterCopyCommon Instance = new RegionDataWeatherSetterCopyCommon();
+        public new static readonly RegionDataWeatherSetterTranslationCommon Instance = new RegionDataWeatherSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RegionDataWeather item,
-            RegionDataWeather rhs,
-            RegionDataWeather def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRegionDataWeather item,
+            IRegionDataWeatherGetter rhs,
+            IRegionDataWeatherGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataWeather_CopyMask copyMask)
+            RegionDataWeather_TranslationMask copyMask)
         {
-            ((RegionDataSetterCopyCommon)((IRegionDataGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Weathers.Overall != CopyOption.Skip)
+            if (copyMask?.Weathers.Overall ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                 try
                 {
-                    item.Weathers.SetToWithDefault<WeatherChance, WeatherChance>(
+                    item.Weathers.SetToWithDefault(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Weathers.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (WeatherChance)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Weathers?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Weathers.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Weathers?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1304,6 +1285,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new RegionDataWeather DeepCopy(
+            IRegionDataWeatherGetter item,
+            RegionDataWeather_TranslationMask copyMask = null,
+            IRegionDataWeatherGetter def = null)
+        {
+            RegionDataWeather ret = RegionDataWeatherSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1326,9 +1320,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RegionDataWeatherSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return RegionDataWeatherSetterCopyCommon.Instance;
+            return RegionDataWeatherSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1876,23 +1870,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RegionDataWeather_CopyMask : RegionData_CopyMask
-    {
-        public RegionDataWeather_CopyMask()
-        {
-        }
-
-        public RegionDataWeather_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
-        #endregion
-
-    }
-
     public class RegionDataWeather_TranslationMask : RegionData_TranslationMask
     {
         #region Members
@@ -2066,6 +2043,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return RegionDataWeatherCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return RegionDataWeatherSetterTranslationCommon.Instance;
         }
 
         #endregion

@@ -587,13 +587,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Hair lhs,
-            Hair rhs,
-            Hair_CopyMask copyMask,
-            Hair def = null)
+        public static void DeepCopyFieldsFrom(
+            this IHairInternal lhs,
+            IHairGetter rhs,
+            Hair_TranslationMask copyMask,
+            IHairGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -602,16 +602,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Hair lhs,
-            Hair rhs,
+        public static void DeepCopyFieldsFrom(
+            this IHairInternal lhs,
+            IHairGetter rhs,
             out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask = null,
-            Hair def = null,
+            Hair_TranslationMask copyMask = null,
+            IHairGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((HairSetterCopyCommon)((IHairGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -620,14 +620,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Hair lhs,
-            Hair rhs,
+        public static void DeepCopyFieldsFrom(
+            this IHairInternal lhs,
+            IHairGetter rhs,
             ErrorMaskBuilder errorMask,
-            Hair_CopyMask copyMask = null,
-            Hair def = null)
+            Hair_TranslationMask copyMask = null,
+            IHairGetter def = null)
         {
-            ((HairSetterCopyCommon)((IHairGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -684,6 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IHairInternal item,
             string path,
@@ -825,6 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1530,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Hair(getNextFormKey());
-            ret.CopyFieldsFrom((Hair)item);
+            ret.DeepCopyFieldsFrom((Hair)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Hair)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1539,19 +1541,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HairSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class HairSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly HairSetterCopyCommon Instance = new HairSetterCopyCommon();
+        public new static readonly HairSetterTranslationCommon Instance = new HairSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Hair item,
-            Hair rhs,
-            Hair def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IHair item,
+            IHairGetter rhs,
+            IHairGetter def,
             ErrorMaskBuilder errorMask,
-            Hair_CopyMask copyMask)
+            Hair_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1587,7 +1589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Hair_FieldIndex.Model);
                 try
@@ -1600,26 +1602,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1723,9 +1708,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return HairSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return HairSetterCopyCommon.Instance;
+            return HairSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2386,29 +2371,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Hair_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Hair_CopyMask()
-        {
-        }
-
-        public Hair_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Flags;
-        #endregion
-
-    }
-
     public class Hair_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2626,6 +2588,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return HairCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return HairSetterTranslationCommon.Instance;
         }
 
         #endregion

@@ -716,13 +716,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Grass lhs,
-            Grass rhs,
-            Grass_CopyMask copyMask,
-            Grass def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGrassInternal lhs,
+            IGrassGetter rhs,
+            Grass_TranslationMask copyMask,
+            IGrassGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -731,16 +731,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Grass lhs,
-            Grass rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGrassInternal lhs,
+            IGrassGetter rhs,
             out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask = null,
-            Grass def = null,
+            Grass_TranslationMask copyMask = null,
+            IGrassGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GrassSetterCopyCommon)((IGrassGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -749,14 +749,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Grass lhs,
-            Grass rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGrassInternal lhs,
+            IGrassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Grass_CopyMask copyMask = null,
-            Grass def = null)
+            Grass_TranslationMask copyMask = null,
+            IGrassGetter def = null)
         {
-            ((GrassSetterCopyCommon)((IGrassGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -813,6 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGrassInternal item,
             string path,
@@ -954,6 +955,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1875,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Grass(getNextFormKey());
-            ret.CopyFieldsFrom((Grass)item);
+            ret.DeepCopyFieldsFrom((Grass)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Grass)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1884,25 +1886,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GrassSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class GrassSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly GrassSetterCopyCommon Instance = new GrassSetterCopyCommon();
+        public new static readonly GrassSetterTranslationCommon Instance = new GrassSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Grass item,
-            Grass rhs,
-            Grass def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGrass item,
+            IGrassGetter rhs,
+            IGrassGetter def,
             ErrorMaskBuilder errorMask,
-            Grass_CopyMask copyMask)
+            Grass_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
@@ -1915,26 +1917,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1955,81 +1940,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Density ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.Density);
                 item.Density = rhs.Density;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MinSlope ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
                 item.MinSlope = rhs.MinSlope;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaxSlope ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
                 item.MaxSlope = rhs.MaxSlope;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff1 ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
                 item.Fluff1 = rhs.Fluff1;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UnitFromWaterAmount ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
                 item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff2 ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
                 item.Fluff2 = rhs.Fluff2;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UnitFromWaterMode ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
                 item.UnitFromWaterMode = rhs.UnitFromWaterMode;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PositionRange ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
                 item.PositionRange = rhs.PositionRange;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HeightRange ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
                 item.HeightRange = rhs.HeightRange;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ColorRange ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
                 item.ColorRange = rhs.ColorRange;
-                errorMask?.PopIndex();
             }
             if (copyMask?.WavePeriod ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
                 item.WavePeriod = rhs.WavePeriod;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2056,9 +2015,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return GrassSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GrassSetterCopyCommon.Instance;
+            return GrassSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3290,49 +3249,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Grass_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Grass_CopyMask()
-        {
-        }
-
-        public Grass_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Density = defaultOn;
-            this.MinSlope = defaultOn;
-            this.MaxSlope = defaultOn;
-            this.Fluff1 = defaultOn;
-            this.UnitFromWaterAmount = defaultOn;
-            this.Fluff2 = defaultOn;
-            this.UnitFromWaterMode = defaultOn;
-            this.PositionRange = defaultOn;
-            this.HeightRange = defaultOn;
-            this.ColorRange = defaultOn;
-            this.WavePeriod = defaultOn;
-            this.Flags = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Density;
-        public bool MinSlope;
-        public bool MaxSlope;
-        public bool Fluff1;
-        public bool UnitFromWaterAmount;
-        public bool Fluff2;
-        public bool UnitFromWaterMode;
-        public bool PositionRange;
-        public bool HeightRange;
-        public bool ColorRange;
-        public bool WavePeriod;
-        public bool Flags;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Grass_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3600,6 +3516,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return GrassCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GrassSetterTranslationCommon.Instance;
         }
 
         #endregion

@@ -743,13 +743,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Climate lhs,
-            Climate rhs,
-            Climate_CopyMask copyMask,
-            Climate def = null)
+        public static void DeepCopyFieldsFrom(
+            this IClimateInternal lhs,
+            IClimateGetter rhs,
+            Climate_TranslationMask copyMask,
+            IClimateGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -758,16 +758,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Climate lhs,
-            Climate rhs,
+        public static void DeepCopyFieldsFrom(
+            this IClimateInternal lhs,
+            IClimateGetter rhs,
             out Climate_ErrorMask errorMask,
-            Climate_CopyMask copyMask = null,
-            Climate def = null,
+            Climate_TranslationMask copyMask = null,
+            IClimateGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ClimateSetterCopyCommon)((IClimateGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -776,14 +776,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Climate_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Climate lhs,
-            Climate rhs,
+        public static void DeepCopyFieldsFrom(
+            this IClimateInternal lhs,
+            IClimateGetter rhs,
             ErrorMaskBuilder errorMask,
-            Climate_CopyMask copyMask = null,
-            Climate def = null)
+            Climate_TranslationMask copyMask = null,
+            IClimateGetter def = null)
         {
-            ((ClimateSetterCopyCommon)((IClimateGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -840,6 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IClimateInternal item,
             string path,
@@ -981,6 +982,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1920,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Climate(getNextFormKey());
-            ret.CopyFieldsFrom((Climate)item);
+            ret.DeepCopyFieldsFrom((Climate)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Climate)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1929,45 +1931,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClimateSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class ClimateSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly ClimateSetterCopyCommon Instance = new ClimateSetterCopyCommon();
+        public new static readonly ClimateSetterTranslationCommon Instance = new ClimateSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Climate item,
-            Climate rhs,
-            Climate def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IClimate item,
+            IClimateGetter rhs,
+            IClimateGetter def,
             ErrorMaskBuilder errorMask,
-            Climate_CopyMask copyMask)
+            Climate_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Weathers.Overall != CopyOption.Skip)
+            if (copyMask?.Weathers.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
                 try
                 {
-                    item.Weathers.SetToWithDefault<WeatherChance, WeatherChance>(
+                    item.Weathers.SetToWithDefault(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Weathers.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (WeatherChance)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Weathers?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Weathers.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Weathers?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2040,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
                 try
@@ -2053,26 +2047,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -2093,51 +2070,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.SunriseBegin ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
                 item.SunriseBegin = rhs.SunriseBegin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SunriseEnd ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
                 item.SunriseEnd = rhs.SunriseEnd;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SunsetBegin ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
                 item.SunsetBegin = rhs.SunsetBegin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SunsetEnd ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
                 item.SunsetEnd = rhs.SunsetEnd;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Volatility ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
                 item.Volatility = rhs.Volatility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Phase ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
                 item.Phase = rhs.Phase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PhaseLength ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
                 item.PhaseLength = rhs.PhaseLength;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TNAMDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Climate_FieldIndex.TNAMDataTypeState);
                 item.TNAMDataTypeState = rhs.TNAMDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2164,9 +2125,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ClimateSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return ClimateSetterCopyCommon.Instance;
+            return ClimateSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3378,45 +3339,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Climate_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Climate_CopyMask()
-        {
-        }
-
-        public Climate_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Weathers = new MaskItem<CopyOption, WeatherChance_CopyMask>(deepCopyOption, default);
-            this.SunTexture = defaultOn;
-            this.SunGlareTexture = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.SunriseBegin = defaultOn;
-            this.SunriseEnd = defaultOn;
-            this.SunsetBegin = defaultOn;
-            this.SunsetEnd = defaultOn;
-            this.Volatility = defaultOn;
-            this.Phase = defaultOn;
-            this.PhaseLength = defaultOn;
-            this.TNAMDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, WeatherChance_CopyMask> Weathers;
-        public bool SunTexture;
-        public bool SunGlareTexture;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool SunriseBegin;
-        public bool SunriseEnd;
-        public bool SunsetBegin;
-        public bool SunsetEnd;
-        public bool Volatility;
-        public bool Phase;
-        public bool PhaseLength;
-        public bool TNAMDataTypeState;
-        #endregion
-
-    }
-
     public class Climate_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3948,6 +3870,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return ClimateCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return ClimateSetterTranslationCommon.Instance;
         }
 
         #endregion

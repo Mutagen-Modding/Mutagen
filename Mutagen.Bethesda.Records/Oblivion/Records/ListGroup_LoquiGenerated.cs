@@ -366,8 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : class, new();
+        object CommonSetterTranslationInstance();
         #region GroupType
         GroupTypeEnum GroupType { get; }
 
@@ -461,13 +460,14 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this ListGroup<T> lhs,
-            ListGroup<T> rhs)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IListGroup<T> lhs,
+            IListGroupGetter<TGetter> rhs)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            CopyFieldsFrom<T, ErrorMaskPlaceholder, T_CopyMask>(
+            DeepCopyFieldsFrom<T, TGetter, ErrorMaskPlaceholder, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -476,15 +476,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this ListGroup<T> lhs,
-            ListGroup<T> rhs,
-            ListGroup_CopyMask<T_CopyMask> copyMask,
-            ListGroup<T> def = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IListGroup<T> lhs,
+            IListGroupGetter<TGetter> rhs,
+            ListGroup_TranslationMask<T_TranslMask> copyMask,
+            IListGroupGetter<TGetter> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            CopyFieldsFrom<T, ErrorMaskPlaceholder, T_CopyMask>(
+            DeepCopyFieldsFrom<T, TGetter, ErrorMaskPlaceholder, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -493,19 +494,20 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(
-            this ListGroup<T> lhs,
-            ListGroup<T> rhs,
+        public static void DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
+            this IListGroup<T> lhs,
+            IListGroupGetter<TGetter> rhs,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null,
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
+            IListGroupGetter<TGetter> def = null,
             bool doMasks = true)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_ErrMask : class, IErrorMask<T_ErrMask>, new()
-            where T_CopyMask : class, new()
+            where T_TranslMask : class, ITranslationMask, new()
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupSetterCopyCommon)((IListGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
+            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -514,16 +516,17 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom<T, T_CopyMask>(
-            this ListGroup<T> lhs,
-            ListGroup<T> rhs,
+        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            this IListGroup<T> lhs,
+            IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
+            IListGroupGetter<TGetter> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            ((ListGroupSetterCopyCommon)((IListGroupGetter<T>)lhs).CommonSetterCopyInstance<T_CopyMask>()).CopyFieldsFrom(
+            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -531,14 +534,15 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static ListGroup<T> Copy<T, T_CopyMask>(
-            this ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+        public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            this IListGroupGetter<TGetter> item,
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
+            IListGroupGetter<TGetter> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
         {
-            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).Copy(
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -582,6 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml<T, T_ErrMask, T_TranslMask>(
             this IListGroup<T> item,
             string path,
@@ -710,6 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -954,20 +960,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ListGroup<T> GetNew()
         {
             return new ListGroup<T>();
-        }
-        
-        public ListGroup<T> Copy<T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup_CopyMask<T_CopyMask> copyMask = null,
-            ListGroup<T> def = null)
-            where T_CopyMask : class, new()
-        {
-            ListGroup<T> ret = GetNew();
-            ret.CopyFieldsFrom<T, T_CopyMask>(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1256,51 +1248,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ListGroupSetterCopyCommon
+    public partial class ListGroupSetterTranslationCommon
     {
-        public static readonly ListGroupSetterCopyCommon Instance = new ListGroupSetterCopyCommon();
+        public static readonly ListGroupSetterTranslationCommon Instance = new ListGroupSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom<T, T_CopyMask>(
-            ListGroup<T> item,
-            ListGroup<T> rhs,
-            ListGroup<T> def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            IListGroup<T> item,
+            IListGroupGetter<TGetter> rhs,
+            IListGroupGetter<TGetter> def,
             ErrorMaskBuilder errorMask,
-            ListGroup_CopyMask<T_CopyMask> copyMask)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
-            where T_CopyMask : class, new()
+            ListGroup_TranslationMask<T_TranslMask> copyMask)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
         {
             if (copyMask?.GroupType ?? true)
             {
-                errorMask?.PushIndex((int)ListGroup_FieldIndex.GroupType);
                 item.GroupType = rhs.GroupType;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LastModified ?? true)
             {
-                errorMask?.PushIndex((int)ListGroup_FieldIndex.LastModified);
                 item.LastModified = rhs.LastModified;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Items.Overall != CopyOption.Skip)
+            if (copyMask?.Items.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<T, T>(
+                    item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (T)r;
-                                case CopyOption.MakeCopy:
-                                    return LoquiRegistration.GetCopyFunc<T>()(r, null, d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
-                            }
+                            return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null, d);
                         });
                 }
                 catch (Exception ex)
@@ -1316,6 +1297,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            IListGroupGetter<TGetter> item,
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
+            IListGroupGetter<TGetter> def = null)
+            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
+            where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
+            where T_TranslMask : class, ITranslationMask, new()
+        {
+            ListGroup<T> ret = ListGroupSetterCommon<T>.Instance.GetNew();
+            ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1338,10 +1335,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ListGroupSetterCommon<T>.Instance;
         }
-        protected object CommonSetterCopyInstance<T_CopyMask>()
-            where T_CopyMask : class, new()
+        protected object CommonSetterTranslationInstance()
         {
-            return ListGroupSetterCopyCommon.Instance;
+            return ListGroupSetterTranslationCommon.Instance;
         }
         object IListGroupGetter<T>.CommonInstance()
         {
@@ -1351,9 +1347,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IListGroupGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        object IListGroupGetter<T>.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance<T_CopyMask>();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2131,28 +2127,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class ListGroup_CopyMask<T_CopyMask>
-        where T_CopyMask : class, new()
-    {
-        public ListGroup_CopyMask()
-        {
-        }
-
-        public ListGroup_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.GroupType = defaultOn;
-            this.LastModified = defaultOn;
-            this.Items = new MaskItem<CopyOption, T_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool GroupType;
-        public bool LastModified;
-        public MaskItem<CopyOption, T_CopyMask> Items;
-        #endregion
-
-    }
-
     public class ListGroup_TranslationMask<T_TranslMask> : ITranslationMask
         where T_TranslMask : class, ITranslationMask, new()
     {
@@ -2411,6 +2385,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ListGroupCommon<T>.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ListGroupSetterTranslationCommon.Instance;
+        }
         object IListGroupGetter<T>.CommonInstance()
         {
             return this.CommonInstance();
@@ -2419,9 +2397,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IListGroupGetter<T>.CommonSetterCopyInstance<T_CopyMask>()
+        object IListGroupGetter<T>.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

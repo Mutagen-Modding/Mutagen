@@ -686,13 +686,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SigilStone lhs,
-            SigilStone rhs,
-            SigilStone_CopyMask copyMask,
-            SigilStone def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISigilStoneInternal lhs,
+            ISigilStoneGetter rhs,
+            SigilStone_TranslationMask copyMask,
+            ISigilStoneGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -701,16 +701,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SigilStone lhs,
-            SigilStone rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISigilStoneInternal lhs,
+            ISigilStoneGetter rhs,
             out SigilStone_ErrorMask errorMask,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null,
+            SigilStone_TranslationMask copyMask = null,
+            ISigilStoneGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SigilStoneSetterCopyCommon)((ISigilStoneGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -719,14 +719,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SigilStone lhs,
-            SigilStone rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISigilStoneInternal lhs,
+            ISigilStoneGetter rhs,
             ErrorMaskBuilder errorMask,
-            SigilStone_CopyMask copyMask = null,
-            SigilStone def = null)
+            SigilStone_TranslationMask copyMask = null,
+            ISigilStoneGetter def = null)
         {
-            ((SigilStoneSetterCopyCommon)((ISigilStoneGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -783,6 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISigilStoneInternal item,
             string path,
@@ -924,6 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1838,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new SigilStone(getNextFormKey());
-            ret.CopyFieldsFrom((SigilStone)item);
+            ret.DeepCopyFieldsFrom((SigilStone)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SigilStone)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1847,19 +1849,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class SigilStoneSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly SigilStoneSetterCopyCommon Instance = new SigilStoneSetterCopyCommon();
+        public new static readonly SigilStoneSetterTranslationCommon Instance = new SigilStoneSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SigilStone item,
-            SigilStone rhs,
-            SigilStone def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISigilStone item,
+            ISigilStoneGetter rhs,
+            ISigilStoneGetter def,
             ErrorMaskBuilder errorMask,
-            SigilStone_CopyMask copyMask)
+            SigilStone_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1895,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Model);
                 try
@@ -1908,26 +1910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1981,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -1995,27 +1980,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Effects.Overall != CopyOption.Skip)
+            if (copyMask?.Effects.Overall ?? true)
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, Effect>(
+                    item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Effect)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Effects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Effects?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2030,27 +2007,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Uses ?? true)
             {
-                errorMask?.PushIndex((int)SigilStone_FieldIndex.Uses);
                 item.Uses = rhs.Uses;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)SigilStone_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)SigilStone_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)SigilStone_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2077,9 +2046,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SigilStoneSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return SigilStoneSetterCopyCommon.Instance;
+            return SigilStoneSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3117,39 +3086,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SigilStone_CopyMask : ItemAbstract_CopyMask
-    {
-        public SigilStone_CopyMask()
-        {
-        }
-
-        public SigilStone_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
-            this.Uses = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Script;
-        public MaskItem<CopyOption, Effect_CopyMask> Effects;
-        public bool Uses;
-        public bool Value;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class SigilStone_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -3439,6 +3375,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return SigilStoneCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return SigilStoneSetterTranslationCommon.Instance;
         }
 
         #endregion

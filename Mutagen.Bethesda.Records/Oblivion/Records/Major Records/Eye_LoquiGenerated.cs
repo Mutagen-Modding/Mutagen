@@ -548,13 +548,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Eye lhs,
-            Eye rhs,
-            Eye_CopyMask copyMask,
-            Eye def = null)
+        public static void DeepCopyFieldsFrom(
+            this IEyeInternal lhs,
+            IEyeGetter rhs,
+            Eye_TranslationMask copyMask,
+            IEyeGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -563,16 +563,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Eye lhs,
-            Eye rhs,
+        public static void DeepCopyFieldsFrom(
+            this IEyeInternal lhs,
+            IEyeGetter rhs,
             out Eye_ErrorMask errorMask,
-            Eye_CopyMask copyMask = null,
-            Eye def = null,
+            Eye_TranslationMask copyMask = null,
+            IEyeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EyeSetterCopyCommon)((IEyeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -581,14 +581,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Eye lhs,
-            Eye rhs,
+        public static void DeepCopyFieldsFrom(
+            this IEyeInternal lhs,
+            IEyeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Eye_CopyMask copyMask = null,
-            Eye def = null)
+            Eye_TranslationMask copyMask = null,
+            IEyeGetter def = null)
         {
-            ((EyeSetterCopyCommon)((IEyeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -645,6 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IEyeInternal item,
             string path,
@@ -786,6 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1431,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Eye(getNextFormKey());
-            ret.CopyFieldsFrom((Eye)item);
+            ret.DeepCopyFieldsFrom((Eye)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Eye)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1440,19 +1442,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EyeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class EyeSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly EyeSetterCopyCommon Instance = new EyeSetterCopyCommon();
+        public new static readonly EyeSetterTranslationCommon Instance = new EyeSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Eye item,
-            Eye rhs,
-            Eye def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IEye item,
+            IEyeGetter rhs,
+            IEyeGetter def,
             ErrorMaskBuilder errorMask,
-            Eye_CopyMask copyMask)
+            Eye_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1573,9 +1575,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return EyeSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return EyeSetterCopyCommon.Instance;
+            return EyeSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2163,27 +2165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Eye_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Eye_CopyMask()
-        {
-        }
-
-        public Eye_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Icon = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Icon;
-        public bool Flags;
-        #endregion
-
-    }
-
     public class Eye_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2388,6 +2369,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return EyeCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return EyeSetterTranslationCommon.Instance;
         }
 
         #endregion

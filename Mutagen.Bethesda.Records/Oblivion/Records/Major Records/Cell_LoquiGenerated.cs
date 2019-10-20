@@ -1071,13 +1071,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Cell lhs,
-            Cell rhs,
-            Cell_CopyMask copyMask,
-            Cell def = null)
+        public static void DeepCopyFieldsFrom(
+            this ICellInternal lhs,
+            ICellGetter rhs,
+            Cell_TranslationMask copyMask,
+            ICellGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1086,16 +1086,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Cell lhs,
-            Cell rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICellInternal lhs,
+            ICellGetter rhs,
             out Cell_ErrorMask errorMask,
-            Cell_CopyMask copyMask = null,
-            Cell def = null,
+            Cell_TranslationMask copyMask = null,
+            ICellGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CellSetterCopyCommon)((ICellGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1104,14 +1104,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Cell lhs,
-            Cell rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICellInternal lhs,
+            ICellGetter rhs,
             ErrorMaskBuilder errorMask,
-            Cell_CopyMask copyMask = null,
-            Cell def = null)
+            Cell_TranslationMask copyMask = null,
+            ICellGetter def = null)
         {
-            ((CellSetterCopyCommon)((ICellGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1168,6 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ICellInternal item,
             string path,
@@ -1321,6 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2749,7 +2751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Cell(getNextFormKey());
-            ret.CopyFieldsFrom((Cell)item);
+            ret.DeepCopyFieldsFrom((Cell)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Cell)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2789,19 +2791,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellSetterCopyCommon : PlaceSetterCopyCommon
+    public partial class CellSetterTranslationCommon : PlaceSetterTranslationCommon
     {
-        public new static readonly CellSetterCopyCommon Instance = new CellSetterCopyCommon();
+        public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Cell item,
-            Cell rhs,
-            Cell def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ICell item,
+            ICellGetter rhs,
+            ICellGetter def,
             ErrorMaskBuilder errorMask,
-            Cell_CopyMask copyMask)
+            Cell_TranslationMask copyMask)
         {
-            ((PlaceSetterCopyCommon)((IPlaceGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2897,7 +2899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Lighting.Overall != CopyOption.Skip)
+            if (copyMask?.Lighting.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
@@ -2910,26 +2912,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsLightingItem,
                         outDefItem: out var defLightingItem))
                     {
-                        switch (copyMask?.Lighting.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((CellLightingSetterCopyCommon)((ICellLightingGetter)item.Lighting).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Lighting,
-                                    rhs: rhs.Lighting,
-                                    def: def?.Lighting,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Lighting.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Lighting = rhsLightingItem.Copy(
-                                    copyMask?.Lighting?.Specific,
-                                    def: defLightingItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Lighting?.Overall}. Cannot execute copy.");
-                        }
+                        item.Lighting = rhsLightingItem.DeepCopy(
+                            copyMask?.Lighting?.Specific,
+                            def: defLightingItem);
                     }
                     else
                     {
@@ -2948,14 +2933,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Regions != CopyOption.Skip)
+            if (copyMask?.Regions ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                 try
                 {
                     item.Regions.SetToWithDefault(
                         rhs.Regions,
-                        def?.Regions);
+                        def?.Regions,
+                        (r, d) => new FormIDLink<Region>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3032,7 +3018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetLink(
+                    item.Climate_Property.SetToFormKey(
                         rhs: rhs.Climate_Property,
                         def: def?.Climate_Property);
                 }
@@ -3051,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetLink(
+                    item.Water_Property.SetToFormKey(
                         rhs: rhs.Water_Property,
                         def: def?.Water_Property);
                 }
@@ -3070,7 +3056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetLink(
+                    item.Owner_Property.SetToFormKey(
                         rhs: rhs.Owner_Property,
                         def: def?.Owner_Property);
                 }
@@ -3119,7 +3105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetLink(
+                    item.GlobalVariable_Property.SetToFormKey(
                         rhs: rhs.GlobalVariable_Property,
                         def: def?.GlobalVariable_Property);
                 }
@@ -3133,7 +3119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.PathGrid.Overall != CopyOption.Skip)
+            if (copyMask?.PathGrid.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                 try
@@ -3146,29 +3132,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsPathGridItem,
                         outDefItem: out var defPathGridItem))
                     {
-                        switch (copyMask?.PathGrid.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((PathGridSetterCopyCommon)((IPathGridGetter)item.PathGrid).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.PathGrid,
-                                    rhs: rhs.PathGrid,
-                                    def: def?.PathGrid,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.PathGrid.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                var copyRet = new PathGrid(rhsPathGridItem.FormKey);
-                                copyRet.CopyFieldsFrom(
-                                    rhs: rhsPathGridItem,
-                                    copyMask: copyMask?.PathGrid?.Specific,
-                                    def: defPathGridItem);
-                                item.PathGrid = copyRet;
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.PathGrid?.Overall}. Cannot execute copy.");
-                        }
+                        var copyRet = new PathGrid(rhsPathGridItem.FormKey);
+                        copyRet.DeepCopyFieldsFrom(
+                            rhs: rhsPathGridItem,
+                            copyMask: copyMask?.PathGrid?.Specific,
+                            def: defPathGridItem);
+                        item.PathGrid = copyRet;
                     }
                     else
                     {
@@ -3187,7 +3156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Landscape.Overall != CopyOption.Skip)
+            if (copyMask?.Landscape.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
@@ -3200,29 +3169,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsLandscapeItem,
                         outDefItem: out var defLandscapeItem))
                     {
-                        switch (copyMask?.Landscape.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((LandscapeSetterCopyCommon)((ILandscapeGetter)item.Landscape).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Landscape,
-                                    rhs: rhs.Landscape,
-                                    def: def?.Landscape,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Landscape.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                var copyRet = new Landscape(rhsLandscapeItem.FormKey);
-                                copyRet.CopyFieldsFrom(
-                                    rhs: rhsLandscapeItem,
-                                    copyMask: copyMask?.Landscape?.Specific,
-                                    def: defLandscapeItem);
-                                item.Landscape = copyRet;
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Landscape?.Overall}. Cannot execute copy.");
-                        }
+                        var copyRet = new Landscape(rhsLandscapeItem.FormKey);
+                        copyRet.DeepCopyFieldsFrom(
+                            rhs: rhsLandscapeItem,
+                            copyMask: copyMask?.Landscape?.Specific,
+                            def: defLandscapeItem);
+                        item.Landscape = copyRet;
                     }
                     else
                     {
@@ -3243,35 +3195,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Timestamp ?? true)
             {
-                errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
-                item.Timestamp = rhs.Timestamp;
-                errorMask?.PopIndex();
+                item.Timestamp = rhs.Timestamp.ToArray();
             }
             if (copyMask?.PersistentTimestamp ?? true)
             {
-                errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
-                item.PersistentTimestamp = rhs.PersistentTimestamp;
-                errorMask?.PopIndex();
+                item.PersistentTimestamp = rhs.PersistentTimestamp.ToArray();
             }
-            if (copyMask?.Persistent != CopyOption.Skip)
+            if (copyMask?.Persistent ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                 try
                 {
-                    item.Persistent.SetToWithDefault<IPlaced, IPlaced>(
+                    item.Persistent.SetToWithDefault(
                         rhs: rhs.Persistent,
                         def: def?.Persistent,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Persistent ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (IPlaced)r;
-                                case CopyOption.MakeCopy:
-                                    return LoquiRegistration.GetCopyFunc<IPlaced>(r.GetType())(r, null, d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Persistent}. Cannot execute copy.");
-                            }
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
                         });
                 }
                 catch (Exception ex)
@@ -3286,29 +3226,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.TemporaryTimestamp ?? true)
             {
-                errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
-                item.TemporaryTimestamp = rhs.TemporaryTimestamp;
-                errorMask?.PopIndex();
+                item.TemporaryTimestamp = rhs.TemporaryTimestamp.ToArray();
             }
-            if (copyMask?.Temporary != CopyOption.Skip)
+            if (copyMask?.Temporary ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                 try
                 {
-                    item.Temporary.SetToWithDefault<IPlaced, IPlaced>(
+                    item.Temporary.SetToWithDefault(
                         rhs: rhs.Temporary,
                         def: def?.Temporary,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Temporary ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (IPlaced)r;
-                                case CopyOption.MakeCopy:
-                                    return LoquiRegistration.GetCopyFunc<IPlaced>(r.GetType())(r, null, d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Temporary}. Cannot execute copy.");
-                            }
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
                         });
                 }
                 catch (Exception ex)
@@ -3323,29 +3253,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.VisibleWhenDistantTimestamp ?? true)
             {
-                errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
-                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp;
-                errorMask?.PopIndex();
+                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp.ToArray();
             }
-            if (copyMask?.VisibleWhenDistant != CopyOption.Skip)
+            if (copyMask?.VisibleWhenDistant ?? true)
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                 try
                 {
-                    item.VisibleWhenDistant.SetToWithDefault<IPlaced, IPlaced>(
+                    item.VisibleWhenDistant.SetToWithDefault(
                         rhs: rhs.VisibleWhenDistant,
                         def: def?.VisibleWhenDistant,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.VisibleWhenDistant ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (IPlaced)r;
-                                case CopyOption.MakeCopy:
-                                    return LoquiRegistration.GetCopyFunc<IPlaced>(r.GetType())(r, null, d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.VisibleWhenDistant}. Cannot execute copy.");
-                            }
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
                         });
                 }
                 catch (Exception ex)
@@ -3383,9 +3303,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return CellSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return CellSetterCopyCommon.Instance;
+            return CellSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -5341,63 +5261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Cell_CopyMask : Place_CopyMask
-    {
-        public Cell_CopyMask()
-        {
-        }
-
-        public Cell_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Flags = defaultOn;
-            this.Grid = defaultOn;
-            this.Lighting = new MaskItem<CopyOption, CellLighting_CopyMask>(deepCopyOption, default);
-            this.Regions = deepCopyOption;
-            this.MusicType = defaultOn;
-            this.WaterHeight = defaultOn;
-            this.Climate = defaultOn;
-            this.Water = defaultOn;
-            this.Owner = defaultOn;
-            this.FactionRank = defaultOn;
-            this.GlobalVariable = defaultOn;
-            this.PathGrid = new MaskItem<CopyOption, PathGrid_CopyMask>(deepCopyOption, default);
-            this.Landscape = new MaskItem<CopyOption, Landscape_CopyMask>(deepCopyOption, default);
-            this.Timestamp = defaultOn;
-            this.PersistentTimestamp = defaultOn;
-            this.Persistent = deepCopyOption;
-            this.TemporaryTimestamp = defaultOn;
-            this.Temporary = deepCopyOption;
-            this.VisibleWhenDistantTimestamp = defaultOn;
-            this.VisibleWhenDistant = deepCopyOption;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Flags;
-        public bool Grid;
-        public MaskItem<CopyOption, CellLighting_CopyMask> Lighting;
-        public CopyOption Regions;
-        public bool MusicType;
-        public bool WaterHeight;
-        public bool Climate;
-        public bool Water;
-        public bool Owner;
-        public bool FactionRank;
-        public bool GlobalVariable;
-        public MaskItem<CopyOption, PathGrid_CopyMask> PathGrid;
-        public MaskItem<CopyOption, Landscape_CopyMask> Landscape;
-        public bool Timestamp;
-        public bool PersistentTimestamp;
-        public CopyOption Persistent;
-        public bool TemporaryTimestamp;
-        public CopyOption Temporary;
-        public bool VisibleWhenDistantTimestamp;
-        public CopyOption VisibleWhenDistant;
-        #endregion
-
-    }
-
     public class Cell_TranslationMask : Place_TranslationMask
     {
         #region Members
@@ -5791,6 +5654,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return CellCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return CellSetterTranslationCommon.Instance;
         }
 
         #endregion

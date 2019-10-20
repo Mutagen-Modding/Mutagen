@@ -234,14 +234,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WorldspaceCommon
         {
-            private static WorldspaceBlock_CopyMask duplicateBlockCopyMask = new WorldspaceBlock_CopyMask(true)
+            private static WorldspaceBlock_TranslationMask duplicateBlockCopyMask = new WorldspaceBlock_TranslationMask(true)
             {
-                Items = new MaskItem<CopyOption, WorldspaceSubBlock_CopyMask>(CopyOption.Skip, null)
+                Items = new MaskItem<bool, WorldspaceSubBlock_TranslationMask>(false, default)
             };
 
-            private static WorldspaceSubBlock_CopyMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_CopyMask(true)
+            private static WorldspaceSubBlock_TranslationMask duplicateSubBlockCopyMask = new WorldspaceSubBlock_TranslationMask(true)
             {
-                Items = new MaskItem<CopyOption, Cell_CopyMask>(CopyOption.Skip, null)
+                Items = new MaskItem<bool, Cell_TranslationMask>(false, default)
             };
 
             partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -259,11 +259,11 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SubCells.SetTo(rhs.SubCells.Select((block) =>
                 {
                     var blockRet = new WorldspaceBlock();
-                    blockRet.CopyFieldsFrom(block, duplicateBlockCopyMask);
+                    blockRet.DeepCopyFieldsFrom(block, duplicateBlockCopyMask);
                     blockRet.Items.SetTo(block.Items.Select((subBlock) =>
                     {
                         var subBlockRet = new WorldspaceSubBlock();
-                        subBlockRet.CopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
+                        subBlockRet.DeepCopyFieldsFrom(subBlock, duplicateSubBlockCopyMask);
                         subBlockRet.Items.SetTo(subBlock.Items.Select(c => (Cell)c.Duplicate(getNextFormKey, duplicatedRecords)));
                         return subBlockRet;
                     }));

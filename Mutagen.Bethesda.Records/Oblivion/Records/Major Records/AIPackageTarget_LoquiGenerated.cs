@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region ObjectType
         AIPackageTarget.ObjectTypeEnum ObjectType { get; }
 
@@ -451,11 +451,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackageTarget lhs,
-            AIPackageTarget rhs)
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageTarget lhs,
+            IAIPackageTargetGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -464,13 +464,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackageTarget lhs,
-            AIPackageTarget rhs,
-            AIPackageTarget_CopyMask copyMask,
-            AIPackageTarget def = null)
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageTarget lhs,
+            IAIPackageTargetGetter rhs,
+            AIPackageTarget_TranslationMask copyMask,
+            IAIPackageTargetGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -479,16 +479,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackageTarget lhs,
-            AIPackageTarget rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageTarget lhs,
+            IAIPackageTargetGetter rhs,
             out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null,
+            AIPackageTarget_TranslationMask copyMask = null,
+            IAIPackageTargetGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AIPackageTargetSetterCopyCommon)((IAIPackageTargetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -497,14 +497,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AIPackageTarget_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackageTarget lhs,
-            AIPackageTarget rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageTarget lhs,
+            IAIPackageTargetGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
+            AIPackageTarget_TranslationMask copyMask = null,
+            IAIPackageTargetGetter def = null)
         {
-            ((AIPackageTargetSetterCopyCommon)((IAIPackageTargetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -512,12 +512,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static AIPackageTarget Copy(
-            this AIPackageTarget item,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
+        public static AIPackageTarget DeepCopy(
+            this IAIPackageTargetGetter item,
+            AIPackageTarget_TranslationMask copyMask = null,
+            IAIPackageTargetGetter def = null)
         {
-            return ((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()).Copy(
+            return ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -572,6 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IAIPackageTarget item,
             string path,
@@ -713,6 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -947,19 +949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new AIPackageTarget();
         }
         
-        public AIPackageTarget Copy(
-            AIPackageTarget item,
-            AIPackageTarget_CopyMask copyMask = null,
-            AIPackageTarget def = null)
-        {
-            AIPackageTarget ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageTarget item,
@@ -1163,39 +1152,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class AIPackageTargetSetterCopyCommon
+    public partial class AIPackageTargetSetterTranslationCommon
     {
-        public static readonly AIPackageTargetSetterCopyCommon Instance = new AIPackageTargetSetterCopyCommon();
+        public static readonly AIPackageTargetSetterTranslationCommon Instance = new AIPackageTargetSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            AIPackageTarget item,
-            AIPackageTarget rhs,
-            AIPackageTarget def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IAIPackageTarget item,
+            IAIPackageTargetGetter rhs,
+            IAIPackageTargetGetter def,
             ErrorMaskBuilder errorMask,
-            AIPackageTarget_CopyMask copyMask)
+            AIPackageTarget_TranslationMask copyMask)
         {
             if (copyMask?.ObjectType ?? true)
             {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
                 item.ObjectType = rhs.ObjectType;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Object ?? true)
             {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
                 item.Object = rhs.Object;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Count ?? true)
             {
-                errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
                 item.Count = rhs.Count;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public AIPackageTarget DeepCopy(
+            IAIPackageTargetGetter item,
+            AIPackageTarget_TranslationMask copyMask = null,
+            IAIPackageTargetGetter def = null)
+        {
+            AIPackageTarget ret = AIPackageTargetSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1218,9 +1214,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return AIPackageTargetSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return AIPackageTargetSetterCopyCommon.Instance;
+            return AIPackageTargetSetterTranslationCommon.Instance;
         }
         object IAIPackageTargetGetter.CommonInstance()
         {
@@ -1230,9 +1226,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IAIPackageTargetGetter.CommonSetterCopyInstance()
+        object IAIPackageTargetGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1903,27 +1899,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AIPackageTarget_CopyMask
-    {
-        public AIPackageTarget_CopyMask()
-        {
-        }
-
-        public AIPackageTarget_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ObjectType = defaultOn;
-            this.Object = defaultOn;
-            this.Count = defaultOn;
-        }
-
-        #region Members
-        public bool ObjectType;
-        public bool Object;
-        public bool Count;
-        #endregion
-
-    }
-
     public class AIPackageTarget_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2102,6 +2077,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return AIPackageTargetCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return AIPackageTargetSetterTranslationCommon.Instance;
+        }
         object IAIPackageTargetGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2110,9 +2089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IAIPackageTargetGetter.CommonSetterCopyInstance()
+        object IAIPackageTargetGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

@@ -818,13 +818,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Light lhs,
-            Light rhs,
-            Light_CopyMask copyMask,
-            Light def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILightInternal lhs,
+            ILightGetter rhs,
+            Light_TranslationMask copyMask,
+            ILightGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -833,16 +833,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Light lhs,
-            Light rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILightInternal lhs,
+            ILightGetter rhs,
             out Light_ErrorMask errorMask,
-            Light_CopyMask copyMask = null,
-            Light def = null,
+            Light_TranslationMask copyMask = null,
+            ILightGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LightSetterCopyCommon)((ILightGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -851,14 +851,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Light lhs,
-            Light rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILightInternal lhs,
+            ILightGetter rhs,
             ErrorMaskBuilder errorMask,
-            Light_CopyMask copyMask = null,
-            Light def = null)
+            Light_TranslationMask copyMask = null,
+            ILightGetter def = null)
         {
-            ((LightSetterCopyCommon)((ILightGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -915,6 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILightInternal item,
             string path,
@@ -1056,6 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2140,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Light(getNextFormKey());
-            ret.CopyFieldsFrom((Light)item);
+            ret.DeepCopyFieldsFrom((Light)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Light)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2149,25 +2151,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class LightSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly LightSetterCopyCommon Instance = new LightSetterCopyCommon();
+        public new static readonly LightSetterTranslationCommon Instance = new LightSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Light item,
-            Light rhs,
-            Light def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILight item,
+            ILightGetter rhs,
+            ILightGetter def,
             ErrorMaskBuilder errorMask,
-            Light_CopyMask copyMask)
+            Light_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Model);
                 try
@@ -2180,26 +2182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -2223,7 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -2299,51 +2284,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Time ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Time);
                 item.Time = rhs.Time;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Radius ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Radius);
                 item.Radius = rhs.Radius;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Color ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Color);
                 item.Color = rhs.Color;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FalloffExponent ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
                 item.FalloffExponent = rhs.FalloffExponent;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FOV ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.FOV);
                 item.FOV = rhs.FOV;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fade ?? true)
             {
@@ -2380,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetLink(
+                    item.Sound_Property.SetToFormKey(
                         rhs: rhs.Sound_Property,
                         def: def?.Sound_Property);
                 }
@@ -2396,9 +2365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2425,9 +2392,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LightSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return LightSetterCopyCommon.Instance;
+            return LightSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3706,51 +3673,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Light_CopyMask : ItemAbstract_CopyMask
-    {
-        public Light_CopyMask()
-        {
-        }
-
-        public Light_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Script = defaultOn;
-            this.Name = defaultOn;
-            this.Icon = defaultOn;
-            this.Time = defaultOn;
-            this.Radius = defaultOn;
-            this.Color = defaultOn;
-            this.Flags = defaultOn;
-            this.FalloffExponent = defaultOn;
-            this.FOV = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.Fade = defaultOn;
-            this.Sound = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Script;
-        public bool Name;
-        public bool Icon;
-        public bool Time;
-        public bool Radius;
-        public bool Color;
-        public bool Flags;
-        public bool FalloffExponent;
-        public bool FOV;
-        public bool Value;
-        public bool Weight;
-        public bool Fade;
-        public bool Sound;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Light_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -4075,6 +3997,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return LightCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return LightSetterTranslationCommon.Instance;
         }
 
         #endregion

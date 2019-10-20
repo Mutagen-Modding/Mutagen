@@ -394,13 +394,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this NPCSpawn lhs,
-            NPCSpawn rhs,
-            NPCSpawn_CopyMask copyMask,
-            NPCSpawn def = null)
+        public static void DeepCopyFieldsFrom(
+            this INPCSpawnInternal lhs,
+            INPCSpawnGetter rhs,
+            NPCSpawn_TranslationMask copyMask,
+            INPCSpawnGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -409,16 +409,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this NPCSpawn lhs,
-            NPCSpawn rhs,
+        public static void DeepCopyFieldsFrom(
+            this INPCSpawnInternal lhs,
+            INPCSpawnGetter rhs,
             out NPCSpawn_ErrorMask errorMask,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null,
+            NPCSpawn_TranslationMask copyMask = null,
+            INPCSpawnGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((NPCSpawnSetterCopyCommon)((INPCSpawnGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCSpawnSetterTranslationCommon)((INPCSpawnGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -427,14 +427,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPCSpawn_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this NPCSpawn lhs,
-            NPCSpawn rhs,
+        public static void DeepCopyFieldsFrom(
+            this INPCSpawnInternal lhs,
+            INPCSpawnGetter rhs,
             ErrorMaskBuilder errorMask,
-            NPCSpawn_CopyMask copyMask = null,
-            NPCSpawn def = null)
+            NPCSpawn_TranslationMask copyMask = null,
+            INPCSpawnGetter def = null)
         {
-            ((NPCSpawnSetterCopyCommon)((INPCSpawnGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCSpawnSetterTranslationCommon)((INPCSpawnGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -491,6 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this INPCSpawnInternal item,
             string path,
@@ -632,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1108,19 +1110,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NPCSpawnSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class NPCSpawnSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly NPCSpawnSetterCopyCommon Instance = new NPCSpawnSetterCopyCommon();
+        public new static readonly NPCSpawnSetterTranslationCommon Instance = new NPCSpawnSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            NPCSpawn item,
-            NPCSpawn rhs,
-            NPCSpawn def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            INPCSpawn item,
+            INPCSpawnGetter rhs,
+            INPCSpawnGetter def,
             ErrorMaskBuilder errorMask,
-            NPCSpawn_CopyMask copyMask)
+            NPCSpawn_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1151,9 +1153,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return NPCSpawnSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return NPCSpawnSetterCopyCommon.Instance;
+            return NPCSpawnSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1561,18 +1563,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class NPCSpawn_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public NPCSpawn_CopyMask()
-        {
-        }
-
-        public NPCSpawn_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-        }
-
-    }
-
     public class NPCSpawn_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Ctors
@@ -1715,6 +1705,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return NPCSpawnCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return NPCSpawnSetterTranslationCommon.Instance;
         }
 
         #endregion

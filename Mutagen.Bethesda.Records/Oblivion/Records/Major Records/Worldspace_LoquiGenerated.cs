@@ -962,13 +962,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Worldspace lhs,
-            Worldspace rhs,
-            Worldspace_CopyMask copyMask,
-            Worldspace def = null)
+        public static void DeepCopyFieldsFrom(
+            this IWorldspaceInternal lhs,
+            IWorldspaceGetter rhs,
+            Worldspace_TranslationMask copyMask,
+            IWorldspaceGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -977,16 +977,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Worldspace lhs,
-            Worldspace rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWorldspaceInternal lhs,
+            IWorldspaceGetter rhs,
             out Worldspace_ErrorMask errorMask,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null,
+            Worldspace_TranslationMask copyMask = null,
+            IWorldspaceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceSetterCopyCommon)((IWorldspaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -995,14 +995,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Worldspace lhs,
-            Worldspace rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWorldspaceInternal lhs,
+            IWorldspaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Worldspace_CopyMask copyMask = null,
-            Worldspace def = null)
+            Worldspace_TranslationMask copyMask = null,
+            IWorldspaceGetter def = null)
         {
-            ((WorldspaceSetterCopyCommon)((IWorldspaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1059,6 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IWorldspaceInternal item,
             string path,
@@ -1212,6 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2462,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Worldspace(getNextFormKey());
-            ret.CopyFieldsFrom((Worldspace)item);
+            ret.DeepCopyFieldsFrom((Worldspace)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Worldspace)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2497,19 +2499,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WorldspaceSetterCopyCommon : PlaceSetterCopyCommon
+    public partial class WorldspaceSetterTranslationCommon : PlaceSetterTranslationCommon
     {
-        public new static readonly WorldspaceSetterCopyCommon Instance = new WorldspaceSetterCopyCommon();
+        public new static readonly WorldspaceSetterTranslationCommon Instance = new WorldspaceSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Worldspace item,
-            Worldspace rhs,
-            Worldspace def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IWorldspace item,
+            IWorldspaceGetter rhs,
+            IWorldspaceGetter def,
             ErrorMaskBuilder errorMask,
-            Worldspace_CopyMask copyMask)
+            Worldspace_TranslationMask copyMask)
         {
-            ((PlaceSetterCopyCommon)((IPlaceGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2550,7 +2552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
                 {
-                    item.Parent_Property.SetLink(
+                    item.Parent_Property.SetToFormKey(
                         rhs: rhs.Parent_Property,
                         def: def?.Parent_Property);
                 }
@@ -2569,7 +2571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetLink(
+                    item.Climate_Property.SetToFormKey(
                         rhs: rhs.Climate_Property,
                         def: def?.Climate_Property);
                 }
@@ -2588,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetLink(
+                    item.Water_Property.SetToFormKey(
                         rhs: rhs.Water_Property,
                         def: def?.Water_Property);
                 }
@@ -2632,7 +2634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MapData.Overall != CopyOption.Skip)
+            if (copyMask?.MapData.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
@@ -2645,26 +2647,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsMapDataItem,
                         outDefItem: out var defMapDataItem))
                     {
-                        switch (copyMask?.MapData.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((MapDataSetterCopyCommon)((IMapDataGetter)item.MapData).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.MapData,
-                                    rhs: rhs.MapData,
-                                    def: def?.MapData,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.MapData.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.MapData = rhsMapDataItem.Copy(
-                                    copyMask?.MapData?.Specific,
-                                    def: defMapDataItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapData?.Overall}. Cannot execute copy.");
-                        }
+                        item.MapData = rhsMapDataItem.DeepCopy(
+                            copyMask?.MapData?.Specific,
+                            def: defMapDataItem);
                     }
                     else
                     {
@@ -2811,12 +2796,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.OffsetData,
                         rhsHasBeenSet: rhs.OffsetData_IsSet,
-                        defItem: def?.OffsetData ?? default(Byte[]),
-                        defHasBeenSet: def?.OffsetData_IsSet ?? false,
+                        defItem: def.OffsetData,
+                        defHasBeenSet: def.OffsetData_IsSet,
                         outRhsItem: out var rhsOffsetDataItem,
                         outDefItem: out var defOffsetDataItem))
                     {
-                        item.OffsetData = rhsOffsetDataItem;
+                        item.OffsetData = rhsOffsetDataItem.ToArray();
                     }
                     else
                     {
@@ -2833,7 +2818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Road.Overall != CopyOption.Skip)
+            if (copyMask?.Road.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                 try
@@ -2846,29 +2831,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsRoadItem,
                         outDefItem: out var defRoadItem))
                     {
-                        switch (copyMask?.Road.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RoadSetterCopyCommon)((IRoadGetter)item.Road).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Road,
-                                    rhs: rhs.Road,
-                                    def: def?.Road,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Road.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                var copyRet = new Road(rhsRoadItem.FormKey);
-                                copyRet.CopyFieldsFrom(
-                                    rhs: rhsRoadItem,
-                                    copyMask: copyMask?.Road?.Specific,
-                                    def: defRoadItem);
-                                item.Road = copyRet;
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Road?.Overall}. Cannot execute copy.");
-                        }
+                        var copyRet = new Road(rhsRoadItem.FormKey);
+                        copyRet.DeepCopyFieldsFrom(
+                            rhs: rhsRoadItem,
+                            copyMask: copyMask?.Road?.Specific,
+                            def: defRoadItem);
+                        item.Road = copyRet;
                     }
                     else
                     {
@@ -2887,7 +2855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TopCell.Overall != CopyOption.Skip)
+            if (copyMask?.TopCell.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
@@ -2900,29 +2868,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsTopCellItem,
                         outDefItem: out var defTopCellItem))
                     {
-                        switch (copyMask?.TopCell.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((CellSetterCopyCommon)((ICellGetter)item.TopCell).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.TopCell,
-                                    rhs: rhs.TopCell,
-                                    def: def?.TopCell,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.TopCell.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                var copyRet = new Cell(rhsTopCellItem.FormKey);
-                                copyRet.CopyFieldsFrom(
-                                    rhs: rhsTopCellItem,
-                                    copyMask: copyMask?.TopCell?.Specific,
-                                    def: defTopCellItem);
-                                item.TopCell = copyRet;
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.TopCell?.Overall}. Cannot execute copy.");
-                        }
+                        var copyRet = new Cell(rhsTopCellItem.FormKey);
+                        copyRet.DeepCopyFieldsFrom(
+                            rhs: rhsTopCellItem,
+                            copyMask: copyMask?.TopCell?.Specific,
+                            def: defTopCellItem);
+                        item.TopCell = copyRet;
                     }
                     else
                     {
@@ -2943,31 +2894,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.SubCellsTimestamp ?? true)
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
-                item.SubCellsTimestamp = rhs.SubCellsTimestamp;
-                errorMask?.PopIndex();
+                item.SubCellsTimestamp = rhs.SubCellsTimestamp.ToArray();
             }
-            if (copyMask?.SubCells.Overall != CopyOption.Skip)
+            if (copyMask?.SubCells.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                 try
                 {
-                    item.SubCells.SetToWithDefault<WorldspaceBlock, WorldspaceBlock>(
+                    item.SubCells.SetToWithDefault(
                         rhs: rhs.SubCells,
                         def: def?.SubCells,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.SubCells.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (WorldspaceBlock)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.SubCells?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SubCells.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.SubCells?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2982,9 +2923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.UsingOffsetLength ?? true)
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.UsingOffsetLength);
                 item.UsingOffsetLength = rhs.UsingOffsetLength;
-                errorMask?.PopIndex();
             }
         }
         
@@ -3011,9 +2950,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return WorldspaceSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return WorldspaceSetterCopyCommon.Instance;
+            return WorldspaceSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -4447,53 +4386,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Worldspace_CopyMask : Place_CopyMask
-    {
-        public Worldspace_CopyMask()
-        {
-        }
-
-        public Worldspace_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Parent = defaultOn;
-            this.Climate = defaultOn;
-            this.Water = defaultOn;
-            this.Icon = defaultOn;
-            this.MapData = new MaskItem<CopyOption, MapData_CopyMask>(deepCopyOption, default);
-            this.Flags = defaultOn;
-            this.ObjectBoundsMin = defaultOn;
-            this.ObjectBoundsMax = defaultOn;
-            this.Music = defaultOn;
-            this.OffsetData = defaultOn;
-            this.Road = new MaskItem<CopyOption, Road_CopyMask>(deepCopyOption, default);
-            this.TopCell = new MaskItem<CopyOption, Cell_CopyMask>(deepCopyOption, default);
-            this.SubCellsTimestamp = defaultOn;
-            this.SubCells = new MaskItem<CopyOption, WorldspaceBlock_CopyMask>(deepCopyOption, default);
-            this.UsingOffsetLength = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Parent;
-        public bool Climate;
-        public bool Water;
-        public bool Icon;
-        public MaskItem<CopyOption, MapData_CopyMask> MapData;
-        public bool Flags;
-        public bool ObjectBoundsMin;
-        public bool ObjectBoundsMax;
-        public bool Music;
-        public bool OffsetData;
-        public MaskItem<CopyOption, Road_CopyMask> Road;
-        public MaskItem<CopyOption, Cell_CopyMask> TopCell;
-        public bool SubCellsTimestamp;
-        public MaskItem<CopyOption, WorldspaceBlock_CopyMask> SubCells;
-        public bool UsingOffsetLength;
-        #endregion
-
-    }
-
     public class Worldspace_TranslationMask : Place_TranslationMask
     {
         #region Members
@@ -4935,6 +4827,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return WorldspaceCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return WorldspaceSetterTranslationCommon.Instance;
         }
 
         #endregion

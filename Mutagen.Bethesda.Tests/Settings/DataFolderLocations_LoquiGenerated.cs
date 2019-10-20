@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Oblivion
         String Oblivion { get; }
 
@@ -367,11 +367,11 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this DataFolderLocations lhs,
-            DataFolderLocations rhs)
+        public static void DeepCopyFieldsFrom(
+            this IDataFolderLocations lhs,
+            IDataFolderLocationsGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -380,13 +380,13 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this DataFolderLocations lhs,
-            DataFolderLocations rhs,
-            DataFolderLocations_CopyMask copyMask,
-            DataFolderLocations def = null)
+        public static void DeepCopyFieldsFrom(
+            this IDataFolderLocations lhs,
+            IDataFolderLocationsGetter rhs,
+            DataFolderLocations_TranslationMask copyMask,
+            IDataFolderLocationsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -395,16 +395,16 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this DataFolderLocations lhs,
-            DataFolderLocations rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDataFolderLocations lhs,
+            IDataFolderLocationsGetter rhs,
             out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null,
+            DataFolderLocations_TranslationMask copyMask = null,
+            IDataFolderLocationsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -413,14 +413,14 @@ namespace Mutagen.Bethesda.Tests
             errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this DataFolderLocations lhs,
-            DataFolderLocations rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDataFolderLocations lhs,
+            IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+            DataFolderLocations_TranslationMask copyMask = null,
+            IDataFolderLocationsGetter def = null)
         {
-            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -428,12 +428,12 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static DataFolderLocations Copy(
-            this DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
+        public static DataFolderLocations DeepCopy(
+            this IDataFolderLocationsGetter item,
+            DataFolderLocations_TranslationMask copyMask = null,
+            IDataFolderLocationsGetter def = null)
         {
-            return ((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).Copy(
+            return ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -488,6 +488,7 @@ namespace Mutagen.Bethesda.Tests
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IDataFolderLocations item,
             string path,
@@ -796,19 +797,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             return new DataFolderLocations();
         }
         
-        public DataFolderLocations Copy(
-            DataFolderLocations item,
-            DataFolderLocations_CopyMask copyMask = null,
-            DataFolderLocations def = null)
-        {
-            DataFolderLocations ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDataFolderLocations item,
@@ -961,33 +949,42 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         
     }
-    public partial class DataFolderLocationsSetterCopyCommon
+    public partial class DataFolderLocationsSetterTranslationCommon
     {
-        public static readonly DataFolderLocationsSetterCopyCommon Instance = new DataFolderLocationsSetterCopyCommon();
+        public static readonly DataFolderLocationsSetterTranslationCommon Instance = new DataFolderLocationsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            DataFolderLocations item,
-            DataFolderLocations rhs,
-            DataFolderLocations def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IDataFolderLocations item,
+            IDataFolderLocationsGetter rhs,
+            IDataFolderLocationsGetter def,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_CopyMask copyMask)
+            DataFolderLocations_TranslationMask copyMask)
         {
             if (copyMask?.Oblivion ?? true)
             {
-                errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
                 item.Oblivion = rhs.Oblivion;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Skyrim ?? true)
             {
-                errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
                 item.Skyrim = rhs.Skyrim;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public DataFolderLocations DeepCopy(
+            IDataFolderLocationsGetter item,
+            DataFolderLocations_TranslationMask copyMask = null,
+            IDataFolderLocationsGetter def = null)
+        {
+            DataFolderLocations ret = DataFolderLocationsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1010,9 +1007,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return DataFolderLocationsSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return DataFolderLocationsSetterCopyCommon.Instance;
+            return DataFolderLocationsSetterTranslationCommon.Instance;
         }
         object IDataFolderLocationsGetter.CommonInstance()
         {
@@ -1022,9 +1019,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return this.CommonSetterInstance();
         }
-        object IDataFolderLocationsGetter.CommonSetterCopyInstance()
+        object IDataFolderLocationsGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1644,25 +1641,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
     }
-    public class DataFolderLocations_CopyMask
-    {
-        public DataFolderLocations_CopyMask()
-        {
-        }
-
-        public DataFolderLocations_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Oblivion = defaultOn;
-            this.Skyrim = defaultOn;
-        }
-
-        #region Members
-        public bool Oblivion;
-        public bool Skyrim;
-        #endregion
-
-    }
-
     public class DataFolderLocations_TranslationMask : ITranslationMask
     {
         #region Members

@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Diffuse
         String Diffuse { get; }
         bool Diffuse_IsSet { get; }
@@ -721,11 +721,11 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Textures lhs,
-            Textures rhs)
+        public static void DeepCopyFieldsFrom(
+            this ITextures lhs,
+            ITexturesGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -734,13 +734,13 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this Textures lhs,
-            Textures rhs,
-            Textures_CopyMask copyMask,
-            Textures def = null)
+        public static void DeepCopyFieldsFrom(
+            this ITextures lhs,
+            ITexturesGetter rhs,
+            Textures_TranslationMask copyMask,
+            ITexturesGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -749,16 +749,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Textures lhs,
-            Textures rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITextures lhs,
+            ITexturesGetter rhs,
             out Textures_ErrorMask errorMask,
-            Textures_CopyMask copyMask = null,
-            Textures def = null,
+            Textures_TranslationMask copyMask = null,
+            ITexturesGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TexturesSetterCopyCommon)((ITexturesGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -767,14 +767,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Textures lhs,
-            Textures rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITextures lhs,
+            ITexturesGetter rhs,
             ErrorMaskBuilder errorMask,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
+            Textures_TranslationMask copyMask = null,
+            ITexturesGetter def = null)
         {
-            ((TexturesSetterCopyCommon)((ITexturesGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -782,12 +782,12 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static Textures Copy(
-            this Textures item,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
+        public static Textures DeepCopy(
+            this ITexturesGetter item,
+            Textures_TranslationMask copyMask = null,
+            ITexturesGetter def = null)
         {
-            return ((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).Copy(
+            return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -842,6 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ITextures item,
             string path,
@@ -983,6 +984,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1304,19 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Textures GetNew()
         {
             return new Textures();
-        }
-        
-        public Textures Copy(
-            Textures item,
-            Textures_CopyMask copyMask = null,
-            Textures def = null)
-        {
-            Textures ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1766,17 +1755,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
     }
-    public partial class TexturesSetterCopyCommon
+    public partial class TexturesSetterTranslationCommon
     {
-        public static readonly TexturesSetterCopyCommon Instance = new TexturesSetterCopyCommon();
+        public static readonly TexturesSetterTranslationCommon Instance = new TexturesSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Textures item,
-            Textures rhs,
-            Textures def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ITextures item,
+            ITexturesGetter rhs,
+            ITexturesGetter def,
             ErrorMaskBuilder errorMask,
-            Textures_CopyMask copyMask)
+            Textures_TranslationMask copyMask)
         {
             if (copyMask?.Diffuse ?? true)
             {
@@ -2022,6 +2011,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
+        public Textures DeepCopy(
+            ITexturesGetter item,
+            Textures_TranslationMask copyMask = null,
+            ITexturesGetter def = null)
+        {
+            Textures ret = TexturesSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -2043,9 +2045,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return TexturesSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return TexturesSetterCopyCommon.Instance;
+            return TexturesSetterTranslationCommon.Instance;
         }
         object ITexturesGetter.CommonInstance()
         {
@@ -2055,9 +2057,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return this.CommonSetterInstance();
         }
-        object ITexturesGetter.CommonSetterCopyInstance()
+        object ITexturesGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -3021,37 +3023,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class Textures_CopyMask
-    {
-        public Textures_CopyMask()
-        {
-        }
-
-        public Textures_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Diffuse = defaultOn;
-            this.NormalOrGloss = defaultOn;
-            this.EnvironmentMaskOrSubsurfaceTint = defaultOn;
-            this.GlowOrDetailMap = defaultOn;
-            this.Height = defaultOn;
-            this.Environment = defaultOn;
-            this.Multilayer = defaultOn;
-            this.BacklightMaskOrSpecular = defaultOn;
-        }
-
-        #region Members
-        public bool Diffuse;
-        public bool NormalOrGloss;
-        public bool EnvironmentMaskOrSubsurfaceTint;
-        public bool GlowOrDetailMap;
-        public bool Height;
-        public bool Environment;
-        public bool Multilayer;
-        public bool BacklightMaskOrSpecular;
-        #endregion
-
-    }
-
     public class Textures_TranslationMask : ITranslationMask
     {
         #region Members
@@ -3299,6 +3270,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return TexturesCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return TexturesSetterTranslationCommon.Instance;
+        }
         object ITexturesGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -3307,9 +3282,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return null;
         }
-        object ITexturesGetter.CommonSetterCopyInstance()
+        object ITexturesGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

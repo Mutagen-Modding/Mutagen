@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Faction
         IFactionGetter Faction { get; }
         IFormIDLinkGetter<IFactionGetter> Faction_Property { get; }
@@ -477,11 +477,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RankPlacement lhs,
-            RankPlacement rhs)
+        public static void DeepCopyFieldsFrom(
+            this IRankPlacement lhs,
+            IRankPlacementGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -490,13 +490,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this RankPlacement lhs,
-            RankPlacement rhs,
-            RankPlacement_CopyMask copyMask,
-            RankPlacement def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRankPlacement lhs,
+            IRankPlacementGetter rhs,
+            RankPlacement_TranslationMask copyMask,
+            IRankPlacementGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -505,16 +505,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RankPlacement lhs,
-            RankPlacement rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRankPlacement lhs,
+            IRankPlacementGetter rhs,
             out RankPlacement_ErrorMask errorMask,
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null,
+            RankPlacement_TranslationMask copyMask = null,
+            IRankPlacementGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RankPlacementSetterCopyCommon)((IRankPlacementGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -523,14 +523,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RankPlacement_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RankPlacement lhs,
-            RankPlacement rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRankPlacement lhs,
+            IRankPlacementGetter rhs,
             ErrorMaskBuilder errorMask,
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null)
+            RankPlacement_TranslationMask copyMask = null,
+            IRankPlacementGetter def = null)
         {
-            ((RankPlacementSetterCopyCommon)((IRankPlacementGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -538,12 +538,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RankPlacement Copy(
-            this RankPlacement item,
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null)
+        public static RankPlacement DeepCopy(
+            this IRankPlacementGetter item,
+            RankPlacement_TranslationMask copyMask = null,
+            IRankPlacementGetter def = null)
         {
-            return ((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()).Copy(
+            return ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -598,6 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRankPlacement item,
             string path,
@@ -739,6 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -973,19 +975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new RankPlacement();
         }
         
-        public RankPlacement Copy(
-            RankPlacement item,
-            RankPlacement_CopyMask copyMask = null,
-            RankPlacement def = null)
-        {
-            RankPlacement ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRankPlacement item,
@@ -1192,39 +1181,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RankPlacementSetterCopyCommon
+    public partial class RankPlacementSetterTranslationCommon
     {
-        public static readonly RankPlacementSetterCopyCommon Instance = new RankPlacementSetterCopyCommon();
+        public static readonly RankPlacementSetterTranslationCommon Instance = new RankPlacementSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RankPlacement item,
-            RankPlacement rhs,
-            RankPlacement def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRankPlacement item,
+            IRankPlacementGetter rhs,
+            IRankPlacementGetter def,
             ErrorMaskBuilder errorMask,
-            RankPlacement_CopyMask copyMask)
+            RankPlacement_TranslationMask copyMask)
         {
             if (copyMask?.Faction ?? true)
             {
-                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
-                item.Faction_Property.SetLink(value: rhs.Faction_Property);
-                errorMask?.PopIndex();
+                item.Faction_Property.FormKey = rhs.Faction_Property.FormKey;
             }
             if (copyMask?.Rank ?? true)
             {
-                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
                 item.Rank = rhs.Rank;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
-                item.Fluff = rhs.Fluff;
-                errorMask?.PopIndex();
+                item.Fluff = rhs.Fluff.ToArray();
             }
         }
         
         #endregion
+        
+        public RankPlacement DeepCopy(
+            IRankPlacementGetter item,
+            RankPlacement_TranslationMask copyMask = null,
+            IRankPlacementGetter def = null)
+        {
+            RankPlacement ret = RankPlacementSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1247,9 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RankPlacementSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return RankPlacementSetterCopyCommon.Instance;
+            return RankPlacementSetterTranslationCommon.Instance;
         }
         object IRankPlacementGetter.CommonInstance()
         {
@@ -1259,9 +1255,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IRankPlacementGetter.CommonSetterCopyInstance()
+        object IRankPlacementGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1913,27 +1909,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RankPlacement_CopyMask
-    {
-        public RankPlacement_CopyMask()
-        {
-        }
-
-        public RankPlacement_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Faction = defaultOn;
-            this.Rank = defaultOn;
-            this.Fluff = defaultOn;
-        }
-
-        #region Members
-        public bool Faction;
-        public bool Rank;
-        public bool Fluff;
-        #endregion
-
-    }
-
     public class RankPlacement_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2114,6 +2089,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RankPlacementCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return RankPlacementSetterTranslationCommon.Instance;
+        }
         object IRankPlacementGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2122,9 +2101,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IRankPlacementGetter.CommonSetterCopyInstance()
+        object IRankPlacementGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

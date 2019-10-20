@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region File
         String File { get; }
 
@@ -482,11 +482,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Model lhs,
-            Model rhs)
+        public static void DeepCopyFieldsFrom(
+            this IModel lhs,
+            IModelGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -495,13 +495,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this Model lhs,
-            Model rhs,
-            Model_CopyMask copyMask,
-            Model def = null)
+        public static void DeepCopyFieldsFrom(
+            this IModel lhs,
+            IModelGetter rhs,
+            Model_TranslationMask copyMask,
+            IModelGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -510,16 +510,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Model lhs,
-            Model rhs,
+        public static void DeepCopyFieldsFrom(
+            this IModel lhs,
+            IModelGetter rhs,
             out Model_ErrorMask errorMask,
-            Model_CopyMask copyMask = null,
-            Model def = null,
+            Model_TranslationMask copyMask = null,
+            IModelGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModelSetterCopyCommon)((IModelGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -528,14 +528,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Model lhs,
-            Model rhs,
+        public static void DeepCopyFieldsFrom(
+            this IModel lhs,
+            IModelGetter rhs,
             ErrorMaskBuilder errorMask,
-            Model_CopyMask copyMask = null,
-            Model def = null)
+            Model_TranslationMask copyMask = null,
+            IModelGetter def = null)
         {
-            ((ModelSetterCopyCommon)((IModelGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -543,12 +543,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static Model Copy(
-            this Model item,
-            Model_CopyMask copyMask = null,
-            Model def = null)
+        public static Model DeepCopy(
+            this IModelGetter item,
+            Model_TranslationMask copyMask = null,
+            IModelGetter def = null)
         {
-            return ((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()).Copy(
+            return ((ModelSetterTranslationCommon)((IModelGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -603,6 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IModel item,
             string path,
@@ -744,6 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -978,19 +980,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Model GetNew()
         {
             return new Model();
-        }
-        
-        public Model Copy(
-            Model item,
-            Model_CopyMask copyMask = null,
-            Model def = null)
-        {
-            Model ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1255,29 +1244,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class ModelSetterCopyCommon
+    public partial class ModelSetterTranslationCommon
     {
-        public static readonly ModelSetterCopyCommon Instance = new ModelSetterCopyCommon();
+        public static readonly ModelSetterTranslationCommon Instance = new ModelSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Model item,
-            Model rhs,
-            Model def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IModel item,
+            IModelGetter rhs,
+            IModelGetter def,
             ErrorMaskBuilder errorMask,
-            Model_CopyMask copyMask)
+            Model_TranslationMask copyMask)
         {
             if (copyMask?.File ?? true)
             {
-                errorMask?.PushIndex((int)Model_FieldIndex.File);
                 item.File = rhs.File;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BoundRadius ?? true)
             {
-                errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
                 item.BoundRadius = rhs.BoundRadius;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Hashes ?? true)
             {
@@ -1287,12 +1272,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Hashes,
                         rhsHasBeenSet: rhs.Hashes_IsSet,
-                        defItem: def?.Hashes ?? default(Byte[]),
-                        defHasBeenSet: def?.Hashes_IsSet ?? false,
+                        defItem: def.Hashes,
+                        defHasBeenSet: def.Hashes_IsSet,
                         outRhsItem: out var rhsHashesItem,
                         outDefItem: out var defHashesItem))
                     {
-                        item.Hashes = rhsHashesItem;
+                        item.Hashes = rhsHashesItem.ToArray();
                     }
                     else
                     {
@@ -1312,6 +1297,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public Model DeepCopy(
+            IModelGetter item,
+            Model_TranslationMask copyMask = null,
+            IModelGetter def = null)
+        {
+            Model ret = ModelSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1334,9 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ModelSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return ModelSetterCopyCommon.Instance;
+            return ModelSetterTranslationCommon.Instance;
         }
         object IModelGetter.CommonInstance()
         {
@@ -1346,9 +1344,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IModelGetter.CommonSetterCopyInstance()
+        object IModelGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2020,27 +2018,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Model_CopyMask
-    {
-        public Model_CopyMask()
-        {
-        }
-
-        public Model_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.File = defaultOn;
-            this.BoundRadius = defaultOn;
-            this.Hashes = defaultOn;
-        }
-
-        #region Members
-        public bool File;
-        public bool BoundRadius;
-        public bool Hashes;
-        #endregion
-
-    }
-
     public class Model_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2227,6 +2204,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ModelCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ModelSetterTranslationCommon.Instance;
+        }
         object IModelGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2235,9 +2216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IModelGetter.CommonSetterCopyInstance()
+        object IModelGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

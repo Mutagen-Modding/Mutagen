@@ -593,13 +593,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Birthsign lhs,
-            Birthsign rhs,
-            Birthsign_CopyMask copyMask,
-            Birthsign def = null)
+        public static void DeepCopyFieldsFrom(
+            this IBirthsignInternal lhs,
+            IBirthsignGetter rhs,
+            Birthsign_TranslationMask copyMask,
+            IBirthsignGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -608,16 +608,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Birthsign lhs,
-            Birthsign rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBirthsignInternal lhs,
+            IBirthsignGetter rhs,
             out Birthsign_ErrorMask errorMask,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null,
+            Birthsign_TranslationMask copyMask = null,
+            IBirthsignGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BirthsignSetterCopyCommon)((IBirthsignGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -626,14 +626,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Birthsign lhs,
-            Birthsign rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBirthsignInternal lhs,
+            IBirthsignGetter rhs,
             ErrorMaskBuilder errorMask,
-            Birthsign_CopyMask copyMask = null,
-            Birthsign def = null)
+            Birthsign_TranslationMask copyMask = null,
+            IBirthsignGetter def = null)
         {
-            ((BirthsignSetterCopyCommon)((IBirthsignGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -690,6 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IBirthsignInternal item,
             string path,
@@ -831,6 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1536,7 +1538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Birthsign(getNextFormKey());
-            ret.CopyFieldsFrom((Birthsign)item);
+            ret.DeepCopyFieldsFrom((Birthsign)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Birthsign)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1545,19 +1547,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BirthsignSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class BirthsignSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly BirthsignSetterCopyCommon Instance = new BirthsignSetterCopyCommon();
+        public new static readonly BirthsignSetterTranslationCommon Instance = new BirthsignSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Birthsign item,
-            Birthsign rhs,
-            Birthsign def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IBirthsign item,
+            IBirthsignGetter rhs,
+            IBirthsignGetter def,
             ErrorMaskBuilder errorMask,
-            Birthsign_CopyMask copyMask)
+            Birthsign_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1653,14 +1655,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells != CopyOption.Skip)
+            if (copyMask?.Spells ?? true)
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells);
+                        def?.Spells,
+                        (r, d) => new FormIDLink<Spell>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1697,9 +1700,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return BirthsignSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return BirthsignSetterCopyCommon.Instance;
+            return BirthsignSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2425,29 +2428,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Birthsign_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Birthsign_CopyMask()
-        {
-        }
-
-        public Birthsign_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Icon = defaultOn;
-            this.Description = defaultOn;
-            this.Spells = deepCopyOption;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Icon;
-        public bool Description;
-        public CopyOption Spells;
-        #endregion
-
-    }
-
     public class Birthsign_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2669,6 +2649,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return BirthsignCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return BirthsignSetterTranslationCommon.Instance;
         }
 
         #endregion

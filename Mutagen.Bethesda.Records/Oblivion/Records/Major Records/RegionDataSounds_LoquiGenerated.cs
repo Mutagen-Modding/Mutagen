@@ -504,13 +504,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataSounds lhs,
-            RegionDataSounds rhs,
-            RegionDataSounds_CopyMask copyMask,
-            RegionDataSounds def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataSoundsInternal lhs,
+            IRegionDataSoundsGetter rhs,
+            RegionDataSounds_TranslationMask copyMask,
+            IRegionDataSoundsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -519,16 +519,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataSounds lhs,
-            RegionDataSounds rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataSoundsInternal lhs,
+            IRegionDataSoundsGetter rhs,
             out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_CopyMask copyMask = null,
-            RegionDataSounds def = null,
+            RegionDataSounds_TranslationMask copyMask = null,
+            IRegionDataSoundsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataSoundsSetterCopyCommon)((IRegionDataSoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataSoundsSetterTranslationCommon)((IRegionDataSoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -537,14 +537,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataSounds lhs,
-            RegionDataSounds rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataSoundsInternal lhs,
+            IRegionDataSoundsGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataSounds_CopyMask copyMask = null,
-            RegionDataSounds def = null)
+            RegionDataSounds_TranslationMask copyMask = null,
+            IRegionDataSoundsGetter def = null)
         {
-            ((RegionDataSoundsSetterCopyCommon)((IRegionDataSoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataSoundsSetterTranslationCommon)((IRegionDataSoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -552,12 +552,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RegionDataSounds Copy(
-            this RegionDataSounds item,
-            RegionDataSounds_CopyMask copyMask = null,
-            RegionDataSounds def = null)
+        public static RegionDataSounds DeepCopy(
+            this IRegionDataSoundsGetter item,
+            RegionDataSounds_TranslationMask copyMask = null,
+            IRegionDataSoundsGetter def = null)
         {
-            return ((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)item).CommonSetterInstance()).Copy(
+            return ((RegionDataSoundsSetterTranslationCommon)((IRegionDataSoundsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -612,6 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRegionDataSoundsInternal item,
             string path,
@@ -753,6 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -986,19 +988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionDataSounds GetNew()
         {
             return new RegionDataSounds();
-        }
-        
-        public new RegionDataSounds Copy(
-            RegionDataSounds item,
-            RegionDataSounds_CopyMask copyMask = null,
-            RegionDataSounds def = null)
-        {
-            RegionDataSounds ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1347,19 +1336,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RegionDataSoundsSetterCopyCommon : RegionDataSetterCopyCommon
+    public partial class RegionDataSoundsSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
-        public new static readonly RegionDataSoundsSetterCopyCommon Instance = new RegionDataSoundsSetterCopyCommon();
+        public new static readonly RegionDataSoundsSetterTranslationCommon Instance = new RegionDataSoundsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RegionDataSounds item,
-            RegionDataSounds rhs,
-            RegionDataSounds def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRegionDataSounds item,
+            IRegionDataSoundsGetter rhs,
+            IRegionDataSoundsGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataSounds_CopyMask copyMask)
+            RegionDataSounds_TranslationMask copyMask)
         {
-            ((RegionDataSetterCopyCommon)((IRegionDataGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1395,27 +1384,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Sounds.Overall != CopyOption.Skip)
+            if (copyMask?.Sounds.Overall ?? true)
             {
                 errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetToWithDefault<RegionSound, RegionSound>(
+                    item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RegionSound)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Sounds?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Sounds?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1431,6 +1412,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new RegionDataSounds DeepCopy(
+            IRegionDataSoundsGetter item,
+            RegionDataSounds_TranslationMask copyMask = null,
+            IRegionDataSoundsGetter def = null)
+        {
+            RegionDataSounds ret = RegionDataSoundsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1453,9 +1447,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RegionDataSoundsSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return RegionDataSoundsSetterCopyCommon.Instance;
+            return RegionDataSoundsSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2061,25 +2055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RegionDataSounds_CopyMask : RegionData_CopyMask
-    {
-        public RegionDataSounds_CopyMask()
-        {
-        }
-
-        public RegionDataSounds_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MusicType = defaultOn;
-            this.Sounds = new MaskItem<CopyOption, RegionSound_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool MusicType;
-        public MaskItem<CopyOption, RegionSound_CopyMask> Sounds;
-        #endregion
-
-    }
-
     public class RegionDataSounds_TranslationMask : RegionData_TranslationMask
     {
         #region Members
@@ -2265,6 +2240,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return RegionDataSoundsCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return RegionDataSoundsSetterTranslationCommon.Instance;
         }
 
         #endregion

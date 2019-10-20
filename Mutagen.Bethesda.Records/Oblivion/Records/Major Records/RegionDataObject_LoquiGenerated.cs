@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Object
         IOblivionMajorRecordGetter Object { get; }
         IFormIDLinkGetter<IOblivionMajorRecordGetter> Object_Property { get; }
@@ -622,11 +622,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataObject lhs,
-            RegionDataObject rhs)
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataObject lhs,
+            IRegionDataObjectGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -635,13 +635,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataObject lhs,
-            RegionDataObject rhs,
-            RegionDataObject_CopyMask copyMask,
-            RegionDataObject def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataObject lhs,
+            IRegionDataObjectGetter rhs,
+            RegionDataObject_TranslationMask copyMask,
+            IRegionDataObjectGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -650,16 +650,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataObject lhs,
-            RegionDataObject rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataObject lhs,
+            IRegionDataObjectGetter rhs,
             out RegionDataObject_ErrorMask errorMask,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null,
+            RegionDataObject_TranslationMask copyMask = null,
+            IRegionDataObjectGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionDataObjectSetterCopyCommon)((IRegionDataObjectGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -668,14 +668,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RegionDataObject lhs,
-            RegionDataObject rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionDataObject lhs,
+            IRegionDataObjectGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
+            RegionDataObject_TranslationMask copyMask = null,
+            IRegionDataObjectGetter def = null)
         {
-            ((RegionDataObjectSetterCopyCommon)((IRegionDataObjectGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -683,12 +683,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RegionDataObject Copy(
-            this RegionDataObject item,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
+        public static RegionDataObject DeepCopy(
+            this IRegionDataObjectGetter item,
+            RegionDataObject_TranslationMask copyMask = null,
+            IRegionDataObjectGetter def = null)
         {
-            return ((RegionDataObjectSetterCommon)((IRegionDataObjectGetter)item).CommonSetterInstance()).Copy(
+            return ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -743,6 +743,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRegionDataObject item,
             string path,
@@ -884,6 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1298,19 +1300,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new RegionDataObject();
         }
         
-        public RegionDataObject Copy(
-            RegionDataObject item,
-            RegionDataObject_CopyMask copyMask = null,
-            RegionDataObject def = null)
-        {
-            RegionDataObject ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRegionDataObject item,
@@ -1721,123 +1710,102 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RegionDataObjectSetterCopyCommon
+    public partial class RegionDataObjectSetterTranslationCommon
     {
-        public static readonly RegionDataObjectSetterCopyCommon Instance = new RegionDataObjectSetterCopyCommon();
+        public static readonly RegionDataObjectSetterTranslationCommon Instance = new RegionDataObjectSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RegionDataObject item,
-            RegionDataObject rhs,
-            RegionDataObject def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRegionDataObject item,
+            IRegionDataObjectGetter rhs,
+            IRegionDataObjectGetter def,
             ErrorMaskBuilder errorMask,
-            RegionDataObject_CopyMask copyMask)
+            RegionDataObject_TranslationMask copyMask)
         {
             if (copyMask?.Object ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
-                item.Object_Property.SetLink(value: rhs.Object_Property);
-                errorMask?.PopIndex();
+                item.Object_Property.FormKey = rhs.Object_Property.FormKey;
             }
             if (copyMask?.ParentIndex ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.ParentIndex);
                 item.ParentIndex = rhs.ParentIndex;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown1 ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
-                item.Unknown1 = rhs.Unknown1;
-                errorMask?.PopIndex();
+                item.Unknown1 = rhs.Unknown1.ToArray();
             }
             if (copyMask?.Density ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Density);
                 item.Density = rhs.Density;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Clustering ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Clustering);
                 item.Clustering = rhs.Clustering;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MinSlope ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinSlope);
                 item.MinSlope = rhs.MinSlope;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaxSlope ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxSlope);
                 item.MaxSlope = rhs.MaxSlope;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RadiusWrtPercent ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.RadiusWrtPercent);
                 item.RadiusWrtPercent = rhs.RadiusWrtPercent;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Radius ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Radius);
                 item.Radius = rhs.Radius;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MinHeight ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MinHeight);
                 item.MinHeight = rhs.MinHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaxHeight ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.MaxHeight);
                 item.MaxHeight = rhs.MaxHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Sink ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Sink);
                 item.Sink = rhs.Sink;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SinkVariance ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SinkVariance);
                 item.SinkVariance = rhs.SinkVariance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SizeVariance ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.SizeVariance);
                 item.SizeVariance = rhs.SizeVariance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AngleVariance ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.AngleVariance);
                 item.AngleVariance = rhs.AngleVariance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown2 ?? true)
             {
-                errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown2);
-                item.Unknown2 = rhs.Unknown2;
-                errorMask?.PopIndex();
+                item.Unknown2 = rhs.Unknown2.ToArray();
             }
         }
         
         #endregion
+        
+        public RegionDataObject DeepCopy(
+            IRegionDataObjectGetter item,
+            RegionDataObject_TranslationMask copyMask = null,
+            IRegionDataObjectGetter def = null)
+        {
+            RegionDataObject ret = RegionDataObjectSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1860,9 +1828,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RegionDataObjectSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return RegionDataObjectSetterCopyCommon.Instance;
+            return RegionDataObjectSetterTranslationCommon.Instance;
         }
         object IRegionDataObjectGetter.CommonInstance()
         {
@@ -1872,9 +1840,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IRegionDataObjectGetter.CommonSetterCopyInstance()
+        object IRegionDataObjectGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -3324,55 +3292,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RegionDataObject_CopyMask
-    {
-        public RegionDataObject_CopyMask()
-        {
-        }
-
-        public RegionDataObject_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Object = defaultOn;
-            this.ParentIndex = defaultOn;
-            this.Unknown1 = defaultOn;
-            this.Density = defaultOn;
-            this.Clustering = defaultOn;
-            this.MinSlope = defaultOn;
-            this.MaxSlope = defaultOn;
-            this.Flags = defaultOn;
-            this.RadiusWrtPercent = defaultOn;
-            this.Radius = defaultOn;
-            this.MinHeight = defaultOn;
-            this.MaxHeight = defaultOn;
-            this.Sink = defaultOn;
-            this.SinkVariance = defaultOn;
-            this.SizeVariance = defaultOn;
-            this.AngleVariance = defaultOn;
-            this.Unknown2 = defaultOn;
-        }
-
-        #region Members
-        public bool Object;
-        public bool ParentIndex;
-        public bool Unknown1;
-        public bool Density;
-        public bool Clustering;
-        public bool MinSlope;
-        public bool MaxSlope;
-        public bool Flags;
-        public bool RadiusWrtPercent;
-        public bool Radius;
-        public bool MinHeight;
-        public bool MaxHeight;
-        public bool Sink;
-        public bool SinkVariance;
-        public bool SizeVariance;
-        public bool AngleVariance;
-        public bool Unknown2;
-        #endregion
-
-    }
-
     public class RegionDataObject_TranslationMask : ITranslationMask
     {
         #region Members
@@ -3622,6 +3541,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RegionDataObjectCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return RegionDataObjectSetterTranslationCommon.Instance;
+        }
         object IRegionDataObjectGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -3630,9 +3553,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IRegionDataObjectGetter.CommonSetterCopyInstance()
+        object IRegionDataObjectGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

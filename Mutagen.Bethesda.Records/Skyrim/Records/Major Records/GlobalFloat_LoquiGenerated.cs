@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalFloat lhs,
-            GlobalFloat rhs,
-            GlobalFloat_CopyMask copyMask,
-            GlobalFloat def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGlobalFloatInternal lhs,
+            IGlobalFloatGetter rhs,
+            GlobalFloat_TranslationMask copyMask,
+            IGlobalFloatGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalFloat lhs,
-            GlobalFloat rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalFloatInternal lhs,
+            IGlobalFloatGetter rhs,
             out GlobalFloat_ErrorMask errorMask,
-            GlobalFloat_CopyMask copyMask = null,
-            GlobalFloat def = null,
+            GlobalFloat_TranslationMask copyMask = null,
+            IGlobalFloatGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalFloatSetterCopyCommon)((IGlobalFloatGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GlobalFloat_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalFloat lhs,
-            GlobalFloat rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalFloatInternal lhs,
+            IGlobalFloatGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalFloat_CopyMask copyMask = null,
-            GlobalFloat def = null)
+            GlobalFloat_TranslationMask copyMask = null,
+            IGlobalFloatGetter def = null)
         {
-            ((GlobalFloatSetterCopyCommon)((IGlobalFloatGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalFloatSetterTranslationCommon)((IGlobalFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -568,6 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGlobalFloatInternal item,
             string path,
@@ -709,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1310,7 +1312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new GlobalFloat(getNextFormKey());
-            ret.CopyFieldsFrom((GlobalFloat)item);
+            ret.DeepCopyFieldsFrom((GlobalFloat)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GlobalFloat)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1319,19 +1321,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalFloatSetterCopyCommon : GlobalSetterCopyCommon
+    public partial class GlobalFloatSetterTranslationCommon : GlobalSetterTranslationCommon
     {
-        public new static readonly GlobalFloatSetterCopyCommon Instance = new GlobalFloatSetterCopyCommon();
+        public new static readonly GlobalFloatSetterTranslationCommon Instance = new GlobalFloatSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GlobalFloat item,
-            GlobalFloat rhs,
-            GlobalFloat def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGlobalFloat item,
+            IGlobalFloatGetter rhs,
+            IGlobalFloatGetter def,
             ErrorMaskBuilder errorMask,
-            GlobalFloat_CopyMask copyMask)
+            GlobalFloat_TranslationMask copyMask)
         {
-            ((GlobalSetterCopyCommon)((IGlobalGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1392,9 +1394,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GlobalFloatSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GlobalFloatSetterCopyCommon.Instance;
+            return GlobalFloatSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1881,23 +1883,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class GlobalFloat_CopyMask : Global_CopyMask
-    {
-        public GlobalFloat_CopyMask()
-        {
-        }
-
-        public GlobalFloat_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Data = defaultOn;
-        }
-
-        #region Members
-        public bool Data;
-        #endregion
-
-    }
-
     public class GlobalFloat_TranslationMask : Global_TranslationMask
     {
         #region Members
@@ -2094,6 +2079,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return GlobalFloatCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GlobalFloatSetterTranslationCommon.Instance;
         }
 
         #endregion

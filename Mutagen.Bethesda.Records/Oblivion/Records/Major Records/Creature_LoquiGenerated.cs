@@ -1637,13 +1637,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Creature lhs,
-            Creature rhs,
-            Creature_CopyMask copyMask,
-            Creature def = null)
+        public static void DeepCopyFieldsFrom(
+            this ICreatureInternal lhs,
+            ICreatureGetter rhs,
+            Creature_TranslationMask copyMask,
+            ICreatureGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1652,16 +1652,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Creature lhs,
-            Creature rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICreatureInternal lhs,
+            ICreatureGetter rhs,
             out Creature_ErrorMask errorMask,
-            Creature_CopyMask copyMask = null,
-            Creature def = null,
+            Creature_TranslationMask copyMask = null,
+            ICreatureGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CreatureSetterCopyCommon)((ICreatureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CreatureSetterTranslationCommon)((ICreatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1670,14 +1670,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Creature lhs,
-            Creature rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICreatureInternal lhs,
+            ICreatureGetter rhs,
             ErrorMaskBuilder errorMask,
-            Creature_CopyMask copyMask = null,
-            Creature def = null)
+            Creature_TranslationMask copyMask = null,
+            ICreatureGetter def = null)
         {
-            ((CreatureSetterCopyCommon)((ICreatureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CreatureSetterTranslationCommon)((ICreatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1734,6 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ICreatureInternal item,
             string path,
@@ -1875,6 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -4261,7 +4263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Creature(getNextFormKey());
-            ret.CopyFieldsFrom((Creature)item);
+            ret.DeepCopyFieldsFrom((Creature)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Creature)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -4270,19 +4272,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSetterCopyCommon : NPCAbstractSetterCopyCommon
+    public partial class CreatureSetterTranslationCommon : NPCAbstractSetterTranslationCommon
     {
-        public new static readonly CreatureSetterCopyCommon Instance = new CreatureSetterCopyCommon();
+        public new static readonly CreatureSetterTranslationCommon Instance = new CreatureSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Creature item,
-            Creature rhs,
-            Creature def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ICreature item,
+            ICreatureGetter rhs,
+            ICreatureGetter def,
             ErrorMaskBuilder errorMask,
-            Creature_CopyMask copyMask)
+            Creature_TranslationMask copyMask)
         {
-            ((NPCAbstractSetterCopyCommon)((INPCAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4318,7 +4320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Model);
                 try
@@ -4331,26 +4333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -4369,27 +4354,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Items.Overall != CopyOption.Skip)
+            if (copyMask?.Items.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<ItemEntry, ItemEntry>(
+                    item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (ItemEntry)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Items?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Items?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -4402,14 +4379,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells != CopyOption.Skip)
+            if (copyMask?.Spells ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells);
+                        def?.Spells,
+                        (r, d) => new FormIDLink<SpellAbstract>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4421,14 +4399,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Models != CopyOption.Skip)
+            if (copyMask?.Models ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Models);
                 try
                 {
-                    item.Models.SetToWithDefault(
-                        rhs.Models,
-                        def?.Models);
+                    item.Models.SetTo(rhs.Models);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4448,12 +4424,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.NIFT,
                         rhsHasBeenSet: rhs.NIFT_IsSet,
-                        defItem: def?.NIFT ?? default(Byte[]),
-                        defHasBeenSet: def?.NIFT_IsSet ?? false,
+                        defItem: def.NIFT,
+                        defHasBeenSet: def.NIFT_IsSet,
                         outRhsItem: out var rhsNIFTItem,
                         outDefItem: out var defNIFTItem))
                     {
-                        item.NIFT = rhsNIFTItem;
+                        item.NIFT = rhsNIFTItem.ToArray();
                     }
                     else
                     {
@@ -4472,67 +4448,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.BaseSpellPoints);
                 item.BaseSpellPoints = rhs.BaseSpellPoints;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fatigue ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Fatigue);
                 item.Fatigue = rhs.Fatigue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BarterGold ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.BarterGold);
                 item.BarterGold = rhs.BarterGold;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LevelOffset ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.LevelOffset);
                 item.LevelOffset = rhs.LevelOffset;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMin ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.CalcMin);
                 item.CalcMin = rhs.CalcMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMax ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.CalcMax);
                 item.CalcMax = rhs.CalcMax;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Factions.Overall != CopyOption.Skip)
+            if (copyMask?.Factions.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetToWithDefault<RankPlacement, RankPlacement>(
+                    item.Factions.SetToWithDefault(
                         rhs: rhs.Factions,
                         def: def?.Factions,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RankPlacement)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Factions?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Factions?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -4550,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetLink(
+                    item.DeathItem_Property.SetToFormKey(
                         rhs: rhs.DeathItem_Property,
                         def: def?.DeathItem_Property);
                 }
@@ -4569,7 +4523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -4585,54 +4539,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Aggression ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Aggression);
                 item.Aggression = rhs.Aggression;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Confidence ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Confidence);
                 item.Confidence = rhs.Confidence;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EnergyLevel ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.EnergyLevel);
                 item.EnergyLevel = rhs.EnergyLevel;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Responsibility ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Responsibility);
                 item.Responsibility = rhs.Responsibility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BuySellServices ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.BuySellServices);
                 item.BuySellServices = rhs.BuySellServices;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Teaches ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Teaches);
                 item.Teaches = rhs.Teaches;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.MaximumTrainingLevel);
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.AIPackages != CopyOption.Skip)
+            if (copyMask?.AIPackages ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
                 try
                 {
                     item.AIPackages.SetToWithDefault(
                         rhs.AIPackages,
-                        def?.AIPackages);
+                        def?.AIPackages,
+                        (r, d) => new FormIDLink<AIPackage>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4644,14 +4585,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Animations != CopyOption.Skip)
+            if (copyMask?.Animations ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
                 try
                 {
-                    item.Animations.SetToWithDefault(
-                        rhs.Animations,
-                        def?.Animations);
+                    item.Animations.SetTo(rhs.Animations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4665,93 +4604,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.CreatureType ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.CreatureType);
                 item.CreatureType = rhs.CreatureType;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CombatSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.CombatSkill);
                 item.CombatSkill = rhs.CombatSkill;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MagicSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.MagicSkill);
                 item.MagicSkill = rhs.MagicSkill;
-                errorMask?.PopIndex();
             }
             if (copyMask?.StealthSkill ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.StealthSkill);
                 item.StealthSkill = rhs.StealthSkill;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SoulLevel ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.SoulLevel);
                 item.SoulLevel = rhs.SoulLevel;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Health);
                 item.Health = rhs.Health;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackDamage ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.AttackDamage);
                 item.AttackDamage = rhs.AttackDamage;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Strength ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Strength);
                 item.Strength = rhs.Strength;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Intelligence ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Intelligence);
                 item.Intelligence = rhs.Intelligence;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Willpower ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Willpower);
                 item.Willpower = rhs.Willpower;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Agility ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Agility);
                 item.Agility = rhs.Agility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Speed);
                 item.Speed = rhs.Speed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Endurance ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Endurance);
                 item.Endurance = rhs.Endurance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Personality ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Personality);
                 item.Personality = rhs.Personality;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Luck ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.Luck);
                 item.Luck = rhs.Luck;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackReach ?? true)
             {
@@ -4788,7 +4697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetLink(
+                    item.CombatStyle_Property.SetToFormKey(
                         rhs: rhs.CombatStyle_Property,
                         def: def?.CombatStyle_Property);
                 }
@@ -4957,7 +4866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                 try
                 {
-                    item.InheritsSoundFrom_Property.SetLink(
+                    item.InheritsSoundFrom_Property.SetToFormKey(
                         rhs: rhs.InheritsSoundFrom_Property,
                         def: def?.InheritsSoundFrom_Property);
                 }
@@ -4971,27 +4880,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Sounds.Overall != CopyOption.Skip)
+            if (copyMask?.Sounds.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetToWithDefault<CreatureSound, CreatureSound>(
+                    item.Sounds.SetToWithDefault(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (CreatureSound)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Sounds?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Sounds?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -5006,21 +4907,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ACBSDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.ACBSDataTypeState);
                 item.ACBSDataTypeState = rhs.ACBSDataTypeState;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AIDTDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.AIDTDataTypeState);
                 item.AIDTDataTypeState = rhs.AIDTDataTypeState;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Creature_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -5047,9 +4942,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return CreatureSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return CreatureSetterCopyCommon.Instance;
+            return CreatureSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -9021,125 +8916,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Creature_CopyMask : NPCAbstract_CopyMask
-    {
-        public Creature_CopyMask()
-        {
-        }
-
-        public Creature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Items = new MaskItem<CopyOption, ItemEntry_CopyMask>(deepCopyOption, default);
-            this.Spells = deepCopyOption;
-            this.Models = deepCopyOption;
-            this.NIFT = defaultOn;
-            this.Flags = defaultOn;
-            this.BaseSpellPoints = defaultOn;
-            this.Fatigue = defaultOn;
-            this.BarterGold = defaultOn;
-            this.LevelOffset = defaultOn;
-            this.CalcMin = defaultOn;
-            this.CalcMax = defaultOn;
-            this.Factions = new MaskItem<CopyOption, RankPlacement_CopyMask>(deepCopyOption, default);
-            this.DeathItem = defaultOn;
-            this.Script = defaultOn;
-            this.Aggression = defaultOn;
-            this.Confidence = defaultOn;
-            this.EnergyLevel = defaultOn;
-            this.Responsibility = defaultOn;
-            this.BuySellServices = defaultOn;
-            this.Teaches = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.AIPackages = deepCopyOption;
-            this.Animations = deepCopyOption;
-            this.CreatureType = defaultOn;
-            this.CombatSkill = defaultOn;
-            this.MagicSkill = defaultOn;
-            this.StealthSkill = defaultOn;
-            this.SoulLevel = defaultOn;
-            this.Health = defaultOn;
-            this.AttackDamage = defaultOn;
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-            this.AttackReach = defaultOn;
-            this.CombatStyle = defaultOn;
-            this.TurningSpeed = defaultOn;
-            this.BaseScale = defaultOn;
-            this.FootWeight = defaultOn;
-            this.BloodSpray = defaultOn;
-            this.BloodDecal = defaultOn;
-            this.InheritsSoundFrom = defaultOn;
-            this.Sounds = new MaskItem<CopyOption, CreatureSound_CopyMask>(deepCopyOption, default);
-            this.ACBSDataTypeState = defaultOn;
-            this.AIDTDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public MaskItem<CopyOption, ItemEntry_CopyMask> Items;
-        public CopyOption Spells;
-        public CopyOption Models;
-        public bool NIFT;
-        public bool Flags;
-        public bool BaseSpellPoints;
-        public bool Fatigue;
-        public bool BarterGold;
-        public bool LevelOffset;
-        public bool CalcMin;
-        public bool CalcMax;
-        public MaskItem<CopyOption, RankPlacement_CopyMask> Factions;
-        public bool DeathItem;
-        public bool Script;
-        public bool Aggression;
-        public bool Confidence;
-        public bool EnergyLevel;
-        public bool Responsibility;
-        public bool BuySellServices;
-        public bool Teaches;
-        public bool MaximumTrainingLevel;
-        public CopyOption AIPackages;
-        public CopyOption Animations;
-        public bool CreatureType;
-        public bool CombatSkill;
-        public bool MagicSkill;
-        public bool StealthSkill;
-        public bool SoulLevel;
-        public bool Health;
-        public bool AttackDamage;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        public bool AttackReach;
-        public bool CombatStyle;
-        public bool TurningSpeed;
-        public bool BaseScale;
-        public bool FootWeight;
-        public bool BloodSpray;
-        public bool BloodDecal;
-        public bool InheritsSoundFrom;
-        public MaskItem<CopyOption, CreatureSound_CopyMask> Sounds;
-        public bool ACBSDataTypeState;
-        public bool AIDTDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Creature_TranslationMask : NPCAbstract_TranslationMask
     {
         #region Members
@@ -9782,6 +9558,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return CreatureCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return CreatureSetterTranslationCommon.Instance;
         }
 
         #endregion

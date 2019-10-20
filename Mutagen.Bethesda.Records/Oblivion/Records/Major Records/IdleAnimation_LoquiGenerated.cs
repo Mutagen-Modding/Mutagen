@@ -573,13 +573,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this IdleAnimation lhs,
-            IdleAnimation rhs,
-            IdleAnimation_CopyMask copyMask,
-            IdleAnimation def = null)
+        public static void DeepCopyFieldsFrom(
+            this IIdleAnimationInternal lhs,
+            IIdleAnimationGetter rhs,
+            IdleAnimation_TranslationMask copyMask,
+            IIdleAnimationGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -588,16 +588,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this IdleAnimation lhs,
-            IdleAnimation rhs,
+        public static void DeepCopyFieldsFrom(
+            this IIdleAnimationInternal lhs,
+            IIdleAnimationGetter rhs,
             out IdleAnimation_ErrorMask errorMask,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null,
+            IdleAnimation_TranslationMask copyMask = null,
+            IIdleAnimationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((IdleAnimationSetterCopyCommon)((IIdleAnimationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -606,14 +606,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this IdleAnimation lhs,
-            IdleAnimation rhs,
+        public static void DeepCopyFieldsFrom(
+            this IIdleAnimationInternal lhs,
+            IIdleAnimationGetter rhs,
             ErrorMaskBuilder errorMask,
-            IdleAnimation_CopyMask copyMask = null,
-            IdleAnimation def = null)
+            IdleAnimation_TranslationMask copyMask = null,
+            IIdleAnimationGetter def = null)
         {
-            ((IdleAnimationSetterCopyCommon)((IIdleAnimationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -670,6 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IIdleAnimationInternal item,
             string path,
@@ -811,6 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1550,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new IdleAnimation(getNextFormKey());
-            ret.CopyFieldsFrom((IdleAnimation)item);
+            ret.DeepCopyFieldsFrom((IdleAnimation)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (IdleAnimation)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1559,25 +1561,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IdleAnimationSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class IdleAnimationSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly IdleAnimationSetterCopyCommon Instance = new IdleAnimationSetterCopyCommon();
+        public new static readonly IdleAnimationSetterTranslationCommon Instance = new IdleAnimationSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            IdleAnimation item,
-            IdleAnimation rhs,
-            IdleAnimation def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IIdleAnimation item,
+            IIdleAnimationGetter rhs,
+            IIdleAnimationGetter def,
             ErrorMaskBuilder errorMask,
-            IdleAnimation_CopyMask copyMask)
+            IdleAnimation_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                 try
@@ -1590,26 +1592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1628,27 +1613,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Conditions.Overall != CopyOption.Skip)
+            if (copyMask?.Conditions.Overall ?? true)
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault<Condition, Condition>(
+                    item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Condition)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Conditions?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Conditions?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1691,14 +1668,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.RelatedIdleAnimations != CopyOption.Skip)
+            if (copyMask?.RelatedIdleAnimations ?? true)
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 try
                 {
                     item.RelatedIdleAnimations.SetToWithDefault(
                         rhs.RelatedIdleAnimations,
-                        def?.RelatedIdleAnimations);
+                        def?.RelatedIdleAnimations,
+                        (r, d) => new FormIDLink<IdleAnimation>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1735,9 +1713,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return IdleAnimationSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return IdleAnimationSetterCopyCommon.Instance;
+            return IdleAnimationSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2569,29 +2547,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class IdleAnimation_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public IdleAnimation_CopyMask()
-        {
-        }
-
-        public IdleAnimation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
-            this.AnimationGroupSection = defaultOn;
-            this.RelatedIdleAnimations = deepCopyOption;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public MaskItem<CopyOption, Condition_CopyMask> Conditions;
-        public bool AnimationGroupSection;
-        public CopyOption RelatedIdleAnimations;
-        #endregion
-
-    }
-
     public class IdleAnimation_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2825,6 +2780,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return IdleAnimationCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return IdleAnimationSetterTranslationCommon.Instance;
         }
 
         #endregion

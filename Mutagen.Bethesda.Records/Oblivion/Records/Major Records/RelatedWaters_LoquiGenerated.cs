@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region RelatedWaterDaytime
         IWaterGetter RelatedWaterDaytime { get; }
         IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime_Property { get; }
@@ -472,11 +472,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RelatedWaters lhs,
-            RelatedWaters rhs)
+        public static void DeepCopyFieldsFrom(
+            this IRelatedWaters lhs,
+            IRelatedWatersGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -485,13 +485,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this RelatedWaters lhs,
-            RelatedWaters rhs,
-            RelatedWaters_CopyMask copyMask,
-            RelatedWaters def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRelatedWaters lhs,
+            IRelatedWatersGetter rhs,
+            RelatedWaters_TranslationMask copyMask,
+            IRelatedWatersGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -500,16 +500,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RelatedWaters lhs,
-            RelatedWaters rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRelatedWaters lhs,
+            IRelatedWatersGetter rhs,
             out RelatedWaters_ErrorMask errorMask,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null,
+            RelatedWaters_TranslationMask copyMask = null,
+            IRelatedWatersGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RelatedWatersSetterCopyCommon)((IRelatedWatersGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -518,14 +518,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RelatedWaters lhs,
-            RelatedWaters rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRelatedWaters lhs,
+            IRelatedWatersGetter rhs,
             ErrorMaskBuilder errorMask,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
+            RelatedWaters_TranslationMask copyMask = null,
+            IRelatedWatersGetter def = null)
         {
-            ((RelatedWatersSetterCopyCommon)((IRelatedWatersGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -533,12 +533,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RelatedWaters Copy(
-            this RelatedWaters item,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
+        public static RelatedWaters DeepCopy(
+            this IRelatedWatersGetter item,
+            RelatedWaters_TranslationMask copyMask = null,
+            IRelatedWatersGetter def = null)
         {
-            return ((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).Copy(
+            return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -593,6 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRelatedWaters item,
             string path,
@@ -734,6 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -968,19 +970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new RelatedWaters();
         }
         
-        public RelatedWaters Copy(
-            RelatedWaters item,
-            RelatedWaters_CopyMask copyMask = null,
-            RelatedWaters def = null)
-        {
-            RelatedWaters ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRelatedWaters item,
@@ -1184,39 +1173,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RelatedWatersSetterCopyCommon
+    public partial class RelatedWatersSetterTranslationCommon
     {
-        public static readonly RelatedWatersSetterCopyCommon Instance = new RelatedWatersSetterCopyCommon();
+        public static readonly RelatedWatersSetterTranslationCommon Instance = new RelatedWatersSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RelatedWaters item,
-            RelatedWaters rhs,
-            RelatedWaters def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRelatedWaters item,
+            IRelatedWatersGetter rhs,
+            IRelatedWatersGetter def,
             ErrorMaskBuilder errorMask,
-            RelatedWaters_CopyMask copyMask)
+            RelatedWaters_TranslationMask copyMask)
         {
             if (copyMask?.RelatedWaterDaytime ?? true)
             {
-                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
-                item.RelatedWaterDaytime_Property.SetLink(value: rhs.RelatedWaterDaytime_Property);
-                errorMask?.PopIndex();
+                item.RelatedWaterDaytime_Property.FormKey = rhs.RelatedWaterDaytime_Property.FormKey;
             }
             if (copyMask?.RelatedWaterNighttime ?? true)
             {
-                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
-                item.RelatedWaterNighttime_Property.SetLink(value: rhs.RelatedWaterNighttime_Property);
-                errorMask?.PopIndex();
+                item.RelatedWaterNighttime_Property.FormKey = rhs.RelatedWaterNighttime_Property.FormKey;
             }
             if (copyMask?.RelatedWaterUnderwater ?? true)
             {
-                errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
-                item.RelatedWaterUnderwater_Property.SetLink(value: rhs.RelatedWaterUnderwater_Property);
-                errorMask?.PopIndex();
+                item.RelatedWaterUnderwater_Property.FormKey = rhs.RelatedWaterUnderwater_Property.FormKey;
             }
         }
         
         #endregion
+        
+        public RelatedWaters DeepCopy(
+            IRelatedWatersGetter item,
+            RelatedWaters_TranslationMask copyMask = null,
+            IRelatedWatersGetter def = null)
+        {
+            RelatedWaters ret = RelatedWatersSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1239,9 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RelatedWatersSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return RelatedWatersSetterCopyCommon.Instance;
+            return RelatedWatersSetterTranslationCommon.Instance;
         }
         object IRelatedWatersGetter.CommonInstance()
         {
@@ -1251,9 +1247,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IRelatedWatersGetter.CommonSetterCopyInstance()
+        object IRelatedWatersGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1867,27 +1863,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RelatedWaters_CopyMask
-    {
-        public RelatedWaters_CopyMask()
-        {
-        }
-
-        public RelatedWaters_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.RelatedWaterDaytime = defaultOn;
-            this.RelatedWaterNighttime = defaultOn;
-            this.RelatedWaterUnderwater = defaultOn;
-        }
-
-        #region Members
-        public bool RelatedWaterDaytime;
-        public bool RelatedWaterNighttime;
-        public bool RelatedWaterUnderwater;
-        #endregion
-
-    }
-
     public class RelatedWaters_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2072,6 +2047,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RelatedWatersCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return RelatedWatersSetterTranslationCommon.Instance;
+        }
         object IRelatedWatersGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2080,9 +2059,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IRelatedWatersGetter.CommonSetterCopyInstance()
+        object IRelatedWatersGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

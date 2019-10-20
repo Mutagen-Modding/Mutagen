@@ -612,13 +612,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Faction lhs,
-            Faction rhs,
-            Faction_CopyMask copyMask,
-            Faction def = null)
+        public static void DeepCopyFieldsFrom(
+            this IFactionInternal lhs,
+            IFactionGetter rhs,
+            Faction_TranslationMask copyMask,
+            IFactionGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -627,16 +627,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Faction lhs,
-            Faction rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFactionInternal lhs,
+            IFactionGetter rhs,
             out Faction_ErrorMask errorMask,
-            Faction_CopyMask copyMask = null,
-            Faction def = null,
+            Faction_TranslationMask copyMask = null,
+            IFactionGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FactionSetterCopyCommon)((IFactionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -645,14 +645,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Faction lhs,
-            Faction rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFactionInternal lhs,
+            IFactionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Faction_CopyMask copyMask = null,
-            Faction def = null)
+            Faction_TranslationMask copyMask = null,
+            IFactionGetter def = null)
         {
-            ((FactionSetterCopyCommon)((IFactionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -709,6 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IFactionInternal item,
             string path,
@@ -850,6 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1634,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Faction(getNextFormKey());
-            ret.CopyFieldsFrom((Faction)item);
+            ret.DeepCopyFieldsFrom((Faction)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Faction)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1643,19 +1645,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FactionSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class FactionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly FactionSetterCopyCommon Instance = new FactionSetterCopyCommon();
+        public new static readonly FactionSetterTranslationCommon Instance = new FactionSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Faction item,
-            Faction rhs,
-            Faction def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IFaction item,
+            IFactionGetter rhs,
+            IFactionGetter def,
             ErrorMaskBuilder errorMask,
-            Faction_CopyMask copyMask)
+            Faction_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1691,27 +1693,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Relations.Overall != CopyOption.Skip)
+            if (copyMask?.Relations.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetToWithDefault<Relation, Relation>(
+                    item.Relations.SetToWithDefault(
                         rhs: rhs.Relations,
                         def: def?.Relations,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Relations.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Relation)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Relations?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Relations.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Relations?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1784,27 +1778,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Ranks.Overall != CopyOption.Skip)
+            if (copyMask?.Ranks.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
-                    item.Ranks.SetToWithDefault<Rank, Rank>(
+                    item.Ranks.SetToWithDefault(
                         rhs: rhs.Ranks,
                         def: def?.Ranks,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Ranks.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Rank)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Ranks?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Ranks.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Ranks?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1842,9 +1828,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return FactionSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return FactionSetterCopyCommon.Instance;
+            return FactionSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2730,31 +2716,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Faction_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Faction_CopyMask()
-        {
-        }
-
-        public Faction_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Relations = new MaskItem<CopyOption, Relation_CopyMask>(deepCopyOption, default);
-            this.Flags = defaultOn;
-            this.CrimeGoldMultiplier = defaultOn;
-            this.Ranks = new MaskItem<CopyOption, Rank_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Relation_CopyMask> Relations;
-        public bool Flags;
-        public bool CrimeGoldMultiplier;
-        public MaskItem<CopyOption, Rank_CopyMask> Ranks;
-        #endregion
-
-    }
-
     public class Faction_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3001,6 +2962,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return FactionCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return FactionSetterTranslationCommon.Instance;
         }
 
         #endregion

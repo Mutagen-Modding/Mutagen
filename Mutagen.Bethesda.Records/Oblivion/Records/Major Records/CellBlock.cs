@@ -21,9 +21,9 @@ namespace Mutagen.Bethesda.Oblivion
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
-        public static CellBlock_CopyMask duplicateMask = new CellBlock_CopyMask(true)
+        public static CellBlock_TranslationMask duplicateMask = new CellBlock_TranslationMask(true)
         {
-            Items = new Loqui.MaskItem<Loqui.CopyOption, CellSubBlock_CopyMask>(Loqui.CopyOption.Skip, null)
+            Items = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
         };
 
         public async Task WriteToXmlFolder(
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
             var ret = new CellBlock();
-            ret.CopyFieldsFrom(this, duplicateMask);
+            ret.DeepCopyFieldsFrom(this, duplicateMask);
             ret.Items.SetTo(this.Items.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
         }

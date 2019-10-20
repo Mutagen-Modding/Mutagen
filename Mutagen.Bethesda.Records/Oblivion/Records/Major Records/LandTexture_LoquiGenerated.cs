@@ -593,13 +593,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this LandTexture lhs,
-            LandTexture rhs,
-            LandTexture_CopyMask copyMask,
-            LandTexture def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILandTextureInternal lhs,
+            ILandTextureGetter rhs,
+            LandTexture_TranslationMask copyMask,
+            ILandTextureGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -608,16 +608,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this LandTexture lhs,
-            LandTexture rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILandTextureInternal lhs,
+            ILandTextureGetter rhs,
             out LandTexture_ErrorMask errorMask,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null,
+            LandTexture_TranslationMask copyMask = null,
+            ILandTextureGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LandTextureSetterCopyCommon)((ILandTextureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -626,14 +626,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this LandTexture lhs,
-            LandTexture rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILandTextureInternal lhs,
+            ILandTextureGetter rhs,
             ErrorMaskBuilder errorMask,
-            LandTexture_CopyMask copyMask = null,
-            LandTexture def = null)
+            LandTexture_TranslationMask copyMask = null,
+            ILandTextureGetter def = null)
         {
-            ((LandTextureSetterCopyCommon)((ILandTextureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LandTextureSetterTranslationCommon)((ILandTextureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -690,6 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILandTextureInternal item,
             string path,
@@ -831,6 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1540,7 +1542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new LandTexture(getNextFormKey());
-            ret.CopyFieldsFrom((LandTexture)item);
+            ret.DeepCopyFieldsFrom((LandTexture)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LandTexture)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1549,19 +1551,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LandTextureSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class LandTextureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly LandTextureSetterCopyCommon Instance = new LandTextureSetterCopyCommon();
+        public new static readonly LandTextureSetterTranslationCommon Instance = new LandTextureSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            LandTexture item,
-            LandTexture rhs,
-            LandTexture def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILandTexture item,
+            ILandTextureGetter rhs,
+            ILandTextureGetter def,
             ErrorMaskBuilder errorMask,
-            LandTexture_CopyMask copyMask)
+            LandTexture_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1597,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Havok.Overall != CopyOption.Skip)
+            if (copyMask?.Havok.Overall ?? true)
             {
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
                 try
@@ -1610,26 +1612,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsHavokItem,
                         outDefItem: out var defHavokItem))
                     {
-                        switch (copyMask?.Havok.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((HavokDataSetterCopyCommon)((IHavokDataGetter)item.Havok).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Havok,
-                                    rhs: rhs.Havok,
-                                    def: def?.Havok,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Havok.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Havok = rhsHavokItem.Copy(
-                                    copyMask?.Havok?.Specific,
-                                    def: defHavokItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Havok?.Overall}. Cannot execute copy.");
-                        }
+                        item.Havok = rhsHavokItem.DeepCopy(
+                            copyMask?.Havok?.Specific,
+                            def: defHavokItem);
                     }
                     else
                     {
@@ -1678,14 +1663,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.PotentialGrass != CopyOption.Skip)
+            if (copyMask?.PotentialGrass ?? true)
             {
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
                 try
                 {
                     item.PotentialGrass.SetToWithDefault(
                         rhs.PotentialGrass,
-                        def?.PotentialGrass);
+                        def?.PotentialGrass,
+                        (r, d) => new FormIDLink<Grass>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1722,9 +1708,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LandTextureSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return LandTextureSetterCopyCommon.Instance;
+            return LandTextureSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2465,29 +2451,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class LandTexture_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public LandTexture_CopyMask()
-        {
-        }
-
-        public LandTexture_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Icon = defaultOn;
-            this.Havok = new MaskItem<CopyOption, HavokData_CopyMask>(deepCopyOption, default);
-            this.TextureSpecularExponent = defaultOn;
-            this.PotentialGrass = deepCopyOption;
-        }
-
-        #region Members
-        public bool Icon;
-        public MaskItem<CopyOption, HavokData_CopyMask> Havok;
-        public bool TextureSpecularExponent;
-        public CopyOption PotentialGrass;
-        #endregion
-
-    }
-
     public class LandTexture_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2711,6 +2674,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return LandTextureCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return LandTextureSetterTranslationCommon.Instance;
         }
 
         #endregion

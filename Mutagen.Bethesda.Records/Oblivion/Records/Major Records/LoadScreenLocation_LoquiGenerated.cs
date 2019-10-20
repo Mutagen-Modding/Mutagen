@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Direct
         IPlaceGetter Direct { get; }
         IFormIDLinkGetter<IPlaceGetter> Direct_Property { get; }
@@ -479,11 +479,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this LoadScreenLocation lhs,
-            LoadScreenLocation rhs)
+        public static void DeepCopyFieldsFrom(
+            this ILoadScreenLocation lhs,
+            ILoadScreenLocationGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -492,13 +492,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this LoadScreenLocation lhs,
-            LoadScreenLocation rhs,
-            LoadScreenLocation_CopyMask copyMask,
-            LoadScreenLocation def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILoadScreenLocation lhs,
+            ILoadScreenLocationGetter rhs,
+            LoadScreenLocation_TranslationMask copyMask,
+            ILoadScreenLocationGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -507,16 +507,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this LoadScreenLocation lhs,
-            LoadScreenLocation rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILoadScreenLocation lhs,
+            ILoadScreenLocationGetter rhs,
             out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null,
+            LoadScreenLocation_TranslationMask copyMask = null,
+            ILoadScreenLocationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LoadScreenLocationSetterCopyCommon)((ILoadScreenLocationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -525,14 +525,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this LoadScreenLocation lhs,
-            LoadScreenLocation rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILoadScreenLocation lhs,
+            ILoadScreenLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null)
+            LoadScreenLocation_TranslationMask copyMask = null,
+            ILoadScreenLocationGetter def = null)
         {
-            ((LoadScreenLocationSetterCopyCommon)((ILoadScreenLocationGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -540,12 +540,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static LoadScreenLocation Copy(
-            this LoadScreenLocation item,
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null)
+        public static LoadScreenLocation DeepCopy(
+            this ILoadScreenLocationGetter item,
+            LoadScreenLocation_TranslationMask copyMask = null,
+            ILoadScreenLocationGetter def = null)
         {
-            return ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).Copy(
+            return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -600,6 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILoadScreenLocation item,
             string path,
@@ -741,6 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -975,19 +977,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new LoadScreenLocation();
         }
         
-        public LoadScreenLocation Copy(
-            LoadScreenLocation item,
-            LoadScreenLocation_CopyMask copyMask = null,
-            LoadScreenLocation def = null)
-        {
-            LoadScreenLocation ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             ILoadScreenLocation item,
@@ -1197,39 +1186,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class LoadScreenLocationSetterCopyCommon
+    public partial class LoadScreenLocationSetterTranslationCommon
     {
-        public static readonly LoadScreenLocationSetterCopyCommon Instance = new LoadScreenLocationSetterCopyCommon();
+        public static readonly LoadScreenLocationSetterTranslationCommon Instance = new LoadScreenLocationSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            LoadScreenLocation item,
-            LoadScreenLocation rhs,
-            LoadScreenLocation def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILoadScreenLocation item,
+            ILoadScreenLocationGetter rhs,
+            ILoadScreenLocationGetter def,
             ErrorMaskBuilder errorMask,
-            LoadScreenLocation_CopyMask copyMask)
+            LoadScreenLocation_TranslationMask copyMask)
         {
             if (copyMask?.Direct ?? true)
             {
-                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
-                item.Direct_Property.SetLink(value: rhs.Direct_Property);
-                errorMask?.PopIndex();
+                item.Direct_Property.FormKey = rhs.Direct_Property.FormKey;
             }
             if (copyMask?.Indirect ?? true)
             {
-                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
-                item.Indirect_Property.SetLink(value: rhs.Indirect_Property);
-                errorMask?.PopIndex();
+                item.Indirect_Property.FormKey = rhs.Indirect_Property.FormKey;
             }
             if (copyMask?.GridPoint ?? true)
             {
-                errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
                 item.GridPoint = rhs.GridPoint;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public LoadScreenLocation DeepCopy(
+            ILoadScreenLocationGetter item,
+            LoadScreenLocation_TranslationMask copyMask = null,
+            ILoadScreenLocationGetter def = null)
+        {
+            LoadScreenLocation ret = LoadScreenLocationSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1252,9 +1248,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LoadScreenLocationSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return LoadScreenLocationSetterCopyCommon.Instance;
+            return LoadScreenLocationSetterTranslationCommon.Instance;
         }
         object ILoadScreenLocationGetter.CommonInstance()
         {
@@ -1264,9 +1260,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object ILoadScreenLocationGetter.CommonSetterCopyInstance()
+        object ILoadScreenLocationGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1899,27 +1895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class LoadScreenLocation_CopyMask
-    {
-        public LoadScreenLocation_CopyMask()
-        {
-        }
-
-        public LoadScreenLocation_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Direct = defaultOn;
-            this.Indirect = defaultOn;
-            this.GridPoint = defaultOn;
-        }
-
-        #region Members
-        public bool Direct;
-        public bool Indirect;
-        public bool GridPoint;
-        #endregion
-
-    }
-
     public class LoadScreenLocation_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2103,6 +2078,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return LoadScreenLocationCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return LoadScreenLocationSetterTranslationCommon.Instance;
+        }
         object ILoadScreenLocationGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2111,9 +2090,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object ILoadScreenLocationGetter.CommonSetterCopyInstance()
+        object ILoadScreenLocationGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

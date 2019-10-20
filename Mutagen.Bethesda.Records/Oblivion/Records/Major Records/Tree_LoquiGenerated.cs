@@ -751,13 +751,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Tree lhs,
-            Tree rhs,
-            Tree_CopyMask copyMask,
-            Tree def = null)
+        public static void DeepCopyFieldsFrom(
+            this ITreeInternal lhs,
+            ITreeGetter rhs,
+            Tree_TranslationMask copyMask,
+            ITreeGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -766,16 +766,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Tree lhs,
-            Tree rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITreeInternal lhs,
+            ITreeGetter rhs,
             out Tree_ErrorMask errorMask,
-            Tree_CopyMask copyMask = null,
-            Tree def = null,
+            Tree_TranslationMask copyMask = null,
+            ITreeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TreeSetterCopyCommon)((ITreeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -784,14 +784,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Tree lhs,
-            Tree rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITreeInternal lhs,
+            ITreeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Tree_CopyMask copyMask = null,
-            Tree def = null)
+            Tree_TranslationMask copyMask = null,
+            ITreeGetter def = null)
         {
-            ((TreeSetterCopyCommon)((ITreeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -848,6 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ITreeInternal item,
             string path,
@@ -989,6 +990,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2031,7 +2033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Tree(getNextFormKey());
-            ret.CopyFieldsFrom((Tree)item);
+            ret.DeepCopyFieldsFrom((Tree)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Tree)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2040,25 +2042,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TreeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class TreeSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly TreeSetterCopyCommon Instance = new TreeSetterCopyCommon();
+        public new static readonly TreeSetterTranslationCommon Instance = new TreeSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Tree item,
-            Tree rhs,
-            Tree def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ITree item,
+            ITreeGetter rhs,
+            ITreeGetter def,
             ErrorMaskBuilder errorMask,
-            Tree_CopyMask copyMask)
+            Tree_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
@@ -2071,26 +2073,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -2139,14 +2124,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SpeedTreeSeeds != CopyOption.Skip)
+            if (copyMask?.SpeedTreeSeeds ?? true)
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
                 {
-                    item.SpeedTreeSeeds.SetToWithDefault(
-                        rhs.SpeedTreeSeeds,
-                        def?.SpeedTreeSeeds);
+                    item.SpeedTreeSeeds.SetTo(rhs.SpeedTreeSeeds);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2160,75 +2143,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.LeafCurvature ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
                 item.LeafCurvature = rhs.LeafCurvature;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MinimumLeafAngle ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
                 item.MinimumLeafAngle = rhs.MinimumLeafAngle;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumLeafAngle ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
                 item.MaximumLeafAngle = rhs.MaximumLeafAngle;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BranchDimmingValue ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
                 item.BranchDimmingValue = rhs.BranchDimmingValue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LeafDimmingValue ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
                 item.LeafDimmingValue = rhs.LeafDimmingValue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ShadowRadius ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
                 item.ShadowRadius = rhs.ShadowRadius;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RockingSpeed ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
                 item.RockingSpeed = rhs.RockingSpeed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RustleSpeed ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
                 item.RustleSpeed = rhs.RustleSpeed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BillboardWidth ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
                 item.BillboardWidth = rhs.BillboardWidth;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BillboardHeight ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
                 item.BillboardHeight = rhs.BillboardHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CNAMDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
                 item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BNAMDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.BNAMDataTypeState);
                 item.BNAMDataTypeState = rhs.BNAMDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2255,9 +2214,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return TreeSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return TreeSetterCopyCommon.Instance;
+            return TreeSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3632,51 +3591,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Tree_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Tree_CopyMask()
-        {
-        }
-
-        public Tree_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.SpeedTreeSeeds = deepCopyOption;
-            this.LeafCurvature = defaultOn;
-            this.MinimumLeafAngle = defaultOn;
-            this.MaximumLeafAngle = defaultOn;
-            this.BranchDimmingValue = defaultOn;
-            this.LeafDimmingValue = defaultOn;
-            this.ShadowRadius = defaultOn;
-            this.RockingSpeed = defaultOn;
-            this.RustleSpeed = defaultOn;
-            this.BillboardWidth = defaultOn;
-            this.BillboardHeight = defaultOn;
-            this.CNAMDataTypeState = defaultOn;
-            this.BNAMDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public CopyOption SpeedTreeSeeds;
-        public bool LeafCurvature;
-        public bool MinimumLeafAngle;
-        public bool MaximumLeafAngle;
-        public bool BranchDimmingValue;
-        public bool LeafDimmingValue;
-        public bool ShadowRadius;
-        public bool RockingSpeed;
-        public bool RustleSpeed;
-        public bool BillboardWidth;
-        public bool BillboardHeight;
-        public bool CNAMDataTypeState;
-        public bool BNAMDataTypeState;
-        #endregion
-
-    }
-
     public class Tree_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3971,6 +3885,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return TreeCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return TreeSetterTranslationCommon.Instance;
         }
 
         #endregion

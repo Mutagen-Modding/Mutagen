@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Reference
         IPlacedGetter Reference { get; }
         IFormIDLinkGetter<IPlacedGetter> Reference_Property { get; }
@@ -456,11 +456,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this PointToReferenceMapping lhs,
-            PointToReferenceMapping rhs)
+        public static void DeepCopyFieldsFrom(
+            this IPointToReferenceMapping lhs,
+            IPointToReferenceMappingGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -469,13 +469,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this PointToReferenceMapping lhs,
-            PointToReferenceMapping rhs,
-            PointToReferenceMapping_CopyMask copyMask,
-            PointToReferenceMapping def = null)
+        public static void DeepCopyFieldsFrom(
+            this IPointToReferenceMapping lhs,
+            IPointToReferenceMappingGetter rhs,
+            PointToReferenceMapping_TranslationMask copyMask,
+            IPointToReferenceMappingGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -484,16 +484,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this PointToReferenceMapping lhs,
-            PointToReferenceMapping rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPointToReferenceMapping lhs,
+            IPointToReferenceMappingGetter rhs,
             out PointToReferenceMapping_ErrorMask errorMask,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null,
+            PointToReferenceMapping_TranslationMask copyMask = null,
+            IPointToReferenceMappingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PointToReferenceMappingSetterCopyCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -502,14 +502,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this PointToReferenceMapping lhs,
-            PointToReferenceMapping rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPointToReferenceMapping lhs,
+            IPointToReferenceMappingGetter rhs,
             ErrorMaskBuilder errorMask,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
+            PointToReferenceMapping_TranslationMask copyMask = null,
+            IPointToReferenceMappingGetter def = null)
         {
-            ((PointToReferenceMappingSetterCopyCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -517,12 +517,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static PointToReferenceMapping Copy(
-            this PointToReferenceMapping item,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
+        public static PointToReferenceMapping DeepCopy(
+            this IPointToReferenceMappingGetter item,
+            PointToReferenceMapping_TranslationMask copyMask = null,
+            IPointToReferenceMappingGetter def = null)
         {
-            return ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()).Copy(
+            return ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -577,6 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IPointToReferenceMapping item,
             string path,
@@ -718,6 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -940,19 +942,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new PointToReferenceMapping();
         }
         
-        public PointToReferenceMapping Copy(
-            PointToReferenceMapping item,
-            PointToReferenceMapping_CopyMask copyMask = null,
-            PointToReferenceMapping def = null)
-        {
-            PointToReferenceMapping ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IPointToReferenceMapping item,
@@ -1161,32 +1150,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class PointToReferenceMappingSetterCopyCommon
+    public partial class PointToReferenceMappingSetterTranslationCommon
     {
-        public static readonly PointToReferenceMappingSetterCopyCommon Instance = new PointToReferenceMappingSetterCopyCommon();
+        public static readonly PointToReferenceMappingSetterTranslationCommon Instance = new PointToReferenceMappingSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            PointToReferenceMapping item,
-            PointToReferenceMapping rhs,
-            PointToReferenceMapping def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IPointToReferenceMapping item,
+            IPointToReferenceMappingGetter rhs,
+            IPointToReferenceMappingGetter def,
             ErrorMaskBuilder errorMask,
-            PointToReferenceMapping_CopyMask copyMask)
+            PointToReferenceMapping_TranslationMask copyMask)
         {
             if (copyMask?.Reference ?? true)
             {
-                errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
-                item.Reference_Property.SetLink(value: rhs.Reference_Property);
-                errorMask?.PopIndex();
+                item.Reference_Property.FormKey = rhs.Reference_Property.FormKey;
             }
-            if (copyMask?.Points != CopyOption.Skip)
+            if (copyMask?.Points ?? true)
             {
                 errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Points);
                 try
                 {
-                    item.Points.SetToWithDefault(
-                        rhs.Points,
-                        def?.Points);
+                    item.Points.SetTo(rhs.Points);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1201,6 +1186,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public PointToReferenceMapping DeepCopy(
+            IPointToReferenceMappingGetter item,
+            PointToReferenceMapping_TranslationMask copyMask = null,
+            IPointToReferenceMappingGetter def = null)
+        {
+            PointToReferenceMapping ret = PointToReferenceMappingSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1223,9 +1221,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return PointToReferenceMappingSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return PointToReferenceMappingSetterCopyCommon.Instance;
+            return PointToReferenceMappingSetterTranslationCommon.Instance;
         }
         object IPointToReferenceMappingGetter.CommonInstance()
         {
@@ -1235,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IPointToReferenceMappingGetter.CommonSetterCopyInstance()
+        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1912,25 +1910,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PointToReferenceMapping_CopyMask
-    {
-        public PointToReferenceMapping_CopyMask()
-        {
-        }
-
-        public PointToReferenceMapping_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Reference = defaultOn;
-            this.Points = deepCopyOption;
-        }
-
-        #region Members
-        public bool Reference;
-        public CopyOption Points;
-        #endregion
-
-    }
-
     public class PointToReferenceMapping_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2108,6 +2087,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return PointToReferenceMappingCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return PointToReferenceMappingSetterTranslationCommon.Instance;
+        }
         object IPointToReferenceMappingGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2116,9 +2099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IPointToReferenceMappingGetter.CommonSetterCopyInstance()
+        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

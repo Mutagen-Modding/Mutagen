@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region CompareOperator
         CompareOperator CompareOperator { get; }
 
@@ -519,11 +519,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Condition lhs,
-            Condition rhs)
+        public static void DeepCopyFieldsFrom(
+            this ICondition lhs,
+            IConditionGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -532,13 +532,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this Condition lhs,
-            Condition rhs,
-            Condition_CopyMask copyMask,
-            Condition def = null)
+        public static void DeepCopyFieldsFrom(
+            this ICondition lhs,
+            IConditionGetter rhs,
+            Condition_TranslationMask copyMask,
+            IConditionGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -547,16 +547,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Condition lhs,
-            Condition rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICondition lhs,
+            IConditionGetter rhs,
             out Condition_ErrorMask errorMask,
-            Condition_CopyMask copyMask = null,
-            Condition def = null,
+            Condition_TranslationMask copyMask = null,
+            IConditionGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ConditionSetterCopyCommon)((IConditionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -565,14 +565,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Condition lhs,
-            Condition rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICondition lhs,
+            IConditionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
+            Condition_TranslationMask copyMask = null,
+            IConditionGetter def = null)
         {
-            ((ConditionSetterCopyCommon)((IConditionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -580,12 +580,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static Condition Copy(
-            this Condition item,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
+        public static Condition DeepCopy(
+            this IConditionGetter item,
+            Condition_TranslationMask copyMask = null,
+            IConditionGetter def = null)
         {
-            return ((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).Copy(
+            return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -640,6 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ICondition item,
             string path,
@@ -781,6 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1092,19 +1094,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new Condition();
         }
         
-        public Condition Copy(
-            Condition item,
-            Condition_CopyMask copyMask = null,
-            Condition def = null)
-        {
-            Condition ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             ICondition item,
@@ -1374,69 +1363,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class ConditionSetterCopyCommon
+    public partial class ConditionSetterTranslationCommon
     {
-        public static readonly ConditionSetterCopyCommon Instance = new ConditionSetterCopyCommon();
+        public static readonly ConditionSetterTranslationCommon Instance = new ConditionSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Condition item,
-            Condition rhs,
-            Condition def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ICondition item,
+            IConditionGetter rhs,
+            IConditionGetter def,
             ErrorMaskBuilder errorMask,
-            Condition_CopyMask copyMask)
+            Condition_TranslationMask copyMask)
         {
             if (copyMask?.CompareOperator ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
                 item.CompareOperator = rhs.CompareOperator;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
-                item.Fluff = rhs.Fluff;
-                errorMask?.PopIndex();
+                item.Fluff = rhs.Fluff.ToArray();
             }
             if (copyMask?.ComparisonValue ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
                 item.ComparisonValue = rhs.ComparisonValue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Function ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.Function);
                 item.Function = rhs.Function;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FirstParameter ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
                 item.FirstParameter = rhs.FirstParameter;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SecondParameter ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
                 item.SecondParameter = rhs.SecondParameter;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ThirdParameter ?? true)
             {
-                errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
                 item.ThirdParameter = rhs.ThirdParameter;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public Condition DeepCopy(
+            IConditionGetter item,
+            Condition_TranslationMask copyMask = null,
+            IConditionGetter def = null)
+        {
+            Condition ret = ConditionSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1459,9 +1445,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ConditionSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return ConditionSetterCopyCommon.Instance;
+            return ConditionSetterTranslationCommon.Instance;
         }
         object IConditionGetter.CommonInstance()
         {
@@ -1471,9 +1457,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IConditionGetter.CommonSetterCopyInstance()
+        object IConditionGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2429,37 +2415,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Condition_CopyMask
-    {
-        public Condition_CopyMask()
-        {
-        }
-
-        public Condition_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.CompareOperator = defaultOn;
-            this.Flags = defaultOn;
-            this.Fluff = defaultOn;
-            this.ComparisonValue = defaultOn;
-            this.Function = defaultOn;
-            this.FirstParameter = defaultOn;
-            this.SecondParameter = defaultOn;
-            this.ThirdParameter = defaultOn;
-        }
-
-        #region Members
-        public bool CompareOperator;
-        public bool Flags;
-        public bool Fluff;
-        public bool ComparisonValue;
-        public bool Function;
-        public bool FirstParameter;
-        public bool SecondParameter;
-        public bool ThirdParameter;
-        #endregion
-
-    }
-
     public class Condition_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2703,6 +2658,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ConditionCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ConditionSetterTranslationCommon.Instance;
+        }
         object IConditionGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2711,9 +2670,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IConditionGetter.CommonSetterCopyInstance()
+        object IConditionGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Point
         P3Float Point { get; }
 
@@ -472,11 +472,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this PathGridPoint lhs,
-            PathGridPoint rhs)
+        public static void DeepCopyFieldsFrom(
+            this IPathGridPoint lhs,
+            IPathGridPointGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -485,13 +485,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this PathGridPoint lhs,
-            PathGridPoint rhs,
-            PathGridPoint_CopyMask copyMask,
-            PathGridPoint def = null)
+        public static void DeepCopyFieldsFrom(
+            this IPathGridPoint lhs,
+            IPathGridPointGetter rhs,
+            PathGridPoint_TranslationMask copyMask,
+            IPathGridPointGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -500,16 +500,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this PathGridPoint lhs,
-            PathGridPoint rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPathGridPoint lhs,
+            IPathGridPointGetter rhs,
             out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null,
+            PathGridPoint_TranslationMask copyMask = null,
+            IPathGridPointGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PathGridPointSetterCopyCommon)((IPathGridPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -518,14 +518,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this PathGridPoint lhs,
-            PathGridPoint rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPathGridPoint lhs,
+            IPathGridPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
+            PathGridPoint_TranslationMask copyMask = null,
+            IPathGridPointGetter def = null)
         {
-            ((PathGridPointSetterCopyCommon)((IPathGridPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -533,12 +533,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static PathGridPoint Copy(
-            this PathGridPoint item,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
+        public static PathGridPoint DeepCopy(
+            this IPathGridPointGetter item,
+            PathGridPoint_TranslationMask copyMask = null,
+            IPathGridPointGetter def = null)
         {
-            return ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).Copy(
+            return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -593,6 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IPathGridPoint item,
             string path,
@@ -734,6 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -980,19 +982,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new PathGridPoint();
         }
         
-        public PathGridPoint Copy(
-            PathGridPoint item,
-            PathGridPoint_CopyMask copyMask = null,
-            PathGridPoint def = null)
-        {
-            PathGridPoint ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IPathGridPoint item,
@@ -1227,44 +1216,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class PathGridPointSetterCopyCommon
+    public partial class PathGridPointSetterTranslationCommon
     {
-        public static readonly PathGridPointSetterCopyCommon Instance = new PathGridPointSetterCopyCommon();
+        public static readonly PathGridPointSetterTranslationCommon Instance = new PathGridPointSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            PathGridPoint item,
-            PathGridPoint rhs,
-            PathGridPoint def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IPathGridPoint item,
+            IPathGridPointGetter rhs,
+            IPathGridPointGetter def,
             ErrorMaskBuilder errorMask,
-            PathGridPoint_CopyMask copyMask)
+            PathGridPoint_TranslationMask copyMask)
         {
             if (copyMask?.Point ?? true)
             {
-                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Point);
                 item.Point = rhs.Point;
-                errorMask?.PopIndex();
             }
             if (copyMask?.NumConnections ?? true)
             {
-                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.NumConnections);
                 item.NumConnections = rhs.NumConnections;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FluffBytes ?? true)
             {
-                errorMask?.PushIndex((int)PathGridPoint_FieldIndex.FluffBytes);
-                item.FluffBytes = rhs.FluffBytes;
-                errorMask?.PopIndex();
+                item.FluffBytes = rhs.FluffBytes.ToArray();
             }
-            if (copyMask?.Connections != CopyOption.Skip)
+            if (copyMask?.Connections ?? true)
             {
                 errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Connections);
                 try
                 {
-                    item.Connections.SetToWithDefault(
-                        rhs.Connections,
-                        def?.Connections);
+                    item.Connections.SetTo(rhs.Connections);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1279,6 +1260,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public PathGridPoint DeepCopy(
+            IPathGridPointGetter item,
+            PathGridPoint_TranslationMask copyMask = null,
+            IPathGridPointGetter def = null)
+        {
+            PathGridPoint ret = PathGridPointSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1301,9 +1295,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return PathGridPointSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return PathGridPointSetterCopyCommon.Instance;
+            return PathGridPointSetterTranslationCommon.Instance;
         }
         object IPathGridPointGetter.CommonInstance()
         {
@@ -1313,9 +1307,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IPathGridPointGetter.CommonSetterCopyInstance()
+        object IPathGridPointGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2123,29 +2117,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class PathGridPoint_CopyMask
-    {
-        public PathGridPoint_CopyMask()
-        {
-        }
-
-        public PathGridPoint_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Point = defaultOn;
-            this.NumConnections = defaultOn;
-            this.FluffBytes = defaultOn;
-            this.Connections = deepCopyOption;
-        }
-
-        #region Members
-        public bool Point;
-        public bool NumConnections;
-        public bool FluffBytes;
-        public CopyOption Connections;
-        #endregion
-
-    }
-
     public class PathGridPoint_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2322,6 +2293,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return PathGridPointCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return PathGridPointSetterTranslationCommon.Instance;
+        }
         object IPathGridPointGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2330,9 +2305,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IPathGridPointGetter.CommonSetterCopyInstance()
+        object IPathGridPointGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

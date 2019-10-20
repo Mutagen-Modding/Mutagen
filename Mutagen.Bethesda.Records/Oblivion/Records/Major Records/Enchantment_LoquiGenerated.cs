@@ -609,13 +609,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Enchantment lhs,
-            Enchantment rhs,
-            Enchantment_CopyMask copyMask,
-            Enchantment def = null)
+        public static void DeepCopyFieldsFrom(
+            this IEnchantmentInternal lhs,
+            IEnchantmentGetter rhs,
+            Enchantment_TranslationMask copyMask,
+            IEnchantmentGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -624,16 +624,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Enchantment lhs,
-            Enchantment rhs,
+        public static void DeepCopyFieldsFrom(
+            this IEnchantmentInternal lhs,
+            IEnchantmentGetter rhs,
             out Enchantment_ErrorMask errorMask,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null,
+            Enchantment_TranslationMask copyMask = null,
+            IEnchantmentGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((EnchantmentSetterCopyCommon)((IEnchantmentGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -642,14 +642,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Enchantment lhs,
-            Enchantment rhs,
+        public static void DeepCopyFieldsFrom(
+            this IEnchantmentInternal lhs,
+            IEnchantmentGetter rhs,
             ErrorMaskBuilder errorMask,
-            Enchantment_CopyMask copyMask = null,
-            Enchantment def = null)
+            Enchantment_TranslationMask copyMask = null,
+            IEnchantmentGetter def = null)
         {
-            ((EnchantmentSetterCopyCommon)((IEnchantmentGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -706,6 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IEnchantmentInternal item,
             string path,
@@ -847,6 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1610,7 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Enchantment(getNextFormKey());
-            ret.CopyFieldsFrom((Enchantment)item);
+            ret.DeepCopyFieldsFrom((Enchantment)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Enchantment)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1619,19 +1621,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnchantmentSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class EnchantmentSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly EnchantmentSetterCopyCommon Instance = new EnchantmentSetterCopyCommon();
+        public new static readonly EnchantmentSetterTranslationCommon Instance = new EnchantmentSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Enchantment item,
-            Enchantment rhs,
-            Enchantment def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IEnchantment item,
+            IEnchantmentGetter rhs,
+            IEnchantmentGetter def,
             ErrorMaskBuilder errorMask,
-            Enchantment_CopyMask copyMask)
+            Enchantment_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1669,49 +1671,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
                 item.Type = rhs.Type;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ChargeAmount ?? true)
             {
-                errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
                 item.ChargeAmount = rhs.ChargeAmount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EnchantCost ?? true)
             {
-                errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
                 item.EnchantCost = rhs.EnchantCost;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Effects.Overall != CopyOption.Skip)
+            if (copyMask?.Effects.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, Effect>(
+                    item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Effect)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Effects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Effects?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1726,9 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ENITDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Enchantment_FieldIndex.ENITDataTypeState);
                 item.ENITDataTypeState = rhs.ENITDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1755,9 +1739,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return EnchantmentSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return EnchantmentSetterCopyCommon.Instance;
+            return EnchantmentSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2667,35 +2651,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Enchantment_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Enchantment_CopyMask()
-        {
-        }
-
-        public Enchantment_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Type = defaultOn;
-            this.ChargeAmount = defaultOn;
-            this.EnchantCost = defaultOn;
-            this.Flags = defaultOn;
-            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
-            this.ENITDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Type;
-        public bool ChargeAmount;
-        public bool EnchantCost;
-        public bool Flags;
-        public MaskItem<CopyOption, Effect_CopyMask> Effects;
-        public bool ENITDataTypeState;
-        #endregion
-
-    }
-
     public class Enchantment_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2942,6 +2897,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return EnchantmentCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return EnchantmentSetterTranslationCommon.Instance;
         }
 
         #endregion

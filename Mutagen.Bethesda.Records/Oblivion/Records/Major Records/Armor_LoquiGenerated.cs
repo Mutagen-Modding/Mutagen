@@ -524,13 +524,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Armor lhs,
-            Armor rhs,
-            Armor_CopyMask copyMask,
-            Armor def = null)
+        public static void DeepCopyFieldsFrom(
+            this IArmorInternal lhs,
+            IArmorGetter rhs,
+            Armor_TranslationMask copyMask,
+            IArmorGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -539,16 +539,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Armor lhs,
-            Armor rhs,
+        public static void DeepCopyFieldsFrom(
+            this IArmorInternal lhs,
+            IArmorGetter rhs,
             out Armor_ErrorMask errorMask,
-            Armor_CopyMask copyMask = null,
-            Armor def = null,
+            Armor_TranslationMask copyMask = null,
+            IArmorGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ArmorSetterCopyCommon)((IArmorGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -557,14 +557,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Armor lhs,
-            Armor rhs,
+        public static void DeepCopyFieldsFrom(
+            this IArmorInternal lhs,
+            IArmorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Armor_CopyMask copyMask = null,
-            Armor def = null)
+            Armor_TranslationMask copyMask = null,
+            IArmorGetter def = null)
         {
-            ((ArmorSetterCopyCommon)((IArmorGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -621,6 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IArmorInternal item,
             string path,
@@ -762,6 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1521,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Armor(getNextFormKey());
-            ret.CopyFieldsFrom((Armor)item);
+            ret.DeepCopyFieldsFrom((Armor)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Armor)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1530,19 +1532,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorSetterCopyCommon : ClothingAbstractSetterCopyCommon
+    public partial class ArmorSetterTranslationCommon : ClothingAbstractSetterTranslationCommon
     {
-        public new static readonly ArmorSetterCopyCommon Instance = new ArmorSetterCopyCommon();
+        public new static readonly ArmorSetterTranslationCommon Instance = new ArmorSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Armor item,
-            Armor rhs,
-            Armor def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IArmor item,
+            IArmorGetter rhs,
+            IArmorGetter def,
             ErrorMaskBuilder errorMask,
-            Armor_CopyMask copyMask)
+            Armor_TranslationMask copyMask)
         {
-            ((ClothingAbstractSetterCopyCommon)((IClothingAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1550,33 +1552,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.ArmorValue ?? true)
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.ArmorValue);
                 item.ArmorValue = rhs.ArmorValue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.Health);
                 item.Health = rhs.Health;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1603,9 +1595,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ArmorSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return ArmorSetterCopyCommon.Instance;
+            return ArmorSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2338,31 +2330,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Armor_CopyMask : ClothingAbstract_CopyMask
-    {
-        public Armor_CopyMask()
-        {
-        }
-
-        public Armor_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ArmorValue = defaultOn;
-            this.Value = defaultOn;
-            this.Health = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool ArmorValue;
-        public bool Value;
-        public bool Health;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Armor_TranslationMask : ClothingAbstract_TranslationMask
     {
         #region Members
@@ -2645,6 +2612,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return ArmorCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return ArmorSetterTranslationCommon.Instance;
         }
 
         #endregion

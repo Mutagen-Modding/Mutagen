@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Road lhs,
-            Road rhs,
-            Road_CopyMask copyMask,
-            Road def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRoadInternal lhs,
+            IRoadGetter rhs,
+            Road_TranslationMask copyMask,
+            IRoadGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -456,16 +456,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Road lhs,
-            Road rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRoadInternal lhs,
+            IRoadGetter rhs,
             out Road_ErrorMask errorMask,
-            Road_CopyMask copyMask = null,
-            Road def = null,
+            Road_TranslationMask copyMask = null,
+            IRoadGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RoadSetterCopyCommon)((IRoadGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RoadSetterTranslationCommon)((IRoadGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -474,14 +474,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Road lhs,
-            Road rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRoadInternal lhs,
+            IRoadGetter rhs,
             ErrorMaskBuilder errorMask,
-            Road_CopyMask copyMask = null,
-            Road def = null)
+            Road_TranslationMask copyMask = null,
+            IRoadGetter def = null)
         {
-            ((RoadSetterCopyCommon)((IRoadGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RoadSetterTranslationCommon)((IRoadGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -538,6 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRoadInternal item,
             string path,
@@ -679,6 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1243,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Road(getNextFormKey());
-            ret.CopyFieldsFrom((Road)item);
+            ret.DeepCopyFieldsFrom((Road)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Road)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1252,45 +1254,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RoadSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class RoadSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly RoadSetterCopyCommon Instance = new RoadSetterCopyCommon();
+        public new static readonly RoadSetterTranslationCommon Instance = new RoadSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Road item,
-            Road rhs,
-            Road def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRoad item,
+            IRoadGetter rhs,
+            IRoadGetter def,
             ErrorMaskBuilder errorMask,
-            Road_CopyMask copyMask)
+            Road_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Points.Overall != CopyOption.Skip)
+            if (copyMask?.Points.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Road_FieldIndex.Points);
                 try
                 {
-                    item.Points.SetToWithDefault<RoadPoint, RoadPoint>(
+                    item.Points.SetToWithDefault(
                         rhs: rhs.Points,
                         def: def?.Points,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Points.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RoadPoint)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Points?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Points.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Points?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1328,9 +1322,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RoadSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return RoadSetterCopyCommon.Instance;
+            return RoadSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1893,23 +1887,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Road_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Road_CopyMask()
-        {
-        }
-
-        public Road_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Points = new MaskItem<CopyOption, RoadPoint_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public MaskItem<CopyOption, RoadPoint_CopyMask> Points;
-        #endregion
-
-    }
-
     public class Road_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2126,6 +2103,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return RoadCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return RoadSetterTranslationCommon.Instance;
         }
 
         #endregion

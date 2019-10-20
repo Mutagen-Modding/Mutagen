@@ -473,13 +473,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this LocationReferenceType lhs,
-            LocationReferenceType rhs,
-            LocationReferenceType_CopyMask copyMask,
-            LocationReferenceType def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILocationReferenceTypeInternal lhs,
+            ILocationReferenceTypeGetter rhs,
+            LocationReferenceType_TranslationMask copyMask,
+            ILocationReferenceTypeGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -488,16 +488,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this LocationReferenceType lhs,
-            LocationReferenceType rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILocationReferenceTypeInternal lhs,
+            ILocationReferenceTypeGetter rhs,
             out LocationReferenceType_ErrorMask errorMask,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null,
+            LocationReferenceType_TranslationMask copyMask = null,
+            ILocationReferenceTypeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LocationReferenceTypeSetterCopyCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -506,14 +506,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this LocationReferenceType lhs,
-            LocationReferenceType rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILocationReferenceTypeInternal lhs,
+            ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocationReferenceType_CopyMask copyMask = null,
-            LocationReferenceType def = null)
+            LocationReferenceType_TranslationMask copyMask = null,
+            ILocationReferenceTypeGetter def = null)
         {
-            ((LocationReferenceTypeSetterCopyCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -570,6 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             string path,
@@ -711,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1271,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new LocationReferenceType(getNextFormKey());
-            ret.CopyFieldsFrom((LocationReferenceType)item);
+            ret.DeepCopyFieldsFrom((LocationReferenceType)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LocationReferenceType)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1280,19 +1282,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class LocationReferenceTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly LocationReferenceTypeSetterCopyCommon Instance = new LocationReferenceTypeSetterCopyCommon();
+        public new static readonly LocationReferenceTypeSetterTranslationCommon Instance = new LocationReferenceTypeSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            LocationReferenceType item,
-            LocationReferenceType rhs,
-            LocationReferenceType def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILocationReferenceType item,
+            ILocationReferenceTypeGetter rhs,
+            ILocationReferenceTypeGetter def,
             ErrorMaskBuilder errorMask,
-            LocationReferenceType_CopyMask copyMask)
+            LocationReferenceType_TranslationMask copyMask)
         {
-            ((SkyrimMajorRecordSetterCopyCommon)((ISkyrimMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1353,9 +1355,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return LocationReferenceTypeSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return LocationReferenceTypeSetterCopyCommon.Instance;
+            return LocationReferenceTypeSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1827,23 +1829,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class LocationReferenceType_CopyMask : SkyrimMajorRecord_CopyMask
-    {
-        public LocationReferenceType_CopyMask()
-        {
-        }
-
-        public LocationReferenceType_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Color = defaultOn;
-        }
-
-        #region Members
-        public bool Color;
-        #endregion
-
-    }
-
     public class LocationReferenceType_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
@@ -2026,6 +2011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return LocationReferenceTypeCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return LocationReferenceTypeSetterTranslationCommon.Instance;
         }
 
         #endregion

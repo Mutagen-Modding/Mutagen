@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region DodgeFatigueModMult
         Single DodgeFatigueModMult { get; }
 
@@ -631,11 +631,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyleAdvanced lhs,
-            CombatStyleAdvanced rhs)
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleAdvanced lhs,
+            ICombatStyleAdvancedGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -644,13 +644,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyleAdvanced lhs,
-            CombatStyleAdvanced rhs,
-            CombatStyleAdvanced_CopyMask copyMask,
-            CombatStyleAdvanced def = null)
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleAdvanced lhs,
+            ICombatStyleAdvancedGetter rhs,
+            CombatStyleAdvanced_TranslationMask copyMask,
+            ICombatStyleAdvancedGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -659,16 +659,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyleAdvanced lhs,
-            CombatStyleAdvanced rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleAdvanced lhs,
+            ICombatStyleAdvancedGetter rhs,
             out CombatStyleAdvanced_ErrorMask errorMask,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null,
+            CombatStyleAdvanced_TranslationMask copyMask = null,
+            ICombatStyleAdvancedGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -677,14 +677,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyleAdvanced lhs,
-            CombatStyleAdvanced rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleAdvanced lhs,
+            ICombatStyleAdvancedGetter rhs,
             ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
+            CombatStyleAdvanced_TranslationMask copyMask = null,
+            ICombatStyleAdvancedGetter def = null)
         {
-            ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -692,12 +692,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static CombatStyleAdvanced Copy(
-            this CombatStyleAdvanced item,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
+        public static CombatStyleAdvanced DeepCopy(
+            this ICombatStyleAdvancedGetter item,
+            CombatStyleAdvanced_TranslationMask copyMask = null,
+            ICombatStyleAdvancedGetter def = null)
         {
-            return ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).Copy(
+            return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -752,6 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ICombatStyleAdvanced item,
             string path,
@@ -893,6 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1359,19 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public CombatStyleAdvanced GetNew()
         {
             return new CombatStyleAdvanced();
-        }
-        
-        public CombatStyleAdvanced Copy(
-            CombatStyleAdvanced item,
-            CombatStyleAdvanced_CopyMask copyMask = null,
-            CombatStyleAdvanced def = null)
-        {
-            CombatStyleAdvanced ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1919,147 +1908,118 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class CombatStyleAdvancedSetterCopyCommon
+    public partial class CombatStyleAdvancedSetterTranslationCommon
     {
-        public static readonly CombatStyleAdvancedSetterCopyCommon Instance = new CombatStyleAdvancedSetterCopyCommon();
+        public static readonly CombatStyleAdvancedSetterTranslationCommon Instance = new CombatStyleAdvancedSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            CombatStyleAdvanced item,
-            CombatStyleAdvanced rhs,
-            CombatStyleAdvanced def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ICombatStyleAdvanced item,
+            ICombatStyleAdvancedGetter rhs,
+            ICombatStyleAdvancedGetter def,
             ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_CopyMask copyMask)
+            CombatStyleAdvanced_TranslationMask copyMask)
         {
             if (copyMask?.DodgeFatigueModMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult);
                 item.DodgeFatigueModMult = rhs.DodgeFatigueModMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeFatigueModBase ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase);
                 item.DodgeFatigueModBase = rhs.DodgeFatigueModBase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EncumbSpeedModBase ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase);
                 item.EncumbSpeedModBase = rhs.EncumbSpeedModBase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EncumbSpeedModMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult);
                 item.EncumbSpeedModMult = rhs.EncumbSpeedModMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeWhileUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult);
                 item.DodgeWhileUnderAttackMult = rhs.DodgeWhileUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeNotUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult);
                 item.DodgeNotUnderAttackMult = rhs.DodgeNotUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackWhileUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult);
                 item.DodgeBackWhileUnderAttackMult = rhs.DodgeBackWhileUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackNotUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult);
                 item.DodgeBackNotUnderAttackMult = rhs.DodgeBackNotUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardWhileUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult);
                 item.DodgeForwardWhileUnderAttackMult = rhs.DodgeForwardWhileUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardNotUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult);
                 item.DodgeForwardNotUnderAttackMult = rhs.DodgeForwardNotUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BlockSkillModifierMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult);
                 item.BlockSkillModifierMult = rhs.BlockSkillModifierMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BlockSkillModifierBase ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase);
                 item.BlockSkillModifierBase = rhs.BlockSkillModifierBase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BlockWhileUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult);
                 item.BlockWhileUnderAttackMult = rhs.BlockWhileUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BlockNotUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult);
                 item.BlockNotUnderAttackMult = rhs.BlockNotUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackSkillModifierMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult);
                 item.AttackSkillModifierMult = rhs.AttackSkillModifierMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackSkillModifierBase ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase);
                 item.AttackSkillModifierBase = rhs.AttackSkillModifierBase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackWhileUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult);
                 item.AttackWhileUnderAttackMult = rhs.AttackWhileUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackNotUnderAttackMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult);
                 item.AttackNotUnderAttackMult = rhs.AttackNotUnderAttackMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackDuringBlockMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult);
                 item.AttackDuringBlockMult = rhs.AttackDuringBlockMult;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackFatigueModBase ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase);
                 item.PowerAttackFatigueModBase = rhs.PowerAttackFatigueModBase;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackFatigueModMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult);
                 item.PowerAttackFatigueModMult = rhs.PowerAttackFatigueModMult;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public CombatStyleAdvanced DeepCopy(
+            ICombatStyleAdvancedGetter item,
+            CombatStyleAdvanced_TranslationMask copyMask = null,
+            ICombatStyleAdvancedGetter def = null)
+        {
+            CombatStyleAdvanced ret = CombatStyleAdvancedSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -2082,9 +2042,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return CombatStyleAdvancedSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return CombatStyleAdvancedSetterCopyCommon.Instance;
+            return CombatStyleAdvancedSetterTranslationCommon.Instance;
         }
         object ICombatStyleAdvancedGetter.CommonInstance()
         {
@@ -2094,9 +2054,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object ICombatStyleAdvancedGetter.CommonSetterCopyInstance()
+        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -3793,63 +3753,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class CombatStyleAdvanced_CopyMask
-    {
-        public CombatStyleAdvanced_CopyMask()
-        {
-        }
-
-        public CombatStyleAdvanced_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.DodgeFatigueModMult = defaultOn;
-            this.DodgeFatigueModBase = defaultOn;
-            this.EncumbSpeedModBase = defaultOn;
-            this.EncumbSpeedModMult = defaultOn;
-            this.DodgeWhileUnderAttackMult = defaultOn;
-            this.DodgeNotUnderAttackMult = defaultOn;
-            this.DodgeBackWhileUnderAttackMult = defaultOn;
-            this.DodgeBackNotUnderAttackMult = defaultOn;
-            this.DodgeForwardWhileUnderAttackMult = defaultOn;
-            this.DodgeForwardNotUnderAttackMult = defaultOn;
-            this.BlockSkillModifierMult = defaultOn;
-            this.BlockSkillModifierBase = defaultOn;
-            this.BlockWhileUnderAttackMult = defaultOn;
-            this.BlockNotUnderAttackMult = defaultOn;
-            this.AttackSkillModifierMult = defaultOn;
-            this.AttackSkillModifierBase = defaultOn;
-            this.AttackWhileUnderAttackMult = defaultOn;
-            this.AttackNotUnderAttackMult = defaultOn;
-            this.AttackDuringBlockMult = defaultOn;
-            this.PowerAttackFatigueModBase = defaultOn;
-            this.PowerAttackFatigueModMult = defaultOn;
-        }
-
-        #region Members
-        public bool DodgeFatigueModMult;
-        public bool DodgeFatigueModBase;
-        public bool EncumbSpeedModBase;
-        public bool EncumbSpeedModMult;
-        public bool DodgeWhileUnderAttackMult;
-        public bool DodgeNotUnderAttackMult;
-        public bool DodgeBackWhileUnderAttackMult;
-        public bool DodgeBackNotUnderAttackMult;
-        public bool DodgeForwardWhileUnderAttackMult;
-        public bool DodgeForwardNotUnderAttackMult;
-        public bool BlockSkillModifierMult;
-        public bool BlockSkillModifierBase;
-        public bool BlockWhileUnderAttackMult;
-        public bool BlockNotUnderAttackMult;
-        public bool AttackSkillModifierMult;
-        public bool AttackSkillModifierBase;
-        public bool AttackWhileUnderAttackMult;
-        public bool AttackNotUnderAttackMult;
-        public bool AttackDuringBlockMult;
-        public bool PowerAttackFatigueModBase;
-        public bool PowerAttackFatigueModMult;
-        #endregion
-
-    }
-
     public class CombatStyleAdvanced_TranslationMask : ITranslationMask
     {
         #region Members
@@ -4139,6 +4042,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return CombatStyleAdvancedCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return CombatStyleAdvancedSetterTranslationCommon.Instance;
+        }
         object ICombatStyleAdvancedGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -4147,9 +4054,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object ICombatStyleAdvancedGetter.CommonSetterCopyInstance()
+        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

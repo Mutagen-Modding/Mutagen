@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"var ret = new {obj.Name}(getNextFormKey());");
                     //ToDo
                     // Modify to getter interface after copy is refactored
-                    fg.AppendLine($"ret.CopyFieldsFrom(({obj.ObjectName})item);");
+                    fg.AppendLine($"ret.DeepCopyFieldsFrom(({obj.ObjectName})item);");
                     fg.AppendLine("duplicatedRecords?.Add((ret, item.FormKey));");
                     fg.AppendLine($"PostDuplicate(ret, ({obj.ObjectName})item, getNextFormKey, duplicatedRecords);");
                     fg.AppendLine("return ret;");

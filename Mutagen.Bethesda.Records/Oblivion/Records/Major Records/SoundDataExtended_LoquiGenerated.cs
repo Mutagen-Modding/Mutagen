@@ -461,13 +461,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundDataExtended lhs,
-            SoundDataExtended rhs,
-            SoundDataExtended_CopyMask copyMask,
-            SoundDataExtended def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataExtendedInternal lhs,
+            ISoundDataExtendedInternalGetter rhs,
+            SoundDataExtended_TranslationMask copyMask,
+            ISoundDataExtendedInternalGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -476,16 +476,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundDataExtended lhs,
-            SoundDataExtended rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataExtendedInternal lhs,
+            ISoundDataExtendedInternalGetter rhs,
             out SoundDataExtended_ErrorMask errorMask,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null,
+            SoundDataExtended_TranslationMask copyMask = null,
+            ISoundDataExtendedInternalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundDataExtendedSetterCopyCommon)((ISoundDataExtendedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -494,14 +494,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundDataExtended lhs,
-            SoundDataExtended rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataExtendedInternal lhs,
+            ISoundDataExtendedInternalGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
+            SoundDataExtended_TranslationMask copyMask = null,
+            ISoundDataExtendedInternalGetter def = null)
         {
-            ((SoundDataExtendedSetterCopyCommon)((ISoundDataExtendedGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -509,12 +509,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static SoundDataExtended Copy(
-            this SoundDataExtended item,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
+        public static SoundDataExtended DeepCopy(
+            this ISoundDataExtendedInternalGetter item,
+            SoundDataExtended_TranslationMask copyMask = null,
+            ISoundDataExtendedInternalGetter def = null)
         {
-            return ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).Copy(
+            return ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -569,6 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             string path,
@@ -710,6 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -952,19 +954,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new SoundDataExtended GetNew()
         {
             return new SoundDataExtended();
-        }
-        
-        public new SoundDataExtended Copy(
-            SoundDataExtended item,
-            SoundDataExtended_CopyMask copyMask = null,
-            SoundDataExtended def = null)
-        {
-            SoundDataExtended ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1221,19 +1210,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class SoundDataExtendedSetterCopyCommon : SoundDataSetterCopyCommon
+    public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
     {
-        public new static readonly SoundDataExtendedSetterCopyCommon Instance = new SoundDataExtendedSetterCopyCommon();
+        public new static readonly SoundDataExtendedSetterTranslationCommon Instance = new SoundDataExtendedSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SoundDataExtended item,
-            SoundDataExtended rhs,
-            SoundDataExtended def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISoundDataExtended item,
+            ISoundDataExtendedGetter rhs,
+            ISoundDataExtendedGetter def,
             ErrorMaskBuilder errorMask,
-            SoundDataExtended_CopyMask copyMask)
+            SoundDataExtended_TranslationMask copyMask)
         {
-            ((SoundDataSetterCopyCommon)((ISoundDataGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1241,25 +1230,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.StaticAttenuation ?? true)
             {
-                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
                 item.StaticAttenuation = rhs.StaticAttenuation;
-                errorMask?.PopIndex();
             }
             if (copyMask?.StopTime ?? true)
             {
-                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
                 item.StopTime = rhs.StopTime;
-                errorMask?.PopIndex();
             }
             if (copyMask?.StartTime ?? true)
             {
-                errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
                 item.StartTime = rhs.StartTime;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public new SoundDataExtended DeepCopy(
+            ISoundDataExtendedInternalGetter item,
+            SoundDataExtended_TranslationMask copyMask = null,
+            ISoundDataExtendedInternalGetter def = null)
+        {
+            SoundDataExtended ret = SoundDataExtendedSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1282,9 +1278,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SoundDataExtendedSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return SoundDataExtendedSetterCopyCommon.Instance;
+            return SoundDataExtendedSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1854,27 +1850,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SoundDataExtended_CopyMask : SoundData_CopyMask
-    {
-        public SoundDataExtended_CopyMask()
-        {
-        }
-
-        public SoundDataExtended_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.StaticAttenuation = defaultOn;
-            this.StopTime = defaultOn;
-            this.StartTime = defaultOn;
-        }
-
-        #region Members
-        public bool StaticAttenuation;
-        public bool StopTime;
-        public bool StartTime;
-        #endregion
-
-    }
-
     public class SoundDataExtended_TranslationMask : SoundData_TranslationMask
     {
         #region Members
@@ -2160,6 +2135,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return SoundDataExtendedCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return SoundDataExtendedSetterTranslationCommon.Instance;
         }
 
         #endregion

@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingBool lhs,
-            GameSettingBool rhs,
-            GameSettingBool_CopyMask copyMask,
-            GameSettingBool def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingBoolInternal lhs,
+            IGameSettingBoolGetter rhs,
+            GameSettingBool_TranslationMask copyMask,
+            IGameSettingBoolGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingBool lhs,
-            GameSettingBool rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingBoolInternal lhs,
+            IGameSettingBoolGetter rhs,
             out GameSettingBool_ErrorMask errorMask,
-            GameSettingBool_CopyMask copyMask = null,
-            GameSettingBool def = null,
+            GameSettingBool_TranslationMask copyMask = null,
+            IGameSettingBoolGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingBoolSetterCopyCommon)((IGameSettingBoolGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSettingBool lhs,
-            GameSettingBool rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingBoolInternal lhs,
+            IGameSettingBoolGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingBool_CopyMask copyMask = null,
-            GameSettingBool def = null)
+            GameSettingBool_TranslationMask copyMask = null,
+            IGameSettingBoolGetter def = null)
         {
-            ((GameSettingBoolSetterCopyCommon)((IGameSettingBoolGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -568,6 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGameSettingBoolInternal item,
             string path,
@@ -709,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1304,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new GameSettingBool(getNextFormKey());
-            ret.CopyFieldsFrom((GameSettingBool)item);
+            ret.DeepCopyFieldsFrom((GameSettingBool)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GameSettingBool)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1313,19 +1315,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GameSettingBoolSetterCopyCommon : GameSettingSetterCopyCommon
+    public partial class GameSettingBoolSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
-        public new static readonly GameSettingBoolSetterCopyCommon Instance = new GameSettingBoolSetterCopyCommon();
+        public new static readonly GameSettingBoolSetterTranslationCommon Instance = new GameSettingBoolSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GameSettingBool item,
-            GameSettingBool rhs,
-            GameSettingBool def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGameSettingBool item,
+            IGameSettingBoolGetter rhs,
+            IGameSettingBoolGetter def,
             ErrorMaskBuilder errorMask,
-            GameSettingBool_CopyMask copyMask)
+            GameSettingBool_TranslationMask copyMask)
         {
-            ((GameSettingSetterCopyCommon)((IGameSettingGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1386,9 +1388,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GameSettingBoolSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GameSettingBoolSetterCopyCommon.Instance;
+            return GameSettingBoolSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1875,23 +1877,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class GameSettingBool_CopyMask : GameSetting_CopyMask
-    {
-        public GameSettingBool_CopyMask()
-        {
-        }
-
-        public GameSettingBool_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Data = defaultOn;
-        }
-
-        #region Members
-        public bool Data;
-        #endregion
-
-    }
-
     public class GameSettingBool_TranslationMask : GameSetting_TranslationMask
     {
         #region Members
@@ -2123,6 +2108,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return GameSettingBoolCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GameSettingBoolSetterTranslationCommon.Instance;
         }
 
         #endregion

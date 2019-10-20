@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region MajorRecordFlagsRaw
         Int32 MajorRecordFlagsRaw { get; }
 
@@ -493,11 +493,11 @@ namespace Mutagen.Bethesda
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this MajorRecord lhs,
-            MajorRecord rhs)
+        public static void DeepCopyFieldsFrom(
+            this IMajorRecordInternal lhs,
+            IMajorRecordGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -506,13 +506,13 @@ namespace Mutagen.Bethesda
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this MajorRecord lhs,
-            MajorRecord rhs,
-            MajorRecord_CopyMask copyMask,
-            MajorRecord def = null)
+        public static void DeepCopyFieldsFrom(
+            this IMajorRecordInternal lhs,
+            IMajorRecordGetter rhs,
+            MajorRecord_TranslationMask copyMask,
+            IMajorRecordGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -521,16 +521,16 @@ namespace Mutagen.Bethesda
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this MajorRecord lhs,
-            MajorRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMajorRecordInternal lhs,
+            IMajorRecordGetter rhs,
             out MajorRecord_ErrorMask errorMask,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null,
+            MajorRecord_TranslationMask copyMask = null,
+            IMajorRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MajorRecordSetterCopyCommon)((IMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -539,14 +539,14 @@ namespace Mutagen.Bethesda
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this MajorRecord lhs,
-            MajorRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMajorRecordInternal lhs,
+            IMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            MajorRecord_CopyMask copyMask = null,
-            MajorRecord def = null)
+            MajorRecord_TranslationMask copyMask = null,
+            IMajorRecordGetter def = null)
         {
-            ((MajorRecordSetterCopyCommon)((IMajorRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -603,6 +603,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IMajorRecordInternal item,
             string path,
@@ -767,6 +768,7 @@ namespace Mutagen.Bethesda
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1474,29 +1476,25 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
     }
-    public partial class MajorRecordSetterCopyCommon
+    public partial class MajorRecordSetterTranslationCommon
     {
-        public static readonly MajorRecordSetterCopyCommon Instance = new MajorRecordSetterCopyCommon();
+        public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            MajorRecord item,
-            MajorRecord rhs,
-            MajorRecord def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            IMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
-            MajorRecord_CopyMask copyMask)
+            MajorRecord_TranslationMask copyMask)
         {
             if (copyMask?.MajorRecordFlagsRaw ?? true)
             {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
                 item.MajorRecordFlagsRaw = rhs.MajorRecordFlagsRaw;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Version ?? true)
             {
-                errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
                 item.Version = rhs.Version;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EditorID ?? true)
             {
@@ -1553,9 +1551,9 @@ namespace Mutagen.Bethesda
         {
             return MajorRecordSetterCommon.Instance;
         }
-        protected virtual object CommonSetterCopyInstance()
+        protected virtual object CommonSetterTranslationInstance()
         {
-            return MajorRecordSetterCopyCommon.Instance;
+            return MajorRecordSetterTranslationCommon.Instance;
         }
         object IMajorRecordGetter.CommonInstance()
         {
@@ -1565,9 +1563,9 @@ namespace Mutagen.Bethesda
         {
             return this.CommonSetterInstance();
         }
-        object IMajorRecordGetter.CommonSetterCopyInstance()
+        object IMajorRecordGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2270,29 +2268,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
-    public class MajorRecord_CopyMask
-    {
-        public MajorRecord_CopyMask()
-        {
-        }
-
-        public MajorRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MajorRecordFlagsRaw = defaultOn;
-            this.FormKey = defaultOn;
-            this.Version = defaultOn;
-            this.EditorID = defaultOn;
-        }
-
-        #region Members
-        public bool MajorRecordFlagsRaw;
-        public bool FormKey;
-        public bool Version;
-        public bool EditorID;
-        #endregion
-
-    }
-
     public class MajorRecord_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2491,6 +2466,10 @@ namespace Mutagen.Bethesda.Internals
         {
             return MajorRecordCommon.Instance;
         }
+        protected virtual object CommonSetterTranslationInstance()
+        {
+            return MajorRecordSetterTranslationCommon.Instance;
+        }
         object IMajorRecordGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2499,9 +2478,9 @@ namespace Mutagen.Bethesda.Internals
         {
             return null;
         }
-        object IMajorRecordGetter.CommonSetterCopyInstance()
+        object IMajorRecordGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

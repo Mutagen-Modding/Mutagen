@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region EnchantEffect
         IEffectShaderGetter EnchantEffect { get; }
         IFormIDLinkGetter<IEffectShaderGetter> EnchantEffect_Property { get; }
@@ -542,11 +542,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this MagicEffectSubData lhs,
-            MagicEffectSubData rhs)
+        public static void DeepCopyFieldsFrom(
+            this IMagicEffectSubData lhs,
+            IMagicEffectSubDataGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -555,13 +555,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this MagicEffectSubData lhs,
-            MagicEffectSubData rhs,
-            MagicEffectSubData_CopyMask copyMask,
-            MagicEffectSubData def = null)
+        public static void DeepCopyFieldsFrom(
+            this IMagicEffectSubData lhs,
+            IMagicEffectSubDataGetter rhs,
+            MagicEffectSubData_TranslationMask copyMask,
+            IMagicEffectSubDataGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -570,16 +570,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this MagicEffectSubData lhs,
-            MagicEffectSubData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMagicEffectSubData lhs,
+            IMagicEffectSubDataGetter rhs,
             out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null,
+            MagicEffectSubData_TranslationMask copyMask = null,
+            IMagicEffectSubDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MagicEffectSubDataSetterCopyCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -588,14 +588,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this MagicEffectSubData lhs,
-            MagicEffectSubData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMagicEffectSubData lhs,
+            IMagicEffectSubDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
+            MagicEffectSubData_TranslationMask copyMask = null,
+            IMagicEffectSubDataGetter def = null)
         {
-            ((MagicEffectSubDataSetterCopyCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -603,12 +603,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static MagicEffectSubData Copy(
-            this MagicEffectSubData item,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
+        public static MagicEffectSubData DeepCopy(
+            this IMagicEffectSubDataGetter item,
+            MagicEffectSubData_TranslationMask copyMask = null,
+            IMagicEffectSubDataGetter def = null)
         {
-            return ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()).Copy(
+            return ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -663,6 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IMagicEffectSubData item,
             string path,
@@ -804,6 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1088,19 +1090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new MagicEffectSubData();
         }
         
-        public MagicEffectSubData Copy(
-            MagicEffectSubData item,
-            MagicEffectSubData_CopyMask copyMask = null,
-            MagicEffectSubData def = null)
-        {
-            MagicEffectSubData ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMagicEffectSubData item,
@@ -1361,63 +1350,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class MagicEffectSubDataSetterCopyCommon
+    public partial class MagicEffectSubDataSetterTranslationCommon
     {
-        public static readonly MagicEffectSubDataSetterCopyCommon Instance = new MagicEffectSubDataSetterCopyCommon();
+        public static readonly MagicEffectSubDataSetterTranslationCommon Instance = new MagicEffectSubDataSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            MagicEffectSubData item,
-            MagicEffectSubData rhs,
-            MagicEffectSubData def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IMagicEffectSubData item,
+            IMagicEffectSubDataGetter rhs,
+            IMagicEffectSubDataGetter def,
             ErrorMaskBuilder errorMask,
-            MagicEffectSubData_CopyMask copyMask)
+            MagicEffectSubData_TranslationMask copyMask)
         {
             if (copyMask?.EnchantEffect ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
-                item.EnchantEffect_Property.SetLink(value: rhs.EnchantEffect_Property);
-                errorMask?.PopIndex();
+                item.EnchantEffect_Property.FormKey = rhs.EnchantEffect_Property.FormKey;
             }
             if (copyMask?.CastingSound ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
-                item.CastingSound_Property.SetLink(value: rhs.CastingSound_Property);
-                errorMask?.PopIndex();
+                item.CastingSound_Property.FormKey = rhs.CastingSound_Property.FormKey;
             }
             if (copyMask?.BoltSound ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
-                item.BoltSound_Property.SetLink(value: rhs.BoltSound_Property);
-                errorMask?.PopIndex();
+                item.BoltSound_Property.FormKey = rhs.BoltSound_Property.FormKey;
             }
             if (copyMask?.HitSound ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
-                item.HitSound_Property.SetLink(value: rhs.HitSound_Property);
-                errorMask?.PopIndex();
+                item.HitSound_Property.FormKey = rhs.HitSound_Property.FormKey;
             }
             if (copyMask?.AreaSound ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
-                item.AreaSound_Property.SetLink(value: rhs.AreaSound_Property);
-                errorMask?.PopIndex();
+                item.AreaSound_Property.FormKey = rhs.AreaSound_Property.FormKey;
             }
             if (copyMask?.ConstantEffectEnchantmentFactor ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
                 item.ConstantEffectEnchantmentFactor = rhs.ConstantEffectEnchantmentFactor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ConstantEffectBarterFactor ?? true)
             {
-                errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
                 item.ConstantEffectBarterFactor = rhs.ConstantEffectBarterFactor;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public MagicEffectSubData DeepCopy(
+            IMagicEffectSubDataGetter item,
+            MagicEffectSubData_TranslationMask copyMask = null,
+            IMagicEffectSubDataGetter def = null)
+        {
+            MagicEffectSubData ret = MagicEffectSubDataSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1440,9 +1428,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return MagicEffectSubDataSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return MagicEffectSubDataSetterCopyCommon.Instance;
+            return MagicEffectSubDataSetterTranslationCommon.Instance;
         }
         object IMagicEffectSubDataGetter.CommonInstance()
         {
@@ -1452,9 +1440,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IMagicEffectSubDataGetter.CommonSetterCopyInstance()
+        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2258,35 +2246,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class MagicEffectSubData_CopyMask
-    {
-        public MagicEffectSubData_CopyMask()
-        {
-        }
-
-        public MagicEffectSubData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.EnchantEffect = defaultOn;
-            this.CastingSound = defaultOn;
-            this.BoltSound = defaultOn;
-            this.HitSound = defaultOn;
-            this.AreaSound = defaultOn;
-            this.ConstantEffectEnchantmentFactor = defaultOn;
-            this.ConstantEffectBarterFactor = defaultOn;
-        }
-
-        #region Members
-        public bool EnchantEffect;
-        public bool CastingSound;
-        public bool BoltSound;
-        public bool HitSound;
-        public bool AreaSound;
-        public bool ConstantEffectEnchantmentFactor;
-        public bool ConstantEffectBarterFactor;
-        #endregion
-
-    }
-
     public class MagicEffectSubData_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2491,6 +2450,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return MagicEffectSubDataCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return MagicEffectSubDataSetterTranslationCommon.Instance;
+        }
         object IMagicEffectSubDataGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2499,9 +2462,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IMagicEffectSubDataGetter.CommonSetterCopyInstance()
+        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

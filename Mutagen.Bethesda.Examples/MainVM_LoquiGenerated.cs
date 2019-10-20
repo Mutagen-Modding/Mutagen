@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Examples
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region ModFilePath
         String ModFilePath { get; }
 
@@ -365,11 +365,11 @@ namespace Mutagen.Bethesda.Examples
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this MainVM lhs,
-            MainVM rhs)
+        public static void DeepCopyFieldsFrom(
+            this IMainVM lhs,
+            IMainVMGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -378,13 +378,13 @@ namespace Mutagen.Bethesda.Examples
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this MainVM lhs,
-            MainVM rhs,
-            MainVM_CopyMask copyMask,
-            MainVM def = null)
+        public static void DeepCopyFieldsFrom(
+            this IMainVM lhs,
+            IMainVMGetter rhs,
+            MainVM_TranslationMask copyMask,
+            IMainVMGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -393,16 +393,16 @@ namespace Mutagen.Bethesda.Examples
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this MainVM lhs,
-            MainVM rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMainVM lhs,
+            IMainVMGetter rhs,
             out MainVM_ErrorMask errorMask,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null,
+            MainVM_TranslationMask copyMask = null,
+            IMainVMGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MainVMSetterCopyCommon)((IMainVMGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MainVMSetterTranslationCommon)((IMainVMGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -411,14 +411,14 @@ namespace Mutagen.Bethesda.Examples
             errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this MainVM lhs,
-            MainVM rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMainVM lhs,
+            IMainVMGetter rhs,
             ErrorMaskBuilder errorMask,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
+            MainVM_TranslationMask copyMask = null,
+            IMainVMGetter def = null)
         {
-            ((MainVMSetterCopyCommon)((IMainVMGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MainVMSetterTranslationCommon)((IMainVMGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -426,12 +426,12 @@ namespace Mutagen.Bethesda.Examples
                 copyMask: copyMask);
         }
 
-        public static MainVM Copy(
-            this MainVM item,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
+        public static MainVM DeepCopy(
+            this IMainVMGetter item,
+            MainVM_TranslationMask copyMask = null,
+            IMainVMGetter def = null)
         {
-            return ((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).Copy(
+            return ((MainVMSetterTranslationCommon)((IMainVMGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -486,6 +486,7 @@ namespace Mutagen.Bethesda.Examples
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IMainVM item,
             string path,
@@ -781,19 +782,6 @@ namespace Mutagen.Bethesda.Examples.Internals
             return new MainVM();
         }
         
-        public MainVM Copy(
-            MainVM item,
-            MainVM_CopyMask copyMask = null,
-            MainVM def = null)
-        {
-            MainVM ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMainVM item,
@@ -938,17 +926,17 @@ namespace Mutagen.Bethesda.Examples.Internals
         
         
     }
-    public partial class MainVMSetterCopyCommon
+    public partial class MainVMSetterTranslationCommon
     {
-        public static readonly MainVMSetterCopyCommon Instance = new MainVMSetterCopyCommon();
+        public static readonly MainVMSetterTranslationCommon Instance = new MainVMSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            MainVM item,
-            MainVM rhs,
-            MainVM def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IMainVM item,
+            IMainVMGetter rhs,
+            IMainVMGetter def,
             ErrorMaskBuilder errorMask,
-            MainVM_CopyMask copyMask)
+            MainVM_TranslationMask copyMask)
         {
             if (copyMask?.ModFilePath ?? true)
             {
@@ -971,6 +959,19 @@ namespace Mutagen.Bethesda.Examples.Internals
         
         #endregion
         
+        public MainVM DeepCopy(
+            IMainVMGetter item,
+            MainVM_TranslationMask copyMask = null,
+            IMainVMGetter def = null)
+        {
+            MainVM ret = MainVMSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -992,9 +993,9 @@ namespace Mutagen.Bethesda.Examples
         {
             return MainVMSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return MainVMSetterCopyCommon.Instance;
+            return MainVMSetterTranslationCommon.Instance;
         }
         object IMainVMGetter.CommonInstance()
         {
@@ -1004,9 +1005,9 @@ namespace Mutagen.Bethesda.Examples
         {
             return this.CommonSetterInstance();
         }
-        object IMainVMGetter.CommonSetterCopyInstance()
+        object IMainVMGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1566,23 +1567,6 @@ namespace Mutagen.Bethesda.Examples.Internals
         #endregion
 
     }
-    public class MainVM_CopyMask
-    {
-        public MainVM_CopyMask()
-        {
-        }
-
-        public MainVM_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ModFilePath = defaultOn;
-        }
-
-        #region Members
-        public bool ModFilePath;
-        #endregion
-
-    }
-
     public class MainVM_TranslationMask : ITranslationMask
     {
         #region Members

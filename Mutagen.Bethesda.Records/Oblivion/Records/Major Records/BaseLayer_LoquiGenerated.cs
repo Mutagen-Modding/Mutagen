@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Texture
         ILandTextureGetter Texture { get; }
         IFormIDLinkGetter<ILandTextureGetter> Texture_Property { get; }
@@ -514,11 +514,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this BaseLayer lhs,
-            BaseLayer rhs)
+        public static void DeepCopyFieldsFrom(
+            this IBaseLayerInternal lhs,
+            IBaseLayerGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -527,13 +527,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this BaseLayer lhs,
-            BaseLayer rhs,
-            BaseLayer_CopyMask copyMask,
-            BaseLayer def = null)
+        public static void DeepCopyFieldsFrom(
+            this IBaseLayerInternal lhs,
+            IBaseLayerGetter rhs,
+            BaseLayer_TranslationMask copyMask,
+            IBaseLayerGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -542,16 +542,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this BaseLayer lhs,
-            BaseLayer rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBaseLayerInternal lhs,
+            IBaseLayerGetter rhs,
             out BaseLayer_ErrorMask errorMask,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null,
+            BaseLayer_TranslationMask copyMask = null,
+            IBaseLayerGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BaseLayerSetterCopyCommon)((IBaseLayerGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -560,14 +560,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this BaseLayer lhs,
-            BaseLayer rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBaseLayerInternal lhs,
+            IBaseLayerGetter rhs,
             ErrorMaskBuilder errorMask,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
+            BaseLayer_TranslationMask copyMask = null,
+            IBaseLayerGetter def = null)
         {
-            ((BaseLayerSetterCopyCommon)((IBaseLayerGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -575,12 +575,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static BaseLayer Copy(
-            this BaseLayer item,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
+        public static BaseLayer DeepCopy(
+            this IBaseLayerGetter item,
+            BaseLayer_TranslationMask copyMask = null,
+            IBaseLayerGetter def = null)
         {
-            return ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()).Copy(
+            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -635,6 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IBaseLayerInternal item,
             string path,
@@ -776,6 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1033,19 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public BaseLayer GetNew()
         {
             return new BaseLayer();
-        }
-        
-        public BaseLayer Copy(
-            BaseLayer item,
-            BaseLayer_CopyMask copyMask = null,
-            BaseLayer def = null)
-        {
-            BaseLayer ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1338,39 +1327,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class BaseLayerSetterCopyCommon
+    public partial class BaseLayerSetterTranslationCommon
     {
-        public static readonly BaseLayerSetterCopyCommon Instance = new BaseLayerSetterCopyCommon();
+        public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            BaseLayer item,
-            BaseLayer rhs,
-            BaseLayer def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IBaseLayer item,
+            IBaseLayerGetter rhs,
+            IBaseLayerGetter def,
             ErrorMaskBuilder errorMask,
-            BaseLayer_CopyMask copyMask)
+            BaseLayer_TranslationMask copyMask)
         {
             if (copyMask?.Texture ?? true)
             {
-                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
-                item.Texture_Property.SetLink(value: rhs.Texture_Property);
-                errorMask?.PopIndex();
+                item.Texture_Property.FormKey = rhs.Texture_Property.FormKey;
             }
             if (copyMask?.Quadrant ?? true)
             {
-                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
                 item.Quadrant = rhs.Quadrant;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BTXTDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)BaseLayer_FieldIndex.BTXTDataTypeState);
                 item.BTXTDataTypeState = rhs.BTXTDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public BaseLayer DeepCopy(
+            IBaseLayerGetter item,
+            BaseLayer_TranslationMask copyMask = null,
+            IBaseLayerGetter def = null)
+        {
+            BaseLayer ret = BaseLayerSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1393,9 +1389,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return BaseLayerSetterCommon.Instance;
         }
-        protected virtual object CommonSetterCopyInstance()
+        protected virtual object CommonSetterTranslationInstance()
         {
-            return BaseLayerSetterCopyCommon.Instance;
+            return BaseLayerSetterTranslationCommon.Instance;
         }
         object IBaseLayerGetter.CommonInstance()
         {
@@ -1405,9 +1401,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IBaseLayerGetter.CommonSetterCopyInstance()
+        object IBaseLayerGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2094,29 +2090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class BaseLayer_CopyMask
-    {
-        public BaseLayer_CopyMask()
-        {
-        }
-
-        public BaseLayer_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Texture = defaultOn;
-            this.Quadrant = defaultOn;
-            this.LayerNumber = defaultOn;
-            this.BTXTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Texture;
-        public bool Quadrant;
-        public bool LayerNumber;
-        public bool BTXTDataTypeState;
-        #endregion
-
-    }
-
     public class BaseLayer_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2316,6 +2289,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return BaseLayerCommon.Instance;
         }
+        protected virtual object CommonSetterTranslationInstance()
+        {
+            return BaseLayerSetterTranslationCommon.Instance;
+        }
         object IBaseLayerGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2324,9 +2301,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IBaseLayerGetter.CommonSetterCopyInstance()
+        object IBaseLayerGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

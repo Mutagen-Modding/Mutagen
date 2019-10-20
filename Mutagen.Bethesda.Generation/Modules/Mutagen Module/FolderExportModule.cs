@@ -121,11 +121,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case ObjectType.Record:
                             using (var args = new ArgsWrapper(fg,
-                                $"item.{field.Name}.CopyFieldsFrom({loqui.TypeName(getter: false)}.CreateFromXml",
-                                suffixLine: ");")
-                            {
-                                SemiColon = false
-                            })
+                                $"item.{field.Name}.CopyInFromXml"))
                             {
                                 args.Add($"path: Path.Combine(dir.Path, \"{field.Name}.xml\")");
                                 args.Add($"errorMask: errorMask");

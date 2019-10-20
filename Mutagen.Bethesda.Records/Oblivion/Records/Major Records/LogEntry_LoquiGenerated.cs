@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Flags
         LogEntry.Flag Flags { get; }
         bool Flags_IsSet { get; }
@@ -579,11 +579,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this LogEntry lhs,
-            LogEntry rhs)
+        public static void DeepCopyFieldsFrom(
+            this ILogEntry lhs,
+            ILogEntryGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -592,13 +592,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this LogEntry lhs,
-            LogEntry rhs,
-            LogEntry_CopyMask copyMask,
-            LogEntry def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILogEntry lhs,
+            ILogEntryGetter rhs,
+            LogEntry_TranslationMask copyMask,
+            ILogEntryGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -607,16 +607,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this LogEntry lhs,
-            LogEntry rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILogEntry lhs,
+            ILogEntryGetter rhs,
             out LogEntry_ErrorMask errorMask,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null,
+            LogEntry_TranslationMask copyMask = null,
+            ILogEntryGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LogEntrySetterCopyCommon)((ILogEntryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -625,14 +625,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this LogEntry lhs,
-            LogEntry rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILogEntry lhs,
+            ILogEntryGetter rhs,
             ErrorMaskBuilder errorMask,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
+            LogEntry_TranslationMask copyMask = null,
+            ILogEntryGetter def = null)
         {
-            ((LogEntrySetterCopyCommon)((ILogEntryGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -640,12 +640,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static LogEntry Copy(
-            this LogEntry item,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
+        public static LogEntry DeepCopy(
+            this ILogEntryGetter item,
+            LogEntry_TranslationMask copyMask = null,
+            ILogEntryGetter def = null)
         {
-            return ((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()).Copy(
+            return ((LogEntrySetterTranslationCommon)((ILogEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -700,6 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILogEntry item,
             string path,
@@ -841,6 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1108,19 +1110,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LogEntry GetNew()
         {
             return new LogEntry();
-        }
-        
-        public LogEntry Copy(
-            LogEntry item,
-            LogEntry_CopyMask copyMask = null,
-            LogEntry def = null)
-        {
-            LogEntry ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1472,17 +1461,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class LogEntrySetterCopyCommon
+    public partial class LogEntrySetterTranslationCommon
     {
-        public static readonly LogEntrySetterCopyCommon Instance = new LogEntrySetterCopyCommon();
+        public static readonly LogEntrySetterTranslationCommon Instance = new LogEntrySetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            LogEntry item,
-            LogEntry rhs,
-            LogEntry def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILogEntry item,
+            ILogEntryGetter rhs,
+            ILogEntryGetter def,
             ErrorMaskBuilder errorMask,
-            LogEntry_CopyMask copyMask)
+            LogEntry_TranslationMask copyMask)
         {
             if (copyMask?.Flags ?? true)
             {
@@ -1514,27 +1503,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Conditions.Overall != CopyOption.Skip)
+            if (copyMask?.Conditions.Overall ?? true)
             {
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault<Condition, Condition>(
+                    item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Condition)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Conditions?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Conditions?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1577,7 +1558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ResultScript.Overall != CopyOption.Skip)
+            if (copyMask?.ResultScript.Overall ?? true)
             {
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
                 try
@@ -1590,26 +1571,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsResultScriptItem,
                         outDefItem: out var defResultScriptItem))
                     {
-                        switch (copyMask?.ResultScript.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ScriptFieldsSetterCopyCommon)((IScriptFieldsGetter)item.ResultScript).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.ResultScript,
-                                    rhs: rhs.ResultScript,
-                                    def: def?.ResultScript,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.ResultScript.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.ResultScript = rhsResultScriptItem.Copy(
-                                    copyMask?.ResultScript?.Specific,
-                                    def: defResultScriptItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.ResultScript?.Overall}. Cannot execute copy.");
-                        }
+                        item.ResultScript = rhsResultScriptItem.DeepCopy(
+                            copyMask?.ResultScript?.Specific,
+                            def: defResultScriptItem);
                     }
                     else
                     {
@@ -1632,6 +1596,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
+        public LogEntry DeepCopy(
+            ILogEntryGetter item,
+            LogEntry_TranslationMask copyMask = null,
+            ILogEntryGetter def = null)
+        {
+            LogEntry ret = LogEntrySetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -1653,9 +1630,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LogEntrySetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return LogEntrySetterCopyCommon.Instance;
+            return LogEntrySetterTranslationCommon.Instance;
         }
         object ILogEntryGetter.CommonInstance()
         {
@@ -1665,9 +1642,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object ILogEntryGetter.CommonSetterCopyInstance()
+        object ILogEntryGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2505,29 +2482,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class LogEntry_CopyMask
-    {
-        public LogEntry_CopyMask()
-        {
-        }
-
-        public LogEntry_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Flags = defaultOn;
-            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
-            this.Entry = defaultOn;
-            this.ResultScript = new MaskItem<CopyOption, ScriptFields_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool Flags;
-        public MaskItem<CopyOption, Condition_CopyMask> Conditions;
-        public bool Entry;
-        public MaskItem<CopyOption, ScriptFields_CopyMask> ResultScript;
-        #endregion
-
-    }
-
     public class LogEntry_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2744,6 +2698,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return LogEntryCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return LogEntrySetterTranslationCommon.Instance;
+        }
         object ILogEntryGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2752,9 +2710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object ILogEntryGetter.CommonSetterCopyInstance()
+        object ILogEntryGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

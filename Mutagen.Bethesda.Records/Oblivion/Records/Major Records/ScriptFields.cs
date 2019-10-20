@@ -69,15 +69,10 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                var tmpMetadataSummary = ScriptMetaSummary.CreateFromBinary(
+                item.MetadataSummary.CopyInFromBinary(
                     frame: frame,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
-                    recordTypeConverter: metaConverter);
-                item.MetadataSummary.CopyFieldsFrom(
-                    rhs: tmpMetadataSummary,
-                    def: null,
-                    copyMask: null,
+                    recordTypeConverter: null,
                     errorMask: errorMask);
             }
         }

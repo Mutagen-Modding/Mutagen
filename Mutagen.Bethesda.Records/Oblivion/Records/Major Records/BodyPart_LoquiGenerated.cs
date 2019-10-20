@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Index
         Race.BodyIndex Index { get; }
         bool Index_IsSet { get; }
@@ -493,11 +493,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this BodyPart lhs,
-            BodyPart rhs)
+        public static void DeepCopyFieldsFrom(
+            this IBodyPart lhs,
+            IBodyPartGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -506,13 +506,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this BodyPart lhs,
-            BodyPart rhs,
-            BodyPart_CopyMask copyMask,
-            BodyPart def = null)
+        public static void DeepCopyFieldsFrom(
+            this IBodyPart lhs,
+            IBodyPartGetter rhs,
+            BodyPart_TranslationMask copyMask,
+            IBodyPartGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -521,16 +521,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this BodyPart lhs,
-            BodyPart rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBodyPart lhs,
+            IBodyPartGetter rhs,
             out BodyPart_ErrorMask errorMask,
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null,
+            BodyPart_TranslationMask copyMask = null,
+            IBodyPartGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((BodyPartSetterCopyCommon)((IBodyPartGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BodyPartSetterTranslationCommon)((IBodyPartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -539,14 +539,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = BodyPart_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this BodyPart lhs,
-            BodyPart rhs,
+        public static void DeepCopyFieldsFrom(
+            this IBodyPart lhs,
+            IBodyPartGetter rhs,
             ErrorMaskBuilder errorMask,
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null)
+            BodyPart_TranslationMask copyMask = null,
+            IBodyPartGetter def = null)
         {
-            ((BodyPartSetterCopyCommon)((IBodyPartGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((BodyPartSetterTranslationCommon)((IBodyPartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -554,12 +554,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static BodyPart Copy(
-            this BodyPart item,
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null)
+        public static BodyPart DeepCopy(
+            this IBodyPartGetter item,
+            BodyPart_TranslationMask copyMask = null,
+            IBodyPartGetter def = null)
         {
-            return ((BodyPartSetterCommon)((IBodyPartGetter)item).CommonSetterInstance()).Copy(
+            return ((BodyPartSetterTranslationCommon)((IBodyPartGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -614,6 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IBodyPart item,
             string path,
@@ -755,6 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -986,19 +988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public BodyPart GetNew()
         {
             return new BodyPart();
-        }
-        
-        public BodyPart Copy(
-            BodyPart item,
-            BodyPart_CopyMask copyMask = null,
-            BodyPart def = null)
-        {
-            BodyPart ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1249,17 +1238,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class BodyPartSetterCopyCommon
+    public partial class BodyPartSetterTranslationCommon
     {
-        public static readonly BodyPartSetterCopyCommon Instance = new BodyPartSetterCopyCommon();
+        public static readonly BodyPartSetterTranslationCommon Instance = new BodyPartSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            BodyPart item,
-            BodyPart rhs,
-            BodyPart def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IBodyPart item,
+            IBodyPartGetter rhs,
+            IBodyPartGetter def,
             ErrorMaskBuilder errorMask,
-            BodyPart_CopyMask copyMask)
+            BodyPart_TranslationMask copyMask)
         {
             if (copyMask?.Index ?? true)
             {
@@ -1325,6 +1314,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
+        public BodyPart DeepCopy(
+            IBodyPartGetter item,
+            BodyPart_TranslationMask copyMask = null,
+            IBodyPartGetter def = null)
+        {
+            BodyPart ret = BodyPartSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -1346,9 +1348,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return BodyPartSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return BodyPartSetterCopyCommon.Instance;
+            return BodyPartSetterTranslationCommon.Instance;
         }
         object IBodyPartGetter.CommonInstance()
         {
@@ -1358,9 +1360,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IBodyPartGetter.CommonSetterCopyInstance()
+        object IBodyPartGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1976,25 +1978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class BodyPart_CopyMask
-    {
-        public BodyPart_CopyMask()
-        {
-        }
-
-        public BodyPart_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Index = defaultOn;
-            this.Icon = defaultOn;
-        }
-
-        #region Members
-        public bool Index;
-        public bool Icon;
-        #endregion
-
-    }
-
     public class BodyPart_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2177,6 +2160,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return BodyPartCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return BodyPartSetterTranslationCommon.Instance;
+        }
         object IBodyPartGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2185,9 +2172,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IBodyPartGetter.CommonSetterCopyInstance()
+        object IBodyPartGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

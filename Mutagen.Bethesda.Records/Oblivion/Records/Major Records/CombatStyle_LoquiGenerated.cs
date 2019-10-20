@@ -1211,13 +1211,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyle lhs,
-            CombatStyle rhs,
-            CombatStyle_CopyMask copyMask,
-            CombatStyle def = null)
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleInternal lhs,
+            ICombatStyleGetter rhs,
+            CombatStyle_TranslationMask copyMask,
+            ICombatStyleGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1226,16 +1226,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyle lhs,
-            CombatStyle rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleInternal lhs,
+            ICombatStyleGetter rhs,
             out CombatStyle_ErrorMask errorMask,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null,
+            CombatStyle_TranslationMask copyMask = null,
+            ICombatStyleGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((CombatStyleSetterCopyCommon)((ICombatStyleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1244,14 +1244,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this CombatStyle lhs,
-            CombatStyle rhs,
+        public static void DeepCopyFieldsFrom(
+            this ICombatStyleInternal lhs,
+            ICombatStyleGetter rhs,
             ErrorMaskBuilder errorMask,
-            CombatStyle_CopyMask copyMask = null,
-            CombatStyle def = null)
+            CombatStyle_TranslationMask copyMask = null,
+            ICombatStyleGetter def = null)
         {
-            ((CombatStyleSetterCopyCommon)((ICombatStyleGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1308,6 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ICombatStyleInternal item,
             string path,
@@ -1449,6 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -3101,7 +3103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new CombatStyle(getNextFormKey());
-            ret.CopyFieldsFrom((CombatStyle)item);
+            ret.DeepCopyFieldsFrom((CombatStyle)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (CombatStyle)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -3110,19 +3112,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class CombatStyleSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly CombatStyleSetterCopyCommon Instance = new CombatStyleSetterCopyCommon();
+        public new static readonly CombatStyleSetterTranslationCommon Instance = new CombatStyleSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            CombatStyle item,
-            CombatStyle rhs,
-            CombatStyle def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ICombatStyle item,
+            ICombatStyleGetter rhs,
+            ICombatStyleGetter def,
             ErrorMaskBuilder errorMask,
-            CombatStyle_CopyMask copyMask)
+            CombatStyle_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3130,221 +3132,149 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.DodgePercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
                 item.DodgePercentChance = rhs.DodgePercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LeftRightPercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
                 item.LeftRightPercentChance = rhs.LeftRightPercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeLeftRightTimerMin ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
                 item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeLeftRightTimerMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
                 item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardTimerMin ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
                 item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeForwardTimerMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
                 item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackTimerMin ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
                 item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DodgeBackTimerMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
                 item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.IdleTimerMin ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
                 item.IdleTimerMin = rhs.IdleTimerMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.IdleTimerMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
                 item.IdleTimerMax = rhs.IdleTimerMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BlockPercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
                 item.BlockPercentChance = rhs.BlockPercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AttackPercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
                 item.AttackPercentChance = rhs.AttackPercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RecoilStaggerBonusToAttack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
                 item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UnconsciousBonusToAttack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
                 item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HandToHandBonusToAttack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
                 item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackPercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
                 item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RecoilStaggerBonusToPowerAttack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
                 item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UnconsciousBonusToPowerAttack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
                 item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackNormal ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
                 item.PowerAttackNormal = rhs.PowerAttackNormal;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackForward ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
                 item.PowerAttackForward = rhs.PowerAttackForward;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackBack ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
                 item.PowerAttackBack = rhs.PowerAttackBack;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackLeft ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
                 item.PowerAttackLeft = rhs.PowerAttackLeft;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PowerAttackRight ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
                 item.PowerAttackRight = rhs.PowerAttackRight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HoldTimerMin ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
                 item.HoldTimerMin = rhs.HoldTimerMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HoldTimerMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
                 item.HoldTimerMax = rhs.HoldTimerMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AcrobaticDodgePercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                 item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RangeMultOptimal ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
                 item.RangeMultOptimal = rhs.RangeMultOptimal;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RangeMultMax ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
                 item.RangeMultMax = rhs.RangeMultMax;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SwitchDistanceMelee ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
                 item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SwitchDistanceRanged ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
                 item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BuffStandoffDistance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                 item.BuffStandoffDistance = rhs.BuffStandoffDistance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RangedStandoffDistance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
                 item.RangedStandoffDistance = rhs.RangedStandoffDistance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.GroupStandoffDistance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
                 item.GroupStandoffDistance = rhs.GroupStandoffDistance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RushingAttackPercentChance ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
                 item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RushingAttackDistanceMult ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
                 item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Advanced.Overall != CopyOption.Skip)
+            if (copyMask?.Advanced.Overall ?? true)
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
@@ -3357,26 +3287,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsAdvancedItem,
                         outDefItem: out var defAdvancedItem))
                     {
-                        switch (copyMask?.Advanced.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((CombatStyleAdvancedSetterCopyCommon)((ICombatStyleAdvancedGetter)item.Advanced).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Advanced,
-                                    rhs: rhs.Advanced,
-                                    def: def?.Advanced,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Advanced.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Advanced = rhsAdvancedItem.Copy(
-                                    copyMask?.Advanced?.Specific,
-                                    def: defAdvancedItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Advanced?.Overall}. Cannot execute copy.");
-                        }
+                        item.Advanced = rhsAdvancedItem.DeepCopy(
+                            copyMask?.Advanced?.Specific,
+                            def: defAdvancedItem);
                     }
                     else
                     {
@@ -3397,9 +3310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.CSTDDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSTDDataTypeState);
                 item.CSTDDataTypeState = rhs.CSTDDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -3426,9 +3337,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return CombatStyleSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return CombatStyleSetterCopyCommon.Instance;
+            return CombatStyleSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -6048,97 +5959,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class CombatStyle_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public CombatStyle_CopyMask()
-        {
-        }
-
-        public CombatStyle_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.DodgePercentChance = defaultOn;
-            this.LeftRightPercentChance = defaultOn;
-            this.DodgeLeftRightTimerMin = defaultOn;
-            this.DodgeLeftRightTimerMax = defaultOn;
-            this.DodgeForwardTimerMin = defaultOn;
-            this.DodgeForwardTimerMax = defaultOn;
-            this.DodgeBackTimerMin = defaultOn;
-            this.DodgeBackTimerMax = defaultOn;
-            this.IdleTimerMin = defaultOn;
-            this.IdleTimerMax = defaultOn;
-            this.BlockPercentChance = defaultOn;
-            this.AttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToAttack = defaultOn;
-            this.UnconsciousBonusToAttack = defaultOn;
-            this.HandToHandBonusToAttack = defaultOn;
-            this.PowerAttackPercentChance = defaultOn;
-            this.RecoilStaggerBonusToPowerAttack = defaultOn;
-            this.UnconsciousBonusToPowerAttack = defaultOn;
-            this.PowerAttackNormal = defaultOn;
-            this.PowerAttackForward = defaultOn;
-            this.PowerAttackBack = defaultOn;
-            this.PowerAttackLeft = defaultOn;
-            this.PowerAttackRight = defaultOn;
-            this.HoldTimerMin = defaultOn;
-            this.HoldTimerMax = defaultOn;
-            this.Flags = defaultOn;
-            this.AcrobaticDodgePercentChance = defaultOn;
-            this.RangeMultOptimal = defaultOn;
-            this.RangeMultMax = defaultOn;
-            this.SwitchDistanceMelee = defaultOn;
-            this.SwitchDistanceRanged = defaultOn;
-            this.BuffStandoffDistance = defaultOn;
-            this.RangedStandoffDistance = defaultOn;
-            this.GroupStandoffDistance = defaultOn;
-            this.RushingAttackPercentChance = defaultOn;
-            this.RushingAttackDistanceMult = defaultOn;
-            this.Advanced = new MaskItem<CopyOption, CombatStyleAdvanced_CopyMask>(deepCopyOption, default);
-            this.CSTDDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool DodgePercentChance;
-        public bool LeftRightPercentChance;
-        public bool DodgeLeftRightTimerMin;
-        public bool DodgeLeftRightTimerMax;
-        public bool DodgeForwardTimerMin;
-        public bool DodgeForwardTimerMax;
-        public bool DodgeBackTimerMin;
-        public bool DodgeBackTimerMax;
-        public bool IdleTimerMin;
-        public bool IdleTimerMax;
-        public bool BlockPercentChance;
-        public bool AttackPercentChance;
-        public bool RecoilStaggerBonusToAttack;
-        public bool UnconsciousBonusToAttack;
-        public bool HandToHandBonusToAttack;
-        public bool PowerAttackPercentChance;
-        public bool RecoilStaggerBonusToPowerAttack;
-        public bool UnconsciousBonusToPowerAttack;
-        public bool PowerAttackNormal;
-        public bool PowerAttackForward;
-        public bool PowerAttackBack;
-        public bool PowerAttackLeft;
-        public bool PowerAttackRight;
-        public bool HoldTimerMin;
-        public bool HoldTimerMax;
-        public bool Flags;
-        public bool AcrobaticDodgePercentChance;
-        public bool RangeMultOptimal;
-        public bool RangeMultMax;
-        public bool SwitchDistanceMelee;
-        public bool SwitchDistanceRanged;
-        public bool BuffStandoffDistance;
-        public bool RangedStandoffDistance;
-        public bool GroupStandoffDistance;
-        public bool RushingAttackPercentChance;
-        public bool RushingAttackDistanceMult;
-        public MaskItem<CopyOption, CombatStyleAdvanced_CopyMask> Advanced;
-        public bool CSTDDataTypeState;
-        #endregion
-
-    }
-
     public class CombatStyle_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -6601,6 +6421,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return CombatStyleCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return CombatStyleSetterTranslationCommon.Instance;
         }
 
         #endregion

@@ -734,13 +734,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Ammo lhs,
-            Ammo rhs,
-            Ammo_CopyMask copyMask,
-            Ammo def = null)
+        public static void DeepCopyFieldsFrom(
+            this IAmmoInternal lhs,
+            IAmmoGetter rhs,
+            Ammo_TranslationMask copyMask,
+            IAmmoGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -749,16 +749,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Ammo lhs,
-            Ammo rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAmmoInternal lhs,
+            IAmmoGetter rhs,
             out Ammo_ErrorMask errorMask,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null,
+            Ammo_TranslationMask copyMask = null,
+            IAmmoGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AmmoSetterCopyCommon)((IAmmoGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -767,14 +767,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Ammo lhs,
-            Ammo rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAmmoInternal lhs,
+            IAmmoGetter rhs,
             ErrorMaskBuilder errorMask,
-            Ammo_CopyMask copyMask = null,
-            Ammo def = null)
+            Ammo_TranslationMask copyMask = null,
+            IAmmoGetter def = null)
         {
-            ((AmmoSetterCopyCommon)((IAmmoGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -831,6 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IAmmoInternal item,
             string path,
@@ -972,6 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1917,7 +1919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Ammo(getNextFormKey());
-            ret.CopyFieldsFrom((Ammo)item);
+            ret.DeepCopyFieldsFrom((Ammo)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Ammo)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1926,19 +1928,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmoSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class AmmoSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly AmmoSetterCopyCommon Instance = new AmmoSetterCopyCommon();
+        public new static readonly AmmoSetterTranslationCommon Instance = new AmmoSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Ammo item,
-            Ammo rhs,
-            Ammo def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IAmmo item,
+            IAmmoGetter rhs,
+            IAmmoGetter def,
             ErrorMaskBuilder errorMask,
-            Ammo_CopyMask copyMask)
+            Ammo_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1974,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
                 try
@@ -1987,26 +1989,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -2060,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetLink(
+                    item.Enchantment_Property.SetToFormKey(
                         rhs: rhs.Enchantment_Property,
                         def: def?.Enchantment_Property);
                 }
@@ -2106,39 +2091,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Speed);
                 item.Speed = rhs.Speed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Damage ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Damage);
                 item.Damage = rhs.Damage;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2165,9 +2138,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return AmmoSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return AmmoSetterCopyCommon.Instance;
+            return AmmoSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3228,43 +3201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Ammo_CopyMask : ItemAbstract_CopyMask
-    {
-        public Ammo_CopyMask()
-        {
-        }
-
-        public Ammo_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.Speed = defaultOn;
-            this.Flags = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.Damage = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool Speed;
-        public bool Flags;
-        public bool Value;
-        public bool Weight;
-        public bool Damage;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Ammo_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -3557,6 +3493,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return AmmoCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return AmmoSetterTranslationCommon.Instance;
         }
 
         #endregion

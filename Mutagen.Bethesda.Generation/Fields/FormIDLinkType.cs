@@ -109,9 +109,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override string SkipCheck(string copyMaskAccessor)
+        public override string SkipCheck(string copyMaskAccessor, bool deepCopy)
         {
-            return _rawFormID.SkipCheck(copyMaskAccessor);
+            return _rawFormID.SkipCheck(copyMaskAccessor, deepCopy);
         }
 
         public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
@@ -144,12 +144,12 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, bool protectedMembers)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, bool protectedMembers, bool getter)
         {
             if (this.HasBeenSet)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{accessor.PropertyAccess}.SetLink"))
+                    $"{accessor.PropertyAccess}.{(getter ? "SetToFormKey" : "SetLink")}"))
                 {
                     args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
                     args.Add($"def: {defaultFallbackAccessor}?.{this.GetName(false, property: true)}");
@@ -157,10 +157,17 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"{accessor.PropertyAccess}.SetLink"))
+                if (getter)
                 {
-                    args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
+                    fg.AppendLine($"{accessor.PropertyAccess}.FormKey = {rhsAccessorPrefix}.{this.GetName(false, property: true)}.FormKey;");
+                }
+                else
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{accessor.PropertyAccess}.SetLink"))
+                    {
+                        args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
+                    }
                 }
             }
         }
@@ -216,6 +223,11 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
                 }
             }
+        }
+
+        public override void GenerateCopySetToConverter(FileGeneration fg)
+        {
+            fg.AppendLine($"(r, d) => new {DirectTypeName(getter: false)}(r.FormKey)");
         }
     }
 }

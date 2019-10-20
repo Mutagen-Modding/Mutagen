@@ -652,13 +652,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackage lhs,
-            AIPackage rhs,
-            AIPackage_CopyMask copyMask,
-            AIPackage def = null)
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageInternal lhs,
+            IAIPackageGetter rhs,
+            AIPackage_TranslationMask copyMask,
+            IAIPackageGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -667,16 +667,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackage lhs,
-            AIPackage rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageInternal lhs,
+            IAIPackageGetter rhs,
             out AIPackage_ErrorMask errorMask,
-            AIPackage_CopyMask copyMask = null,
-            AIPackage def = null,
+            AIPackage_TranslationMask copyMask = null,
+            IAIPackageGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AIPackageSetterCopyCommon)((IAIPackageGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AIPackageSetterTranslationCommon)((IAIPackageGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -685,14 +685,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this AIPackage lhs,
-            AIPackage rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAIPackageInternal lhs,
+            IAIPackageGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackage_CopyMask copyMask = null,
-            AIPackage def = null)
+            AIPackage_TranslationMask copyMask = null,
+            IAIPackageGetter def = null)
         {
-            ((AIPackageSetterCopyCommon)((IAIPackageGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AIPackageSetterTranslationCommon)((IAIPackageGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -749,6 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IAIPackageInternal item,
             string path,
@@ -890,6 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1732,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new AIPackage(getNextFormKey());
-            ret.CopyFieldsFrom((AIPackage)item);
+            ret.DeepCopyFieldsFrom((AIPackage)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (AIPackage)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1741,19 +1743,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class AIPackageSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly AIPackageSetterCopyCommon Instance = new AIPackageSetterCopyCommon();
+        public new static readonly AIPackageSetterTranslationCommon Instance = new AIPackageSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            AIPackage item,
-            AIPackage rhs,
-            AIPackage def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IAIPackage item,
+            IAIPackageGetter rhs,
+            IAIPackageGetter def,
             ErrorMaskBuilder errorMask,
-            AIPackage_CopyMask copyMask)
+            AIPackage_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1761,17 +1763,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.GeneralType ?? true)
             {
-                errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
                 item.GeneralType = rhs.GeneralType;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Location.Overall != CopyOption.Skip)
+            if (copyMask?.Location.Overall ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
                 try
@@ -1784,26 +1782,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsLocationItem,
                         outDefItem: out var defLocationItem))
                     {
-                        switch (copyMask?.Location.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((AIPackageLocationSetterCopyCommon)((IAIPackageLocationGetter)item.Location).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Location,
-                                    rhs: rhs.Location,
-                                    def: def?.Location,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Location.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Location = rhsLocationItem.Copy(
-                                    copyMask?.Location?.Specific,
-                                    def: defLocationItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Location?.Overall}. Cannot execute copy.");
-                        }
+                        item.Location = rhsLocationItem.DeepCopy(
+                            copyMask?.Location?.Specific,
+                            def: defLocationItem);
                     }
                     else
                     {
@@ -1822,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Schedule.Overall != CopyOption.Skip)
+            if (copyMask?.Schedule.Overall ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
                 try
@@ -1835,26 +1816,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsScheduleItem,
                         outDefItem: out var defScheduleItem))
                     {
-                        switch (copyMask?.Schedule.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((AIPackageScheduleSetterCopyCommon)((IAIPackageScheduleGetter)item.Schedule).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Schedule,
-                                    rhs: rhs.Schedule,
-                                    def: def?.Schedule,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Schedule.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Schedule = rhsScheduleItem.Copy(
-                                    copyMask?.Schedule?.Specific,
-                                    def: defScheduleItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Schedule?.Overall}. Cannot execute copy.");
-                        }
+                        item.Schedule = rhsScheduleItem.DeepCopy(
+                            copyMask?.Schedule?.Specific,
+                            def: defScheduleItem);
                     }
                     else
                     {
@@ -1873,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Target.Overall != CopyOption.Skip)
+            if (copyMask?.Target.Overall ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
                 try
@@ -1886,26 +1850,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsTargetItem,
                         outDefItem: out var defTargetItem))
                     {
-                        switch (copyMask?.Target.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((AIPackageTargetSetterCopyCommon)((IAIPackageTargetGetter)item.Target).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Target,
-                                    rhs: rhs.Target,
-                                    def: def?.Target,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Target.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Target = rhsTargetItem.Copy(
-                                    copyMask?.Target?.Specific,
-                                    def: defTargetItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Target?.Overall}. Cannot execute copy.");
-                        }
+                        item.Target = rhsTargetItem.DeepCopy(
+                            copyMask?.Target?.Specific,
+                            def: defTargetItem);
                     }
                     else
                     {
@@ -1924,27 +1871,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Conditions.Overall != CopyOption.Skip)
+            if (copyMask?.Conditions.Overall ?? true)
             {
                 errorMask?.PushIndex((int)AIPackage_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault<Condition, Condition>(
+                    item.Conditions.SetToWithDefault(
                         rhs: rhs.Conditions,
                         def: def?.Conditions,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Conditions.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Condition)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Conditions?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Conditions.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Conditions?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1959,9 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.PKDTDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)AIPackage_FieldIndex.PKDTDataTypeState);
                 item.PKDTDataTypeState = rhs.PKDTDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1988,9 +1925,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return AIPackageSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return AIPackageSetterCopyCommon.Instance;
+            return AIPackageSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2947,35 +2884,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AIPackage_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public AIPackage_CopyMask()
-        {
-        }
-
-        public AIPackage_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Flags = defaultOn;
-            this.GeneralType = defaultOn;
-            this.Location = new MaskItem<CopyOption, AIPackageLocation_CopyMask>(deepCopyOption, default);
-            this.Schedule = new MaskItem<CopyOption, AIPackageSchedule_CopyMask>(deepCopyOption, default);
-            this.Target = new MaskItem<CopyOption, AIPackageTarget_CopyMask>(deepCopyOption, default);
-            this.Conditions = new MaskItem<CopyOption, Condition_CopyMask>(deepCopyOption, default);
-            this.PKDTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Flags;
-        public bool GeneralType;
-        public MaskItem<CopyOption, AIPackageLocation_CopyMask> Location;
-        public MaskItem<CopyOption, AIPackageSchedule_CopyMask> Schedule;
-        public MaskItem<CopyOption, AIPackageTarget_CopyMask> Target;
-        public MaskItem<CopyOption, Condition_CopyMask> Conditions;
-        public bool PKDTDataTypeState;
-        #endregion
-
-    }
-
     public class AIPackage_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3320,6 +3228,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return AIPackageCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return AIPackageSetterTranslationCommon.Instance;
         }
 
         #endregion

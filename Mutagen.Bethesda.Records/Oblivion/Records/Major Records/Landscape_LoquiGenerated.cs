@@ -666,13 +666,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Landscape lhs,
-            Landscape rhs,
-            Landscape_CopyMask copyMask,
-            Landscape def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILandscapeInternal lhs,
+            ILandscapeGetter rhs,
+            Landscape_TranslationMask copyMask,
+            ILandscapeGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -681,16 +681,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Landscape lhs,
-            Landscape rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILandscapeInternal lhs,
+            ILandscapeGetter rhs,
             out Landscape_ErrorMask errorMask,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null,
+            Landscape_TranslationMask copyMask = null,
+            ILandscapeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LandscapeSetterCopyCommon)((ILandscapeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -699,14 +699,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Landscape lhs,
-            Landscape rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILandscapeInternal lhs,
+            ILandscapeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Landscape_CopyMask copyMask = null,
-            Landscape def = null)
+            Landscape_TranslationMask copyMask = null,
+            ILandscapeGetter def = null)
         {
-            ((LandscapeSetterCopyCommon)((ILandscapeGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -763,6 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILandscapeInternal item,
             string path,
@@ -904,6 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1731,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Landscape(getNextFormKey());
-            ret.CopyFieldsFrom((Landscape)item);
+            ret.DeepCopyFieldsFrom((Landscape)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Landscape)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1740,19 +1742,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LandscapeSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class LandscapeSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly LandscapeSetterCopyCommon Instance = new LandscapeSetterCopyCommon();
+        public new static readonly LandscapeSetterTranslationCommon Instance = new LandscapeSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Landscape item,
-            Landscape rhs,
-            Landscape def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILandscape item,
+            ILandscapeGetter rhs,
+            ILandscapeGetter def,
             ErrorMaskBuilder errorMask,
-            Landscape_CopyMask copyMask)
+            Landscape_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1766,12 +1768,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Unknown,
                         rhsHasBeenSet: rhs.Unknown_IsSet,
-                        defItem: def?.Unknown ?? default(Byte[]),
-                        defHasBeenSet: def?.Unknown_IsSet ?? false,
+                        defItem: def.Unknown,
+                        defHasBeenSet: def.Unknown_IsSet,
                         outRhsItem: out var rhsUnknownItem,
                         outDefItem: out var defUnknownItem))
                     {
-                        item.Unknown = rhsUnknownItem;
+                        item.Unknown = rhsUnknownItem.ToArray();
                     }
                     else
                     {
@@ -1796,12 +1798,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.VertexNormals,
                         rhsHasBeenSet: rhs.VertexNormals_IsSet,
-                        defItem: def?.VertexNormals ?? default(Byte[]),
-                        defHasBeenSet: def?.VertexNormals_IsSet ?? false,
+                        defItem: def.VertexNormals,
+                        defHasBeenSet: def.VertexNormals_IsSet,
                         outRhsItem: out var rhsVertexNormalsItem,
                         outDefItem: out var defVertexNormalsItem))
                     {
-                        item.VertexNormals = rhsVertexNormalsItem;
+                        item.VertexNormals = rhsVertexNormalsItem.ToArray();
                     }
                     else
                     {
@@ -1826,12 +1828,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.VertexHeightMap,
                         rhsHasBeenSet: rhs.VertexHeightMap_IsSet,
-                        defItem: def?.VertexHeightMap ?? default(Byte[]),
-                        defHasBeenSet: def?.VertexHeightMap_IsSet ?? false,
+                        defItem: def.VertexHeightMap,
+                        defHasBeenSet: def.VertexHeightMap_IsSet,
                         outRhsItem: out var rhsVertexHeightMapItem,
                         outDefItem: out var defVertexHeightMapItem))
                     {
-                        item.VertexHeightMap = rhsVertexHeightMapItem;
+                        item.VertexHeightMap = rhsVertexHeightMapItem.ToArray();
                     }
                     else
                     {
@@ -1856,12 +1858,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.VertexColors,
                         rhsHasBeenSet: rhs.VertexColors_IsSet,
-                        defItem: def?.VertexColors ?? default(Byte[]),
-                        defHasBeenSet: def?.VertexColors_IsSet ?? false,
+                        defItem: def.VertexColors,
+                        defHasBeenSet: def.VertexColors_IsSet,
                         outRhsItem: out var rhsVertexColorsItem,
                         outDefItem: out var defVertexColorsItem))
                     {
-                        item.VertexColors = rhsVertexColorsItem;
+                        item.VertexColors = rhsVertexColorsItem.ToArray();
                     }
                     else
                     {
@@ -1878,27 +1880,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Layers.Overall != CopyOption.Skip)
+            if (copyMask?.Layers.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                 try
                 {
-                    item.Layers.SetToWithDefault<BaseLayer, BaseLayer>(
+                    item.Layers.SetToWithDefault(
                         rhs: rhs.Layers,
                         def: def?.Layers,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Layers.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (BaseLayer)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Layers?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Layers.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Layers?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1911,14 +1905,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Textures != CopyOption.Skip)
+            if (copyMask?.Textures ?? true)
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                 try
                 {
                     item.Textures.SetToWithDefault(
                         rhs.Textures,
-                        def?.Textures);
+                        def?.Textures,
+                        (r, d) => new FormIDLink<LandTexture>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1955,9 +1950,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LandscapeSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return LandscapeSetterCopyCommon.Instance;
+            return LandscapeSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2890,33 +2885,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Landscape_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Landscape_CopyMask()
-        {
-        }
-
-        public Landscape_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Unknown = defaultOn;
-            this.VertexNormals = defaultOn;
-            this.VertexHeightMap = defaultOn;
-            this.VertexColors = defaultOn;
-            this.Layers = new MaskItem<CopyOption, BaseLayer_CopyMask>(deepCopyOption, default);
-            this.Textures = deepCopyOption;
-        }
-
-        #region Members
-        public bool Unknown;
-        public bool VertexNormals;
-        public bool VertexHeightMap;
-        public bool VertexColors;
-        public MaskItem<CopyOption, BaseLayer_CopyMask> Layers;
-        public CopyOption Textures;
-        #endregion
-
-    }
-
     public class Landscape_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3169,6 +3137,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return LandscapeCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return LandscapeSetterTranslationCommon.Instance;
         }
 
         #endregion

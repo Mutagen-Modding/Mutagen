@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Flags
         ModHeader.HeaderFlag Flags { get; }
 
@@ -790,11 +790,11 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this ModHeader lhs,
-            ModHeader rhs)
+        public static void DeepCopyFieldsFrom(
+            this IModHeader lhs,
+            IModHeaderGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -803,13 +803,13 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this ModHeader lhs,
-            ModHeader rhs,
-            ModHeader_CopyMask copyMask,
-            ModHeader def = null)
+        public static void DeepCopyFieldsFrom(
+            this IModHeader lhs,
+            IModHeaderGetter rhs,
+            ModHeader_TranslationMask copyMask,
+            IModHeaderGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -818,16 +818,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this ModHeader lhs,
-            ModHeader rhs,
+        public static void DeepCopyFieldsFrom(
+            this IModHeader lhs,
+            IModHeaderGetter rhs,
             out ModHeader_ErrorMask errorMask,
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null,
+            ModHeader_TranslationMask copyMask = null,
+            IModHeaderGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ModHeaderSetterCopyCommon)((IModHeaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -836,14 +836,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this ModHeader lhs,
-            ModHeader rhs,
+        public static void DeepCopyFieldsFrom(
+            this IModHeader lhs,
+            IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null)
+            ModHeader_TranslationMask copyMask = null,
+            IModHeaderGetter def = null)
         {
-            ((ModHeaderSetterCopyCommon)((IModHeaderGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -851,12 +851,12 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static ModHeader Copy(
-            this ModHeader item,
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null)
+        public static ModHeader DeepCopy(
+            this IModHeaderGetter item,
+            ModHeader_TranslationMask copyMask = null,
+            IModHeaderGetter def = null)
         {
-            return ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).Copy(
+            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -911,6 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IModHeader item,
             string path,
@@ -1052,6 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1438,19 +1440,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ModHeader GetNew()
         {
             return new ModHeader();
-        }
-        
-        public ModHeader Copy(
-            ModHeader item,
-            ModHeader_CopyMask copyMask = null,
-            ModHeader def = null)
-        {
-            ModHeader ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1981,80 +1970,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
     }
-    public partial class ModHeaderSetterCopyCommon
+    public partial class ModHeaderSetterTranslationCommon
     {
-        public static readonly ModHeaderSetterCopyCommon Instance = new ModHeaderSetterCopyCommon();
+        public static readonly ModHeaderSetterTranslationCommon Instance = new ModHeaderSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            ModHeader item,
-            ModHeader rhs,
-            ModHeader def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IModHeader item,
+            IModHeaderGetter rhs,
+            IModHeaderGetter def,
             ErrorMaskBuilder errorMask,
-            ModHeader_CopyMask copyMask)
+            ModHeader_TranslationMask copyMask)
         {
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FormID ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.FormID);
                 item.FormID = rhs.FormID;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Version ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Version);
                 item.Version = rhs.Version;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FormVersion ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.FormVersion);
                 item.FormVersion = rhs.FormVersion;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Version2 ?? true)
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Version2);
                 item.Version2 = rhs.Version2;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Stats.Overall != CopyOption.Skip)
+            if (copyMask?.Stats.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
                 try
                 {
-                    switch (copyMask?.Stats?.Overall ?? CopyOption.Reference)
+                    if (copyMask?.Stats?.Overall ?? true)
                     {
-                        case CopyOption.Reference:
-                            item.Stats = Utility.GetGetterInterfaceReference<ModStats>(rhs.Stats);
-                            break;
-                        case CopyOption.CopyIn:
-                            ((ModStatsSetterCopyCommon)((IModStatsGetter)item.Stats).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                item: item.Stats,
-                                rhs: rhs.Stats,
-                                def: def?.Stats,
-                                errorMask: errorMask,
-                                copyMask: copyMask?.Stats.Specific);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Stats == null)
-                            {
-                                item.Stats = null;
-                            }
-                            else
-                            {
-                                item.Stats = rhs.Stats.Copy(
-                                    copyMask?.Stats?.Specific,
-                                    def?.Stats);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Stats?.Overall}. Cannot execute copy.");
+                        if (rhs.Stats == null)
+                        {
+                            item.Stats = null;
+                        }
+                        else
+                        {
+                            item.Stats = rhs.Stats.DeepCopy(
+                                copyMask?.Stats?.Specific,
+                                def?.Stats);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -2075,12 +2039,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.TypeOffsets,
                         rhsHasBeenSet: rhs.TypeOffsets_IsSet,
-                        defItem: def?.TypeOffsets ?? default(Byte[]),
-                        defHasBeenSet: def?.TypeOffsets_IsSet ?? false,
+                        defItem: def.TypeOffsets,
+                        defHasBeenSet: def.TypeOffsets_IsSet,
                         outRhsItem: out var rhsTypeOffsetsItem,
                         outDefItem: out var defTypeOffsetsItem))
                     {
-                        item.TypeOffsets = rhsTypeOffsetsItem;
+                        item.TypeOffsets = rhsTypeOffsetsItem.ToArray();
                     }
                     else
                     {
@@ -2105,12 +2069,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Deleted,
                         rhsHasBeenSet: rhs.Deleted_IsSet,
-                        defItem: def?.Deleted ?? default(Byte[]),
-                        defHasBeenSet: def?.Deleted_IsSet ?? false,
+                        defItem: def.Deleted,
+                        defHasBeenSet: def.Deleted_IsSet,
                         outRhsItem: out var rhsDeletedItem,
                         outDefItem: out var defDeletedItem))
                     {
-                        item.Deleted = rhsDeletedItem;
+                        item.Deleted = rhsDeletedItem.ToArray();
                     }
                     else
                     {
@@ -2187,27 +2151,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
+            if (copyMask?.MasterReferences.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
-                    item.MasterReferences.SetToWithDefault<MasterReference, MasterReference>(
+                    item.MasterReferences.SetToWithDefault(
                         rhs: rhs.MasterReferences,
                         def: def?.MasterReferences,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.MasterReferences.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (MasterReference)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.MasterReferences?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MasterReferences.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.MasterReferences?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2220,14 +2176,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.OverriddenForms != CopyOption.Skip)
+            if (copyMask?.OverriddenForms ?? true)
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
                 try
                 {
                     item.OverriddenForms.SetToWithDefault(
                         rhs.OverriddenForms,
-                        def?.OverriddenForms);
+                        def?.OverriddenForms,
+                        (r, d) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2303,6 +2260,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
+        public ModHeader DeepCopy(
+            IModHeaderGetter item,
+            ModHeader_TranslationMask copyMask = null,
+            IModHeaderGetter def = null)
+        {
+            ModHeader ret = ModHeaderSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -2324,9 +2294,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return ModHeaderSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return ModHeaderSetterCopyCommon.Instance;
+            return ModHeaderSetterTranslationCommon.Instance;
         }
         object IModHeaderGetter.CommonInstance()
         {
@@ -2336,9 +2306,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return this.CommonSetterInstance();
         }
-        object IModHeaderGetter.CommonSetterCopyInstance()
+        object IModHeaderGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -3829,49 +3799,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class ModHeader_CopyMask
-    {
-        public ModHeader_CopyMask()
-        {
-        }
-
-        public ModHeader_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Flags = defaultOn;
-            this.FormID = defaultOn;
-            this.Version = defaultOn;
-            this.FormVersion = defaultOn;
-            this.Version2 = defaultOn;
-            this.Stats = new MaskItem<CopyOption, ModStats_CopyMask>(deepCopyOption, default);
-            this.TypeOffsets = defaultOn;
-            this.Deleted = defaultOn;
-            this.Author = defaultOn;
-            this.Description = defaultOn;
-            this.MasterReferences = new MaskItem<CopyOption, MasterReference_CopyMask>(deepCopyOption, default);
-            this.OverriddenForms = deepCopyOption;
-            this.INTV = defaultOn;
-            this.INCC = defaultOn;
-        }
-
-        #region Members
-        public bool Flags;
-        public bool FormID;
-        public bool Version;
-        public bool FormVersion;
-        public bool Version2;
-        public MaskItem<CopyOption, ModStats_CopyMask> Stats;
-        public bool TypeOffsets;
-        public bool Deleted;
-        public bool Author;
-        public bool Description;
-        public MaskItem<CopyOption, MasterReference_CopyMask> MasterReferences;
-        public CopyOption OverriddenForms;
-        public bool INTV;
-        public bool INCC;
-        #endregion
-
-    }
-
     public class ModHeader_TranslationMask : ITranslationMask
     {
         #region Members
@@ -4188,6 +4115,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ModHeaderCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ModHeaderSetterTranslationCommon.Instance;
+        }
         object IModHeaderGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -4196,9 +4127,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return null;
         }
-        object IModHeaderGetter.CommonSetterCopyInstance()
+        object IModHeaderGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

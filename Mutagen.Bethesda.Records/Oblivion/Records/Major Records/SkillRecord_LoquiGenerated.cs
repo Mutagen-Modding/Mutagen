@@ -810,13 +810,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillRecord lhs,
-            SkillRecord rhs,
-            SkillRecord_CopyMask copyMask,
-            SkillRecord def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISkillRecordInternal lhs,
+            ISkillRecordGetter rhs,
+            SkillRecord_TranslationMask copyMask,
+            ISkillRecordGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -825,16 +825,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillRecord lhs,
-            SkillRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISkillRecordInternal lhs,
+            ISkillRecordGetter rhs,
             out SkillRecord_ErrorMask errorMask,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null,
+            SkillRecord_TranslationMask copyMask = null,
+            ISkillRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkillRecordSetterCopyCommon)((ISkillRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillRecord lhs,
-            SkillRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISkillRecordInternal lhs,
+            ISkillRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkillRecord_CopyMask copyMask = null,
-            SkillRecord def = null)
+            SkillRecord_TranslationMask copyMask = null,
+            ISkillRecordGetter def = null)
         {
-            ((SkillRecordSetterCopyCommon)((ISkillRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -907,6 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISkillRecordInternal item,
             string path,
@@ -1048,6 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2067,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new SkillRecord(getNextFormKey());
-            ret.CopyFieldsFrom((SkillRecord)item);
+            ret.DeepCopyFieldsFrom((SkillRecord)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SkillRecord)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -2076,19 +2078,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SkillRecordSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class SkillRecordSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly SkillRecordSetterCopyCommon Instance = new SkillRecordSetterCopyCommon();
+        public new static readonly SkillRecordSetterTranslationCommon Instance = new SkillRecordSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SkillRecord item,
-            SkillRecord rhs,
-            SkillRecord def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISkillRecord item,
+            ISkillRecordGetter rhs,
+            ISkillRecordGetter def,
             ErrorMaskBuilder errorMask,
-            SkillRecord_CopyMask copyMask)
+            SkillRecord_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2186,33 +2188,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Action ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
                 item.Action = rhs.Action;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Attribute ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
                 item.Attribute = rhs.Attribute;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Specialization ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
                 item.Specialization = rhs.Specialization;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UseValueFirst ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
                 item.UseValueFirst = rhs.UseValueFirst;
-                errorMask?.PopIndex();
             }
             if (copyMask?.UseValueSecond ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
                 item.UseValueSecond = rhs.UseValueSecond;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ApprenticeText ?? true)
             {
@@ -2336,9 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)SkillRecord_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2365,9 +2355,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SkillRecordSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return SkillRecordSetterCopyCommon.Instance;
+            return SkillRecordSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3533,47 +3523,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SkillRecord_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public SkillRecord_CopyMask()
-        {
-        }
-
-        public SkillRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Skill = defaultOn;
-            this.Description = defaultOn;
-            this.Icon = defaultOn;
-            this.Action = defaultOn;
-            this.Attribute = defaultOn;
-            this.Specialization = defaultOn;
-            this.UseValueFirst = defaultOn;
-            this.UseValueSecond = defaultOn;
-            this.ApprenticeText = defaultOn;
-            this.JourneymanText = defaultOn;
-            this.ExpertText = defaultOn;
-            this.MasterText = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Skill;
-        public bool Description;
-        public bool Icon;
-        public bool Action;
-        public bool Attribute;
-        public bool Specialization;
-        public bool UseValueFirst;
-        public bool UseValueSecond;
-        public bool ApprenticeText;
-        public bool JourneymanText;
-        public bool ExpertText;
-        public bool MasterText;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class SkillRecord_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3877,6 +3826,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return SkillRecordCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return SkillRecordSetterTranslationCommon.Instance;
         }
 
         #endregion

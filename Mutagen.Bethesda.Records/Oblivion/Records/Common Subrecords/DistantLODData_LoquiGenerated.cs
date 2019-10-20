@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Unknown0
         Single Unknown0 { get; }
 
@@ -451,11 +451,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this DistantLODData lhs,
-            DistantLODData rhs)
+        public static void DeepCopyFieldsFrom(
+            this IDistantLODData lhs,
+            IDistantLODDataGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -464,13 +464,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this DistantLODData lhs,
-            DistantLODData rhs,
-            DistantLODData_CopyMask copyMask,
-            DistantLODData def = null)
+        public static void DeepCopyFieldsFrom(
+            this IDistantLODData lhs,
+            IDistantLODDataGetter rhs,
+            DistantLODData_TranslationMask copyMask,
+            IDistantLODDataGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -479,16 +479,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this DistantLODData lhs,
-            DistantLODData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDistantLODData lhs,
+            IDistantLODDataGetter rhs,
             out DistantLODData_ErrorMask errorMask,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null,
+            DistantLODData_TranslationMask copyMask = null,
+            IDistantLODDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DistantLODDataSetterCopyCommon)((IDistantLODDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -497,14 +497,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this DistantLODData lhs,
-            DistantLODData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDistantLODData lhs,
+            IDistantLODDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
+            DistantLODData_TranslationMask copyMask = null,
+            IDistantLODDataGetter def = null)
         {
-            ((DistantLODDataSetterCopyCommon)((IDistantLODDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -512,12 +512,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static DistantLODData Copy(
-            this DistantLODData item,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
+        public static DistantLODData DeepCopy(
+            this IDistantLODDataGetter item,
+            DistantLODData_TranslationMask copyMask = null,
+            IDistantLODDataGetter def = null)
         {
-            return ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).Copy(
+            return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -572,6 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IDistantLODData item,
             string path,
@@ -713,6 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -947,19 +949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new DistantLODData();
         }
         
-        public DistantLODData Copy(
-            DistantLODData item,
-            DistantLODData_CopyMask copyMask = null,
-            DistantLODData def = null)
-        {
-            DistantLODData ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDistantLODData item,
@@ -1181,39 +1170,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class DistantLODDataSetterCopyCommon
+    public partial class DistantLODDataSetterTranslationCommon
     {
-        public static readonly DistantLODDataSetterCopyCommon Instance = new DistantLODDataSetterCopyCommon();
+        public static readonly DistantLODDataSetterTranslationCommon Instance = new DistantLODDataSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            DistantLODData item,
-            DistantLODData rhs,
-            DistantLODData def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IDistantLODData item,
+            IDistantLODDataGetter rhs,
+            IDistantLODDataGetter def,
             ErrorMaskBuilder errorMask,
-            DistantLODData_CopyMask copyMask)
+            DistantLODData_TranslationMask copyMask)
         {
             if (copyMask?.Unknown0 ?? true)
             {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
                 item.Unknown0 = rhs.Unknown0;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown1 ?? true)
             {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
                 item.Unknown1 = rhs.Unknown1;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown2 ?? true)
             {
-                errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
                 item.Unknown2 = rhs.Unknown2;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public DistantLODData DeepCopy(
+            IDistantLODDataGetter item,
+            DistantLODData_TranslationMask copyMask = null,
+            IDistantLODDataGetter def = null)
+        {
+            DistantLODData ret = DistantLODDataSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1236,9 +1232,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return DistantLODDataSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return DistantLODDataSetterCopyCommon.Instance;
+            return DistantLODDataSetterTranslationCommon.Instance;
         }
         object IDistantLODDataGetter.CommonInstance()
         {
@@ -1248,9 +1244,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IDistantLODDataGetter.CommonSetterCopyInstance()
+        object IDistantLODDataGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1921,27 +1917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class DistantLODData_CopyMask
-    {
-        public DistantLODData_CopyMask()
-        {
-        }
-
-        public DistantLODData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Unknown0 = defaultOn;
-            this.Unknown1 = defaultOn;
-            this.Unknown2 = defaultOn;
-        }
-
-        #region Members
-        public bool Unknown0;
-        public bool Unknown1;
-        public bool Unknown2;
-        #endregion
-
-    }
-
     public class DistantLODData_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2123,6 +2098,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return DistantLODDataCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return DistantLODDataSetterTranslationCommon.Instance;
+        }
         object IDistantLODDataGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2131,9 +2110,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IDistantLODDataGetter.CommonSetterCopyInstance()
+        object IDistantLODDataGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

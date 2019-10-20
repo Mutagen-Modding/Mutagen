@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region ReuseCaches
         Boolean ReuseCaches { get; }
 
@@ -418,11 +418,11 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this PassthroughSettings lhs,
-            PassthroughSettings rhs)
+        public static void DeepCopyFieldsFrom(
+            this IPassthroughSettings lhs,
+            IPassthroughSettingsGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -431,13 +431,13 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this PassthroughSettings lhs,
-            PassthroughSettings rhs,
-            PassthroughSettings_CopyMask copyMask,
-            PassthroughSettings def = null)
+        public static void DeepCopyFieldsFrom(
+            this IPassthroughSettings lhs,
+            IPassthroughSettingsGetter rhs,
+            PassthroughSettings_TranslationMask copyMask,
+            IPassthroughSettingsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -446,16 +446,16 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this PassthroughSettings lhs,
-            PassthroughSettings rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPassthroughSettings lhs,
+            IPassthroughSettingsGetter rhs,
             out PassthroughSettings_ErrorMask errorMask,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null,
+            PassthroughSettings_TranslationMask copyMask = null,
+            IPassthroughSettingsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -464,14 +464,14 @@ namespace Mutagen.Bethesda.Tests
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this PassthroughSettings lhs,
-            PassthroughSettings rhs,
+        public static void DeepCopyFieldsFrom(
+            this IPassthroughSettings lhs,
+            IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
+            PassthroughSettings_TranslationMask copyMask = null,
+            IPassthroughSettingsGetter def = null)
         {
-            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -479,12 +479,12 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static PassthroughSettings Copy(
-            this PassthroughSettings item,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
+        public static PassthroughSettings DeepCopy(
+            this IPassthroughSettingsGetter item,
+            PassthroughSettings_TranslationMask copyMask = null,
+            IPassthroughSettingsGetter def = null)
         {
-            return ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).Copy(
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Tests
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IPassthroughSettings item,
             string path,
@@ -912,19 +913,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             return new PassthroughSettings();
         }
         
-        public PassthroughSettings Copy(
-            PassthroughSettings item,
-            PassthroughSettings_CopyMask copyMask = null,
-            PassthroughSettings def = null)
-        {
-            PassthroughSettings ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IPassthroughSettings item,
@@ -1117,63 +1105,62 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         
     }
-    public partial class PassthroughSettingsSetterCopyCommon
+    public partial class PassthroughSettingsSetterTranslationCommon
     {
-        public static readonly PassthroughSettingsSetterCopyCommon Instance = new PassthroughSettingsSetterCopyCommon();
+        public static readonly PassthroughSettingsSetterTranslationCommon Instance = new PassthroughSettingsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            PassthroughSettings item,
-            PassthroughSettings rhs,
-            PassthroughSettings def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IPassthroughSettings item,
+            IPassthroughSettingsGetter rhs,
+            IPassthroughSettingsGetter def,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_CopyMask copyMask)
+            PassthroughSettings_TranslationMask copyMask)
         {
             if (copyMask?.ReuseCaches ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
                 item.ReuseCaches = rhs.ReuseCaches;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ReorderRecords ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
                 item.ReorderRecords = rhs.ReorderRecords;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DeleteCachesAfter ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
                 item.DeleteCachesAfter = rhs.DeleteCachesAfter;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestNormal ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
                 item.TestNormal = rhs.TestNormal;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestBinaryWrapper ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryWrapper);
                 item.TestBinaryWrapper = rhs.TestBinaryWrapper;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestImport ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
                 item.TestImport = rhs.TestImport;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestFolder ?? true)
             {
-                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
                 item.TestFolder = rhs.TestFolder;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public PassthroughSettings DeepCopy(
+            IPassthroughSettingsGetter item,
+            PassthroughSettings_TranslationMask copyMask = null,
+            IPassthroughSettingsGetter def = null)
+        {
+            PassthroughSettings ret = PassthroughSettingsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1196,9 +1183,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return PassthroughSettingsSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return PassthroughSettingsSetterCopyCommon.Instance;
+            return PassthroughSettingsSetterTranslationCommon.Instance;
         }
         object IPassthroughSettingsGetter.CommonInstance()
         {
@@ -1208,9 +1195,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return this.CommonSetterInstance();
         }
-        object IPassthroughSettingsGetter.CommonSetterCopyInstance()
+        object IPassthroughSettingsGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2130,35 +2117,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
     }
-    public class PassthroughSettings_CopyMask
-    {
-        public PassthroughSettings_CopyMask()
-        {
-        }
-
-        public PassthroughSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ReuseCaches = defaultOn;
-            this.ReorderRecords = defaultOn;
-            this.DeleteCachesAfter = defaultOn;
-            this.TestNormal = defaultOn;
-            this.TestBinaryWrapper = defaultOn;
-            this.TestImport = defaultOn;
-            this.TestFolder = defaultOn;
-        }
-
-        #region Members
-        public bool ReuseCaches;
-        public bool ReorderRecords;
-        public bool DeleteCachesAfter;
-        public bool TestNormal;
-        public bool TestBinaryWrapper;
-        public bool TestImport;
-        public bool TestFolder;
-        #endregion
-
-    }
-
     public class PassthroughSettings_TranslationMask : ITranslationMask
     {
         #region Members

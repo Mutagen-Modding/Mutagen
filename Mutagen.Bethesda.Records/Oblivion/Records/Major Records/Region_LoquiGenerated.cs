@@ -806,13 +806,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Region lhs,
-            Region rhs,
-            Region_CopyMask copyMask,
-            Region def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRegionInternal lhs,
+            IRegionGetter rhs,
+            Region_TranslationMask copyMask,
+            IRegionGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -821,16 +821,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Region lhs,
-            Region rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionInternal lhs,
+            IRegionGetter rhs,
             out Region_ErrorMask errorMask,
-            Region_CopyMask copyMask = null,
-            Region def = null,
+            Region_TranslationMask copyMask = null,
+            IRegionGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RegionSetterCopyCommon)((IRegionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -839,14 +839,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Region_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Region lhs,
-            Region rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRegionInternal lhs,
+            IRegionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Region_CopyMask copyMask = null,
-            Region def = null)
+            Region_TranslationMask copyMask = null,
+            IRegionGetter def = null)
         {
-            ((RegionSetterCopyCommon)((IRegionGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -903,6 +903,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRegionInternal item,
             string path,
@@ -1044,6 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1943,7 +1945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Region(getNextFormKey());
-            ret.CopyFieldsFrom((Region)item);
+            ret.DeepCopyFieldsFrom((Region)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Region)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1952,19 +1954,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class RegionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly RegionSetterCopyCommon Instance = new RegionSetterCopyCommon();
+        public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Region item,
-            Region rhs,
-            Region def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRegion item,
+            IRegionGetter rhs,
+            IRegionGetter def,
             ErrorMaskBuilder errorMask,
-            Region_CopyMask copyMask)
+            Region_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2035,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                 try
                 {
-                    item.Worldspace_Property.SetLink(
+                    item.Worldspace_Property.SetToFormKey(
                         rhs: rhs.Worldspace_Property,
                         def: def?.Worldspace_Property);
                 }
@@ -2049,27 +2051,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Areas.Overall != CopyOption.Skip)
+            if (copyMask?.Areas.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
-                    item.Areas.SetToWithDefault<RegionArea, RegionArea>(
+                    item.Areas.SetToWithDefault(
                         rhs: rhs.Areas,
                         def: def?.Areas,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Areas.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RegionArea)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Areas?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Areas.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Areas?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2082,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Objects.Overall != CopyOption.Skip)
+            if (copyMask?.Objects.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.Objects);
                 try
@@ -2095,26 +2089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsObjectsItem,
                         outDefItem: out var defObjectsItem))
                     {
-                        switch (copyMask?.Objects.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RegionDataObjectsSetterCopyCommon)((IRegionDataObjectsGetter)item.Objects).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Objects,
-                                    rhs: rhs.Objects,
-                                    def: def?.Objects,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Objects.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Objects = rhsObjectsItem.Copy(
-                                    copyMask?.Objects?.Specific,
-                                    def: defObjectsItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Objects?.Overall}. Cannot execute copy.");
-                        }
+                        item.Objects = rhsObjectsItem.DeepCopy(
+                            copyMask?.Objects?.Specific,
+                            def: defObjectsItem);
                     }
                     else
                     {
@@ -2133,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Weather.Overall != CopyOption.Skip)
+            if (copyMask?.Weather.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.Weather);
                 try
@@ -2146,26 +2123,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsWeatherItem,
                         outDefItem: out var defWeatherItem))
                     {
-                        switch (copyMask?.Weather.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RegionDataWeatherSetterCopyCommon)((IRegionDataWeatherGetter)item.Weather).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Weather,
-                                    rhs: rhs.Weather,
-                                    def: def?.Weather,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Weather.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Weather = rhsWeatherItem.Copy(
-                                    copyMask?.Weather?.Specific,
-                                    def: defWeatherItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Weather?.Overall}. Cannot execute copy.");
-                        }
+                        item.Weather = rhsWeatherItem.DeepCopy(
+                            copyMask?.Weather?.Specific,
+                            def: defWeatherItem);
                     }
                     else
                     {
@@ -2184,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MapName.Overall != CopyOption.Skip)
+            if (copyMask?.MapName.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.MapName);
                 try
@@ -2197,26 +2157,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsMapNameItem,
                         outDefItem: out var defMapNameItem))
                     {
-                        switch (copyMask?.MapName.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RegionDataMapNameSetterCopyCommon)((IRegionDataMapNameGetter)item.MapName).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.MapName,
-                                    rhs: rhs.MapName,
-                                    def: def?.MapName,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.MapName.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.MapName = rhsMapNameItem.Copy(
-                                    copyMask?.MapName?.Specific,
-                                    def: defMapNameItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MapName?.Overall}. Cannot execute copy.");
-                        }
+                        item.MapName = rhsMapNameItem.DeepCopy(
+                            copyMask?.MapName?.Specific,
+                            def: defMapNameItem);
                     }
                     else
                     {
@@ -2235,7 +2178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Grasses.Overall != CopyOption.Skip)
+            if (copyMask?.Grasses.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
                 try
@@ -2248,26 +2191,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsGrassesItem,
                         outDefItem: out var defGrassesItem))
                     {
-                        switch (copyMask?.Grasses.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RegionDataGrassesSetterCopyCommon)((IRegionDataGrassesGetter)item.Grasses).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Grasses,
-                                    rhs: rhs.Grasses,
-                                    def: def?.Grasses,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Grasses.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Grasses = rhsGrassesItem.Copy(
-                                    copyMask?.Grasses?.Specific,
-                                    def: defGrassesItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Grasses?.Overall}. Cannot execute copy.");
-                        }
+                        item.Grasses = rhsGrassesItem.DeepCopy(
+                            copyMask?.Grasses?.Specific,
+                            def: defGrassesItem);
                     }
                     else
                     {
@@ -2286,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Sounds.Overall != CopyOption.Skip)
+            if (copyMask?.Sounds.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
                 try
@@ -2299,26 +2225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsSoundsItem,
                         outDefItem: out var defSoundsItem))
                     {
-                        switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RegionDataSoundsSetterCopyCommon)((IRegionDataSoundsGetter)item.Sounds).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Sounds,
-                                    rhs: rhs.Sounds,
-                                    def: def?.Sounds,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Sounds.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Sounds = rhsSoundsItem.Copy(
-                                    copyMask?.Sounds?.Specific,
-                                    def: defSoundsItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds?.Overall}. Cannot execute copy.");
-                        }
+                        item.Sounds = rhsSoundsItem.DeepCopy(
+                            copyMask?.Sounds?.Specific,
+                            def: defSoundsItem);
                     }
                     else
                     {
@@ -2362,9 +2271,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RegionSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return RegionSetterCopyCommon.Instance;
+            return RegionSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3447,39 +3356,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Region_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Region_CopyMask()
-        {
-        }
-
-        public Region_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Icon = defaultOn;
-            this.MapColor = defaultOn;
-            this.Worldspace = defaultOn;
-            this.Areas = new MaskItem<CopyOption, RegionArea_CopyMask>(deepCopyOption, default);
-            this.Objects = new MaskItem<CopyOption, RegionDataObjects_CopyMask>(deepCopyOption, default);
-            this.Weather = new MaskItem<CopyOption, RegionDataWeather_CopyMask>(deepCopyOption, default);
-            this.MapName = new MaskItem<CopyOption, RegionDataMapName_CopyMask>(deepCopyOption, default);
-            this.Grasses = new MaskItem<CopyOption, RegionDataGrasses_CopyMask>(deepCopyOption, default);
-            this.Sounds = new MaskItem<CopyOption, RegionDataSounds_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool Icon;
-        public bool MapColor;
-        public bool Worldspace;
-        public MaskItem<CopyOption, RegionArea_CopyMask> Areas;
-        public MaskItem<CopyOption, RegionDataObjects_CopyMask> Objects;
-        public MaskItem<CopyOption, RegionDataWeather_CopyMask> Weather;
-        public MaskItem<CopyOption, RegionDataMapName_CopyMask> MapName;
-        public MaskItem<CopyOption, RegionDataGrasses_CopyMask> Grasses;
-        public MaskItem<CopyOption, RegionDataSounds_CopyMask> Sounds;
-        #endregion
-
-    }
-
     public class Region_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3764,6 +3640,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return RegionCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return RegionSetterTranslationCommon.Instance;
         }
 
         #endregion

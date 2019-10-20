@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalInt lhs,
-            GlobalInt rhs,
-            GlobalInt_CopyMask copyMask,
-            GlobalInt def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGlobalIntInternal lhs,
+            IGlobalIntGetter rhs,
+            GlobalInt_TranslationMask copyMask,
+            IGlobalIntGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalInt lhs,
-            GlobalInt rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalIntInternal lhs,
+            IGlobalIntGetter rhs,
             out GlobalInt_ErrorMask errorMask,
-            GlobalInt_CopyMask copyMask = null,
-            GlobalInt def = null,
+            GlobalInt_TranslationMask copyMask = null,
+            IGlobalIntGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalIntSetterCopyCommon)((IGlobalIntGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalInt lhs,
-            GlobalInt rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalIntInternal lhs,
+            IGlobalIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalInt_CopyMask copyMask = null,
-            GlobalInt def = null)
+            GlobalInt_TranslationMask copyMask = null,
+            IGlobalIntGetter def = null)
         {
-            ((GlobalIntSetterCopyCommon)((IGlobalIntGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -568,6 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGlobalIntInternal item,
             string path,
@@ -709,6 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1294,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new GlobalInt(getNextFormKey());
-            ret.CopyFieldsFrom((GlobalInt)item);
+            ret.DeepCopyFieldsFrom((GlobalInt)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GlobalInt)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1303,19 +1305,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GlobalIntSetterCopyCommon : GlobalSetterCopyCommon
+    public partial class GlobalIntSetterTranslationCommon : GlobalSetterTranslationCommon
     {
-        public new static readonly GlobalIntSetterCopyCommon Instance = new GlobalIntSetterCopyCommon();
+        public new static readonly GlobalIntSetterTranslationCommon Instance = new GlobalIntSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GlobalInt item,
-            GlobalInt rhs,
-            GlobalInt def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGlobalInt item,
+            IGlobalIntGetter rhs,
+            IGlobalIntGetter def,
             ErrorMaskBuilder errorMask,
-            GlobalInt_CopyMask copyMask)
+            GlobalInt_TranslationMask copyMask)
         {
-            ((GlobalSetterCopyCommon)((IGlobalGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1376,9 +1378,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return GlobalIntSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GlobalIntSetterCopyCommon.Instance;
+            return GlobalIntSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1865,23 +1867,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class GlobalInt_CopyMask : Global_CopyMask
-    {
-        public GlobalInt_CopyMask()
-        {
-        }
-
-        public GlobalInt_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Data = defaultOn;
-        }
-
-        #region Members
-        public bool Data;
-        #endregion
-
-    }
-
     public class GlobalInt_TranslationMask : Global_TranslationMask
     {
         #region Members
@@ -2113,6 +2098,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return GlobalIntCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GlobalIntSetterTranslationCommon.Instance;
         }
 
         #endregion

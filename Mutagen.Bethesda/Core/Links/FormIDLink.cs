@@ -42,9 +42,9 @@ namespace Mutagen.Bethesda
 #endif
         }
 
-        public FormIDLink(FormKey unlinkedForm)
+        public FormIDLink(FormKey formKey)
         {
-            this.UnlinkedForm = unlinkedForm;
+            this.UnlinkedForm = formKey;
 #if DEBUG
             FormIDLinkTesterHelper.Add(this);
 #endif

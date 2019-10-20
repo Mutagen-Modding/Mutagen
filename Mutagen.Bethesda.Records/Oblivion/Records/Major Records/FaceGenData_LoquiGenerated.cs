@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region SymmetricGeometry
         ReadOnlySpan<Byte> SymmetricGeometry { get; }
         bool SymmetricGeometry_IsSet { get; }
@@ -537,11 +537,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this FaceGenData lhs,
-            FaceGenData rhs)
+        public static void DeepCopyFieldsFrom(
+            this IFaceGenData lhs,
+            IFaceGenDataGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -550,13 +550,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this FaceGenData lhs,
-            FaceGenData rhs,
-            FaceGenData_CopyMask copyMask,
-            FaceGenData def = null)
+        public static void DeepCopyFieldsFrom(
+            this IFaceGenData lhs,
+            IFaceGenDataGetter rhs,
+            FaceGenData_TranslationMask copyMask,
+            IFaceGenDataGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -565,16 +565,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this FaceGenData lhs,
-            FaceGenData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFaceGenData lhs,
+            IFaceGenDataGetter rhs,
             out FaceGenData_ErrorMask errorMask,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null,
+            FaceGenData_TranslationMask copyMask = null,
+            IFaceGenDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FaceGenDataSetterCopyCommon)((IFaceGenDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -583,14 +583,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this FaceGenData lhs,
-            FaceGenData rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFaceGenData lhs,
+            IFaceGenDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
+            FaceGenData_TranslationMask copyMask = null,
+            IFaceGenDataGetter def = null)
         {
-            ((FaceGenDataSetterCopyCommon)((IFaceGenDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -598,12 +598,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static FaceGenData Copy(
-            this FaceGenData item,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
+        public static FaceGenData DeepCopy(
+            this IFaceGenDataGetter item,
+            FaceGenData_TranslationMask copyMask = null,
+            IFaceGenDataGetter def = null)
         {
-            return ((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).Copy(
+            return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -658,6 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IFaceGenData item,
             string path,
@@ -799,6 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1045,19 +1047,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public FaceGenData GetNew()
         {
             return new FaceGenData();
-        }
-        
-        public FaceGenData Copy(
-            FaceGenData item,
-            FaceGenData_CopyMask copyMask = null,
-            FaceGenData def = null)
-        {
-            FaceGenData ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1339,17 +1328,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class FaceGenDataSetterCopyCommon
+    public partial class FaceGenDataSetterTranslationCommon
     {
-        public static readonly FaceGenDataSetterCopyCommon Instance = new FaceGenDataSetterCopyCommon();
+        public static readonly FaceGenDataSetterTranslationCommon Instance = new FaceGenDataSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            FaceGenData item,
-            FaceGenData rhs,
-            FaceGenData def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IFaceGenData item,
+            IFaceGenDataGetter rhs,
+            IFaceGenDataGetter def,
             ErrorMaskBuilder errorMask,
-            FaceGenData_CopyMask copyMask)
+            FaceGenData_TranslationMask copyMask)
         {
             if (copyMask?.SymmetricGeometry ?? true)
             {
@@ -1359,12 +1348,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.SymmetricGeometry,
                         rhsHasBeenSet: rhs.SymmetricGeometry_IsSet,
-                        defItem: def?.SymmetricGeometry ?? default(Byte[]),
-                        defHasBeenSet: def?.SymmetricGeometry_IsSet ?? false,
+                        defItem: def.SymmetricGeometry,
+                        defHasBeenSet: def.SymmetricGeometry_IsSet,
                         outRhsItem: out var rhsSymmetricGeometryItem,
                         outDefItem: out var defSymmetricGeometryItem))
                     {
-                        item.SymmetricGeometry = rhsSymmetricGeometryItem;
+                        item.SymmetricGeometry = rhsSymmetricGeometryItem.ToArray();
                     }
                     else
                     {
@@ -1389,12 +1378,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.AsymmetricGeometry,
                         rhsHasBeenSet: rhs.AsymmetricGeometry_IsSet,
-                        defItem: def?.AsymmetricGeometry ?? default(Byte[]),
-                        defHasBeenSet: def?.AsymmetricGeometry_IsSet ?? false,
+                        defItem: def.AsymmetricGeometry,
+                        defHasBeenSet: def.AsymmetricGeometry_IsSet,
                         outRhsItem: out var rhsAsymmetricGeometryItem,
                         outDefItem: out var defAsymmetricGeometryItem))
                     {
-                        item.AsymmetricGeometry = rhsAsymmetricGeometryItem;
+                        item.AsymmetricGeometry = rhsAsymmetricGeometryItem.ToArray();
                     }
                     else
                     {
@@ -1419,12 +1408,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.SymmetricTexture,
                         rhsHasBeenSet: rhs.SymmetricTexture_IsSet,
-                        defItem: def?.SymmetricTexture ?? default(Byte[]),
-                        defHasBeenSet: def?.SymmetricTexture_IsSet ?? false,
+                        defItem: def.SymmetricTexture,
+                        defHasBeenSet: def.SymmetricTexture_IsSet,
                         outRhsItem: out var rhsSymmetricTextureItem,
                         outDefItem: out var defSymmetricTextureItem))
                     {
-                        item.SymmetricTexture = rhsSymmetricTextureItem;
+                        item.SymmetricTexture = rhsSymmetricTextureItem.ToArray();
                     }
                     else
                     {
@@ -1444,6 +1433,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public FaceGenData DeepCopy(
+            IFaceGenDataGetter item,
+            FaceGenData_TranslationMask copyMask = null,
+            IFaceGenDataGetter def = null)
+        {
+            FaceGenData ret = FaceGenDataSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1466,9 +1468,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return FaceGenDataSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return FaceGenDataSetterCopyCommon.Instance;
+            return FaceGenDataSetterTranslationCommon.Instance;
         }
         object IFaceGenDataGetter.CommonInstance()
         {
@@ -1478,9 +1480,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IFaceGenDataGetter.CommonSetterCopyInstance()
+        object IFaceGenDataGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2154,27 +2156,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class FaceGenData_CopyMask
-    {
-        public FaceGenData_CopyMask()
-        {
-        }
-
-        public FaceGenData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.SymmetricGeometry = defaultOn;
-            this.AsymmetricGeometry = defaultOn;
-            this.SymmetricTexture = defaultOn;
-        }
-
-        #region Members
-        public bool SymmetricGeometry;
-        public bool AsymmetricGeometry;
-        public bool SymmetricTexture;
-        #endregion
-
-    }
-
     public class FaceGenData_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2367,6 +2348,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return FaceGenDataCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return FaceGenDataSetterTranslationCommon.Instance;
+        }
         object IFaceGenDataGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2375,9 +2360,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IFaceGenDataGetter.CommonSetterCopyInstance()
+        object IFaceGenDataGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

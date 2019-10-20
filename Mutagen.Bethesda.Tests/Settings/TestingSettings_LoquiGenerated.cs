@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region TestGroupMasks
         Boolean TestGroupMasks { get; }
 
@@ -437,11 +437,11 @@ namespace Mutagen.Bethesda.Tests
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this TestingSettings lhs,
-            TestingSettings rhs)
+        public static void DeepCopyFieldsFrom(
+            this ITestingSettings lhs,
+            ITestingSettingsGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -450,13 +450,13 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this TestingSettings lhs,
-            TestingSettings rhs,
-            TestingSettings_CopyMask copyMask,
-            TestingSettings def = null)
+        public static void DeepCopyFieldsFrom(
+            this ITestingSettings lhs,
+            ITestingSettingsGetter rhs,
+            TestingSettings_TranslationMask copyMask,
+            ITestingSettingsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -465,16 +465,16 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this TestingSettings lhs,
-            TestingSettings rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITestingSettings lhs,
+            ITestingSettingsGetter rhs,
             out TestingSettings_ErrorMask errorMask,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null,
+            TestingSettings_TranslationMask copyMask = null,
+            ITestingSettingsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TestingSettingsSetterCopyCommon)((ITestingSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -483,14 +483,14 @@ namespace Mutagen.Bethesda.Tests
             errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this TestingSettings lhs,
-            TestingSettings rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITestingSettings lhs,
+            ITestingSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
+            TestingSettings_TranslationMask copyMask = null,
+            ITestingSettingsGetter def = null)
         {
-            ((TestingSettingsSetterCopyCommon)((ITestingSettingsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -498,12 +498,12 @@ namespace Mutagen.Bethesda.Tests
                 copyMask: copyMask);
         }
 
-        public static TestingSettings Copy(
-            this TestingSettings item,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
+        public static TestingSettings DeepCopy(
+            this ITestingSettingsGetter item,
+            TestingSettings_TranslationMask copyMask = null,
+            ITestingSettingsGetter def = null)
         {
-            return ((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).Copy(
+            return ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -558,6 +558,7 @@ namespace Mutagen.Bethesda.Tests
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ITestingSettings item,
             string path,
@@ -946,19 +947,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             return new TestingSettings();
         }
         
-        public TestingSettings Copy(
-            TestingSettings item,
-            TestingSettings_CopyMask copyMask = null,
-            TestingSettings def = null)
-        {
-            TestingSettings ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             ITestingSettings item,
@@ -1176,80 +1164,55 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         
     }
-    public partial class TestingSettingsSetterCopyCommon
+    public partial class TestingSettingsSetterTranslationCommon
     {
-        public static readonly TestingSettingsSetterCopyCommon Instance = new TestingSettingsSetterCopyCommon();
+        public static readonly TestingSettingsSetterTranslationCommon Instance = new TestingSettingsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            TestingSettings item,
-            TestingSettings rhs,
-            TestingSettings def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ITestingSettings item,
+            ITestingSettingsGetter rhs,
+            ITestingSettingsGetter def,
             ErrorMaskBuilder errorMask,
-            TestingSettings_CopyMask copyMask)
+            TestingSettings_TranslationMask copyMask)
         {
             if (copyMask?.TestGroupMasks ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
                 item.TestGroupMasks = rhs.TestGroupMasks;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestModList ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestModList);
                 item.TestModList = rhs.TestModList;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestFlattenedMod ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
                 item.TestFlattenedMod = rhs.TestFlattenedMod;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestBenchmarks ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
                 item.TestBenchmarks = rhs.TestBenchmarks;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TestLocators ?? true)
             {
-                errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
                 item.TestLocators = rhs.TestLocators;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.DataFolderLocations.Overall != CopyOption.Skip)
+            if (copyMask?.DataFolderLocations.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.DataFolderLocations);
                 try
                 {
-                    switch (copyMask?.DataFolderLocations?.Overall ?? CopyOption.Reference)
+                    if (copyMask?.DataFolderLocations?.Overall ?? true)
                     {
-                        case CopyOption.Reference:
-                            item.DataFolderLocations = Utility.GetGetterInterfaceReference<DataFolderLocations>(rhs.DataFolderLocations);
-                            break;
-                        case CopyOption.CopyIn:
-                            ((DataFolderLocationsSetterCopyCommon)((IDataFolderLocationsGetter)item.DataFolderLocations).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                item: item.DataFolderLocations,
-                                rhs: rhs.DataFolderLocations,
-                                def: def?.DataFolderLocations,
-                                errorMask: errorMask,
-                                copyMask: copyMask?.DataFolderLocations.Specific);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.DataFolderLocations == null)
-                            {
-                                item.DataFolderLocations = null;
-                            }
-                            else
-                            {
-                                item.DataFolderLocations = rhs.DataFolderLocations.Copy(
-                                    copyMask?.DataFolderLocations?.Specific,
-                                    def?.DataFolderLocations);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.DataFolderLocations?.Overall}. Cannot execute copy.");
+                        if (rhs.DataFolderLocations == null)
+                        {
+                            item.DataFolderLocations = null;
+                        }
+                        else
+                        {
+                            item.DataFolderLocations = rhs.DataFolderLocations.DeepCopy(
+                                copyMask?.DataFolderLocations?.Specific,
+                                def?.DataFolderLocations);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -1262,38 +1225,23 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.PassthroughSettings.Overall != CopyOption.Skip)
+            if (copyMask?.PassthroughSettings.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
                 try
                 {
-                    switch (copyMask?.PassthroughSettings?.Overall ?? CopyOption.Reference)
+                    if (copyMask?.PassthroughSettings?.Overall ?? true)
                     {
-                        case CopyOption.Reference:
-                            item.PassthroughSettings = Utility.GetGetterInterfaceReference<PassthroughSettings>(rhs.PassthroughSettings);
-                            break;
-                        case CopyOption.CopyIn:
-                            ((PassthroughSettingsSetterCopyCommon)((IPassthroughSettingsGetter)item.PassthroughSettings).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                item: item.PassthroughSettings,
-                                rhs: rhs.PassthroughSettings,
-                                def: def?.PassthroughSettings,
-                                errorMask: errorMask,
-                                copyMask: copyMask?.PassthroughSettings.Specific);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.PassthroughSettings == null)
-                            {
-                                item.PassthroughSettings = null;
-                            }
-                            else
-                            {
-                                item.PassthroughSettings = rhs.PassthroughSettings.Copy(
-                                    copyMask?.PassthroughSettings?.Specific,
-                                    def?.PassthroughSettings);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.PassthroughSettings?.Overall}. Cannot execute copy.");
+                        if (rhs.PassthroughSettings == null)
+                        {
+                            item.PassthroughSettings = null;
+                        }
+                        else
+                        {
+                            item.PassthroughSettings = rhs.PassthroughSettings.DeepCopy(
+                                copyMask?.PassthroughSettings?.Specific,
+                                def?.PassthroughSettings);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -1306,27 +1254,19 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TargetGroups.Overall != CopyOption.Skip)
+            if (copyMask?.TargetGroups.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                 try
                 {
-                    item.TargetGroups.SetToWithDefault<TargetGroup, TargetGroup>(
+                    item.TargetGroups.SetToWithDefault(
                         rhs: rhs.TargetGroups,
                         def: def?.TargetGroups,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.TargetGroups.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (TargetGroup)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.TargetGroups?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TargetGroups.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.TargetGroups?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1342,6 +1282,19 @@ namespace Mutagen.Bethesda.Tests.Internals
         }
         
         #endregion
+        
+        public TestingSettings DeepCopy(
+            ITestingSettingsGetter item,
+            TestingSettings_TranslationMask copyMask = null,
+            ITestingSettingsGetter def = null)
+        {
+            TestingSettings ret = TestingSettingsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1364,9 +1317,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return TestingSettingsSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return TestingSettingsSetterCopyCommon.Instance;
+            return TestingSettingsSetterTranslationCommon.Instance;
         }
         object ITestingSettingsGetter.CommonInstance()
         {
@@ -1376,9 +1329,9 @@ namespace Mutagen.Bethesda.Tests
         {
             return this.CommonSetterInstance();
         }
-        object ITestingSettingsGetter.CommonSetterCopyInstance()
+        object ITestingSettingsGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2479,37 +2432,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
 
     }
-    public class TestingSettings_CopyMask
-    {
-        public TestingSettings_CopyMask()
-        {
-        }
-
-        public TestingSettings_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.TestGroupMasks = defaultOn;
-            this.TestModList = defaultOn;
-            this.TestFlattenedMod = defaultOn;
-            this.TestBenchmarks = defaultOn;
-            this.TestLocators = defaultOn;
-            this.DataFolderLocations = new MaskItem<CopyOption, DataFolderLocations_CopyMask>(deepCopyOption, default);
-            this.PassthroughSettings = new MaskItem<CopyOption, PassthroughSettings_CopyMask>(deepCopyOption, default);
-            this.TargetGroups = new MaskItem<CopyOption, TargetGroup_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool TestGroupMasks;
-        public bool TestModList;
-        public bool TestFlattenedMod;
-        public bool TestBenchmarks;
-        public bool TestLocators;
-        public MaskItem<CopyOption, DataFolderLocations_CopyMask> DataFolderLocations;
-        public MaskItem<CopyOption, PassthroughSettings_CopyMask> PassthroughSettings;
-        public MaskItem<CopyOption, TargetGroup_CopyMask> TargetGroups;
-        #endregion
-
-    }
-
     public class TestingSettings_TranslationMask : ITranslationMask
     {
         #region Members

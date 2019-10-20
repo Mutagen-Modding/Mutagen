@@ -639,13 +639,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Key lhs,
-            Key rhs,
-            Key_CopyMask copyMask,
-            Key def = null)
+        public static void DeepCopyFieldsFrom(
+            this IKeyInternal lhs,
+            IKeyGetter rhs,
+            Key_TranslationMask copyMask,
+            IKeyGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -654,16 +654,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Key lhs,
-            Key rhs,
+        public static void DeepCopyFieldsFrom(
+            this IKeyInternal lhs,
+            IKeyGetter rhs,
             out Key_ErrorMask errorMask,
-            Key_CopyMask copyMask = null,
-            Key def = null,
+            Key_TranslationMask copyMask = null,
+            IKeyGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((KeySetterCopyCommon)((IKeyGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((KeySetterTranslationCommon)((IKeyGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -672,14 +672,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Key_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Key lhs,
-            Key rhs,
+        public static void DeepCopyFieldsFrom(
+            this IKeyInternal lhs,
+            IKeyGetter rhs,
             ErrorMaskBuilder errorMask,
-            Key_CopyMask copyMask = null,
-            Key def = null)
+            Key_TranslationMask copyMask = null,
+            IKeyGetter def = null)
         {
-            ((KeySetterCopyCommon)((IKeyGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((KeySetterTranslationCommon)((IKeyGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -736,6 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IKeyInternal item,
             string path,
@@ -877,6 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1702,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Key(getNextFormKey());
-            ret.CopyFieldsFrom((Key)item);
+            ret.DeepCopyFieldsFrom((Key)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Key)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1711,19 +1713,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class KeySetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class KeySetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly KeySetterCopyCommon Instance = new KeySetterCopyCommon();
+        public new static readonly KeySetterTranslationCommon Instance = new KeySetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Key item,
-            Key rhs,
-            Key def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IKey item,
+            IKeyGetter rhs,
+            IKeyGetter def,
             ErrorMaskBuilder errorMask,
-            Key_CopyMask copyMask)
+            Key_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1759,7 +1761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Key_FieldIndex.Model);
                 try
@@ -1772,26 +1774,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1845,7 +1830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Key_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -1861,21 +1846,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)Key_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)Key_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Key_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1902,9 +1881,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return KeySetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return KeySetterCopyCommon.Instance;
+            return KeySetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2736,35 +2715,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Key_CopyMask : ItemAbstract_CopyMask
-    {
-        public Key_CopyMask()
-        {
-        }
-
-        public Key_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Value;
-        public bool Weight;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Key_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -3029,6 +2979,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return KeyCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return KeySetterTranslationCommon.Instance;
         }
 
         #endregion

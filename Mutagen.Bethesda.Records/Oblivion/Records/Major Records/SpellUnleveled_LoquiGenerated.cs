@@ -569,13 +569,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SpellUnleveled lhs,
-            SpellUnleveled rhs,
-            SpellUnleveled_CopyMask copyMask,
-            SpellUnleveled def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISpellUnleveledInternal lhs,
+            ISpellUnleveledGetter rhs,
+            SpellUnleveled_TranslationMask copyMask,
+            ISpellUnleveledGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -584,16 +584,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SpellUnleveled lhs,
-            SpellUnleveled rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISpellUnleveledInternal lhs,
+            ISpellUnleveledGetter rhs,
             out SpellUnleveled_ErrorMask errorMask,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null,
+            SpellUnleveled_TranslationMask copyMask = null,
+            ISpellUnleveledGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SpellUnleveledSetterCopyCommon)((ISpellUnleveledGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -602,14 +602,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SpellUnleveled lhs,
-            SpellUnleveled rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISpellUnleveledInternal lhs,
+            ISpellUnleveledGetter rhs,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_CopyMask copyMask = null,
-            SpellUnleveled def = null)
+            SpellUnleveled_TranslationMask copyMask = null,
+            ISpellUnleveledGetter def = null)
         {
-            ((SpellUnleveledSetterCopyCommon)((ISpellUnleveledGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -666,6 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             string path,
@@ -807,6 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1612,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new SpellUnleveled(getNextFormKey());
-            ret.CopyFieldsFrom((SpellUnleveled)item);
+            ret.DeepCopyFieldsFrom((SpellUnleveled)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (SpellUnleveled)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1621,19 +1623,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellUnleveledSetterCopyCommon : SpellSetterCopyCommon
+    public partial class SpellUnleveledSetterTranslationCommon : SpellSetterTranslationCommon
     {
-        public new static readonly SpellUnleveledSetterCopyCommon Instance = new SpellUnleveledSetterCopyCommon();
+        public new static readonly SpellUnleveledSetterTranslationCommon Instance = new SpellUnleveledSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SpellUnleveled item,
-            SpellUnleveled rhs,
-            SpellUnleveled def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISpellUnleveled item,
+            ISpellUnleveledGetter rhs,
+            ISpellUnleveledGetter def,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_CopyMask copyMask)
+            SpellUnleveled_TranslationMask copyMask)
         {
-            ((SpellSetterCopyCommon)((ISpellGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1641,49 +1643,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.Type ?? true)
             {
-                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
                 item.Type = rhs.Type;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Cost ?? true)
             {
-                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
                 item.Cost = rhs.Cost;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Level ?? true)
             {
-                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
                 item.Level = rhs.Level;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flag ?? true)
             {
-                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
                 item.Flag = rhs.Flag;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Effects.Overall != CopyOption.Skip)
+            if (copyMask?.Effects.Overall ?? true)
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, Effect>(
+                    item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Effect)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Effects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Effects?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1698,9 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.SPITDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.SPITDataTypeState);
                 item.SPITDataTypeState = rhs.SPITDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1727,9 +1711,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SpellUnleveledSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return SpellUnleveledSetterCopyCommon.Instance;
+            return SpellUnleveledSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2611,33 +2595,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SpellUnleveled_CopyMask : Spell_CopyMask
-    {
-        public SpellUnleveled_CopyMask()
-        {
-        }
-
-        public SpellUnleveled_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Type = defaultOn;
-            this.Cost = defaultOn;
-            this.Level = defaultOn;
-            this.Flag = defaultOn;
-            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
-            this.SPITDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Type;
-        public bool Cost;
-        public bool Level;
-        public bool Flag;
-        public MaskItem<CopyOption, Effect_CopyMask> Effects;
-        public bool SPITDataTypeState;
-        #endregion
-
-    }
-
     public class SpellUnleveled_TranslationMask : Spell_TranslationMask
     {
         #region Members
@@ -2906,6 +2863,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return SpellUnleveledCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return SpellUnleveledSetterTranslationCommon.Instance;
         }
 
         #endregion

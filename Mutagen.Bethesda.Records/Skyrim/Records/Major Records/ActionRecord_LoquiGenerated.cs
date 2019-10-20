@@ -473,13 +473,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this ActionRecord lhs,
-            ActionRecord rhs,
-            ActionRecord_CopyMask copyMask,
-            ActionRecord def = null)
+        public static void DeepCopyFieldsFrom(
+            this IActionRecordInternal lhs,
+            IActionRecordGetter rhs,
+            ActionRecord_TranslationMask copyMask,
+            IActionRecordGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -488,16 +488,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this ActionRecord lhs,
-            ActionRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IActionRecordInternal lhs,
+            IActionRecordGetter rhs,
             out ActionRecord_ErrorMask errorMask,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null,
+            ActionRecord_TranslationMask copyMask = null,
+            IActionRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ActionRecordSetterCopyCommon)((IActionRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -506,14 +506,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this ActionRecord lhs,
-            ActionRecord rhs,
+        public static void DeepCopyFieldsFrom(
+            this IActionRecordInternal lhs,
+            IActionRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            ActionRecord_CopyMask copyMask = null,
-            ActionRecord def = null)
+            ActionRecord_TranslationMask copyMask = null,
+            IActionRecordGetter def = null)
         {
-            ((ActionRecordSetterCopyCommon)((IActionRecordGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -570,6 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IActionRecordInternal item,
             string path,
@@ -711,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1271,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new ActionRecord(getNextFormKey());
-            ret.CopyFieldsFrom((ActionRecord)item);
+            ret.DeepCopyFieldsFrom((ActionRecord)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (ActionRecord)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1280,19 +1282,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActionRecordSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class ActionRecordSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly ActionRecordSetterCopyCommon Instance = new ActionRecordSetterCopyCommon();
+        public new static readonly ActionRecordSetterTranslationCommon Instance = new ActionRecordSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            ActionRecord item,
-            ActionRecord rhs,
-            ActionRecord def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IActionRecord item,
+            IActionRecordGetter rhs,
+            IActionRecordGetter def,
             ErrorMaskBuilder errorMask,
-            ActionRecord_CopyMask copyMask)
+            ActionRecord_TranslationMask copyMask)
         {
-            ((SkyrimMajorRecordSetterCopyCommon)((ISkyrimMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1353,9 +1355,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return ActionRecordSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return ActionRecordSetterCopyCommon.Instance;
+            return ActionRecordSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1827,23 +1829,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class ActionRecord_CopyMask : SkyrimMajorRecord_CopyMask
-    {
-        public ActionRecord_CopyMask()
-        {
-        }
-
-        public ActionRecord_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Color = defaultOn;
-        }
-
-        #region Members
-        public bool Color;
-        #endregion
-
-    }
-
     public class ActionRecord_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
@@ -2026,6 +2011,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return ActionRecordCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return ActionRecordSetterTranslationCommon.Instance;
         }
 
         #endregion

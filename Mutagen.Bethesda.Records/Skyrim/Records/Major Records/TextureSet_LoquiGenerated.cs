@@ -588,13 +588,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this TextureSet lhs,
-            TextureSet rhs,
-            TextureSet_CopyMask copyMask,
-            TextureSet def = null)
+        public static void DeepCopyFieldsFrom(
+            this ITextureSetInternal lhs,
+            ITextureSetGetter rhs,
+            TextureSet_TranslationMask copyMask,
+            ITextureSetGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -603,16 +603,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this TextureSet lhs,
-            TextureSet rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITextureSetInternal lhs,
+            ITextureSetGetter rhs,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null,
+            TextureSet_TranslationMask copyMask = null,
+            ITextureSetGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((TextureSetSetterCopyCommon)((ITextureSetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -621,14 +621,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this TextureSet lhs,
-            TextureSet rhs,
+        public static void DeepCopyFieldsFrom(
+            this ITextureSetInternal lhs,
+            ITextureSetGetter rhs,
             ErrorMaskBuilder errorMask,
-            TextureSet_CopyMask copyMask = null,
-            TextureSet def = null)
+            TextureSet_TranslationMask copyMask = null,
+            ITextureSetGetter def = null)
         {
-            ((TextureSetSetterCopyCommon)((ITextureSetGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -685,6 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ITextureSetInternal item,
             string path,
@@ -826,6 +827,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1577,7 +1579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new TextureSet(getNextFormKey());
-            ret.CopyFieldsFrom((TextureSet)item);
+            ret.DeepCopyFieldsFrom((TextureSet)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (TextureSet)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1586,25 +1588,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly TextureSetSetterCopyCommon Instance = new TextureSetSetterCopyCommon();
+        public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            TextureSet item,
-            TextureSet rhs,
-            TextureSet def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ITextureSet item,
+            ITextureSetGetter rhs,
+            ITextureSetGetter def,
             ErrorMaskBuilder errorMask,
-            TextureSet_CopyMask copyMask)
+            TextureSet_TranslationMask copyMask)
         {
-            ((SkyrimMajorRecordSetterCopyCommon)((ISkyrimMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.ObjectBounds.Overall != CopyOption.Skip)
+            if (copyMask?.ObjectBounds.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
                 try
@@ -1617,26 +1619,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         outRhsItem: out var rhsObjectBoundsItem,
                         outDefItem: out var defObjectBoundsItem))
                     {
-                        switch (copyMask?.ObjectBounds.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ObjectBoundsSetterCopyCommon)((IObjectBoundsGetter)item.ObjectBounds).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.ObjectBounds,
-                                    rhs: rhs.ObjectBounds,
-                                    def: def?.ObjectBounds,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.ObjectBounds.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.ObjectBounds = rhsObjectBoundsItem.Copy(
-                                    copyMask?.ObjectBounds?.Specific,
-                                    def: defObjectBoundsItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.ObjectBounds?.Overall}. Cannot execute copy.");
-                        }
+                        item.ObjectBounds = rhsObjectBoundsItem.DeepCopy(
+                            copyMask?.ObjectBounds?.Specific,
+                            def: defObjectBoundsItem);
                     }
                     else
                     {
@@ -1655,7 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Textures.Overall != CopyOption.Skip)
+            if (copyMask?.Textures.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
                 try
@@ -1668,26 +1653,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         outRhsItem: out var rhsTexturesItem,
                         outDefItem: out var defTexturesItem))
                     {
-                        switch (copyMask?.Textures.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((TexturesSetterCopyCommon)((ITexturesGetter)item.Textures).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Textures,
-                                    rhs: rhs.Textures,
-                                    def: def?.Textures,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Textures.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Textures = rhsTexturesItem.Copy(
-                                    copyMask?.Textures?.Specific,
-                                    def: defTexturesItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Textures?.Overall}. Cannot execute copy.");
-                        }
+                        item.Textures = rhsTexturesItem.DeepCopy(
+                            copyMask?.Textures?.Specific,
+                            def: defTexturesItem);
                     }
                     else
                     {
@@ -1706,7 +1674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Decal.Overall != CopyOption.Skip)
+            if (copyMask?.Decal.Overall ?? true)
             {
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
                 try
@@ -1719,26 +1687,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         outRhsItem: out var rhsDecalItem,
                         outDefItem: out var defDecalItem))
                     {
-                        switch (copyMask?.Decal.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((DecalSetterCopyCommon)((IDecalGetter)item.Decal).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Decal,
-                                    rhs: rhs.Decal,
-                                    def: def?.Decal,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Decal.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Decal = rhsDecalItem.Copy(
-                                    copyMask?.Decal?.Specific,
-                                    def: defDecalItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Decal?.Overall}. Cannot execute copy.");
-                        }
+                        item.Decal = rhsDecalItem.DeepCopy(
+                            copyMask?.Decal?.Specific,
+                            def: defDecalItem);
                     }
                     else
                     {
@@ -1812,9 +1763,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return TextureSetSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return TextureSetSetterCopyCommon.Instance;
+            return TextureSetSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2505,29 +2456,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class TextureSet_CopyMask : SkyrimMajorRecord_CopyMask
-    {
-        public TextureSet_CopyMask()
-        {
-        }
-
-        public TextureSet_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ObjectBounds = new MaskItem<CopyOption, ObjectBounds_CopyMask>(deepCopyOption, default);
-            this.Textures = new MaskItem<CopyOption, Textures_CopyMask>(deepCopyOption, default);
-            this.Decal = new MaskItem<CopyOption, Decal_CopyMask>(deepCopyOption, default);
-            this.Flags = defaultOn;
-        }
-
-        #region Members
-        public MaskItem<CopyOption, ObjectBounds_CopyMask> ObjectBounds;
-        public MaskItem<CopyOption, Textures_CopyMask> Textures;
-        public MaskItem<CopyOption, Decal_CopyMask> Decal;
-        public bool Flags;
-        #endregion
-
-    }
-
     public class TextureSet_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Members
@@ -2749,6 +2677,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return TextureSetCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return TextureSetSetterTranslationCommon.Instance;
         }
 
         #endregion

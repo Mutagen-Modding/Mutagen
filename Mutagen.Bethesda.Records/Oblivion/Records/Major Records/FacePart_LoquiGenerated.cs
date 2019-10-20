@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Index
         Race.FaceIndex Index { get; }
         bool Index_IsSet { get; }
@@ -533,11 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this FacePart lhs,
-            FacePart rhs)
+        public static void DeepCopyFieldsFrom(
+            this IFacePart lhs,
+            IFacePartGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -546,13 +546,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this FacePart lhs,
-            FacePart rhs,
-            FacePart_CopyMask copyMask,
-            FacePart def = null)
+        public static void DeepCopyFieldsFrom(
+            this IFacePart lhs,
+            IFacePartGetter rhs,
+            FacePart_TranslationMask copyMask,
+            IFacePartGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -561,16 +561,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this FacePart lhs,
-            FacePart rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFacePart lhs,
+            IFacePartGetter rhs,
             out FacePart_ErrorMask errorMask,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null,
+            FacePart_TranslationMask copyMask = null,
+            IFacePartGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FacePartSetterCopyCommon)((IFacePartGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -579,14 +579,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = FacePart_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this FacePart lhs,
-            FacePart rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFacePart lhs,
+            IFacePartGetter rhs,
             ErrorMaskBuilder errorMask,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null)
+            FacePart_TranslationMask copyMask = null,
+            IFacePartGetter def = null)
         {
-            ((FacePartSetterCopyCommon)((IFacePartGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -594,12 +594,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static FacePart Copy(
-            this FacePart item,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null)
+        public static FacePart DeepCopy(
+            this IFacePartGetter item,
+            FacePart_TranslationMask copyMask = null,
+            IFacePartGetter def = null)
         {
-            return ((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()).Copy(
+            return ((FacePartSetterTranslationCommon)((IFacePartGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -654,6 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IFacePart item,
             string path,
@@ -795,6 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1042,19 +1044,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public FacePart GetNew()
         {
             return new FacePart();
-        }
-        
-        public FacePart Copy(
-            FacePart item,
-            FacePart_CopyMask copyMask = null,
-            FacePart def = null)
-        {
-            FacePart ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1351,17 +1340,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class FacePartSetterCopyCommon
+    public partial class FacePartSetterTranslationCommon
     {
-        public static readonly FacePartSetterCopyCommon Instance = new FacePartSetterCopyCommon();
+        public static readonly FacePartSetterTranslationCommon Instance = new FacePartSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            FacePart item,
-            FacePart rhs,
-            FacePart def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IFacePart item,
+            IFacePartGetter rhs,
+            IFacePartGetter def,
             ErrorMaskBuilder errorMask,
-            FacePart_CopyMask copyMask)
+            FacePart_TranslationMask copyMask)
         {
             if (copyMask?.Index ?? true)
             {
@@ -1393,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)FacePart_FieldIndex.Model);
                 try
@@ -1406,26 +1395,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1478,6 +1450,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
+        public FacePart DeepCopy(
+            IFacePartGetter item,
+            FacePart_TranslationMask copyMask = null,
+            IFacePartGetter def = null)
+        {
+            FacePart ret = FacePartSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -1499,9 +1484,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return FacePartSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return FacePartSetterCopyCommon.Instance;
+            return FacePartSetterTranslationCommon.Instance;
         }
         object IFacePartGetter.CommonInstance()
         {
@@ -1511,9 +1496,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IFacePartGetter.CommonSetterCopyInstance()
+        object IFacePartGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2202,27 +2187,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class FacePart_CopyMask
-    {
-        public FacePart_CopyMask()
-        {
-        }
-
-        public FacePart_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Index = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-        }
-
-        #region Members
-        public bool Index;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        #endregion
-
-    }
-
     public class FacePart_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2418,6 +2382,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return FacePartCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return FacePartSetterTranslationCommon.Instance;
+        }
         object IFacePartGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2426,9 +2394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IFacePartGetter.CommonSetterCopyInstance()
+        object IFacePartGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

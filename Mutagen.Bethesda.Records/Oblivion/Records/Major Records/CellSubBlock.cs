@@ -15,9 +15,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellSubBlock
     {
-        public static CellSubBlock_CopyMask duplicateMask = new CellSubBlock_CopyMask(true)
+        public static CellSubBlock_TranslationMask duplicateMask = new CellSubBlock_TranslationMask(true)
         {
-            Items = new Loqui.MaskItem<Loqui.CopyOption, Cell_CopyMask>(Loqui.CopyOption.Skip, null)
+            Items = new Loqui.MaskItem<bool, Cell_TranslationMask>(false, default)
         };
 
         public void WriteToXmlFolder(
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         public object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null)
         {
             var ret = new CellSubBlock();
-            ret.CopyFieldsFrom(this, duplicateMask);
+            ret.DeepCopyFieldsFrom(this, duplicateMask);
             ret.Items.SetTo(this.Items.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
         }

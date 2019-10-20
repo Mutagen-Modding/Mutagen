@@ -505,13 +505,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Subspace lhs,
-            Subspace rhs,
-            Subspace_CopyMask copyMask,
-            Subspace def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISubspaceInternal lhs,
+            ISubspaceGetter rhs,
+            Subspace_TranslationMask copyMask,
+            ISubspaceGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -520,16 +520,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Subspace lhs,
-            Subspace rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISubspaceInternal lhs,
+            ISubspaceGetter rhs,
             out Subspace_ErrorMask errorMask,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null,
+            Subspace_TranslationMask copyMask = null,
+            ISubspaceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SubspaceSetterCopyCommon)((ISubspaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -538,14 +538,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Subspace lhs,
-            Subspace rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISubspaceInternal lhs,
+            ISubspaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Subspace_CopyMask copyMask = null,
-            Subspace def = null)
+            Subspace_TranslationMask copyMask = null,
+            ISubspaceGetter def = null)
         {
-            ((SubspaceSetterCopyCommon)((ISubspaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SubspaceSetterTranslationCommon)((ISubspaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -602,6 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISubspaceInternal item,
             string path,
@@ -743,6 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1379,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Subspace(getNextFormKey());
-            ret.CopyFieldsFrom((Subspace)item);
+            ret.DeepCopyFieldsFrom((Subspace)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Subspace)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1388,19 +1390,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SubspaceSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class SubspaceSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly SubspaceSetterCopyCommon Instance = new SubspaceSetterCopyCommon();
+        public new static readonly SubspaceSetterTranslationCommon Instance = new SubspaceSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Subspace item,
-            Subspace rhs,
-            Subspace def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISubspace item,
+            ISubspaceGetter rhs,
+            ISubspaceGetter def,
             ErrorMaskBuilder errorMask,
-            Subspace_CopyMask copyMask)
+            Subspace_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1408,27 +1410,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if (copyMask?.X ?? true)
             {
-                errorMask?.PushIndex((int)Subspace_FieldIndex.X);
                 item.X = rhs.X;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Y ?? true)
             {
-                errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
                 item.Y = rhs.Y;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Z ?? true)
             {
-                errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
                 item.Z = rhs.Z;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DNAMDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Subspace_FieldIndex.DNAMDataTypeState);
                 item.DNAMDataTypeState = rhs.DNAMDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1455,9 +1449,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SubspaceSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return SubspaceSetterCopyCommon.Instance;
+            return SubspaceSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2103,29 +2097,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Subspace_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Subspace_CopyMask()
-        {
-        }
-
-        public Subspace_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.X = defaultOn;
-            this.Y = defaultOn;
-            this.Z = defaultOn;
-            this.DNAMDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool X;
-        public bool Y;
-        public bool Z;
-        public bool DNAMDataTypeState;
-        #endregion
-
-    }
-
     public class Subspace_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2336,6 +2307,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return SubspaceCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return SubspaceSetterTranslationCommon.Instance;
         }
 
         #endregion

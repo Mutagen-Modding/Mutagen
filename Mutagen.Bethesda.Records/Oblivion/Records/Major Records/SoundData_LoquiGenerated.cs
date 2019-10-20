@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region MinimumAttenuationDistance
         UInt16 MinimumAttenuationDistance { get; }
 
@@ -468,11 +468,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundData lhs,
-            SoundData rhs)
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataInternal lhs,
+            ISoundDataInternalGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -481,13 +481,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundData lhs,
-            SoundData rhs,
-            SoundData_CopyMask copyMask,
-            SoundData def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataInternal lhs,
+            ISoundDataInternalGetter rhs,
+            SoundData_TranslationMask copyMask,
+            ISoundDataInternalGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -496,16 +496,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundData lhs,
-            SoundData rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataInternal lhs,
+            ISoundDataInternalGetter rhs,
             out SoundData_ErrorMask errorMask,
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null,
+            SoundData_TranslationMask copyMask = null,
+            ISoundDataInternalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SoundDataSetterCopyCommon)((ISoundDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -514,14 +514,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SoundData lhs,
-            SoundData rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISoundDataInternal lhs,
+            ISoundDataInternalGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null)
+            SoundData_TranslationMask copyMask = null,
+            ISoundDataInternalGetter def = null)
         {
-            ((SoundDataSetterCopyCommon)((ISoundDataGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -529,12 +529,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static SoundData Copy(
-            this SoundData item,
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null)
+        public static SoundData DeepCopy(
+            this ISoundDataInternalGetter item,
+            SoundData_TranslationMask copyMask = null,
+            ISoundDataInternalGetter def = null)
         {
-            return ((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).Copy(
+            return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -589,6 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISoundDataInternal item,
             string path,
@@ -730,6 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -989,19 +991,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new SoundData();
         }
         
-        public SoundData Copy(
-            SoundData item,
-            SoundData_CopyMask copyMask = null,
-            SoundData def = null)
-        {
-            SoundData ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             ISoundDataInternal item,
@@ -1223,45 +1212,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class SoundDataSetterCopyCommon
+    public partial class SoundDataSetterTranslationCommon
     {
-        public static readonly SoundDataSetterCopyCommon Instance = new SoundDataSetterCopyCommon();
+        public static readonly SoundDataSetterTranslationCommon Instance = new SoundDataSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SoundData item,
-            SoundData rhs,
-            SoundData def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISoundData item,
+            ISoundDataGetter rhs,
+            ISoundDataGetter def,
             ErrorMaskBuilder errorMask,
-            SoundData_CopyMask copyMask)
+            SoundData_TranslationMask copyMask)
         {
             if (copyMask?.MinimumAttenuationDistance ?? true)
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
                 item.MinimumAttenuationDistance = rhs.MinimumAttenuationDistance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumAttenuationDistance ?? true)
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
                 item.MaximumAttenuationDistance = rhs.MaximumAttenuationDistance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FrequencyAdjustment ?? true)
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
                 item.FrequencyAdjustment = rhs.FrequencyAdjustment;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public SoundData DeepCopy(
+            ISoundDataInternalGetter item,
+            SoundData_TranslationMask copyMask = null,
+            ISoundDataInternalGetter def = null)
+        {
+            SoundData ret = SoundDataSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1284,9 +1278,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SoundDataSetterCommon.Instance;
         }
-        protected virtual object CommonSetterCopyInstance()
+        protected virtual object CommonSetterTranslationInstance()
         {
-            return SoundDataSetterCopyCommon.Instance;
+            return SoundDataSetterTranslationCommon.Instance;
         }
         object ISoundDataGetter.CommonInstance()
         {
@@ -1296,9 +1290,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object ISoundDataGetter.CommonSetterCopyInstance()
+        object ISoundDataGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2026,29 +2020,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SoundData_CopyMask
-    {
-        public SoundData_CopyMask()
-        {
-        }
-
-        public SoundData_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MinimumAttenuationDistance = defaultOn;
-            this.MaximumAttenuationDistance = defaultOn;
-            this.FrequencyAdjustment = defaultOn;
-            this.Flags = defaultOn;
-        }
-
-        #region Members
-        public bool MinimumAttenuationDistance;
-        public bool MaximumAttenuationDistance;
-        public bool FrequencyAdjustment;
-        public bool Flags;
-        #endregion
-
-    }
-
     public class SoundData_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2318,6 +2289,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return SoundDataCommon.Instance;
         }
+        protected virtual object CommonSetterTranslationInstance()
+        {
+            return SoundDataSetterTranslationCommon.Instance;
+        }
         object ISoundDataGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2326,9 +2301,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object ISoundDataGetter.CommonSetterCopyInstance()
+        object ISoundDataGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

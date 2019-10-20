@@ -32,11 +32,11 @@ namespace Mutagen.Bethesda.Generation
             return this.TargetObjectGeneration?.GetObjectType();
         }
 
-        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, Accessor defAccessor, string copyMaskAccessor)
+        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, Accessor defAccessor, string copyMaskAccessor, bool deepCopy)
         {
             if (this.GetObjectType() != ObjectType.Record)
             {
-                base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, defAccessor, copyMaskAccessor);
+                base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, defAccessor, copyMaskAccessor, deepCopy);
                 return;
             }
             switch (this.RefType)
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
                 case LoquiRefType.Direct:
                     fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
                     using (var args2 = new ArgsWrapper(fg,
-                        $"copyRet.CopyFieldsFrom"))
+                        $"copyRet.{(deepCopy ? "Deep" : null)}CopyFieldsFrom"))
                     {
                         args2.Add($"rhs: {rhsAccessor}");
                         if (this.RefType == LoquiRefType.Direct)
@@ -56,10 +56,10 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"{retAccessor}copyRet;");
                     break;
                 case LoquiRefType.Generic:
-                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}>()({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
+                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{_generic}, {_generic}Getter>()({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
                     break;
                 case LoquiRefType.Interface:
-                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}>(r.GetType())({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
+                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor.DirectAccess}, null, {defAccessor.DirectAccess});");
                     break;
                 default:
                     throw new NotImplementedException();

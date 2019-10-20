@@ -587,13 +587,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Furnature lhs,
-            Furnature rhs,
-            Furnature_CopyMask copyMask,
-            Furnature def = null)
+        public static void DeepCopyFieldsFrom(
+            this IFurnatureInternal lhs,
+            IFurnatureGetter rhs,
+            Furnature_TranslationMask copyMask,
+            IFurnatureGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -602,16 +602,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Furnature lhs,
-            Furnature rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFurnatureInternal lhs,
+            IFurnatureGetter rhs,
             out Furnature_ErrorMask errorMask,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null,
+            Furnature_TranslationMask copyMask = null,
+            IFurnatureGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FurnatureSetterCopyCommon)((IFurnatureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -620,14 +620,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Furnature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Furnature lhs,
-            Furnature rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFurnatureInternal lhs,
+            IFurnatureGetter rhs,
             ErrorMaskBuilder errorMask,
-            Furnature_CopyMask copyMask = null,
-            Furnature def = null)
+            Furnature_TranslationMask copyMask = null,
+            IFurnatureGetter def = null)
         {
-            ((FurnatureSetterCopyCommon)((IFurnatureGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -684,6 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IFurnatureInternal item,
             string path,
@@ -825,6 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1523,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Furnature(getNextFormKey());
-            ret.CopyFieldsFrom((Furnature)item);
+            ret.DeepCopyFieldsFrom((Furnature)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Furnature)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1532,19 +1534,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FurnatureSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class FurnatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly FurnatureSetterCopyCommon Instance = new FurnatureSetterCopyCommon();
+        public new static readonly FurnatureSetterTranslationCommon Instance = new FurnatureSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Furnature item,
-            Furnature rhs,
-            Furnature def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IFurnature item,
+            IFurnatureGetter rhs,
+            IFurnatureGetter def,
             ErrorMaskBuilder errorMask,
-            Furnature_CopyMask copyMask)
+            Furnature_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1580,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Furnature_FieldIndex.Model);
                 try
@@ -1593,26 +1595,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1636,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Furnature_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -1658,12 +1643,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.MarkerFlags,
                         rhsHasBeenSet: rhs.MarkerFlags_IsSet,
-                        defItem: def?.MarkerFlags ?? default(Byte[]),
-                        defHasBeenSet: def?.MarkerFlags_IsSet ?? false,
+                        defItem: def.MarkerFlags,
+                        defHasBeenSet: def.MarkerFlags_IsSet,
                         outRhsItem: out var rhsMarkerFlagsItem,
                         outDefItem: out var defMarkerFlagsItem))
                     {
-                        item.MarkerFlags = rhsMarkerFlagsItem;
+                        item.MarkerFlags = rhsMarkerFlagsItem.ToArray();
                     }
                     else
                     {
@@ -1705,9 +1690,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return FurnatureSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return FurnatureSetterCopyCommon.Instance;
+            return FurnatureSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2349,29 +2334,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Furnature_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Furnature_CopyMask()
-        {
-        }
-
-        public Furnature_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Script = defaultOn;
-            this.MarkerFlags = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Script;
-        public bool MarkerFlags;
-        #endregion
-
-    }
-
     public class Furnature_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2589,6 +2551,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return FurnatureCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return FurnatureSetterTranslationCommon.Instance;
         }
 
         #endregion

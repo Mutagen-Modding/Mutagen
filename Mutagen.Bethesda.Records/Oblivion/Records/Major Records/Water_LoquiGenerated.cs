@@ -1245,13 +1245,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Water lhs,
-            Water rhs,
-            Water_CopyMask copyMask,
-            Water def = null)
+        public static void DeepCopyFieldsFrom(
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
+            Water_TranslationMask copyMask,
+            IWaterGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1260,16 +1260,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Water lhs,
-            Water rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
             out Water_ErrorMask errorMask,
-            Water_CopyMask copyMask = null,
-            Water def = null,
+            Water_TranslationMask copyMask = null,
+            IWaterGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WaterSetterCopyCommon)((IWaterGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1278,14 +1278,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Water lhs,
-            Water rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
             ErrorMaskBuilder errorMask,
-            Water_CopyMask copyMask = null,
-            Water def = null)
+            Water_TranslationMask copyMask = null,
+            IWaterGetter def = null)
         {
-            ((WaterSetterCopyCommon)((IWaterGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1342,6 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IWaterInternal item,
             string path,
@@ -1483,6 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -3134,7 +3136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Water(getNextFormKey());
-            ret.CopyFieldsFrom((Water)item);
+            ret.DeepCopyFieldsFrom((Water)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Water)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -3143,19 +3145,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class WaterSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly WaterSetterCopyCommon Instance = new WaterSetterCopyCommon();
+        public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Water item,
-            Water rhs,
-            Water def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IWater item,
+            IWaterGetter rhs,
+            IWaterGetter def,
             ErrorMaskBuilder errorMask,
-            Water_CopyMask copyMask)
+            Water_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3286,7 +3288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetLink(
+                    item.Sound_Property.SetToFormKey(
                         rhs: rhs.Sound_Property,
                         def: def?.Sound_Property);
                 }
@@ -3302,161 +3304,109 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.WindVelocity ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
                 item.WindVelocity = rhs.WindVelocity;
-                errorMask?.PopIndex();
             }
             if (copyMask?.WindDirection ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
                 item.WindDirection = rhs.WindDirection;
-                errorMask?.PopIndex();
             }
             if (copyMask?.WaveAmplitude ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
                 item.WaveAmplitude = rhs.WaveAmplitude;
-                errorMask?.PopIndex();
             }
             if (copyMask?.WaveFrequency ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
                 item.WaveFrequency = rhs.WaveFrequency;
-                errorMask?.PopIndex();
             }
             if (copyMask?.SunPower ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
                 item.SunPower = rhs.SunPower;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ReflectivityAmount ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
                 item.ReflectivityAmount = rhs.ReflectivityAmount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FresnelAmount ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
                 item.FresnelAmount = rhs.FresnelAmount;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ScrollXSpeed ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
                 item.ScrollXSpeed = rhs.ScrollXSpeed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ScrollYSpeed ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
                 item.ScrollYSpeed = rhs.ScrollYSpeed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FogDistanceNearPlane ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
                 item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FogDistanceFarPlane ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
                 item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ShallowColor ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
                 item.ShallowColor = rhs.ShallowColor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DeepColor ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
                 item.DeepColor = rhs.DeepColor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ReflectionColor ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
                 item.ReflectionColor = rhs.ReflectionColor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.TextureBlend ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
                 item.TextureBlend = rhs.TextureBlend;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorForce ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
                 item.RainSimulatorForce = rhs.RainSimulatorForce;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorVelocity ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
                 item.RainSimulatorVelocity = rhs.RainSimulatorVelocity;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorFalloff ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
                 item.RainSimulatorFalloff = rhs.RainSimulatorFalloff;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorDampner ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
                 item.RainSimulatorDampner = rhs.RainSimulatorDampner;
-                errorMask?.PopIndex();
             }
             if (copyMask?.RainSimulatorStartingSize ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
                 item.RainSimulatorStartingSize = rhs.RainSimulatorStartingSize;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorForce ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
                 item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorVelocity ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
                 item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorFalloff ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
                 item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorDampner ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
                 item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DisplacementSimulatorStartingSize ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
                 item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Damage ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.Damage);
                 item.Damage = rhs.Damage;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.RelatedWaters.Overall != CopyOption.Skip)
+            if (copyMask?.RelatedWaters.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
@@ -3469,26 +3419,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsRelatedWatersItem,
                         outDefItem: out var defRelatedWatersItem))
                     {
-                        switch (copyMask?.RelatedWaters.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RelatedWatersSetterCopyCommon)((IRelatedWatersGetter)item.RelatedWaters).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.RelatedWaters,
-                                    rhs: rhs.RelatedWaters,
-                                    def: def?.RelatedWaters,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.RelatedWaters.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.RelatedWaters = rhsRelatedWatersItem.Copy(
-                                    copyMask?.RelatedWaters?.Specific,
-                                    def: defRelatedWatersItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.RelatedWaters?.Overall}. Cannot execute copy.");
-                        }
+                        item.RelatedWaters = rhsRelatedWatersItem.DeepCopy(
+                            copyMask?.RelatedWaters?.Specific,
+                            def: defRelatedWatersItem);
                     }
                     else
                     {
@@ -3509,9 +3442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -3538,9 +3469,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return WaterSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return WaterSetterCopyCommon.Instance;
+            return WaterSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -5860,87 +5791,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Water_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Water_CopyMask()
-        {
-        }
-
-        public Water_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Texture = defaultOn;
-            this.Opacity = defaultOn;
-            this.Flags = defaultOn;
-            this.MaterialID = defaultOn;
-            this.Sound = defaultOn;
-            this.WindVelocity = defaultOn;
-            this.WindDirection = defaultOn;
-            this.WaveAmplitude = defaultOn;
-            this.WaveFrequency = defaultOn;
-            this.SunPower = defaultOn;
-            this.ReflectivityAmount = defaultOn;
-            this.FresnelAmount = defaultOn;
-            this.ScrollXSpeed = defaultOn;
-            this.ScrollYSpeed = defaultOn;
-            this.FogDistanceNearPlane = defaultOn;
-            this.FogDistanceFarPlane = defaultOn;
-            this.ShallowColor = defaultOn;
-            this.DeepColor = defaultOn;
-            this.ReflectionColor = defaultOn;
-            this.TextureBlend = defaultOn;
-            this.RainSimulatorForce = defaultOn;
-            this.RainSimulatorVelocity = defaultOn;
-            this.RainSimulatorFalloff = defaultOn;
-            this.RainSimulatorDampner = defaultOn;
-            this.RainSimulatorStartingSize = defaultOn;
-            this.DisplacementSimulatorForce = defaultOn;
-            this.DisplacementSimulatorVelocity = defaultOn;
-            this.DisplacementSimulatorFalloff = defaultOn;
-            this.DisplacementSimulatorDampner = defaultOn;
-            this.DisplacementSimulatorStartingSize = defaultOn;
-            this.Damage = defaultOn;
-            this.RelatedWaters = new MaskItem<CopyOption, RelatedWaters_CopyMask>(deepCopyOption, default);
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Texture;
-        public bool Opacity;
-        public bool Flags;
-        public bool MaterialID;
-        public bool Sound;
-        public bool WindVelocity;
-        public bool WindDirection;
-        public bool WaveAmplitude;
-        public bool WaveFrequency;
-        public bool SunPower;
-        public bool ReflectivityAmount;
-        public bool FresnelAmount;
-        public bool ScrollXSpeed;
-        public bool ScrollYSpeed;
-        public bool FogDistanceNearPlane;
-        public bool FogDistanceFarPlane;
-        public bool ShallowColor;
-        public bool DeepColor;
-        public bool ReflectionColor;
-        public bool TextureBlend;
-        public bool RainSimulatorForce;
-        public bool RainSimulatorVelocity;
-        public bool RainSimulatorFalloff;
-        public bool RainSimulatorDampner;
-        public bool RainSimulatorStartingSize;
-        public bool DisplacementSimulatorForce;
-        public bool DisplacementSimulatorVelocity;
-        public bool DisplacementSimulatorFalloff;
-        public bool DisplacementSimulatorDampner;
-        public bool DisplacementSimulatorStartingSize;
-        public bool Damage;
-        public MaskItem<CopyOption, RelatedWaters_CopyMask> RelatedWaters;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Water_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -6543,6 +6393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return WaterCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return WaterSetterTranslationCommon.Instance;
         }
 
         #endregion

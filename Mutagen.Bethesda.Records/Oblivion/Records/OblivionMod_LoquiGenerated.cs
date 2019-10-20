@@ -2044,10 +2044,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var item = new OblivionMod(modKey);
             var tasks = new List<Task>();
-            item.ModHeader.CopyFieldsFrom(ModHeader.CreateFromXml(
+            item.ModHeader.CopyInFromXml(
                 path: Path.Combine(dir.Path, "ModHeader.xml"),
                 errorMask: errorMask,
-                translationMask: null));
+                translationMask: null);
             tasks.Add(Task.Run(() => item.GameSettings.CreateFromXmlFolder<GameSetting>(
                 dir: dir,
                 name: nameof(GameSettings),
@@ -2907,7 +2907,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region ModHeader
         IModHeaderGetter ModHeader { get; }
         bool ModHeader_IsSet { get; }
@@ -3156,11 +3156,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMod lhs,
-            OblivionMod rhs)
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMod lhs,
+            IOblivionModGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -3169,13 +3169,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMod lhs,
-            OblivionMod rhs,
-            OblivionMod_CopyMask copyMask,
-            OblivionMod def = null)
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMod lhs,
+            IOblivionModGetter rhs,
+            OblivionMod_TranslationMask copyMask,
+            IOblivionModGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -3184,16 +3184,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMod lhs,
-            OblivionMod rhs,
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMod lhs,
+            IOblivionModGetter rhs,
             out OblivionMod_ErrorMask errorMask,
-            OblivionMod_CopyMask copyMask = null,
-            OblivionMod def = null,
+            OblivionMod_TranslationMask copyMask = null,
+            IOblivionModGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((OblivionModSetterCopyCommon)((IOblivionModGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -3202,14 +3202,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this OblivionMod lhs,
-            OblivionMod rhs,
+        public static void DeepCopyFieldsFrom(
+            this IOblivionMod lhs,
+            IOblivionModGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMod_CopyMask copyMask = null,
-            OblivionMod def = null)
+            OblivionMod_TranslationMask copyMask = null,
+            IOblivionModGetter def = null)
         {
-            ((OblivionModSetterCopyCommon)((IOblivionModGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -3266,6 +3266,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IOblivionMod item,
             string path,
@@ -3485,6 +3486,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         public static async Task CopyInFromBinary(
             this IOblivionMod item,
             string path,
@@ -7875,25 +7877,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionModSetterCopyCommon
+    public partial class OblivionModSetterTranslationCommon
     {
-        public static readonly OblivionModSetterCopyCommon Instance = new OblivionModSetterCopyCommon();
+        public static readonly OblivionModSetterTranslationCommon Instance = new OblivionModSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            OblivionMod item,
-            OblivionMod rhs,
-            OblivionMod def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IOblivionMod item,
+            IOblivionModGetter rhs,
+            IOblivionModGetter def,
             ErrorMaskBuilder errorMask,
-            OblivionMod_CopyMask copyMask)
+            OblivionMod_TranslationMask copyMask)
         {
             if (copyMask?.ModHeader.Overall ?? true)
             {
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.ModHeader);
                 try
                 {
-                    ((ModHeaderSetterCopyCommon)((IModHeaderGetter)item.ModHeader).CommonSetterCopyInstance()).CopyFieldsFrom(
-                        item: item.ModHeader,
+                    item.ModHeader.DeepCopyFieldsFrom(
                         rhs: rhs.ModHeader,
                         def: def?.ModHeader,
                         errorMask: errorMask,
@@ -7914,8 +7915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.GameSettings);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IGameSettingGetter>)item.GameSettings).CommonSetterCopyInstance<GameSetting_CopyMask>()).CopyFieldsFrom(
-                        item: item.GameSettings,
+                    item.GameSettings.DeepCopyFieldsFrom(
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
                         errorMask: errorMask,
@@ -7936,8 +7936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Globals);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IGlobalGetter>)item.Globals).CommonSetterCopyInstance<Global_CopyMask>()).CopyFieldsFrom(
-                        item: item.Globals,
+                    item.Globals.DeepCopyFieldsFrom(
                         rhs: rhs.Globals,
                         def: def?.Globals,
                         errorMask: errorMask,
@@ -7958,8 +7957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Classes);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IClassGetter>)item.Classes).CommonSetterCopyInstance<Class_CopyMask>()).CopyFieldsFrom(
-                        item: item.Classes,
+                    item.Classes.DeepCopyFieldsFrom(
                         rhs: rhs.Classes,
                         def: def?.Classes,
                         errorMask: errorMask,
@@ -7980,8 +7978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Factions);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IFactionGetter>)item.Factions).CommonSetterCopyInstance<Faction_CopyMask>()).CopyFieldsFrom(
-                        item: item.Factions,
+                    item.Factions.DeepCopyFieldsFrom(
                         rhs: rhs.Factions,
                         def: def?.Factions,
                         errorMask: errorMask,
@@ -8002,8 +7999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Hairs);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IHairGetter>)item.Hairs).CommonSetterCopyInstance<Hair_CopyMask>()).CopyFieldsFrom(
-                        item: item.Hairs,
+                    item.Hairs.DeepCopyFieldsFrom(
                         rhs: rhs.Hairs,
                         def: def?.Hairs,
                         errorMask: errorMask,
@@ -8024,8 +8020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Eyes);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IEyeGetter>)item.Eyes).CommonSetterCopyInstance<Eye_CopyMask>()).CopyFieldsFrom(
-                        item: item.Eyes,
+                    item.Eyes.DeepCopyFieldsFrom(
                         rhs: rhs.Eyes,
                         def: def?.Eyes,
                         errorMask: errorMask,
@@ -8046,8 +8041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Races);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IRaceGetter>)item.Races).CommonSetterCopyInstance<Race_CopyMask>()).CopyFieldsFrom(
-                        item: item.Races,
+                    item.Races.DeepCopyFieldsFrom(
                         rhs: rhs.Races,
                         def: def?.Races,
                         errorMask: errorMask,
@@ -8068,8 +8062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Sounds);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISoundGetter>)item.Sounds).CommonSetterCopyInstance<Sound_CopyMask>()).CopyFieldsFrom(
-                        item: item.Sounds,
+                    item.Sounds.DeepCopyFieldsFrom(
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
                         errorMask: errorMask,
@@ -8090,8 +8083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Skills);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISkillRecordGetter>)item.Skills).CommonSetterCopyInstance<SkillRecord_CopyMask>()).CopyFieldsFrom(
-                        item: item.Skills,
+                    item.Skills.DeepCopyFieldsFrom(
                         rhs: rhs.Skills,
                         def: def?.Skills,
                         errorMask: errorMask,
@@ -8112,8 +8104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.MagicEffects);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IMagicEffectGetter>)item.MagicEffects).CommonSetterCopyInstance<MagicEffect_CopyMask>()).CopyFieldsFrom(
-                        item: item.MagicEffects,
+                    item.MagicEffects.DeepCopyFieldsFrom(
                         rhs: rhs.MagicEffects,
                         def: def?.MagicEffects,
                         errorMask: errorMask,
@@ -8134,8 +8125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Scripts);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IScriptGetter>)item.Scripts).CommonSetterCopyInstance<Script_CopyMask>()).CopyFieldsFrom(
-                        item: item.Scripts,
+                    item.Scripts.DeepCopyFieldsFrom(
                         rhs: rhs.Scripts,
                         def: def?.Scripts,
                         errorMask: errorMask,
@@ -8156,8 +8146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LandTextures);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILandTextureGetter>)item.LandTextures).CommonSetterCopyInstance<LandTexture_CopyMask>()).CopyFieldsFrom(
-                        item: item.LandTextures,
+                    item.LandTextures.DeepCopyFieldsFrom(
                         rhs: rhs.LandTextures,
                         def: def?.LandTextures,
                         errorMask: errorMask,
@@ -8178,8 +8167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Enchantments);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IEnchantmentGetter>)item.Enchantments).CommonSetterCopyInstance<Enchantment_CopyMask>()).CopyFieldsFrom(
-                        item: item.Enchantments,
+                    item.Enchantments.DeepCopyFieldsFrom(
                         rhs: rhs.Enchantments,
                         def: def?.Enchantments,
                         errorMask: errorMask,
@@ -8200,8 +8188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Spells);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISpellUnleveledGetter>)item.Spells).CommonSetterCopyInstance<SpellUnleveled_CopyMask>()).CopyFieldsFrom(
-                        item: item.Spells,
+                    item.Spells.DeepCopyFieldsFrom(
                         rhs: rhs.Spells,
                         def: def?.Spells,
                         errorMask: errorMask,
@@ -8222,8 +8209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Birthsigns);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IBirthsignGetter>)item.Birthsigns).CommonSetterCopyInstance<Birthsign_CopyMask>()).CopyFieldsFrom(
-                        item: item.Birthsigns,
+                    item.Birthsigns.DeepCopyFieldsFrom(
                         rhs: rhs.Birthsigns,
                         def: def?.Birthsigns,
                         errorMask: errorMask,
@@ -8244,8 +8230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Activators);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IActivatorGetter>)item.Activators).CommonSetterCopyInstance<Activator_CopyMask>()).CopyFieldsFrom(
-                        item: item.Activators,
+                    item.Activators.DeepCopyFieldsFrom(
                         rhs: rhs.Activators,
                         def: def?.Activators,
                         errorMask: errorMask,
@@ -8266,8 +8251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IAlchemicalApparatusGetter>)item.AlchemicalApparatus).CommonSetterCopyInstance<AlchemicalApparatus_CopyMask>()).CopyFieldsFrom(
-                        item: item.AlchemicalApparatus,
+                    item.AlchemicalApparatus.DeepCopyFieldsFrom(
                         rhs: rhs.AlchemicalApparatus,
                         def: def?.AlchemicalApparatus,
                         errorMask: errorMask,
@@ -8288,8 +8272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Armors);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IArmorGetter>)item.Armors).CommonSetterCopyInstance<Armor_CopyMask>()).CopyFieldsFrom(
-                        item: item.Armors,
+                    item.Armors.DeepCopyFieldsFrom(
                         rhs: rhs.Armors,
                         def: def?.Armors,
                         errorMask: errorMask,
@@ -8310,8 +8293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Books);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IBookGetter>)item.Books).CommonSetterCopyInstance<Book_CopyMask>()).CopyFieldsFrom(
-                        item: item.Books,
+                    item.Books.DeepCopyFieldsFrom(
                         rhs: rhs.Books,
                         def: def?.Books,
                         errorMask: errorMask,
@@ -8332,8 +8314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Clothes);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IClothingGetter>)item.Clothes).CommonSetterCopyInstance<Clothing_CopyMask>()).CopyFieldsFrom(
-                        item: item.Clothes,
+                    item.Clothes.DeepCopyFieldsFrom(
                         rhs: rhs.Clothes,
                         def: def?.Clothes,
                         errorMask: errorMask,
@@ -8354,8 +8335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Containers);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IContainerGetter>)item.Containers).CommonSetterCopyInstance<Container_CopyMask>()).CopyFieldsFrom(
-                        item: item.Containers,
+                    item.Containers.DeepCopyFieldsFrom(
                         rhs: rhs.Containers,
                         def: def?.Containers,
                         errorMask: errorMask,
@@ -8376,8 +8356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Doors);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IDoorGetter>)item.Doors).CommonSetterCopyInstance<Door_CopyMask>()).CopyFieldsFrom(
-                        item: item.Doors,
+                    item.Doors.DeepCopyFieldsFrom(
                         rhs: rhs.Doors,
                         def: def?.Doors,
                         errorMask: errorMask,
@@ -8398,8 +8377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ingredients);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IIngredientGetter>)item.Ingredients).CommonSetterCopyInstance<Ingredient_CopyMask>()).CopyFieldsFrom(
-                        item: item.Ingredients,
+                    item.Ingredients.DeepCopyFieldsFrom(
                         rhs: rhs.Ingredients,
                         def: def?.Ingredients,
                         errorMask: errorMask,
@@ -8420,8 +8398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Lights);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILightGetter>)item.Lights).CommonSetterCopyInstance<Light_CopyMask>()).CopyFieldsFrom(
-                        item: item.Lights,
+                    item.Lights.DeepCopyFieldsFrom(
                         rhs: rhs.Lights,
                         def: def?.Lights,
                         errorMask: errorMask,
@@ -8442,8 +8419,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Miscellaneous);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IMiscellaneousGetter>)item.Miscellaneous).CommonSetterCopyInstance<Miscellaneous_CopyMask>()).CopyFieldsFrom(
-                        item: item.Miscellaneous,
+                    item.Miscellaneous.DeepCopyFieldsFrom(
                         rhs: rhs.Miscellaneous,
                         def: def?.Miscellaneous,
                         errorMask: errorMask,
@@ -8464,8 +8440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Statics);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IStaticGetter>)item.Statics).CommonSetterCopyInstance<Static_CopyMask>()).CopyFieldsFrom(
-                        item: item.Statics,
+                    item.Statics.DeepCopyFieldsFrom(
                         rhs: rhs.Statics,
                         def: def?.Statics,
                         errorMask: errorMask,
@@ -8486,8 +8461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Grasses);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IGrassGetter>)item.Grasses).CommonSetterCopyInstance<Grass_CopyMask>()).CopyFieldsFrom(
-                        item: item.Grasses,
+                    item.Grasses.DeepCopyFieldsFrom(
                         rhs: rhs.Grasses,
                         def: def?.Grasses,
                         errorMask: errorMask,
@@ -8508,8 +8482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Trees);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ITreeGetter>)item.Trees).CommonSetterCopyInstance<Tree_CopyMask>()).CopyFieldsFrom(
-                        item: item.Trees,
+                    item.Trees.DeepCopyFieldsFrom(
                         rhs: rhs.Trees,
                         def: def?.Trees,
                         errorMask: errorMask,
@@ -8530,8 +8503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Flora);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IFloraGetter>)item.Flora).CommonSetterCopyInstance<Flora_CopyMask>()).CopyFieldsFrom(
-                        item: item.Flora,
+                    item.Flora.DeepCopyFieldsFrom(
                         rhs: rhs.Flora,
                         def: def?.Flora,
                         errorMask: errorMask,
@@ -8552,8 +8524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Furnature);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IFurnatureGetter>)item.Furnature).CommonSetterCopyInstance<Furnature_CopyMask>()).CopyFieldsFrom(
-                        item: item.Furnature,
+                    item.Furnature.DeepCopyFieldsFrom(
                         rhs: rhs.Furnature,
                         def: def?.Furnature,
                         errorMask: errorMask,
@@ -8574,8 +8545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weapons);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IWeaponGetter>)item.Weapons).CommonSetterCopyInstance<Weapon_CopyMask>()).CopyFieldsFrom(
-                        item: item.Weapons,
+                    item.Weapons.DeepCopyFieldsFrom(
                         rhs: rhs.Weapons,
                         def: def?.Weapons,
                         errorMask: errorMask,
@@ -8596,8 +8566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IAmmoGetter>)item.Ammo).CommonSetterCopyInstance<Ammo_CopyMask>()).CopyFieldsFrom(
-                        item: item.Ammo,
+                    item.Ammo.DeepCopyFieldsFrom(
                         rhs: rhs.Ammo,
                         def: def?.Ammo,
                         errorMask: errorMask,
@@ -8618,8 +8587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.NPCs);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<INPCGetter>)item.NPCs).CommonSetterCopyInstance<NPC_CopyMask>()).CopyFieldsFrom(
-                        item: item.NPCs,
+                    item.NPCs.DeepCopyFieldsFrom(
                         rhs: rhs.NPCs,
                         def: def?.NPCs,
                         errorMask: errorMask,
@@ -8640,8 +8608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Creatures);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ICreatureGetter>)item.Creatures).CommonSetterCopyInstance<Creature_CopyMask>()).CopyFieldsFrom(
-                        item: item.Creatures,
+                    item.Creatures.DeepCopyFieldsFrom(
                         rhs: rhs.Creatures,
                         def: def?.Creatures,
                         errorMask: errorMask,
@@ -8662,8 +8629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledCreatures);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILeveledCreatureGetter>)item.LeveledCreatures).CommonSetterCopyInstance<LeveledCreature_CopyMask>()).CopyFieldsFrom(
-                        item: item.LeveledCreatures,
+                    item.LeveledCreatures.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledCreatures,
                         def: def?.LeveledCreatures,
                         errorMask: errorMask,
@@ -8684,8 +8650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SoulGems);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISoulGemGetter>)item.SoulGems).CommonSetterCopyInstance<SoulGem_CopyMask>()).CopyFieldsFrom(
-                        item: item.SoulGems,
+                    item.SoulGems.DeepCopyFieldsFrom(
                         rhs: rhs.SoulGems,
                         def: def?.SoulGems,
                         errorMask: errorMask,
@@ -8706,8 +8671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Keys);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IKeyGetter>)item.Keys).CommonSetterCopyInstance<Key_CopyMask>()).CopyFieldsFrom(
-                        item: item.Keys,
+                    item.Keys.DeepCopyFieldsFrom(
                         rhs: rhs.Keys,
                         def: def?.Keys,
                         errorMask: errorMask,
@@ -8728,8 +8692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Potions);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IPotionGetter>)item.Potions).CommonSetterCopyInstance<Potion_CopyMask>()).CopyFieldsFrom(
-                        item: item.Potions,
+                    item.Potions.DeepCopyFieldsFrom(
                         rhs: rhs.Potions,
                         def: def?.Potions,
                         errorMask: errorMask,
@@ -8750,8 +8713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Subspaces);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISubspaceGetter>)item.Subspaces).CommonSetterCopyInstance<Subspace_CopyMask>()).CopyFieldsFrom(
-                        item: item.Subspaces,
+                    item.Subspaces.DeepCopyFieldsFrom(
                         rhs: rhs.Subspaces,
                         def: def?.Subspaces,
                         errorMask: errorMask,
@@ -8772,8 +8734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.SigilStones);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ISigilStoneGetter>)item.SigilStones).CommonSetterCopyInstance<SigilStone_CopyMask>()).CopyFieldsFrom(
-                        item: item.SigilStones,
+                    item.SigilStones.DeepCopyFieldsFrom(
                         rhs: rhs.SigilStones,
                         def: def?.SigilStones,
                         errorMask: errorMask,
@@ -8794,8 +8755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledItems);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILeveledItemGetter>)item.LeveledItems).CommonSetterCopyInstance<LeveledItem_CopyMask>()).CopyFieldsFrom(
-                        item: item.LeveledItems,
+                    item.LeveledItems.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledItems,
                         def: def?.LeveledItems,
                         errorMask: errorMask,
@@ -8816,8 +8776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Weathers);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IWeatherGetter>)item.Weathers).CommonSetterCopyInstance<Weather_CopyMask>()).CopyFieldsFrom(
-                        item: item.Weathers,
+                    item.Weathers.DeepCopyFieldsFrom(
                         rhs: rhs.Weathers,
                         def: def?.Weathers,
                         errorMask: errorMask,
@@ -8838,8 +8797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Climates);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IClimateGetter>)item.Climates).CommonSetterCopyInstance<Climate_CopyMask>()).CopyFieldsFrom(
-                        item: item.Climates,
+                    item.Climates.DeepCopyFieldsFrom(
                         rhs: rhs.Climates,
                         def: def?.Climates,
                         errorMask: errorMask,
@@ -8860,8 +8818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Regions);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IRegionGetter>)item.Regions).CommonSetterCopyInstance<Region_CopyMask>()).CopyFieldsFrom(
-                        item: item.Regions,
+                    item.Regions.DeepCopyFieldsFrom(
                         rhs: rhs.Regions,
                         def: def?.Regions,
                         errorMask: errorMask,
@@ -8882,8 +8839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Cells);
                 try
                 {
-                    ((ListGroupSetterCopyCommon)((IListGroupGetter<ICellBlockGetter>)item.Cells).CommonSetterCopyInstance<CellBlock_CopyMask>()).CopyFieldsFrom(
-                        item: item.Cells,
+                    item.Cells.DeepCopyFieldsFrom(
                         rhs: rhs.Cells,
                         def: def?.Cells,
                         errorMask: errorMask,
@@ -8904,8 +8860,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Worldspaces);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IWorldspaceGetter>)item.Worldspaces).CommonSetterCopyInstance<Worldspace_CopyMask>()).CopyFieldsFrom(
-                        item: item.Worldspaces,
+                    item.Worldspaces.DeepCopyFieldsFrom(
                         rhs: rhs.Worldspaces,
                         def: def?.Worldspaces,
                         errorMask: errorMask,
@@ -8926,8 +8881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.DialogTopics);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IDialogTopicGetter>)item.DialogTopics).CommonSetterCopyInstance<DialogTopic_CopyMask>()).CopyFieldsFrom(
-                        item: item.DialogTopics,
+                    item.DialogTopics.DeepCopyFieldsFrom(
                         rhs: rhs.DialogTopics,
                         def: def?.DialogTopics,
                         errorMask: errorMask,
@@ -8948,8 +8902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Quests);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IQuestGetter>)item.Quests).CommonSetterCopyInstance<Quest_CopyMask>()).CopyFieldsFrom(
-                        item: item.Quests,
+                    item.Quests.DeepCopyFieldsFrom(
                         rhs: rhs.Quests,
                         def: def?.Quests,
                         errorMask: errorMask,
@@ -8970,8 +8923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.IdleAnimations);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IIdleAnimationGetter>)item.IdleAnimations).CommonSetterCopyInstance<IdleAnimation_CopyMask>()).CopyFieldsFrom(
-                        item: item.IdleAnimations,
+                    item.IdleAnimations.DeepCopyFieldsFrom(
                         rhs: rhs.IdleAnimations,
                         def: def?.IdleAnimations,
                         errorMask: errorMask,
@@ -8992,8 +8944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AIPackages);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IAIPackageGetter>)item.AIPackages).CommonSetterCopyInstance<AIPackage_CopyMask>()).CopyFieldsFrom(
-                        item: item.AIPackages,
+                    item.AIPackages.DeepCopyFieldsFrom(
                         rhs: rhs.AIPackages,
                         def: def?.AIPackages,
                         errorMask: errorMask,
@@ -9014,8 +8965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.CombatStyles);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ICombatStyleGetter>)item.CombatStyles).CommonSetterCopyInstance<CombatStyle_CopyMask>()).CopyFieldsFrom(
-                        item: item.CombatStyles,
+                    item.CombatStyles.DeepCopyFieldsFrom(
                         rhs: rhs.CombatStyles,
                         def: def?.CombatStyles,
                         errorMask: errorMask,
@@ -9036,8 +8986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LoadScreens);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILoadScreenGetter>)item.LoadScreens).CommonSetterCopyInstance<LoadScreen_CopyMask>()).CopyFieldsFrom(
-                        item: item.LoadScreens,
+                    item.LoadScreens.DeepCopyFieldsFrom(
                         rhs: rhs.LoadScreens,
                         def: def?.LoadScreens,
                         errorMask: errorMask,
@@ -9058,8 +9007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.LeveledSpells);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<ILeveledSpellGetter>)item.LeveledSpells).CommonSetterCopyInstance<LeveledSpell_CopyMask>()).CopyFieldsFrom(
-                        item: item.LeveledSpells,
+                    item.LeveledSpells.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledSpells,
                         def: def?.LeveledSpells,
                         errorMask: errorMask,
@@ -9080,8 +9028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.AnimatedObjects);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IAnimatedObjectGetter>)item.AnimatedObjects).CommonSetterCopyInstance<AnimatedObject_CopyMask>()).CopyFieldsFrom(
-                        item: item.AnimatedObjects,
+                    item.AnimatedObjects.DeepCopyFieldsFrom(
                         rhs: rhs.AnimatedObjects,
                         def: def?.AnimatedObjects,
                         errorMask: errorMask,
@@ -9102,8 +9049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.Waters);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IWaterGetter>)item.Waters).CommonSetterCopyInstance<Water_CopyMask>()).CopyFieldsFrom(
-                        item: item.Waters,
+                    item.Waters.DeepCopyFieldsFrom(
                         rhs: rhs.Waters,
                         def: def?.Waters,
                         errorMask: errorMask,
@@ -9124,8 +9070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)OblivionMod_FieldIndex.EffectShaders);
                 try
                 {
-                    ((GroupSetterCopyCommon)((IGroupGetter<IEffectShaderGetter>)item.EffectShaders).CommonSetterCopyInstance<EffectShader_CopyMask>()).CopyFieldsFrom(
-                        item: item.EffectShaders,
+                    item.EffectShaders.DeepCopyFieldsFrom(
                         rhs: rhs.EffectShaders,
                         def: def?.EffectShaders,
                         errorMask: errorMask,
@@ -9166,9 +9111,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return OblivionModSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return OblivionModSetterCopyCommon.Instance;
+            return OblivionModSetterTranslationCommon.Instance;
         }
         object IOblivionModGetter.CommonInstance()
         {
@@ -9178,9 +9123,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IOblivionModGetter.CommonSetterCopyInstance()
+        object IOblivionModGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -13291,135 +13236,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class OblivionMod_CopyMask
-    {
-        public OblivionMod_CopyMask()
-        {
-        }
-
-        public OblivionMod_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ModHeader = new MaskItem<bool, ModHeader_CopyMask>(defaultOn, default);
-            this.GameSettings = new MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>>(defaultOn, default);
-            this.Globals = new MaskItem<bool, Group_CopyMask<Global_CopyMask>>(defaultOn, default);
-            this.Classes = new MaskItem<bool, Group_CopyMask<Class_CopyMask>>(defaultOn, default);
-            this.Factions = new MaskItem<bool, Group_CopyMask<Faction_CopyMask>>(defaultOn, default);
-            this.Hairs = new MaskItem<bool, Group_CopyMask<Hair_CopyMask>>(defaultOn, default);
-            this.Eyes = new MaskItem<bool, Group_CopyMask<Eye_CopyMask>>(defaultOn, default);
-            this.Races = new MaskItem<bool, Group_CopyMask<Race_CopyMask>>(defaultOn, default);
-            this.Sounds = new MaskItem<bool, Group_CopyMask<Sound_CopyMask>>(defaultOn, default);
-            this.Skills = new MaskItem<bool, Group_CopyMask<SkillRecord_CopyMask>>(defaultOn, default);
-            this.MagicEffects = new MaskItem<bool, Group_CopyMask<MagicEffect_CopyMask>>(defaultOn, default);
-            this.Scripts = new MaskItem<bool, Group_CopyMask<Script_CopyMask>>(defaultOn, default);
-            this.LandTextures = new MaskItem<bool, Group_CopyMask<LandTexture_CopyMask>>(defaultOn, default);
-            this.Enchantments = new MaskItem<bool, Group_CopyMask<Enchantment_CopyMask>>(defaultOn, default);
-            this.Spells = new MaskItem<bool, Group_CopyMask<SpellUnleveled_CopyMask>>(defaultOn, default);
-            this.Birthsigns = new MaskItem<bool, Group_CopyMask<Birthsign_CopyMask>>(defaultOn, default);
-            this.Activators = new MaskItem<bool, Group_CopyMask<Activator_CopyMask>>(defaultOn, default);
-            this.AlchemicalApparatus = new MaskItem<bool, Group_CopyMask<AlchemicalApparatus_CopyMask>>(defaultOn, default);
-            this.Armors = new MaskItem<bool, Group_CopyMask<Armor_CopyMask>>(defaultOn, default);
-            this.Books = new MaskItem<bool, Group_CopyMask<Book_CopyMask>>(defaultOn, default);
-            this.Clothes = new MaskItem<bool, Group_CopyMask<Clothing_CopyMask>>(defaultOn, default);
-            this.Containers = new MaskItem<bool, Group_CopyMask<Container_CopyMask>>(defaultOn, default);
-            this.Doors = new MaskItem<bool, Group_CopyMask<Door_CopyMask>>(defaultOn, default);
-            this.Ingredients = new MaskItem<bool, Group_CopyMask<Ingredient_CopyMask>>(defaultOn, default);
-            this.Lights = new MaskItem<bool, Group_CopyMask<Light_CopyMask>>(defaultOn, default);
-            this.Miscellaneous = new MaskItem<bool, Group_CopyMask<Miscellaneous_CopyMask>>(defaultOn, default);
-            this.Statics = new MaskItem<bool, Group_CopyMask<Static_CopyMask>>(defaultOn, default);
-            this.Grasses = new MaskItem<bool, Group_CopyMask<Grass_CopyMask>>(defaultOn, default);
-            this.Trees = new MaskItem<bool, Group_CopyMask<Tree_CopyMask>>(defaultOn, default);
-            this.Flora = new MaskItem<bool, Group_CopyMask<Flora_CopyMask>>(defaultOn, default);
-            this.Furnature = new MaskItem<bool, Group_CopyMask<Furnature_CopyMask>>(defaultOn, default);
-            this.Weapons = new MaskItem<bool, Group_CopyMask<Weapon_CopyMask>>(defaultOn, default);
-            this.Ammo = new MaskItem<bool, Group_CopyMask<Ammo_CopyMask>>(defaultOn, default);
-            this.NPCs = new MaskItem<bool, Group_CopyMask<NPC_CopyMask>>(defaultOn, default);
-            this.Creatures = new MaskItem<bool, Group_CopyMask<Creature_CopyMask>>(defaultOn, default);
-            this.LeveledCreatures = new MaskItem<bool, Group_CopyMask<LeveledCreature_CopyMask>>(defaultOn, default);
-            this.SoulGems = new MaskItem<bool, Group_CopyMask<SoulGem_CopyMask>>(defaultOn, default);
-            this.Keys = new MaskItem<bool, Group_CopyMask<Key_CopyMask>>(defaultOn, default);
-            this.Potions = new MaskItem<bool, Group_CopyMask<Potion_CopyMask>>(defaultOn, default);
-            this.Subspaces = new MaskItem<bool, Group_CopyMask<Subspace_CopyMask>>(defaultOn, default);
-            this.SigilStones = new MaskItem<bool, Group_CopyMask<SigilStone_CopyMask>>(defaultOn, default);
-            this.LeveledItems = new MaskItem<bool, Group_CopyMask<LeveledItem_CopyMask>>(defaultOn, default);
-            this.Weathers = new MaskItem<bool, Group_CopyMask<Weather_CopyMask>>(defaultOn, default);
-            this.Climates = new MaskItem<bool, Group_CopyMask<Climate_CopyMask>>(defaultOn, default);
-            this.Regions = new MaskItem<bool, Group_CopyMask<Region_CopyMask>>(defaultOn, default);
-            this.Cells = new MaskItem<bool, ListGroup_CopyMask<CellBlock_CopyMask>>(defaultOn, default);
-            this.Worldspaces = new MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>>(defaultOn, default);
-            this.DialogTopics = new MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>>(defaultOn, default);
-            this.Quests = new MaskItem<bool, Group_CopyMask<Quest_CopyMask>>(defaultOn, default);
-            this.IdleAnimations = new MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>>(defaultOn, default);
-            this.AIPackages = new MaskItem<bool, Group_CopyMask<AIPackage_CopyMask>>(defaultOn, default);
-            this.CombatStyles = new MaskItem<bool, Group_CopyMask<CombatStyle_CopyMask>>(defaultOn, default);
-            this.LoadScreens = new MaskItem<bool, Group_CopyMask<LoadScreen_CopyMask>>(defaultOn, default);
-            this.LeveledSpells = new MaskItem<bool, Group_CopyMask<LeveledSpell_CopyMask>>(defaultOn, default);
-            this.AnimatedObjects = new MaskItem<bool, Group_CopyMask<AnimatedObject_CopyMask>>(defaultOn, default);
-            this.Waters = new MaskItem<bool, Group_CopyMask<Water_CopyMask>>(defaultOn, default);
-            this.EffectShaders = new MaskItem<bool, Group_CopyMask<EffectShader_CopyMask>>(defaultOn, default);
-        }
-
-        #region Members
-        public MaskItem<bool, ModHeader_CopyMask> ModHeader;
-        public MaskItem<bool, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
-        public MaskItem<bool, Group_CopyMask<Global_CopyMask>> Globals;
-        public MaskItem<bool, Group_CopyMask<Class_CopyMask>> Classes;
-        public MaskItem<bool, Group_CopyMask<Faction_CopyMask>> Factions;
-        public MaskItem<bool, Group_CopyMask<Hair_CopyMask>> Hairs;
-        public MaskItem<bool, Group_CopyMask<Eye_CopyMask>> Eyes;
-        public MaskItem<bool, Group_CopyMask<Race_CopyMask>> Races;
-        public MaskItem<bool, Group_CopyMask<Sound_CopyMask>> Sounds;
-        public MaskItem<bool, Group_CopyMask<SkillRecord_CopyMask>> Skills;
-        public MaskItem<bool, Group_CopyMask<MagicEffect_CopyMask>> MagicEffects;
-        public MaskItem<bool, Group_CopyMask<Script_CopyMask>> Scripts;
-        public MaskItem<bool, Group_CopyMask<LandTexture_CopyMask>> LandTextures;
-        public MaskItem<bool, Group_CopyMask<Enchantment_CopyMask>> Enchantments;
-        public MaskItem<bool, Group_CopyMask<SpellUnleveled_CopyMask>> Spells;
-        public MaskItem<bool, Group_CopyMask<Birthsign_CopyMask>> Birthsigns;
-        public MaskItem<bool, Group_CopyMask<Activator_CopyMask>> Activators;
-        public MaskItem<bool, Group_CopyMask<AlchemicalApparatus_CopyMask>> AlchemicalApparatus;
-        public MaskItem<bool, Group_CopyMask<Armor_CopyMask>> Armors;
-        public MaskItem<bool, Group_CopyMask<Book_CopyMask>> Books;
-        public MaskItem<bool, Group_CopyMask<Clothing_CopyMask>> Clothes;
-        public MaskItem<bool, Group_CopyMask<Container_CopyMask>> Containers;
-        public MaskItem<bool, Group_CopyMask<Door_CopyMask>> Doors;
-        public MaskItem<bool, Group_CopyMask<Ingredient_CopyMask>> Ingredients;
-        public MaskItem<bool, Group_CopyMask<Light_CopyMask>> Lights;
-        public MaskItem<bool, Group_CopyMask<Miscellaneous_CopyMask>> Miscellaneous;
-        public MaskItem<bool, Group_CopyMask<Static_CopyMask>> Statics;
-        public MaskItem<bool, Group_CopyMask<Grass_CopyMask>> Grasses;
-        public MaskItem<bool, Group_CopyMask<Tree_CopyMask>> Trees;
-        public MaskItem<bool, Group_CopyMask<Flora_CopyMask>> Flora;
-        public MaskItem<bool, Group_CopyMask<Furnature_CopyMask>> Furnature;
-        public MaskItem<bool, Group_CopyMask<Weapon_CopyMask>> Weapons;
-        public MaskItem<bool, Group_CopyMask<Ammo_CopyMask>> Ammo;
-        public MaskItem<bool, Group_CopyMask<NPC_CopyMask>> NPCs;
-        public MaskItem<bool, Group_CopyMask<Creature_CopyMask>> Creatures;
-        public MaskItem<bool, Group_CopyMask<LeveledCreature_CopyMask>> LeveledCreatures;
-        public MaskItem<bool, Group_CopyMask<SoulGem_CopyMask>> SoulGems;
-        public MaskItem<bool, Group_CopyMask<Key_CopyMask>> Keys;
-        public MaskItem<bool, Group_CopyMask<Potion_CopyMask>> Potions;
-        public MaskItem<bool, Group_CopyMask<Subspace_CopyMask>> Subspaces;
-        public MaskItem<bool, Group_CopyMask<SigilStone_CopyMask>> SigilStones;
-        public MaskItem<bool, Group_CopyMask<LeveledItem_CopyMask>> LeveledItems;
-        public MaskItem<bool, Group_CopyMask<Weather_CopyMask>> Weathers;
-        public MaskItem<bool, Group_CopyMask<Climate_CopyMask>> Climates;
-        public MaskItem<bool, Group_CopyMask<Region_CopyMask>> Regions;
-        public MaskItem<bool, ListGroup_CopyMask<CellBlock_CopyMask>> Cells;
-        public MaskItem<bool, Group_CopyMask<Worldspace_CopyMask>> Worldspaces;
-        public MaskItem<bool, Group_CopyMask<DialogTopic_CopyMask>> DialogTopics;
-        public MaskItem<bool, Group_CopyMask<Quest_CopyMask>> Quests;
-        public MaskItem<bool, Group_CopyMask<IdleAnimation_CopyMask>> IdleAnimations;
-        public MaskItem<bool, Group_CopyMask<AIPackage_CopyMask>> AIPackages;
-        public MaskItem<bool, Group_CopyMask<CombatStyle_CopyMask>> CombatStyles;
-        public MaskItem<bool, Group_CopyMask<LoadScreen_CopyMask>> LoadScreens;
-        public MaskItem<bool, Group_CopyMask<LeveledSpell_CopyMask>> LeveledSpells;
-        public MaskItem<bool, Group_CopyMask<AnimatedObject_CopyMask>> AnimatedObjects;
-        public MaskItem<bool, Group_CopyMask<Water_CopyMask>> Waters;
-        public MaskItem<bool, Group_CopyMask<EffectShader_CopyMask>> EffectShaders;
-        #endregion
-
-    }
-
     public class OblivionMod_TranslationMask : ITranslationMask
     {
         #region Members
@@ -14768,6 +14584,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return OblivionModCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return OblivionModSetterTranslationCommon.Instance;
+        }
         object IOblivionModGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -14776,9 +14596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IOblivionModGetter.CommonSetterCopyInstance()
+        object IOblivionModGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

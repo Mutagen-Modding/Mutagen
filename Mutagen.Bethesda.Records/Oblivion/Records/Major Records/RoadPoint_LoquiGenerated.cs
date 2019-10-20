@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Point
         P3Float Point { get; }
 
@@ -462,11 +462,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this RoadPoint lhs,
-            RoadPoint rhs)
+        public static void DeepCopyFieldsFrom(
+            this IRoadPoint lhs,
+            IRoadPointGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -475,13 +475,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this RoadPoint lhs,
-            RoadPoint rhs,
-            RoadPoint_CopyMask copyMask,
-            RoadPoint def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRoadPoint lhs,
+            IRoadPointGetter rhs,
+            RoadPoint_TranslationMask copyMask,
+            IRoadPointGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -490,16 +490,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this RoadPoint lhs,
-            RoadPoint rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRoadPoint lhs,
+            IRoadPointGetter rhs,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null,
+            RoadPoint_TranslationMask copyMask = null,
+            IRoadPointGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RoadPointSetterCopyCommon)((IRoadPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -508,14 +508,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this RoadPoint lhs,
-            RoadPoint rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRoadPoint lhs,
+            IRoadPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
+            RoadPoint_TranslationMask copyMask = null,
+            IRoadPointGetter def = null)
         {
-            ((RoadPointSetterCopyCommon)((IRoadPointGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -523,12 +523,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static RoadPoint Copy(
-            this RoadPoint item,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
+        public static RoadPoint DeepCopy(
+            this IRoadPointGetter item,
+            RoadPoint_TranslationMask copyMask = null,
+            IRoadPointGetter def = null)
         {
-            return ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).Copy(
+            return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -583,6 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRoadPoint item,
             string path,
@@ -724,6 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -957,19 +959,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new RoadPoint();
         }
         
-        public RoadPoint Copy(
-            RoadPoint item,
-            RoadPoint_CopyMask copyMask = null,
-            RoadPoint def = null)
-        {
-            RoadPoint ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRoadPoint item,
@@ -1199,38 +1188,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class RoadPointSetterCopyCommon
+    public partial class RoadPointSetterTranslationCommon
     {
-        public static readonly RoadPointSetterCopyCommon Instance = new RoadPointSetterCopyCommon();
+        public static readonly RoadPointSetterTranslationCommon Instance = new RoadPointSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            RoadPoint item,
-            RoadPoint rhs,
-            RoadPoint def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRoadPoint item,
+            IRoadPointGetter rhs,
+            IRoadPointGetter def,
             ErrorMaskBuilder errorMask,
-            RoadPoint_CopyMask copyMask)
+            RoadPoint_TranslationMask copyMask)
         {
             if (copyMask?.Point ?? true)
             {
-                errorMask?.PushIndex((int)RoadPoint_FieldIndex.Point);
                 item.Point = rhs.Point;
-                errorMask?.PopIndex();
             }
             if (copyMask?.NumConnectionsFluffBytes ?? true)
             {
-                errorMask?.PushIndex((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes);
-                item.NumConnectionsFluffBytes = rhs.NumConnectionsFluffBytes;
-                errorMask?.PopIndex();
+                item.NumConnectionsFluffBytes = rhs.NumConnectionsFluffBytes.ToArray();
             }
-            if (copyMask?.Connections != CopyOption.Skip)
+            if (copyMask?.Connections ?? true)
             {
                 errorMask?.PushIndex((int)RoadPoint_FieldIndex.Connections);
                 try
                 {
-                    item.Connections.SetToWithDefault(
-                        rhs.Connections,
-                        def?.Connections);
+                    item.Connections.SetTo(rhs.Connections);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1245,6 +1228,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public RoadPoint DeepCopy(
+            IRoadPointGetter item,
+            RoadPoint_TranslationMask copyMask = null,
+            IRoadPointGetter def = null)
+        {
+            RoadPoint ret = RoadPointSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1267,9 +1263,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RoadPointSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return RoadPointSetterCopyCommon.Instance;
+            return RoadPointSetterTranslationCommon.Instance;
         }
         object IRoadPointGetter.CommonInstance()
         {
@@ -1279,9 +1275,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IRoadPointGetter.CommonSetterCopyInstance()
+        object IRoadPointGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2032,27 +2028,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RoadPoint_CopyMask
-    {
-        public RoadPoint_CopyMask()
-        {
-        }
-
-        public RoadPoint_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Point = defaultOn;
-            this.NumConnectionsFluffBytes = defaultOn;
-            this.Connections = deepCopyOption;
-        }
-
-        #region Members
-        public bool Point;
-        public bool NumConnectionsFluffBytes;
-        public CopyOption Connections;
-        #endregion
-
-    }
-
     public class RoadPoint_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2229,6 +2204,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RoadPointCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return RoadPointSetterTranslationCommon.Instance;
+        }
         object IRoadPointGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2237,9 +2216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IRoadPointGetter.CommonSetterCopyInstance()
+        object IRoadPointGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

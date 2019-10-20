@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Sound
         ISoundGetter Sound { get; }
         IFormIDLinkGetter<ISoundGetter> Sound_Property { get; }
@@ -461,11 +461,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this WeatherSound lhs,
-            WeatherSound rhs)
+        public static void DeepCopyFieldsFrom(
+            this IWeatherSound lhs,
+            IWeatherSoundGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -474,13 +474,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this WeatherSound lhs,
-            WeatherSound rhs,
-            WeatherSound_CopyMask copyMask,
-            WeatherSound def = null)
+        public static void DeepCopyFieldsFrom(
+            this IWeatherSound lhs,
+            IWeatherSoundGetter rhs,
+            WeatherSound_TranslationMask copyMask,
+            IWeatherSoundGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -489,16 +489,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this WeatherSound lhs,
-            WeatherSound rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWeatherSound lhs,
+            IWeatherSoundGetter rhs,
             out WeatherSound_ErrorMask errorMask,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null,
+            WeatherSound_TranslationMask copyMask = null,
+            IWeatherSoundGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WeatherSoundSetterCopyCommon)((IWeatherSoundGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -507,14 +507,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = WeatherSound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this WeatherSound lhs,
-            WeatherSound rhs,
+        public static void DeepCopyFieldsFrom(
+            this IWeatherSound lhs,
+            IWeatherSoundGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
+            WeatherSound_TranslationMask copyMask = null,
+            IWeatherSoundGetter def = null)
         {
-            ((WeatherSoundSetterCopyCommon)((IWeatherSoundGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -522,12 +522,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static WeatherSound Copy(
-            this WeatherSound item,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
+        public static WeatherSound DeepCopy(
+            this IWeatherSoundGetter item,
+            WeatherSound_TranslationMask copyMask = null,
+            IWeatherSoundGetter def = null)
         {
-            return ((WeatherSoundSetterCommon)((IWeatherSoundGetter)item).CommonSetterInstance()).Copy(
+            return ((WeatherSoundSetterTranslationCommon)((IWeatherSoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -582,6 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IWeatherSound item,
             string path,
@@ -723,6 +724,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -944,19 +946,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new WeatherSound();
         }
         
-        public WeatherSound Copy(
-            WeatherSound item,
-            WeatherSound_CopyMask copyMask = null,
-            WeatherSound def = null)
-        {
-            WeatherSound ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IWeatherSound item,
@@ -1154,33 +1143,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class WeatherSoundSetterCopyCommon
+    public partial class WeatherSoundSetterTranslationCommon
     {
-        public static readonly WeatherSoundSetterCopyCommon Instance = new WeatherSoundSetterCopyCommon();
+        public static readonly WeatherSoundSetterTranslationCommon Instance = new WeatherSoundSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            WeatherSound item,
-            WeatherSound rhs,
-            WeatherSound def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IWeatherSound item,
+            IWeatherSoundGetter rhs,
+            IWeatherSoundGetter def,
             ErrorMaskBuilder errorMask,
-            WeatherSound_CopyMask copyMask)
+            WeatherSound_TranslationMask copyMask)
         {
             if (copyMask?.Sound ?? true)
             {
-                errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
-                item.Sound_Property.SetLink(value: rhs.Sound_Property);
-                errorMask?.PopIndex();
+                item.Sound_Property.FormKey = rhs.Sound_Property.FormKey;
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
                 item.Type = rhs.Type;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public WeatherSound DeepCopy(
+            IWeatherSoundGetter item,
+            WeatherSound_TranslationMask copyMask = null,
+            IWeatherSoundGetter def = null)
+        {
+            WeatherSound ret = WeatherSoundSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1203,9 +1201,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return WeatherSoundSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return WeatherSoundSetterCopyCommon.Instance;
+            return WeatherSoundSetterTranslationCommon.Instance;
         }
         object IWeatherSoundGetter.CommonInstance()
         {
@@ -1215,9 +1213,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object IWeatherSoundGetter.CommonSetterCopyInstance()
+        object IWeatherSoundGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1812,25 +1810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class WeatherSound_CopyMask
-    {
-        public WeatherSound_CopyMask()
-        {
-        }
-
-        public WeatherSound_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Sound = defaultOn;
-            this.Type = defaultOn;
-        }
-
-        #region Members
-        public bool Sound;
-        public bool Type;
-        #endregion
-
-    }
-
     public class WeatherSound_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2008,6 +1987,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return WeatherSoundCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return WeatherSoundSetterTranslationCommon.Instance;
+        }
         object IWeatherSoundGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2016,9 +1999,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object IWeatherSoundGetter.CommonSetterCopyInstance()
+        object IWeatherSoundGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

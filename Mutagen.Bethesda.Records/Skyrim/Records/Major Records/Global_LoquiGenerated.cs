@@ -378,13 +378,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Global lhs,
-            Global rhs,
-            Global_CopyMask copyMask,
-            Global def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGlobalInternal lhs,
+            IGlobalGetter rhs,
+            Global_TranslationMask copyMask,
+            IGlobalGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -393,16 +393,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Global lhs,
-            Global rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalInternal lhs,
+            IGlobalGetter rhs,
             out Global_ErrorMask errorMask,
-            Global_CopyMask copyMask = null,
-            Global def = null,
+            Global_TranslationMask copyMask = null,
+            IGlobalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalSetterCopyCommon)((IGlobalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -411,14 +411,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Global lhs,
-            Global rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalInternal lhs,
+            IGlobalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Global_CopyMask copyMask = null,
-            Global def = null)
+            Global_TranslationMask copyMask = null,
+            IGlobalGetter def = null)
         {
-            ((GlobalSetterCopyCommon)((IGlobalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -475,6 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGlobalInternal item,
             string path,
@@ -616,6 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1118,19 +1120,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalSetterCopyCommon : SkyrimMajorRecordSetterCopyCommon
+    public partial class GlobalSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly GlobalSetterCopyCommon Instance = new GlobalSetterCopyCommon();
+        public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Global item,
-            Global rhs,
-            Global def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGlobal item,
+            IGlobalGetter rhs,
+            IGlobalGetter def,
             ErrorMaskBuilder errorMask,
-            Global_CopyMask copyMask)
+            Global_TranslationMask copyMask)
         {
-            ((SkyrimMajorRecordSetterCopyCommon)((ISkyrimMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1161,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GlobalSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GlobalSetterCopyCommon.Instance;
+            return GlobalSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1571,18 +1573,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class Global_CopyMask : SkyrimMajorRecord_CopyMask
-    {
-        public Global_CopyMask()
-        {
-        }
-
-        public Global_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-        }
-
-    }
-
     public class Global_TranslationMask : SkyrimMajorRecord_TranslationMask
     {
         #region Ctors
@@ -1789,6 +1779,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return GlobalCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GlobalSetterTranslationCommon.Instance;
         }
 
         #endregion

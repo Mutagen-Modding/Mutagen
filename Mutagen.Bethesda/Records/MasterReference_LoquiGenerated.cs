@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Master
         ModKey Master { get; }
 
@@ -469,11 +469,11 @@ namespace Mutagen.Bethesda
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this MasterReference lhs,
-            MasterReference rhs)
+        public static void DeepCopyFieldsFrom(
+            this IMasterReference lhs,
+            IMasterReferenceGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -482,13 +482,13 @@ namespace Mutagen.Bethesda
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this MasterReference lhs,
-            MasterReference rhs,
-            MasterReference_CopyMask copyMask,
-            MasterReference def = null)
+        public static void DeepCopyFieldsFrom(
+            this IMasterReference lhs,
+            IMasterReferenceGetter rhs,
+            MasterReference_TranslationMask copyMask,
+            IMasterReferenceGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -497,16 +497,16 @@ namespace Mutagen.Bethesda
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this MasterReference lhs,
-            MasterReference rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMasterReference lhs,
+            IMasterReferenceGetter rhs,
             out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null,
+            MasterReference_TranslationMask copyMask = null,
+            IMasterReferenceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MasterReferenceSetterCopyCommon)((IMasterReferenceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -515,14 +515,14 @@ namespace Mutagen.Bethesda
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this MasterReference lhs,
-            MasterReference rhs,
+        public static void DeepCopyFieldsFrom(
+            this IMasterReference lhs,
+            IMasterReferenceGetter rhs,
             ErrorMaskBuilder errorMask,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
+            MasterReference_TranslationMask copyMask = null,
+            IMasterReferenceGetter def = null)
         {
-            ((MasterReferenceSetterCopyCommon)((IMasterReferenceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -530,12 +530,12 @@ namespace Mutagen.Bethesda
                 copyMask: copyMask);
         }
 
-        public static MasterReference Copy(
-            this MasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
+        public static MasterReference DeepCopy(
+            this IMasterReferenceGetter item,
+            MasterReference_TranslationMask copyMask = null,
+            IMasterReferenceGetter def = null)
         {
-            return ((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).Copy(
+            return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -590,6 +590,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IMasterReference item,
             string path,
@@ -731,6 +732,7 @@ namespace Mutagen.Bethesda
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -951,19 +953,6 @@ namespace Mutagen.Bethesda.Internals
         public MasterReference GetNew()
         {
             return new MasterReference();
-        }
-        
-        public MasterReference Copy(
-            MasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            MasterReference def = null)
-        {
-            MasterReference ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1195,23 +1184,21 @@ namespace Mutagen.Bethesda.Internals
         
         
     }
-    public partial class MasterReferenceSetterCopyCommon
+    public partial class MasterReferenceSetterTranslationCommon
     {
-        public static readonly MasterReferenceSetterCopyCommon Instance = new MasterReferenceSetterCopyCommon();
+        public static readonly MasterReferenceSetterTranslationCommon Instance = new MasterReferenceSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            MasterReference item,
-            MasterReference rhs,
-            MasterReference def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IMasterReference item,
+            IMasterReferenceGetter rhs,
+            IMasterReferenceGetter def,
             ErrorMaskBuilder errorMask,
-            MasterReference_CopyMask copyMask)
+            MasterReference_TranslationMask copyMask)
         {
             if (copyMask?.Master ?? true)
             {
-                errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
                 item.Master = rhs.Master;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FileSize ?? true)
             {
@@ -1247,6 +1234,19 @@ namespace Mutagen.Bethesda.Internals
         
         #endregion
         
+        public MasterReference DeepCopy(
+            IMasterReferenceGetter item,
+            MasterReference_TranslationMask copyMask = null,
+            IMasterReferenceGetter def = null)
+        {
+            MasterReference ret = MasterReferenceSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+        
     }
     #endregion
 
@@ -1268,9 +1268,9 @@ namespace Mutagen.Bethesda
         {
             return MasterReferenceSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return MasterReferenceSetterCopyCommon.Instance;
+            return MasterReferenceSetterTranslationCommon.Instance;
         }
         object IMasterReferenceGetter.CommonInstance()
         {
@@ -1280,9 +1280,9 @@ namespace Mutagen.Bethesda
         {
             return this.CommonSetterInstance();
         }
-        object IMasterReferenceGetter.CommonSetterCopyInstance()
+        object IMasterReferenceGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1897,25 +1897,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
-    public class MasterReference_CopyMask
-    {
-        public MasterReference_CopyMask()
-        {
-        }
-
-        public MasterReference_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Master = defaultOn;
-            this.FileSize = defaultOn;
-        }
-
-        #region Members
-        public bool Master;
-        public bool FileSize;
-        #endregion
-
-    }
-
     public class MasterReference_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2094,6 +2075,10 @@ namespace Mutagen.Bethesda.Internals
         {
             return MasterReferenceCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return MasterReferenceSetterTranslationCommon.Instance;
+        }
         object IMasterReferenceGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2102,9 +2087,9 @@ namespace Mutagen.Bethesda.Internals
         {
             return null;
         }
-        object IMasterReferenceGetter.CommonSetterCopyInstance()
+        object IMasterReferenceGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

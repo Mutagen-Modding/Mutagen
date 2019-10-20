@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region Skill
         ActorValue Skill { get; }
 
@@ -437,11 +437,11 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillBoost lhs,
-            SkillBoost rhs)
+        public static void DeepCopyFieldsFrom(
+            this ISkillBoost lhs,
+            ISkillBoostGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -450,13 +450,13 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillBoost lhs,
-            SkillBoost rhs,
-            SkillBoost_CopyMask copyMask,
-            SkillBoost def = null)
+        public static void DeepCopyFieldsFrom(
+            this ISkillBoost lhs,
+            ISkillBoostGetter rhs,
+            SkillBoost_TranslationMask copyMask,
+            ISkillBoostGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -465,16 +465,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillBoost lhs,
-            SkillBoost rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISkillBoost lhs,
+            ISkillBoostGetter rhs,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null,
+            SkillBoost_TranslationMask copyMask = null,
+            ISkillBoostGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((SkillBoostSetterCopyCommon)((ISkillBoostGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -483,14 +483,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SkillBoost_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this SkillBoost lhs,
-            SkillBoost rhs,
+        public static void DeepCopyFieldsFrom(
+            this ISkillBoost lhs,
+            ISkillBoostGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
+            SkillBoost_TranslationMask copyMask = null,
+            ISkillBoostGetter def = null)
         {
-            ((SkillBoostSetterCopyCommon)((ISkillBoostGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -498,12 +498,12 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static SkillBoost Copy(
-            this SkillBoost item,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
+        public static SkillBoost DeepCopy(
+            this ISkillBoostGetter item,
+            SkillBoost_TranslationMask copyMask = null,
+            ISkillBoostGetter def = null)
         {
-            return ((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()).Copy(
+            return ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -558,6 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ISkillBoost item,
             string path,
@@ -699,6 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -918,19 +920,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return new SkillBoost();
         }
         
-        public SkillBoost Copy(
-            SkillBoost item,
-            SkillBoost_CopyMask copyMask = null,
-            SkillBoost def = null)
-        {
-            SkillBoost ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             ISkillBoost item,
@@ -1122,33 +1111,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
     }
-    public partial class SkillBoostSetterCopyCommon
+    public partial class SkillBoostSetterTranslationCommon
     {
-        public static readonly SkillBoostSetterCopyCommon Instance = new SkillBoostSetterCopyCommon();
+        public static readonly SkillBoostSetterTranslationCommon Instance = new SkillBoostSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            SkillBoost item,
-            SkillBoost rhs,
-            SkillBoost def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ISkillBoost item,
+            ISkillBoostGetter rhs,
+            ISkillBoostGetter def,
             ErrorMaskBuilder errorMask,
-            SkillBoost_CopyMask copyMask)
+            SkillBoost_TranslationMask copyMask)
         {
             if (copyMask?.Skill ?? true)
             {
-                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
                 item.Skill = rhs.Skill;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Boost ?? true)
             {
-                errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
                 item.Boost = rhs.Boost;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public SkillBoost DeepCopy(
+            ISkillBoostGetter item,
+            SkillBoost_TranslationMask copyMask = null,
+            ISkillBoostGetter def = null)
+        {
+            SkillBoost ret = SkillBoostSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1171,9 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return SkillBoostSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return SkillBoostSetterCopyCommon.Instance;
+            return SkillBoostSetterTranslationCommon.Instance;
         }
         object ISkillBoostGetter.CommonInstance()
         {
@@ -1183,9 +1181,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return this.CommonSetterInstance();
         }
-        object ISkillBoostGetter.CommonSetterCopyInstance()
+        object ISkillBoostGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1799,25 +1797,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class SkillBoost_CopyMask
-    {
-        public SkillBoost_CopyMask()
-        {
-        }
-
-        public SkillBoost_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Skill = defaultOn;
-            this.Boost = defaultOn;
-        }
-
-        #region Members
-        public bool Skill;
-        public bool Boost;
-        #endregion
-
-    }
-
     public class SkillBoost_TranslationMask : ITranslationMask
     {
         #region Members
@@ -1986,6 +1965,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return SkillBoostCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return SkillBoostSetterTranslationCommon.Instance;
+        }
         object ISkillBoostGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -1994,9 +1977,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return null;
         }
-        object ISkillBoostGetter.CommonSetterCopyInstance()
+        object ISkillBoostGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

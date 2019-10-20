@@ -554,13 +554,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this LeveledItem lhs,
-            LeveledItem rhs,
-            LeveledItem_CopyMask copyMask,
-            LeveledItem def = null)
+        public static void DeepCopyFieldsFrom(
+            this ILeveledItemInternal lhs,
+            ILeveledItemGetter rhs,
+            LeveledItem_TranslationMask copyMask,
+            ILeveledItemGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -569,16 +569,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this LeveledItem lhs,
-            LeveledItem rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILeveledItemInternal lhs,
+            ILeveledItemGetter rhs,
             out LeveledItem_ErrorMask errorMask,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null,
+            LeveledItem_TranslationMask copyMask = null,
+            ILeveledItemGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LeveledItemSetterCopyCommon)((ILeveledItemGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -587,14 +587,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this LeveledItem lhs,
-            LeveledItem rhs,
+        public static void DeepCopyFieldsFrom(
+            this ILeveledItemInternal lhs,
+            ILeveledItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            LeveledItem_CopyMask copyMask = null,
-            LeveledItem def = null)
+            LeveledItem_TranslationMask copyMask = null,
+            ILeveledItemGetter def = null)
         {
-            ((LeveledItemSetterCopyCommon)((ILeveledItemGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -651,6 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this ILeveledItemInternal item,
             string path,
@@ -792,6 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1517,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new LeveledItem(getNextFormKey());
-            ret.CopyFieldsFrom((LeveledItem)item);
+            ret.DeepCopyFieldsFrom((LeveledItem)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (LeveledItem)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1526,19 +1528,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledItemSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class LeveledItemSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly LeveledItemSetterCopyCommon Instance = new LeveledItemSetterCopyCommon();
+        public new static readonly LeveledItemSetterTranslationCommon Instance = new LeveledItemSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            LeveledItem item,
-            LeveledItem rhs,
-            LeveledItem def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            ILeveledItem item,
+            ILeveledItemGetter rhs,
+            ILeveledItemGetter def,
             ErrorMaskBuilder errorMask,
-            LeveledItem_CopyMask copyMask)
+            LeveledItem_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1604,27 +1606,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Entries.Overall != CopyOption.Skip)
+            if (copyMask?.Entries.Overall ?? true)
             {
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
                 try
                 {
-                    item.Entries.SetToWithDefault<LeveledEntry<ItemAbstract>, LeveledEntry<ItemAbstract>>(
+                    item.Entries.SetToWithDefault(
                         rhs: rhs.Entries,
                         def: def?.Entries,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Entries.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (LeveledEntry<ItemAbstract>)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Entries?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Entries.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy<ItemAbstract, IItemAbstractGetter, ItemAbstract_TranslationMask>(
+                                copyMask?.Entries?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -1662,9 +1656,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return LeveledItemSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return LeveledItemSetterCopyCommon.Instance;
+            return LeveledItemSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2358,27 +2352,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class LeveledItem_CopyMask : ItemAbstract_CopyMask
-    {
-        public LeveledItem_CopyMask()
-        {
-        }
-
-        public LeveledItem_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.ChanceNone = defaultOn;
-            this.Flags = defaultOn;
-            this.Entries = new MaskItem<CopyOption, LeveledEntry_CopyMask<ItemAbstract_CopyMask>>(deepCopyOption, default);
-        }
-
-        #region Members
-        public bool ChanceNone;
-        public bool Flags;
-        public MaskItem<CopyOption, LeveledEntry_CopyMask<ItemAbstract_CopyMask>> Entries;
-        #endregion
-
-    }
-
     public class LeveledItem_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -2612,6 +2585,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return LeveledItemCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return LeveledItemSetterTranslationCommon.Instance;
         }
 
         #endregion

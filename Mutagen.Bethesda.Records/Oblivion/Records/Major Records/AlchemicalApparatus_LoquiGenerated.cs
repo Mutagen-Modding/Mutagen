@@ -678,13 +678,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this AlchemicalApparatus lhs,
-            AlchemicalApparatus rhs,
-            AlchemicalApparatus_CopyMask copyMask,
-            AlchemicalApparatus def = null)
+        public static void DeepCopyFieldsFrom(
+            this IAlchemicalApparatusInternal lhs,
+            IAlchemicalApparatusGetter rhs,
+            AlchemicalApparatus_TranslationMask copyMask,
+            IAlchemicalApparatusGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -693,16 +693,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this AlchemicalApparatus lhs,
-            AlchemicalApparatus rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAlchemicalApparatusInternal lhs,
+            IAlchemicalApparatusGetter rhs,
             out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null,
+            AlchemicalApparatus_TranslationMask copyMask = null,
+            IAlchemicalApparatusGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((AlchemicalApparatusSetterCopyCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -711,14 +711,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this AlchemicalApparatus lhs,
-            AlchemicalApparatus rhs,
+        public static void DeepCopyFieldsFrom(
+            this IAlchemicalApparatusInternal lhs,
+            IAlchemicalApparatusGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            AlchemicalApparatus def = null)
+            AlchemicalApparatus_TranslationMask copyMask = null,
+            IAlchemicalApparatusGetter def = null)
         {
-            ((AlchemicalApparatusSetterCopyCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -775,6 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             string path,
@@ -916,6 +917,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1803,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new AlchemicalApparatus(getNextFormKey());
-            ret.CopyFieldsFrom((AlchemicalApparatus)item);
+            ret.DeepCopyFieldsFrom((AlchemicalApparatus)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (AlchemicalApparatus)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1812,19 +1814,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class AlchemicalApparatusSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly AlchemicalApparatusSetterCopyCommon Instance = new AlchemicalApparatusSetterCopyCommon();
+        public new static readonly AlchemicalApparatusSetterTranslationCommon Instance = new AlchemicalApparatusSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            AlchemicalApparatus item,
-            AlchemicalApparatus rhs,
-            AlchemicalApparatus def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IAlchemicalApparatus item,
+            IAlchemicalApparatusGetter rhs,
+            IAlchemicalApparatusGetter def,
             ErrorMaskBuilder errorMask,
-            AlchemicalApparatus_CopyMask copyMask)
+            AlchemicalApparatus_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1860,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                 try
@@ -1873,26 +1875,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1946,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -1962,33 +1947,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Type ?? true)
             {
-                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Type);
                 item.Type = rhs.Type;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Weight ?? true)
             {
-                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Weight);
                 item.Weight = rhs.Weight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Quality ?? true)
             {
-                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
                 item.Quality = rhs.Quality;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2015,9 +1990,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return AlchemicalApparatusSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return AlchemicalApparatusSetterCopyCommon.Instance;
+            return AlchemicalApparatusSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2963,39 +2938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AlchemicalApparatus_CopyMask : ItemAbstract_CopyMask
-    {
-        public AlchemicalApparatus_CopyMask()
-        {
-        }
-
-        public AlchemicalApparatus_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Type = defaultOn;
-            this.Value = defaultOn;
-            this.Weight = defaultOn;
-            this.Quality = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Type;
-        public bool Value;
-        public bool Weight;
-        public bool Quality;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class AlchemicalApparatus_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -3273,6 +3215,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return AlchemicalApparatusCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return AlchemicalApparatusSetterTranslationCommon.Instance;
         }
 
         #endregion

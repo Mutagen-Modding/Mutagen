@@ -1166,13 +1166,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Race lhs,
-            Race rhs,
-            Race_CopyMask copyMask,
-            Race def = null)
+        public static void DeepCopyFieldsFrom(
+            this IRaceInternal lhs,
+            IRaceGetter rhs,
+            Race_TranslationMask copyMask,
+            IRaceGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1181,16 +1181,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Race lhs,
-            Race rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRaceInternal lhs,
+            IRaceGetter rhs,
             out Race_ErrorMask errorMask,
-            Race_CopyMask copyMask = null,
-            Race def = null,
+            Race_TranslationMask copyMask = null,
+            IRaceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((RaceSetterCopyCommon)((IRaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1199,14 +1199,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Race lhs,
-            Race rhs,
+        public static void DeepCopyFieldsFrom(
+            this IRaceInternal lhs,
+            IRaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Race_CopyMask copyMask = null,
-            Race def = null)
+            Race_TranslationMask copyMask = null,
+            IRaceGetter def = null)
         {
-            ((RaceSetterCopyCommon)((IRaceGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1263,6 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IRaceInternal item,
             string path,
@@ -1404,6 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -3040,7 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Race(getNextFormKey());
-            ret.CopyFieldsFrom((Race)item);
+            ret.DeepCopyFieldsFrom((Race)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Race)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -3049,19 +3051,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class RaceSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly RaceSetterCopyCommon Instance = new RaceSetterCopyCommon();
+        public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Race item,
-            Race rhs,
-            Race def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IRace item,
+            IRaceGetter rhs,
+            IRaceGetter def,
             ErrorMaskBuilder errorMask,
-            Race_CopyMask copyMask)
+            Race_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -3127,14 +3129,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells != CopyOption.Skip)
+            if (copyMask?.Spells ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells);
+                        def?.Spells,
+                        (r, d) => new FormIDLink<Spell>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3146,27 +3149,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Relations.Overall != CopyOption.Skip)
+            if (copyMask?.Relations.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetToWithDefault<RaceRelation, RaceRelation>(
+                    item.Relations.SetToWithDefault(
                         rhs: rhs.Relations,
                         def: def?.Relations,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Relations.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RaceRelation)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Relations?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Relations.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Relations?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -3179,65 +3174,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SkillBoosts.Overall != CopyOption.Skip)
+            if (copyMask?.SkillBoosts.Overall ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoosts);
-                item.SkillBoosts.SetToWithDefault<SkillBoost, SkillBoost>(
+                item.SkillBoosts.SetToWithDefault(
                     rhs: rhs.SkillBoosts,
                     def: def?.SkillBoosts,
                     converter: (r, d) =>
                     {
-                        switch (copyMask?.SkillBoosts.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                return (SkillBoost)r;
-                            case CopyOption.MakeCopy:
-                                return r.Copy(
-                                    copyMask.SkillBoosts?.Specific,
-                                    def: d);
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.SkillBoosts.Overall}. Cannot execute copy.");
-                        }
+                        return r.DeepCopy(
+                            copyMask.SkillBoosts?.Specific,
+                            def: d);
                     });
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
-                item.Fluff = rhs.Fluff;
-                errorMask?.PopIndex();
+                item.Fluff = rhs.Fluff.ToArray();
             }
             if (copyMask?.MaleHeight ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.MaleHeight);
                 item.MaleHeight = rhs.MaleHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FemaleHeight ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.FemaleHeight);
                 item.FemaleHeight = rhs.FemaleHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaleWeight ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.MaleWeight);
                 item.MaleWeight = rhs.MaleWeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.FemaleWeight ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.FemaleWeight);
                 item.FemaleWeight = rhs.FemaleWeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Voices.Overall != CopyOption.Skip)
+            if (copyMask?.Voices.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Voices);
                 try
@@ -3250,26 +3223,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsVoicesItem,
                         outDefItem: out var defVoicesItem))
                     {
-                        switch (copyMask?.Voices.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RaceVoicesSetterCopyCommon)((IRaceVoicesGetter)item.Voices).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Voices,
-                                    rhs: rhs.Voices,
-                                    def: def?.Voices,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Voices.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Voices = rhsVoicesItem.Copy(
-                                    copyMask?.Voices?.Specific,
-                                    def: defVoicesItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Voices?.Overall}. Cannot execute copy.");
-                        }
+                        item.Voices = rhsVoicesItem.DeepCopy(
+                            copyMask?.Voices?.Specific,
+                            def: defVoicesItem);
                     }
                     else
                     {
@@ -3288,7 +3244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DefaultHair.Overall != CopyOption.Skip)
+            if (copyMask?.DefaultHair.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.DefaultHair);
                 try
@@ -3301,26 +3257,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsDefaultHairItem,
                         outDefItem: out var defDefaultHairItem))
                     {
-                        switch (copyMask?.DefaultHair.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RaceHairSetterCopyCommon)((IRaceHairGetter)item.DefaultHair).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.DefaultHair,
-                                    rhs: rhs.DefaultHair,
-                                    def: def?.DefaultHair,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.DefaultHair.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.DefaultHair = rhsDefaultHairItem.Copy(
-                                    copyMask?.DefaultHair?.Specific,
-                                    def: defDefaultHairItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.DefaultHair?.Overall}. Cannot execute copy.");
-                        }
+                        item.DefaultHair = rhsDefaultHairItem.DeepCopy(
+                            copyMask?.DefaultHair?.Specific,
+                            def: defDefaultHairItem);
                     }
                     else
                     {
@@ -3429,7 +3368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.RaceStats.Overall != CopyOption.Skip)
+            if (copyMask?.RaceStats.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.RaceStats);
                 try
@@ -3442,26 +3381,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsRaceStatsItem,
                         outDefItem: out var defRaceStatsItem))
                     {
-                        switch (copyMask?.RaceStats.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((RaceStatsGenderedSetterCopyCommon)((IRaceStatsGenderedGetter)item.RaceStats).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.RaceStats,
-                                    rhs: rhs.RaceStats,
-                                    def: def?.RaceStats,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.RaceStats.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.RaceStats = rhsRaceStatsItem.Copy(
-                                    copyMask?.RaceStats?.Specific,
-                                    def: defRaceStatsItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.RaceStats?.Overall}. Cannot execute copy.");
-                        }
+                        item.RaceStats = rhsRaceStatsItem.DeepCopy(
+                            copyMask?.RaceStats?.Specific,
+                            def: defRaceStatsItem);
                     }
                     else
                     {
@@ -3480,27 +3402,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FaceData.Overall != CopyOption.Skip)
+            if (copyMask?.FaceData.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
                 try
                 {
-                    item.FaceData.SetToWithDefault<FacePart, FacePart>(
+                    item.FaceData.SetToWithDefault(
                         rhs: rhs.FaceData,
                         def: def?.FaceData,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.FaceData.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (FacePart)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.FaceData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.FaceData.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.FaceData?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -3513,7 +3427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.BodyData.Overall != CopyOption.Skip)
+            if (copyMask?.BodyData.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
                 try
@@ -3526,26 +3440,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsBodyDataItem,
                         outDefItem: out var defBodyDataItem))
                     {
-                        switch (copyMask?.BodyData.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((GenderedBodyDataSetterCopyCommon)((IGenderedBodyDataGetter)item.BodyData).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.BodyData,
-                                    rhs: rhs.BodyData,
-                                    def: def?.BodyData,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.BodyData.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.BodyData = rhsBodyDataItem.Copy(
-                                    copyMask?.BodyData?.Specific,
-                                    def: defBodyDataItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.BodyData?.Overall}. Cannot execute copy.");
-                        }
+                        item.BodyData = rhsBodyDataItem.DeepCopy(
+                            copyMask?.BodyData?.Specific,
+                            def: defBodyDataItem);
                     }
                     else
                     {
@@ -3564,14 +3461,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Hairs != CopyOption.Skip)
+            if (copyMask?.Hairs ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                 try
                 {
                     item.Hairs.SetToWithDefault(
                         rhs.Hairs,
-                        def?.Hairs);
+                        def?.Hairs,
+                        (r, d) => new FormIDLink<Hair>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3583,14 +3481,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Eyes != CopyOption.Skip)
+            if (copyMask?.Eyes ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
                         rhs.Eyes,
-                        def?.Eyes);
+                        def?.Eyes,
+                        (r, d) => new FormIDLink<Eye>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3602,7 +3501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FaceGenData.Overall != CopyOption.Skip)
+            if (copyMask?.FaceGenData.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceGenData);
                 try
@@ -3615,26 +3514,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsFaceGenDataItem,
                         outDefItem: out var defFaceGenDataItem))
                     {
-                        switch (copyMask?.FaceGenData.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((FaceGenDataSetterCopyCommon)((IFaceGenDataGetter)item.FaceGenData).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.FaceGenData,
-                                    rhs: rhs.FaceGenData,
-                                    def: def?.FaceGenData,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.FaceGenData.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.FaceGenData = rhsFaceGenDataItem.Copy(
-                                    copyMask?.FaceGenData?.Specific,
-                                    def: defFaceGenDataItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.FaceGenData?.Overall}. Cannot execute copy.");
-                        }
+                        item.FaceGenData = rhsFaceGenDataItem.DeepCopy(
+                            copyMask?.FaceGenData?.Specific,
+                            def: defFaceGenDataItem);
                     }
                     else
                     {
@@ -3661,12 +3543,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Unknown,
                         rhsHasBeenSet: rhs.Unknown_IsSet,
-                        defItem: def?.Unknown ?? default(Byte[]),
-                        defHasBeenSet: def?.Unknown_IsSet ?? false,
+                        defItem: def.Unknown,
+                        defHasBeenSet: def.Unknown_IsSet,
                         outRhsItem: out var rhsUnknownItem,
                         outDefItem: out var defUnknownItem))
                     {
-                        item.Unknown = rhsUnknownItem;
+                        item.Unknown = rhsUnknownItem.ToArray();
                     }
                     else
                     {
@@ -3685,9 +3567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -3714,9 +3594,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return RaceSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return RaceSetterCopyCommon.Instance;
+            return RaceSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -6106,69 +5986,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Race_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Race_CopyMask()
-        {
-        }
-
-        public Race_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Description = defaultOn;
-            this.Spells = deepCopyOption;
-            this.Relations = new MaskItem<CopyOption, RaceRelation_CopyMask>(deepCopyOption, default);
-            this.SkillBoosts = new MaskItem<CopyOption, SkillBoost_CopyMask>(deepCopyOption, default);
-            this.Fluff = defaultOn;
-            this.MaleHeight = defaultOn;
-            this.FemaleHeight = defaultOn;
-            this.MaleWeight = defaultOn;
-            this.FemaleWeight = defaultOn;
-            this.Flags = defaultOn;
-            this.Voices = new MaskItem<CopyOption, RaceVoices_CopyMask>(deepCopyOption, default);
-            this.DefaultHair = new MaskItem<CopyOption, RaceHair_CopyMask>(deepCopyOption, default);
-            this.DefaultHairColor = defaultOn;
-            this.FaceGenMainClamp = defaultOn;
-            this.FaceGenFaceClamp = defaultOn;
-            this.RaceStats = new MaskItem<CopyOption, RaceStatsGendered_CopyMask>(deepCopyOption, default);
-            this.FaceData = new MaskItem<CopyOption, FacePart_CopyMask>(deepCopyOption, default);
-            this.BodyData = new MaskItem<CopyOption, GenderedBodyData_CopyMask>(deepCopyOption, default);
-            this.Hairs = deepCopyOption;
-            this.Eyes = deepCopyOption;
-            this.FaceGenData = new MaskItem<CopyOption, FaceGenData_CopyMask>(deepCopyOption, default);
-            this.Unknown = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Description;
-        public CopyOption Spells;
-        public MaskItem<CopyOption, RaceRelation_CopyMask> Relations;
-        public MaskItem<CopyOption, SkillBoost_CopyMask> SkillBoosts;
-        public bool Fluff;
-        public bool MaleHeight;
-        public bool FemaleHeight;
-        public bool MaleWeight;
-        public bool FemaleWeight;
-        public bool Flags;
-        public MaskItem<CopyOption, RaceVoices_CopyMask> Voices;
-        public MaskItem<CopyOption, RaceHair_CopyMask> DefaultHair;
-        public bool DefaultHairColor;
-        public bool FaceGenMainClamp;
-        public bool FaceGenFaceClamp;
-        public MaskItem<CopyOption, RaceStatsGendered_CopyMask> RaceStats;
-        public MaskItem<CopyOption, FacePart_CopyMask> FaceData;
-        public MaskItem<CopyOption, GenderedBodyData_CopyMask> BodyData;
-        public CopyOption Hairs;
-        public CopyOption Eyes;
-        public MaskItem<CopyOption, FaceGenData_CopyMask> FaceGenData;
-        public bool Unknown;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class Race_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -6645,6 +6462,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return RaceCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return RaceSetterTranslationCommon.Instance;
         }
 
         #endregion

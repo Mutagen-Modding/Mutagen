@@ -472,13 +472,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Static lhs,
-            Static rhs,
-            Static_CopyMask copyMask,
-            Static def = null)
+        public static void DeepCopyFieldsFrom(
+            this IStaticInternal lhs,
+            IStaticGetter rhs,
+            Static_TranslationMask copyMask,
+            IStaticGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -487,16 +487,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Static lhs,
-            Static rhs,
+        public static void DeepCopyFieldsFrom(
+            this IStaticInternal lhs,
+            IStaticGetter rhs,
             out Static_ErrorMask errorMask,
-            Static_CopyMask copyMask = null,
-            Static def = null,
+            Static_TranslationMask copyMask = null,
+            IStaticGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((StaticSetterCopyCommon)((IStaticGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((StaticSetterTranslationCommon)((IStaticGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -505,14 +505,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Static_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Static lhs,
-            Static rhs,
+        public static void DeepCopyFieldsFrom(
+            this IStaticInternal lhs,
+            IStaticGetter rhs,
             ErrorMaskBuilder errorMask,
-            Static_CopyMask copyMask = null,
-            Static def = null)
+            Static_TranslationMask copyMask = null,
+            IStaticGetter def = null)
         {
-            ((StaticSetterCopyCommon)((IStaticGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((StaticSetterTranslationCommon)((IStaticGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -569,6 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IStaticInternal item,
             string path,
@@ -710,6 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1277,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Static(getNextFormKey());
-            ret.CopyFieldsFrom((Static)item);
+            ret.DeepCopyFieldsFrom((Static)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Static)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1286,25 +1288,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class StaticSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class StaticSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly StaticSetterCopyCommon Instance = new StaticSetterCopyCommon();
+        public new static readonly StaticSetterTranslationCommon Instance = new StaticSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Static item,
-            Static rhs,
-            Static def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IStatic item,
+            IStaticGetter rhs,
+            IStaticGetter def,
             ErrorMaskBuilder errorMask,
-            Static_CopyMask copyMask)
+            Static_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
@@ -1317,26 +1319,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1380,9 +1365,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return StaticSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return StaticSetterCopyCommon.Instance;
+            return StaticSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1869,23 +1854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Static_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Static_CopyMask()
-        {
-        }
-
-        public Static_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-        }
-
-        #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        #endregion
-
-    }
-
     public class Static_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -2069,6 +2037,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return StaticCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return StaticSetterTranslationCommon.Instance;
         }
 
         #endregion

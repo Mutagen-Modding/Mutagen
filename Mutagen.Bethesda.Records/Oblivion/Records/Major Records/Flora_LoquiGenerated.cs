@@ -658,13 +658,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Flora lhs,
-            Flora rhs,
-            Flora_CopyMask copyMask,
-            Flora def = null)
+        public static void DeepCopyFieldsFrom(
+            this IFloraInternal lhs,
+            IFloraGetter rhs,
+            Flora_TranslationMask copyMask,
+            IFloraGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -673,16 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Flora lhs,
-            Flora rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFloraInternal lhs,
+            IFloraGetter rhs,
             out Flora_ErrorMask errorMask,
-            Flora_CopyMask copyMask = null,
-            Flora def = null,
+            Flora_TranslationMask copyMask = null,
+            IFloraGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FloraSetterCopyCommon)((IFloraGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -691,14 +691,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Flora lhs,
-            Flora rhs,
+        public static void DeepCopyFieldsFrom(
+            this IFloraInternal lhs,
+            IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
-            Flora_CopyMask copyMask = null,
-            Flora def = null)
+            Flora_TranslationMask copyMask = null,
+            IFloraGetter def = null)
         {
-            ((FloraSetterCopyCommon)((IFloraGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -755,6 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IFloraInternal item,
             string path,
@@ -896,6 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1711,7 +1713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Flora(getNextFormKey());
-            ret.CopyFieldsFrom((Flora)item);
+            ret.DeepCopyFieldsFrom((Flora)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Flora)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1720,19 +1722,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FloraSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class FloraSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly FloraSetterCopyCommon Instance = new FloraSetterCopyCommon();
+        public new static readonly FloraSetterTranslationCommon Instance = new FloraSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Flora item,
-            Flora rhs,
-            Flora def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IFlora item,
+            IFloraGetter rhs,
+            IFloraGetter def,
             ErrorMaskBuilder errorMask,
-            Flora_CopyMask copyMask)
+            Flora_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1768,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
@@ -1781,26 +1783,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -1824,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -1843,7 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
                 {
-                    item.Ingredient_Property.SetLink(
+                    item.Ingredient_Property.SetToFormKey(
                         rhs: rhs.Ingredient_Property,
                         def: def?.Ingredient_Property);
                 }
@@ -1859,33 +1844,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Spring ?? true)
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
                 item.Spring = rhs.Spring;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Summer ?? true)
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
                 item.Summer = rhs.Summer;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fall ?? true)
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
                 item.Fall = rhs.Fall;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Winter ?? true)
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
                 item.Winter = rhs.Winter;
-                errorMask?.PopIndex();
             }
             if (copyMask?.PFPCDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.PFPCDataTypeState);
                 item.PFPCDataTypeState = rhs.PFPCDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -1912,9 +1887,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return FloraSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return FloraSetterCopyCommon.Instance;
+            return FloraSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -2826,39 +2801,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Flora_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public Flora_CopyMask()
-        {
-        }
-
-        public Flora_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Script = defaultOn;
-            this.Ingredient = defaultOn;
-            this.Spring = defaultOn;
-            this.Summer = defaultOn;
-            this.Fall = defaultOn;
-            this.Winter = defaultOn;
-            this.PFPCDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Script;
-        public bool Ingredient;
-        public bool Spring;
-        public bool Summer;
-        public bool Fall;
-        public bool Winter;
-        public bool PFPCDataTypeState;
-        #endregion
-
-    }
-
     public class Flora_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Members
@@ -3115,6 +3057,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return FloraCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return FloraSetterTranslationCommon.Instance;
         }
 
         #endregion

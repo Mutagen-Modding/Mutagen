@@ -378,13 +378,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSetting lhs,
-            GameSetting rhs,
-            GameSetting_CopyMask copyMask,
-            GameSetting def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingInternal lhs,
+            IGameSettingGetter rhs,
+            GameSetting_TranslationMask copyMask,
+            IGameSettingGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -393,16 +393,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSetting lhs,
-            GameSetting rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingInternal lhs,
+            IGameSettingGetter rhs,
             out GameSetting_ErrorMask errorMask,
-            GameSetting_CopyMask copyMask = null,
-            GameSetting def = null,
+            GameSetting_TranslationMask copyMask = null,
+            IGameSettingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GameSettingSetterCopyCommon)((IGameSettingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -411,14 +411,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GameSetting lhs,
-            GameSetting rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGameSettingInternal lhs,
+            IGameSettingGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSetting_CopyMask copyMask = null,
-            GameSetting def = null)
+            GameSetting_TranslationMask copyMask = null,
+            IGameSettingGetter def = null)
         {
-            ((GameSettingSetterCopyCommon)((IGameSettingGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -475,6 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGameSettingInternal item,
             string path,
@@ -616,6 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1078,19 +1080,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GameSettingSetterCopyCommon : OblivionMajorRecordSetterCopyCommon
+    public partial class GameSettingSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
-        public new static readonly GameSettingSetterCopyCommon Instance = new GameSettingSetterCopyCommon();
+        public new static readonly GameSettingSetterTranslationCommon Instance = new GameSettingSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GameSetting item,
-            GameSetting rhs,
-            GameSetting def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGameSetting item,
+            IGameSettingGetter rhs,
+            IGameSettingGetter def,
             ErrorMaskBuilder errorMask,
-            GameSetting_CopyMask copyMask)
+            GameSetting_TranslationMask copyMask)
         {
-            ((OblivionMajorRecordSetterCopyCommon)((IOblivionMajorRecordGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1121,9 +1123,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return GameSettingSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GameSettingSetterCopyCommon.Instance;
+            return GameSettingSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1531,18 +1533,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class GameSetting_CopyMask : OblivionMajorRecord_CopyMask
-    {
-        public GameSetting_CopyMask()
-        {
-        }
-
-        public GameSetting_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-        }
-
-    }
-
     public class GameSetting_TranslationMask : OblivionMajorRecord_TranslationMask
     {
         #region Ctors
@@ -1691,6 +1681,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return GameSettingCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GameSettingSetterTranslationCommon.Instance;
         }
 
         #endregion

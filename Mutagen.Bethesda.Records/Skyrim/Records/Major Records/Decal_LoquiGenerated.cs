@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region MinWidth
         Single MinWidth { get; }
 
@@ -533,11 +533,11 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Decal lhs,
-            Decal rhs)
+        public static void DeepCopyFieldsFrom(
+            this IDecal lhs,
+            IDecalGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -546,13 +546,13 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this Decal lhs,
-            Decal rhs,
-            Decal_CopyMask copyMask,
-            Decal def = null)
+        public static void DeepCopyFieldsFrom(
+            this IDecal lhs,
+            IDecalGetter rhs,
+            Decal_TranslationMask copyMask,
+            IDecalGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -561,16 +561,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Decal lhs,
-            Decal rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDecal lhs,
+            IDecalGetter rhs,
             out Decal_ErrorMask errorMask,
-            Decal_CopyMask copyMask = null,
-            Decal def = null,
+            Decal_TranslationMask copyMask = null,
+            IDecalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DecalSetterCopyCommon)((IDecalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -579,14 +579,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Decal lhs,
-            Decal rhs,
+        public static void DeepCopyFieldsFrom(
+            this IDecal lhs,
+            IDecalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
+            Decal_TranslationMask copyMask = null,
+            IDecalGetter def = null)
         {
-            ((DecalSetterCopyCommon)((IDecalGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -594,12 +594,12 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static Decal Copy(
-            this Decal item,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
+        public static Decal DeepCopy(
+            this IDecalGetter item,
+            Decal_TranslationMask copyMask = null,
+            IDecalGetter def = null)
         {
-            return ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).Copy(
+            return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -654,6 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IDecal item,
             string path,
@@ -795,6 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1131,19 +1133,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Decal GetNew()
         {
             return new Decal();
-        }
-        
-        public Decal Copy(
-            Decal item,
-            Decal_CopyMask copyMask = null,
-            Decal def = null)
-        {
-            Decal ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
         }
         
         #region Xml Translation
@@ -1494,87 +1483,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
     }
-    public partial class DecalSetterCopyCommon
+    public partial class DecalSetterTranslationCommon
     {
-        public static readonly DecalSetterCopyCommon Instance = new DecalSetterCopyCommon();
+        public static readonly DecalSetterTranslationCommon Instance = new DecalSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Decal item,
-            Decal rhs,
-            Decal def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IDecal item,
+            IDecalGetter rhs,
+            IDecalGetter def,
             ErrorMaskBuilder errorMask,
-            Decal_CopyMask copyMask)
+            Decal_TranslationMask copyMask)
         {
             if (copyMask?.MinWidth ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.MinWidth);
                 item.MinWidth = rhs.MinWidth;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaxWidth ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.MaxWidth);
                 item.MaxWidth = rhs.MaxWidth;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MinHeight ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.MinHeight);
                 item.MinHeight = rhs.MinHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaxHeight ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.MaxHeight);
                 item.MaxHeight = rhs.MaxHeight;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Depth ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.Depth);
                 item.Depth = rhs.Depth;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Shininess ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.Shininess);
                 item.Shininess = rhs.Shininess;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ParallaxScale ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxScale);
                 item.ParallaxScale = rhs.ParallaxScale;
-                errorMask?.PopIndex();
             }
             if (copyMask?.ParallaxPasses ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxPasses);
                 item.ParallaxPasses = rhs.ParallaxPasses;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Unknown ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.Unknown);
                 item.Unknown = rhs.Unknown;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Color ?? true)
             {
-                errorMask?.PushIndex((int)Decal_FieldIndex.Color);
                 item.Color = rhs.Color;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public Decal DeepCopy(
+            IDecalGetter item,
+            Decal_TranslationMask copyMask = null,
+            IDecalGetter def = null)
+        {
+            Decal ret = DecalSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1597,9 +1577,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return DecalSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return DecalSetterCopyCommon.Instance;
+            return DecalSetterTranslationCommon.Instance;
         }
         object IDecalGetter.CommonInstance()
         {
@@ -1609,9 +1589,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return this.CommonSetterInstance();
         }
-        object IDecalGetter.CommonSetterCopyInstance()
+        object IDecalGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -2738,43 +2718,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class Decal_CopyMask
-    {
-        public Decal_CopyMask()
-        {
-        }
-
-        public Decal_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.MinWidth = defaultOn;
-            this.MaxWidth = defaultOn;
-            this.MinHeight = defaultOn;
-            this.MaxHeight = defaultOn;
-            this.Depth = defaultOn;
-            this.Shininess = defaultOn;
-            this.ParallaxScale = defaultOn;
-            this.ParallaxPasses = defaultOn;
-            this.Flags = defaultOn;
-            this.Unknown = defaultOn;
-            this.Color = defaultOn;
-        }
-
-        #region Members
-        public bool MinWidth;
-        public bool MaxWidth;
-        public bool MinHeight;
-        public bool MaxHeight;
-        public bool Depth;
-        public bool Shininess;
-        public bool ParallaxScale;
-        public bool ParallaxPasses;
-        public bool Flags;
-        public bool Unknown;
-        public bool Color;
-        #endregion
-
-    }
-
     public class Decal_TranslationMask : ITranslationMask
     {
         #region Members
@@ -3002,6 +2945,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return DecalCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return DecalSetterTranslationCommon.Instance;
+        }
         object IDecalGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -3010,9 +2957,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return null;
         }
-        object IDecalGetter.CommonSetterCopyInstance()
+        object IDecalGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

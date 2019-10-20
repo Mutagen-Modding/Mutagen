@@ -705,13 +705,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this Ingredient lhs,
-            Ingredient rhs,
-            Ingredient_CopyMask copyMask,
-            Ingredient def = null)
+        public static void DeepCopyFieldsFrom(
+            this IIngredientInternal lhs,
+            IIngredientGetter rhs,
+            Ingredient_TranslationMask copyMask,
+            IIngredientGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -720,16 +720,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this Ingredient lhs,
-            Ingredient rhs,
+        public static void DeepCopyFieldsFrom(
+            this IIngredientInternal lhs,
+            IIngredientGetter rhs,
             out Ingredient_ErrorMask errorMask,
-            Ingredient_CopyMask copyMask = null,
-            Ingredient def = null,
+            Ingredient_TranslationMask copyMask = null,
+            IIngredientGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((IngredientSetterCopyCommon)((IIngredientGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((IngredientSetterTranslationCommon)((IIngredientGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -738,14 +738,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this Ingredient lhs,
-            Ingredient rhs,
+        public static void DeepCopyFieldsFrom(
+            this IIngredientInternal lhs,
+            IIngredientGetter rhs,
             ErrorMaskBuilder errorMask,
-            Ingredient_CopyMask copyMask = null,
-            Ingredient def = null)
+            Ingredient_TranslationMask copyMask = null,
+            IIngredientGetter def = null)
         {
-            ((IngredientSetterCopyCommon)((IIngredientGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((IngredientSetterTranslationCommon)((IIngredientGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -802,6 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IIngredientInternal item,
             string path,
@@ -943,6 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1880,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new Ingredient(getNextFormKey());
-            ret.CopyFieldsFrom((Ingredient)item);
+            ret.DeepCopyFieldsFrom((Ingredient)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (Ingredient)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1889,19 +1891,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class IngredientSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly IngredientSetterCopyCommon Instance = new IngredientSetterCopyCommon();
+        public new static readonly IngredientSetterTranslationCommon Instance = new IngredientSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            Ingredient item,
-            Ingredient rhs,
-            Ingredient def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IIngredient item,
+            IIngredientGetter rhs,
+            IIngredientGetter def,
             ErrorMaskBuilder errorMask,
-            Ingredient_CopyMask copyMask)
+            Ingredient_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1937,7 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Model);
                 try
@@ -1950,26 +1952,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -2023,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -2069,37 +2054,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Value ?? true)
             {
-                errorMask?.PushIndex((int)Ingredient_FieldIndex.Value);
                 item.Value = rhs.Value;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)Ingredient_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Effects.Overall != CopyOption.Skip)
+            if (copyMask?.Effects.Overall ?? true)
             {
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault<Effect, Effect>(
+                    item.Effects.SetToWithDefault(
                         rhs: rhs.Effects,
                         def: def?.Effects,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (Effect)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Effects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Effects?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -2114,9 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ENITDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)Ingredient_FieldIndex.ENITDataTypeState);
                 item.ENITDataTypeState = rhs.ENITDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2143,9 +2114,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return IngredientSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return IngredientSetterCopyCommon.Instance;
+            return IngredientSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3184,39 +3155,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Ingredient_CopyMask : ItemAbstract_CopyMask
-    {
-        public Ingredient_CopyMask()
-        {
-        }
-
-        public Ingredient_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Icon = defaultOn;
-            this.Script = defaultOn;
-            this.Weight = defaultOn;
-            this.Value = defaultOn;
-            this.Flags = defaultOn;
-            this.Effects = new MaskItem<CopyOption, Effect_CopyMask>(deepCopyOption, default);
-            this.ENITDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Script;
-        public bool Weight;
-        public bool Value;
-        public bool Flags;
-        public MaskItem<CopyOption, Effect_CopyMask> Effects;
-        public bool ENITDataTypeState;
-        #endregion
-
-    }
-
     public class Ingredient_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -3514,6 +3452,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return IngredientCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return IngredientSetterTranslationCommon.Instance;
         }
 
         #endregion

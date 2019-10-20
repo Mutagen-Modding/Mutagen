@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonSetterCopyInstance();
+        object CommonSetterTranslationInstance();
         #region First
         P3Int16 First { get; }
 
@@ -441,11 +441,11 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this ObjectBounds lhs,
-            ObjectBounds rhs)
+        public static void DeepCopyFieldsFrom(
+            this IObjectBounds lhs,
+            IObjectBoundsGetter rhs)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: null,
@@ -454,13 +454,13 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: null);
         }
 
-        public static void CopyFieldsFrom(
-            this ObjectBounds lhs,
-            ObjectBounds rhs,
-            ObjectBounds_CopyMask copyMask,
-            ObjectBounds def = null)
+        public static void DeepCopyFieldsFrom(
+            this IObjectBounds lhs,
+            IObjectBoundsGetter rhs,
+            ObjectBounds_TranslationMask copyMask,
+            IObjectBoundsGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -469,16 +469,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this ObjectBounds lhs,
-            ObjectBounds rhs,
+        public static void DeepCopyFieldsFrom(
+            this IObjectBounds lhs,
+            IObjectBoundsGetter rhs,
             out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null,
+            ObjectBounds_TranslationMask copyMask = null,
+            IObjectBoundsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ObjectBoundsSetterCopyCommon)((IObjectBoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -487,14 +487,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this ObjectBounds lhs,
-            ObjectBounds rhs,
+        public static void DeepCopyFieldsFrom(
+            this IObjectBounds lhs,
+            IObjectBoundsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
+            ObjectBounds_TranslationMask copyMask = null,
+            IObjectBoundsGetter def = null)
         {
-            ((ObjectBoundsSetterCopyCommon)((IObjectBoundsGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -502,12 +502,12 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static ObjectBounds Copy(
-            this ObjectBounds item,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
+        public static ObjectBounds DeepCopy(
+            this IObjectBoundsGetter item,
+            ObjectBounds_TranslationMask copyMask = null,
+            IObjectBoundsGetter def = null)
         {
-            return ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).Copy(
+            return ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 def: def);
@@ -562,6 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IObjectBounds item,
             string path,
@@ -703,6 +704,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -924,19 +926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return new ObjectBounds();
         }
         
-        public ObjectBounds Copy(
-            ObjectBounds item,
-            ObjectBounds_CopyMask copyMask = null,
-            ObjectBounds def = null)
-        {
-            ObjectBounds ret = GetNew();
-            ret.CopyFieldsFrom(
-                item,
-                copyMask: copyMask,
-                def: def);
-            return ret;
-        }
-        
         #region Xml Translation
         public void CopyInFromXml(
             IObjectBounds item,
@@ -1140,33 +1129,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
     }
-    public partial class ObjectBoundsSetterCopyCommon
+    public partial class ObjectBoundsSetterTranslationCommon
     {
-        public static readonly ObjectBoundsSetterCopyCommon Instance = new ObjectBoundsSetterCopyCommon();
+        public static readonly ObjectBoundsSetterTranslationCommon Instance = new ObjectBoundsSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            ObjectBounds item,
-            ObjectBounds rhs,
-            ObjectBounds def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IObjectBounds item,
+            IObjectBoundsGetter rhs,
+            IObjectBoundsGetter def,
             ErrorMaskBuilder errorMask,
-            ObjectBounds_CopyMask copyMask)
+            ObjectBounds_TranslationMask copyMask)
         {
             if (copyMask?.First ?? true)
             {
-                errorMask?.PushIndex((int)ObjectBounds_FieldIndex.First);
                 item.First = rhs.First;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Second ?? true)
             {
-                errorMask?.PushIndex((int)ObjectBounds_FieldIndex.Second);
                 item.Second = rhs.Second;
-                errorMask?.PopIndex();
             }
         }
         
         #endregion
+        
+        public ObjectBounds DeepCopy(
+            IObjectBoundsGetter item,
+            ObjectBounds_TranslationMask copyMask = null,
+            IObjectBoundsGetter def = null)
+        {
+            ObjectBounds ret = ObjectBoundsSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
         
     }
     #endregion
@@ -1189,9 +1187,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return ObjectBoundsSetterCommon.Instance;
         }
-        protected object CommonSetterCopyInstance()
+        protected object CommonSetterTranslationInstance()
         {
-            return ObjectBoundsSetterCopyCommon.Instance;
+            return ObjectBoundsSetterTranslationCommon.Instance;
         }
         object IObjectBoundsGetter.CommonInstance()
         {
@@ -1201,9 +1199,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return this.CommonSetterInstance();
         }
-        object IObjectBoundsGetter.CommonSetterCopyInstance()
+        object IObjectBoundsGetter.CommonSetterTranslationInstance()
         {
-            return this.CommonSetterCopyInstance();
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion
@@ -1817,25 +1815,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class ObjectBounds_CopyMask
-    {
-        public ObjectBounds_CopyMask()
-        {
-        }
-
-        public ObjectBounds_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.First = defaultOn;
-            this.Second = defaultOn;
-        }
-
-        #region Members
-        public bool First;
-        public bool Second;
-        #endregion
-
-    }
-
     public class ObjectBounds_TranslationMask : ITranslationMask
     {
         #region Members
@@ -2011,6 +1990,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ObjectBoundsCommon.Instance;
         }
+        protected object CommonSetterTranslationInstance()
+        {
+            return ObjectBoundsSetterTranslationCommon.Instance;
+        }
         object IObjectBoundsGetter.CommonInstance()
         {
             return this.CommonInstance();
@@ -2019,9 +2002,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return null;
         }
-        object IObjectBoundsGetter.CommonSetterCopyInstance()
+        object IObjectBoundsGetter.CommonSetterTranslationInstance()
         {
-            return null;
+            return this.CommonSetterTranslationInstance();
         }
 
         #endregion

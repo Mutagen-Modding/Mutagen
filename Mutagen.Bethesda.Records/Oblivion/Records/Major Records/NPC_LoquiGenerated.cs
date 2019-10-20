@@ -1929,13 +1929,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this NPC lhs,
-            NPC rhs,
-            NPC_CopyMask copyMask,
-            NPC def = null)
+        public static void DeepCopyFieldsFrom(
+            this INPCInternal lhs,
+            INPCGetter rhs,
+            NPC_TranslationMask copyMask,
+            INPCGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -1944,16 +1944,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this NPC lhs,
-            NPC rhs,
+        public static void DeepCopyFieldsFrom(
+            this INPCInternal lhs,
+            INPCGetter rhs,
             out NPC_ErrorMask errorMask,
-            NPC_CopyMask copyMask = null,
-            NPC def = null,
+            NPC_TranslationMask copyMask = null,
+            INPCGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((NPCSetterCopyCommon)((INPCGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -1962,14 +1962,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this NPC lhs,
-            NPC rhs,
+        public static void DeepCopyFieldsFrom(
+            this INPCInternal lhs,
+            INPCGetter rhs,
             ErrorMaskBuilder errorMask,
-            NPC_CopyMask copyMask = null,
-            NPC def = null)
+            NPC_TranslationMask copyMask = null,
+            INPCGetter def = null)
         {
-            ((NPCSetterCopyCommon)((INPCGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -2026,6 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this INPCInternal item,
             string path,
@@ -2167,6 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -4861,7 +4863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new NPC(getNextFormKey());
-            ret.CopyFieldsFrom((NPC)item);
+            ret.DeepCopyFieldsFrom((NPC)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (NPC)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -4870,19 +4872,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NPCSetterCopyCommon : NPCAbstractSetterCopyCommon
+    public partial class NPCSetterTranslationCommon : NPCAbstractSetterTranslationCommon
     {
-        public new static readonly NPCSetterCopyCommon Instance = new NPCSetterCopyCommon();
+        public new static readonly NPCSetterTranslationCommon Instance = new NPCSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            NPC item,
-            NPC rhs,
-            NPC def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            INPC item,
+            INPCGetter rhs,
+            INPCGetter def,
             ErrorMaskBuilder errorMask,
-            NPC_CopyMask copyMask)
+            NPC_TranslationMask copyMask)
         {
-            ((NPCAbstractSetterCopyCommon)((INPCAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -4918,7 +4920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.Model.Overall ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Model);
                 try
@@ -4931,26 +4933,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsModelItem,
                         outDefItem: out var defModelItem))
                     {
-                        switch (copyMask?.Model.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.Model).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.Model,
-                                    rhs: rhs.Model,
-                                    def: def?.Model,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.Model.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.Model = rhsModelItem.Copy(
-                                    copyMask?.Model?.Specific,
-                                    def: defModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                        }
+                        item.Model = rhsModelItem.DeepCopy(
+                            copyMask?.Model?.Specific,
+                            def: defModelItem);
                     }
                     else
                     {
@@ -4971,67 +4956,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BaseSpellPoints ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.BaseSpellPoints);
                 item.BaseSpellPoints = rhs.BaseSpellPoints;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fatigue ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Fatigue);
                 item.Fatigue = rhs.Fatigue;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BarterGold ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.BarterGold);
                 item.BarterGold = rhs.BarterGold;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LevelOffset ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.LevelOffset);
                 item.LevelOffset = rhs.LevelOffset;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMin ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.CalcMin);
                 item.CalcMin = rhs.CalcMin;
-                errorMask?.PopIndex();
             }
             if (copyMask?.CalcMax ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.CalcMax);
                 item.CalcMax = rhs.CalcMax;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.Factions.Overall != CopyOption.Skip)
+            if (copyMask?.Factions.Overall ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetToWithDefault<RankPlacement, RankPlacement>(
+                    item.Factions.SetToWithDefault(
                         rhs: rhs.Factions,
                         def: def?.Factions,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (RankPlacement)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Factions?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Factions?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -5049,7 +5012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetLink(
+                    item.DeathItem_Property.SetToFormKey(
                         rhs: rhs.DeathItem_Property,
                         def: def?.DeathItem_Property);
                 }
@@ -5068,7 +5031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Race);
                 try
                 {
-                    item.Race_Property.SetLink(
+                    item.Race_Property.SetToFormKey(
                         rhs: rhs.Race_Property,
                         def: def?.Race_Property);
                 }
@@ -5082,14 +5045,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells != CopyOption.Skip)
+            if (copyMask?.Spells ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                 try
                 {
                     item.Spells.SetToWithDefault(
                         rhs.Spells,
-                        def?.Spells);
+                        def?.Spells,
+                        (r, d) => new FormIDLink<SpellAbstract>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5106,7 +5070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -5120,27 +5084,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Items.Overall != CopyOption.Skip)
+            if (copyMask?.Items.Overall ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault<ItemEntry, ItemEntry>(
+                    item.Items.SetToWithDefault(
                         rhs: rhs.Items,
                         def: def?.Items,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return (ItemEntry)r;
-                                case CopyOption.MakeCopy:
-                                    return r.Copy(
-                                        copyMask?.Items?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
-                            }
+                            return r.DeepCopy(
+                                copyMask?.Items?.Specific,
+                                def: d);
                         });
                 }
                 catch (Exception ex)
@@ -5155,60 +5111,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Aggression ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Aggression);
                 item.Aggression = rhs.Aggression;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Confidence ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Confidence);
                 item.Confidence = rhs.Confidence;
-                errorMask?.PopIndex();
             }
             if (copyMask?.EnergyLevel ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.EnergyLevel);
                 item.EnergyLevel = rhs.EnergyLevel;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Responsibility ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Responsibility);
                 item.Responsibility = rhs.Responsibility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.BuySellServices ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.BuySellServices);
                 item.BuySellServices = rhs.BuySellServices;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Teaches ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Teaches);
                 item.Teaches = rhs.Teaches;
-                errorMask?.PopIndex();
             }
             if (copyMask?.MaximumTrainingLevel ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.MaximumTrainingLevel);
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Fluff ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Fluff);
-                item.Fluff = rhs.Fluff;
-                errorMask?.PopIndex();
+                item.Fluff = rhs.Fluff.ToArray();
             }
-            if (copyMask?.AIPackages != CopyOption.Skip)
+            if (copyMask?.AIPackages ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
                 {
                     item.AIPackages.SetToWithDefault(
                         rhs.AIPackages,
-                        def?.AIPackages);
+                        def?.AIPackages,
+                        (r, d) => new FormIDLink<AIPackage>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5220,14 +5161,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Animations != CopyOption.Skip)
+            if (copyMask?.Animations ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Animations);
                 try
                 {
-                    item.Animations.SetToWithDefault(
-                        rhs.Animations,
-                        def?.Animations);
+                    item.Animations.SetTo(rhs.Animations);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5244,7 +5183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Class);
                 try
                 {
-                    item.Class_Property.SetLink(
+                    item.Class_Property.SetToFormKey(
                         rhs: rhs.Class_Property,
                         def: def?.Class_Property);
                 }
@@ -5260,190 +5199,130 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.Armorer ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Armorer);
                 item.Armorer = rhs.Armorer;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Athletics ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Athletics);
                 item.Athletics = rhs.Athletics;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Blade ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Blade);
                 item.Blade = rhs.Blade;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Block ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Block);
                 item.Block = rhs.Block;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Blunt ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Blunt);
                 item.Blunt = rhs.Blunt;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HandToHand ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.HandToHand);
                 item.HandToHand = rhs.HandToHand;
-                errorMask?.PopIndex();
             }
             if (copyMask?.HeavyArmor ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.HeavyArmor);
                 item.HeavyArmor = rhs.HeavyArmor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Alchemy ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Alchemy);
                 item.Alchemy = rhs.Alchemy;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Alteration ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Alteration);
                 item.Alteration = rhs.Alteration;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Conjuration ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Conjuration);
                 item.Conjuration = rhs.Conjuration;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Destruction ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Destruction);
                 item.Destruction = rhs.Destruction;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Illusion ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Illusion);
                 item.Illusion = rhs.Illusion;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Mysticism ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Mysticism);
                 item.Mysticism = rhs.Mysticism;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Restoration ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Restoration);
                 item.Restoration = rhs.Restoration;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Acrobatics ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Acrobatics);
                 item.Acrobatics = rhs.Acrobatics;
-                errorMask?.PopIndex();
             }
             if (copyMask?.LightArmor ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.LightArmor);
                 item.LightArmor = rhs.LightArmor;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Marksman ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Marksman);
                 item.Marksman = rhs.Marksman;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Mercantile ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Mercantile);
                 item.Mercantile = rhs.Mercantile;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Security ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Security);
                 item.Security = rhs.Security;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Sneak ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Sneak);
                 item.Sneak = rhs.Sneak;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Speechcraft ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Speechcraft);
                 item.Speechcraft = rhs.Speechcraft;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Health ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Health);
                 item.Health = rhs.Health;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Strength ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Strength);
                 item.Strength = rhs.Strength;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Intelligence ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Intelligence);
                 item.Intelligence = rhs.Intelligence;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Willpower ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Willpower);
                 item.Willpower = rhs.Willpower;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Agility ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Agility);
                 item.Agility = rhs.Agility;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Speed ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Speed);
                 item.Speed = rhs.Speed;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Endurance ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Endurance);
                 item.Endurance = rhs.Endurance;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Personality ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Personality);
                 item.Personality = rhs.Personality;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Luck ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.Luck);
                 item.Luck = rhs.Luck;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Hair ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Hair);
                 try
                 {
-                    item.Hair_Property.SetLink(
+                    item.Hair_Property.SetToFormKey(
                         rhs: rhs.Hair_Property,
                         def: def?.Hair_Property);
                 }
@@ -5487,14 +5366,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Eyes != CopyOption.Skip)
+            if (copyMask?.Eyes ?? true)
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
                 {
                     item.Eyes.SetToWithDefault(
                         rhs.Eyes,
-                        def?.Eyes);
+                        def?.Eyes,
+                        (r, d) => new FormIDLink<Eye>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5541,7 +5421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetLink(
+                    item.CombatStyle_Property.SetToFormKey(
                         rhs: rhs.CombatStyle_Property,
                         def: def?.CombatStyle_Property);
                 }
@@ -5563,12 +5443,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.FaceGenGeometrySymmetric,
                         rhsHasBeenSet: rhs.FaceGenGeometrySymmetric_IsSet,
-                        defItem: def?.FaceGenGeometrySymmetric ?? default(Byte[]),
-                        defHasBeenSet: def?.FaceGenGeometrySymmetric_IsSet ?? false,
+                        defItem: def.FaceGenGeometrySymmetric,
+                        defHasBeenSet: def.FaceGenGeometrySymmetric_IsSet,
                         outRhsItem: out var rhsFaceGenGeometrySymmetricItem,
                         outDefItem: out var defFaceGenGeometrySymmetricItem))
                     {
-                        item.FaceGenGeometrySymmetric = rhsFaceGenGeometrySymmetricItem;
+                        item.FaceGenGeometrySymmetric = rhsFaceGenGeometrySymmetricItem.ToArray();
                     }
                     else
                     {
@@ -5593,12 +5473,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.FaceGenGeometryAsymmetric,
                         rhsHasBeenSet: rhs.FaceGenGeometryAsymmetric_IsSet,
-                        defItem: def?.FaceGenGeometryAsymmetric ?? default(Byte[]),
-                        defHasBeenSet: def?.FaceGenGeometryAsymmetric_IsSet ?? false,
+                        defItem: def.FaceGenGeometryAsymmetric,
+                        defHasBeenSet: def.FaceGenGeometryAsymmetric_IsSet,
                         outRhsItem: out var rhsFaceGenGeometryAsymmetricItem,
                         outDefItem: out var defFaceGenGeometryAsymmetricItem))
                     {
-                        item.FaceGenGeometryAsymmetric = rhsFaceGenGeometryAsymmetricItem;
+                        item.FaceGenGeometryAsymmetric = rhsFaceGenGeometryAsymmetricItem.ToArray();
                     }
                     else
                     {
@@ -5623,12 +5503,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.FaceGenTextureSymmetric,
                         rhsHasBeenSet: rhs.FaceGenTextureSymmetric_IsSet,
-                        defItem: def?.FaceGenTextureSymmetric ?? default(Byte[]),
-                        defHasBeenSet: def?.FaceGenTextureSymmetric_IsSet ?? false,
+                        defItem: def.FaceGenTextureSymmetric,
+                        defHasBeenSet: def.FaceGenTextureSymmetric_IsSet,
                         outRhsItem: out var rhsFaceGenTextureSymmetricItem,
                         outDefItem: out var defFaceGenTextureSymmetricItem))
                     {
-                        item.FaceGenTextureSymmetric = rhsFaceGenTextureSymmetricItem;
+                        item.FaceGenTextureSymmetric = rhsFaceGenTextureSymmetricItem.ToArray();
                     }
                     else
                     {
@@ -5653,12 +5533,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (LoquiHelper.DefaultSwitch(
                         rhsItem: rhs.Unknown,
                         rhsHasBeenSet: rhs.Unknown_IsSet,
-                        defItem: def?.Unknown ?? default(Byte[]),
-                        defHasBeenSet: def?.Unknown_IsSet ?? false,
+                        defItem: def.Unknown,
+                        defHasBeenSet: def.Unknown_IsSet,
                         outRhsItem: out var rhsUnknownItem,
                         outDefItem: out var defUnknownItem))
                     {
-                        item.Unknown = rhsUnknownItem;
+                        item.Unknown = rhsUnknownItem.ToArray();
                     }
                     else
                     {
@@ -5677,21 +5557,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.ACBSDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.ACBSDataTypeState);
                 item.ACBSDataTypeState = rhs.ACBSDataTypeState;
-                errorMask?.PopIndex();
             }
             if (copyMask?.AIDTDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.AIDTDataTypeState);
                 item.AIDTDataTypeState = rhs.AIDTDataTypeState;
-                errorMask?.PopIndex();
             }
             if (copyMask?.DATADataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)NPC_FieldIndex.DATADataTypeState);
                 item.DATADataTypeState = rhs.DATADataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -5718,9 +5592,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return NPCSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return NPCSetterCopyCommon.Instance;
+            return NPCSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -10475,157 +10349,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class NPC_CopyMask : NPCAbstract_CopyMask
-    {
-        public NPC_CopyMask()
-        {
-        }
-
-        public NPC_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Model = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.Flags = defaultOn;
-            this.BaseSpellPoints = defaultOn;
-            this.Fatigue = defaultOn;
-            this.BarterGold = defaultOn;
-            this.LevelOffset = defaultOn;
-            this.CalcMin = defaultOn;
-            this.CalcMax = defaultOn;
-            this.Factions = new MaskItem<CopyOption, RankPlacement_CopyMask>(deepCopyOption, default);
-            this.DeathItem = defaultOn;
-            this.Race = defaultOn;
-            this.Spells = deepCopyOption;
-            this.Script = defaultOn;
-            this.Items = new MaskItem<CopyOption, ItemEntry_CopyMask>(deepCopyOption, default);
-            this.Aggression = defaultOn;
-            this.Confidence = defaultOn;
-            this.EnergyLevel = defaultOn;
-            this.Responsibility = defaultOn;
-            this.BuySellServices = defaultOn;
-            this.Teaches = defaultOn;
-            this.MaximumTrainingLevel = defaultOn;
-            this.Fluff = defaultOn;
-            this.AIPackages = deepCopyOption;
-            this.Animations = deepCopyOption;
-            this.Class = defaultOn;
-            this.Armorer = defaultOn;
-            this.Athletics = defaultOn;
-            this.Blade = defaultOn;
-            this.Block = defaultOn;
-            this.Blunt = defaultOn;
-            this.HandToHand = defaultOn;
-            this.HeavyArmor = defaultOn;
-            this.Alchemy = defaultOn;
-            this.Alteration = defaultOn;
-            this.Conjuration = defaultOn;
-            this.Destruction = defaultOn;
-            this.Illusion = defaultOn;
-            this.Mysticism = defaultOn;
-            this.Restoration = defaultOn;
-            this.Acrobatics = defaultOn;
-            this.LightArmor = defaultOn;
-            this.Marksman = defaultOn;
-            this.Mercantile = defaultOn;
-            this.Security = defaultOn;
-            this.Sneak = defaultOn;
-            this.Speechcraft = defaultOn;
-            this.Health = defaultOn;
-            this.Strength = defaultOn;
-            this.Intelligence = defaultOn;
-            this.Willpower = defaultOn;
-            this.Agility = defaultOn;
-            this.Speed = defaultOn;
-            this.Endurance = defaultOn;
-            this.Personality = defaultOn;
-            this.Luck = defaultOn;
-            this.Hair = defaultOn;
-            this.HairLength = defaultOn;
-            this.Eyes = deepCopyOption;
-            this.HairColor = defaultOn;
-            this.CombatStyle = defaultOn;
-            this.FaceGenGeometrySymmetric = defaultOn;
-            this.FaceGenGeometryAsymmetric = defaultOn;
-            this.FaceGenTextureSymmetric = defaultOn;
-            this.Unknown = defaultOn;
-            this.ACBSDataTypeState = defaultOn;
-            this.AIDTDataTypeState = defaultOn;
-            this.DATADataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Flags;
-        public bool BaseSpellPoints;
-        public bool Fatigue;
-        public bool BarterGold;
-        public bool LevelOffset;
-        public bool CalcMin;
-        public bool CalcMax;
-        public MaskItem<CopyOption, RankPlacement_CopyMask> Factions;
-        public bool DeathItem;
-        public bool Race;
-        public CopyOption Spells;
-        public bool Script;
-        public MaskItem<CopyOption, ItemEntry_CopyMask> Items;
-        public bool Aggression;
-        public bool Confidence;
-        public bool EnergyLevel;
-        public bool Responsibility;
-        public bool BuySellServices;
-        public bool Teaches;
-        public bool MaximumTrainingLevel;
-        public bool Fluff;
-        public CopyOption AIPackages;
-        public CopyOption Animations;
-        public bool Class;
-        public bool Armorer;
-        public bool Athletics;
-        public bool Blade;
-        public bool Block;
-        public bool Blunt;
-        public bool HandToHand;
-        public bool HeavyArmor;
-        public bool Alchemy;
-        public bool Alteration;
-        public bool Conjuration;
-        public bool Destruction;
-        public bool Illusion;
-        public bool Mysticism;
-        public bool Restoration;
-        public bool Acrobatics;
-        public bool LightArmor;
-        public bool Marksman;
-        public bool Mercantile;
-        public bool Security;
-        public bool Sneak;
-        public bool Speechcraft;
-        public bool Health;
-        public bool Strength;
-        public bool Intelligence;
-        public bool Willpower;
-        public bool Agility;
-        public bool Speed;
-        public bool Endurance;
-        public bool Personality;
-        public bool Luck;
-        public bool Hair;
-        public bool HairLength;
-        public CopyOption Eyes;
-        public bool HairColor;
-        public bool CombatStyle;
-        public bool FaceGenGeometrySymmetric;
-        public bool FaceGenGeometryAsymmetric;
-        public bool FaceGenTextureSymmetric;
-        public bool Unknown;
-        public bool ACBSDataTypeState;
-        public bool AIDTDataTypeState;
-        public bool DATADataTypeState;
-        #endregion
-
-    }
-
     public class NPC_TranslationMask : NPCAbstract_TranslationMask
     {
         #region Members
@@ -11326,6 +11049,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return NPCCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return NPCSetterTranslationCommon.Instance;
         }
 
         #endregion

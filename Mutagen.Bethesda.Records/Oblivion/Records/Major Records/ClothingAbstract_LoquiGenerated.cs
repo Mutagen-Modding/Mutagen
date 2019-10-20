@@ -805,13 +805,13 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this ClothingAbstract lhs,
-            ClothingAbstract rhs,
-            ClothingAbstract_CopyMask copyMask,
-            ClothingAbstract def = null)
+        public static void DeepCopyFieldsFrom(
+            this IClothingAbstractInternal lhs,
+            IClothingAbstractGetter rhs,
+            ClothingAbstract_TranslationMask copyMask,
+            IClothingAbstractGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -820,16 +820,16 @@ namespace Mutagen.Bethesda.Oblivion
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this ClothingAbstract lhs,
-            ClothingAbstract rhs,
+        public static void DeepCopyFieldsFrom(
+            this IClothingAbstractInternal lhs,
+            IClothingAbstractGetter rhs,
             out ClothingAbstract_ErrorMask errorMask,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null,
+            ClothingAbstract_TranslationMask copyMask = null,
+            IClothingAbstractGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ClothingAbstractSetterCopyCommon)((IClothingAbstractGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -838,14 +838,14 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this ClothingAbstract lhs,
-            ClothingAbstract rhs,
+        public static void DeepCopyFieldsFrom(
+            this IClothingAbstractInternal lhs,
+            IClothingAbstractGetter rhs,
             ErrorMaskBuilder errorMask,
-            ClothingAbstract_CopyMask copyMask = null,
-            ClothingAbstract def = null)
+            ClothingAbstract_TranslationMask copyMask = null,
+            IClothingAbstractGetter def = null)
         {
-            ((ClothingAbstractSetterCopyCommon)((IClothingAbstractGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -902,6 +902,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IClothingAbstractInternal item,
             string path,
@@ -1043,6 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -2218,19 +2220,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClothingAbstractSetterCopyCommon : ItemAbstractSetterCopyCommon
+    public partial class ClothingAbstractSetterTranslationCommon : ItemAbstractSetterTranslationCommon
     {
-        public new static readonly ClothingAbstractSetterCopyCommon Instance = new ClothingAbstractSetterCopyCommon();
+        public new static readonly ClothingAbstractSetterTranslationCommon Instance = new ClothingAbstractSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            ClothingAbstract item,
-            ClothingAbstract rhs,
-            ClothingAbstract def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IClothingAbstract item,
+            IClothingAbstractGetter rhs,
+            IClothingAbstractGetter def,
             ErrorMaskBuilder errorMask,
-            ClothingAbstract_CopyMask copyMask)
+            ClothingAbstract_TranslationMask copyMask)
         {
-            ((ItemAbstractSetterCopyCommon)((IItemAbstractGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -2271,7 +2273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetLink(
+                    item.Script_Property.SetToFormKey(
                         rhs: rhs.Script_Property,
                         def: def?.Script_Property);
                 }
@@ -2290,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetLink(
+                    item.Enchantment_Property.SetToFormKey(
                         rhs: rhs.Enchantment_Property,
                         def: def?.Enchantment_Property);
                 }
@@ -2336,17 +2338,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.BipedFlags ?? true)
             {
-                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BipedFlags);
                 item.BipedFlags = rhs.BipedFlags;
-                errorMask?.PopIndex();
             }
             if (copyMask?.Flags ?? true)
             {
-                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Flags);
                 item.Flags = rhs.Flags;
-                errorMask?.PopIndex();
             }
-            if (copyMask?.MaleBipedModel.Overall != CopyOption.Skip)
+            if (copyMask?.MaleBipedModel.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 try
@@ -2359,26 +2357,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsMaleBipedModelItem,
                         outDefItem: out var defMaleBipedModelItem))
                     {
-                        switch (copyMask?.MaleBipedModel.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.MaleBipedModel).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.MaleBipedModel,
-                                    rhs: rhs.MaleBipedModel,
-                                    def: def?.MaleBipedModel,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.MaleBipedModel.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.MaleBipedModel = rhsMaleBipedModelItem.Copy(
-                                    copyMask?.MaleBipedModel?.Specific,
-                                    def: defMaleBipedModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MaleBipedModel?.Overall}. Cannot execute copy.");
-                        }
+                        item.MaleBipedModel = rhsMaleBipedModelItem.DeepCopy(
+                            copyMask?.MaleBipedModel?.Specific,
+                            def: defMaleBipedModelItem);
                     }
                     else
                     {
@@ -2397,7 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MaleWorldModel.Overall != CopyOption.Skip)
+            if (copyMask?.MaleWorldModel.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 try
@@ -2410,26 +2391,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsMaleWorldModelItem,
                         outDefItem: out var defMaleWorldModelItem))
                     {
-                        switch (copyMask?.MaleWorldModel.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.MaleWorldModel).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.MaleWorldModel,
-                                    rhs: rhs.MaleWorldModel,
-                                    def: def?.MaleWorldModel,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.MaleWorldModel.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.MaleWorldModel = rhsMaleWorldModelItem.Copy(
-                                    copyMask?.MaleWorldModel?.Specific,
-                                    def: defMaleWorldModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.MaleWorldModel?.Overall}. Cannot execute copy.");
-                        }
+                        item.MaleWorldModel = rhsMaleWorldModelItem.DeepCopy(
+                            copyMask?.MaleWorldModel?.Specific,
+                            def: defMaleWorldModelItem);
                     }
                     else
                     {
@@ -2478,7 +2442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FemaleBipedModel.Overall != CopyOption.Skip)
+            if (copyMask?.FemaleBipedModel.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 try
@@ -2491,26 +2455,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsFemaleBipedModelItem,
                         outDefItem: out var defFemaleBipedModelItem))
                     {
-                        switch (copyMask?.FemaleBipedModel.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.FemaleBipedModel).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.FemaleBipedModel,
-                                    rhs: rhs.FemaleBipedModel,
-                                    def: def?.FemaleBipedModel,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.FemaleBipedModel.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.FemaleBipedModel = rhsFemaleBipedModelItem.Copy(
-                                    copyMask?.FemaleBipedModel?.Specific,
-                                    def: defFemaleBipedModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.FemaleBipedModel?.Overall}. Cannot execute copy.");
-                        }
+                        item.FemaleBipedModel = rhsFemaleBipedModelItem.DeepCopy(
+                            copyMask?.FemaleBipedModel?.Specific,
+                            def: defFemaleBipedModelItem);
                     }
                     else
                     {
@@ -2529,7 +2476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FemaleWorldModel.Overall != CopyOption.Skip)
+            if (copyMask?.FemaleWorldModel.Overall ?? true)
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 try
@@ -2542,26 +2489,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         outRhsItem: out var rhsFemaleWorldModelItem,
                         outDefItem: out var defFemaleWorldModelItem))
                     {
-                        switch (copyMask?.FemaleWorldModel.Overall ?? CopyOption.Reference)
-                        {
-                            case CopyOption.Reference:
-                                throw new NotImplementedException("Need to implement an ISetter copy function to support reference copies.");
-                            case CopyOption.CopyIn:
-                                ((ModelSetterCopyCommon)((IModelGetter)item.FemaleWorldModel).CommonSetterCopyInstance()).CopyFieldsFrom(
-                                    item: item.FemaleWorldModel,
-                                    rhs: rhs.FemaleWorldModel,
-                                    def: def?.FemaleWorldModel,
-                                    errorMask: errorMask,
-                                    copyMask: copyMask?.FemaleWorldModel.Specific);
-                                break;
-                            case CopyOption.MakeCopy:
-                                item.FemaleWorldModel = rhsFemaleWorldModelItem.Copy(
-                                    copyMask?.FemaleWorldModel?.Specific,
-                                    def: defFemaleWorldModelItem);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Unknown CopyOption {copyMask?.FemaleWorldModel?.Overall}. Cannot execute copy.");
-                        }
+                        item.FemaleWorldModel = rhsFemaleWorldModelItem.DeepCopy(
+                            copyMask?.FemaleWorldModel?.Specific,
+                            def: defFemaleWorldModelItem);
                     }
                     else
                     {
@@ -2612,9 +2542,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (copyMask?.BMDTDataTypeState ?? true)
             {
-                errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.BMDTDataTypeState);
                 item.BMDTDataTypeState = rhs.BMDTDataTypeState;
-                errorMask?.PopIndex();
             }
         }
         
@@ -2641,9 +2569,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ClothingAbstractSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return ClothingAbstractSetterCopyCommon.Instance;
+            return ClothingAbstractSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -3849,47 +3777,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class ClothingAbstract_CopyMask : ItemAbstract_CopyMask
-    {
-        public ClothingAbstract_CopyMask()
-        {
-        }
-
-        public ClothingAbstract_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Name = defaultOn;
-            this.Script = defaultOn;
-            this.Enchantment = defaultOn;
-            this.EnchantmentPoints = defaultOn;
-            this.BipedFlags = defaultOn;
-            this.Flags = defaultOn;
-            this.MaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.MaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.MaleIcon = defaultOn;
-            this.FemaleBipedModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.FemaleWorldModel = new MaskItem<CopyOption, Model_CopyMask>(deepCopyOption, default);
-            this.FemaleIcon = defaultOn;
-            this.BMDTDataTypeState = defaultOn;
-        }
-
-        #region Members
-        public bool Name;
-        public bool Script;
-        public bool Enchantment;
-        public bool EnchantmentPoints;
-        public bool BipedFlags;
-        public bool Flags;
-        public MaskItem<CopyOption, Model_CopyMask> MaleBipedModel;
-        public MaskItem<CopyOption, Model_CopyMask> MaleWorldModel;
-        public bool MaleIcon;
-        public MaskItem<CopyOption, Model_CopyMask> FemaleBipedModel;
-        public MaskItem<CopyOption, Model_CopyMask> FemaleWorldModel;
-        public bool FemaleIcon;
-        public bool BMDTDataTypeState;
-        #endregion
-
-    }
-
     public class ClothingAbstract_TranslationMask : ItemAbstract_TranslationMask
     {
         #region Members
@@ -4225,6 +4112,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object CommonInstance()
         {
             return ClothingAbstractCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return ClothingAbstractSetterTranslationCommon.Instance;
         }
 
         #endregion

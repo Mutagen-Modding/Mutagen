@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs: rhs);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalShort lhs,
-            GlobalShort rhs,
-            GlobalShort_CopyMask copyMask,
-            GlobalShort def = null)
+        public static void DeepCopyFieldsFrom(
+            this IGlobalShortInternal lhs,
+            IGlobalShortGetter rhs,
+            GlobalShort_TranslationMask copyMask,
+            IGlobalShortGetter def = null)
         {
-            CopyFieldsFrom(
+            DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
                 def: def,
@@ -486,16 +486,16 @@ namespace Mutagen.Bethesda.Skyrim
                 copyMask: copyMask);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalShort lhs,
-            GlobalShort rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalShortInternal lhs,
+            IGlobalShortGetter rhs,
             out GlobalShort_ErrorMask errorMask,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null,
+            GlobalShort_TranslationMask copyMask = null,
+            IGlobalShortGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GlobalShortSetterCopyCommon)((IGlobalShortGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void CopyFieldsFrom(
-            this GlobalShort lhs,
-            GlobalShort rhs,
+        public static void DeepCopyFieldsFrom(
+            this IGlobalShortInternal lhs,
+            IGlobalShortGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalShort_CopyMask copyMask = null,
-            GlobalShort def = null)
+            GlobalShort_TranslationMask copyMask = null,
+            IGlobalShortGetter def = null)
         {
-            ((GlobalShortSetterCopyCommon)((IGlobalShortGetter)lhs).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
                 def: def,
@@ -568,6 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+
         public static void CopyInFromXml(
             this IGlobalShortInternal item,
             string path,
@@ -709,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
         }
+
         #endregion
 
     }
@@ -1304,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
         {
             var ret = new GlobalShort(getNextFormKey());
-            ret.CopyFieldsFrom((GlobalShort)item);
+            ret.DeepCopyFieldsFrom((GlobalShort)item);
             duplicatedRecords?.Add((ret, item.FormKey));
             PostDuplicate(ret, (GlobalShort)item, getNextFormKey, duplicatedRecords);
             return ret;
@@ -1313,19 +1315,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GlobalShortSetterCopyCommon : GlobalSetterCopyCommon
+    public partial class GlobalShortSetterTranslationCommon : GlobalSetterTranslationCommon
     {
-        public new static readonly GlobalShortSetterCopyCommon Instance = new GlobalShortSetterCopyCommon();
+        public new static readonly GlobalShortSetterTranslationCommon Instance = new GlobalShortSetterTranslationCommon();
 
-        #region Copy Fields From
-        public void CopyFieldsFrom(
-            GlobalShort item,
-            GlobalShort rhs,
-            GlobalShort def,
+        #region Deep Copy Fields From
+        public void DeepCopyFieldsFrom(
+            IGlobalShort item,
+            IGlobalShortGetter rhs,
+            IGlobalShortGetter def,
             ErrorMaskBuilder errorMask,
-            GlobalShort_CopyMask copyMask)
+            GlobalShort_TranslationMask copyMask)
         {
-            ((GlobalSetterCopyCommon)((IGlobalGetter)item).CommonSetterCopyInstance()).CopyFieldsFrom(
+            ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1386,9 +1388,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return GlobalShortSetterCommon.Instance;
         }
-        protected override object CommonSetterCopyInstance()
+        protected override object CommonSetterTranslationInstance()
         {
-            return GlobalShortSetterCopyCommon.Instance;
+            return GlobalShortSetterTranslationCommon.Instance;
         }
 
         #endregion
@@ -1875,23 +1877,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
     }
-    public class GlobalShort_CopyMask : Global_CopyMask
-    {
-        public GlobalShort_CopyMask()
-        {
-        }
-
-        public GlobalShort_CopyMask(bool defaultOn, CopyOption deepCopyOption = CopyOption.Reference)
-        {
-            this.Data = defaultOn;
-        }
-
-        #region Members
-        public bool Data;
-        #endregion
-
-    }
-
     public class GlobalShort_TranslationMask : Global_TranslationMask
     {
         #region Members
@@ -2123,6 +2108,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object CommonInstance()
         {
             return GlobalShortCommon.Instance;
+        }
+        protected override object CommonSetterTranslationInstance()
+        {
+            return GlobalShortSetterTranslationCommon.Instance;
         }
 
         #endregion
