@@ -14872,7 +14872,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: new BinaryWrapperFactoryPackage(GameMode.Oblivion))
         {
-            this._data = bytes;
             this.ModKey = modKey;
         }
 

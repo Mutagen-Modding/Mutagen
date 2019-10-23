@@ -2600,7 +2600,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: package)
         {
-            this._data = bytes;
         }
 
         public static GroupBinaryWrapper<T> GroupFactory(

@@ -2125,7 +2125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: bytes,
                 package: package)
         {
-            this._data = bytes;
         }
 
         public static RelatedWatersBinaryWrapper RelatedWatersFactory(

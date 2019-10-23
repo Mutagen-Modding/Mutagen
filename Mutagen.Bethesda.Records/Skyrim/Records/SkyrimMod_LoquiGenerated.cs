@@ -4248,7 +4248,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: bytes,
                 package: new BinaryWrapperFactoryPackage(GameMode.Skyrim))
         {
-            this._data = bytes;
             this.ModKey = modKey;
         }
 

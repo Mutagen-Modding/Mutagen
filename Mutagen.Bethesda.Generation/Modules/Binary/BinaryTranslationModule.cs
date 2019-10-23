@@ -1671,10 +1671,6 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    if (obj.IsTopClass)
-                    {
-                        fg.AppendLine($"this.{dataAccessor} = bytes;");
-                    }
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         fg.AppendLine("this.ModKey = modKey;");
