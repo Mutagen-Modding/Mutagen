@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,
                     masterReferences: masterReferences,
-                    recordTypeConverter: null,
+                    recordTypeConverter: metaConverter,
                     errorMask: errorMask);
             }
         }
