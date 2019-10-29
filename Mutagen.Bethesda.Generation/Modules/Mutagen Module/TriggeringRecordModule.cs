@@ -97,6 +97,11 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
+            if (obj.Name == "Script")
+            {
+                int wer = 23;
+                wer++;
+            }
             HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             if (obj.TryGetRecordType(out var recType))
@@ -222,6 +227,11 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
+            if (obj.Name == "Script")
+            {
+                int wer = 23;
+                wer++;
+            }
             await SetContainerSubTriggers(obj, field);
 
             if (field is LoquiType loqui
@@ -401,13 +411,19 @@ namespace Mutagen.Bethesda.Generation
                 fieldData.IsTriggerForObject = true;
                 if (field is SetMarkerType) break;
                 if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                if (!field.HasBeenSet) break;
+                LoquiType loqui = field as LoquiType;
+                if (!field.HasBeenSet && (loqui == null || loqui.SingletonType == SingletonLevel.None)) break;
             }
             data.TriggeringRecordTypes.Add(recTypes);
         }
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
+            if (obj.Name == "ScriptFields")
+            {
+                int wer = 23;
+                wer++;
+            }
             var data = obj.GetObjectData();
             await SetBasicTriggers(obj, data, isGRUP: data.ObjectType == ObjectType.Group);
 
@@ -441,6 +457,11 @@ namespace Mutagen.Bethesda.Generation
 
         private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
         {
+            if (obj.Name == "Script")
+            {
+                int wer = 23;
+                wer++;
+            }
             if (!data.HasTrigger)
             {
                 if (data.MarkerType.HasValue)

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "public static void CopyFieldsFrom<T, T_ErrMask, T_CopyMask>(";
+            string testString = "ic static readonly RecordType SCHR_HEADER = new RecordType(\"SCHR\");";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

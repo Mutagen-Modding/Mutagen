@@ -110,13 +110,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ModHeader
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ModHeader _ModHeader_Object = new ModHeader();
-        public bool ModHeader_IsSet => true;
-        bool IOblivionModGetter.ModHeader_IsSet => ModHeader_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ModHeader ModHeader => _ModHeader_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter IOblivionModGetter.ModHeader => this.ModHeader;
+        IModHeaderGetter IOblivionModGetter.ModHeader => _ModHeader_Object;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -649,7 +646,6 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((OblivionMod_FieldIndex)index)
             {
                 case OblivionMod_FieldIndex.ModHeader:
-                    return _hasBeenSetTracker[index];
                 case OblivionMod_FieldIndex.GameSettings:
                 case OblivionMod_FieldIndex.Globals:
                 case OblivionMod_FieldIndex.Classes:
@@ -2910,8 +2906,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region ModHeader
         IModHeaderGetter ModHeader { get; }
-        bool ModHeader_IsSet { get; }
-
         #endregion
         #region GameSettings
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
@@ -4490,7 +4484,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     new RecordType[]
                     {
                         TES4_HEADER,
-                        GMST_HEADER
+                        GMST_HEADER,
+                        GLOB_HEADER,
+                        CLAS_HEADER,
+                        FACT_HEADER,
+                        HAIR_HEADER,
+                        EYES_HEADER,
+                        RACE_HEADER,
+                        SOUN_HEADER,
+                        SKIL_HEADER,
+                        MGEF_HEADER,
+                        SCPT_HEADER,
+                        LTEX_HEADER,
+                        ENCH_HEADER,
+                        SPEL_HEADER,
+                        BSGN_HEADER,
+                        ACTI_HEADER,
+                        APPA_HEADER,
+                        ARMO_HEADER,
+                        BOOK_HEADER,
+                        CLOT_HEADER,
+                        CONT_HEADER,
+                        DOOR_HEADER,
+                        INGR_HEADER,
+                        LIGH_HEADER,
+                        MISC_HEADER,
+                        STAT_HEADER,
+                        GRAS_HEADER,
+                        TREE_HEADER,
+                        FLOR_HEADER,
+                        FURN_HEADER,
+                        WEAP_HEADER,
+                        AMMO_HEADER,
+                        NPC__HEADER,
+                        CREA_HEADER,
+                        LVLC_HEADER,
+                        SLGM_HEADER,
+                        KEYM_HEADER,
+                        ALCH_HEADER,
+                        SBSP_HEADER,
+                        SGST_HEADER,
+                        LVLI_HEADER,
+                        WTHR_HEADER,
+                        CLMT_HEADER,
+                        REGN_HEADER,
+                        CELL_HEADER,
+                        WRLD_HEADER,
+                        DIAL_HEADER,
+                        QUST_HEADER,
+                        IDLE_HEADER,
+                        PACK_HEADER,
+                        CSTY_HEADER,
+                        LSCR_HEADER,
+                        LVSP_HEADER,
+                        ANIO_HEADER,
+                        WATR_HEADER,
+                        EFSH_HEADER
                     })
             );
         });
@@ -6592,13 +6641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ModHeader = EqualsMaskHelper.EqualsHelper(
-                item.ModHeader_IsSet,
-                rhs.ModHeader_IsSet,
-                item.ModHeader,
-                rhs.ModHeader,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
+            ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
@@ -6935,8 +6978,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
-            if (checkMask.ModHeader.Overall.HasValue && checkMask.ModHeader.Overall.Value != item.ModHeader_IsSet) return false;
-            if (checkMask.ModHeader.Specific != null && (item.ModHeader == null || !item.ModHeader.HasBeenSet(checkMask.ModHeader.Specific))) return false;
             return true;
         }
         
@@ -6944,7 +6985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             OblivionMod_Mask<bool> mask)
         {
-            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(item.ModHeader_IsSet, item.ModHeader.GetHasBeenSetMask());
+            mask.ModHeader = new MaskItem<bool, ModHeader_Mask<bool>>(true, item.ModHeader.GetHasBeenSetMask());
             mask.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, item.GameSettings.GetHasBeenSetMask());
             mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
             mask.Classes = new MaskItem<bool, Group_Mask<bool>>(true, item.Classes.GetHasBeenSetMask());
@@ -7010,11 +7051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.ModHeader_IsSet != rhs.ModHeader_IsSet) return false;
-            if (lhs.ModHeader_IsSet)
-            {
-                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
-            }
+            if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
             if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
             if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
             if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
@@ -7077,10 +7114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IOblivionModGetter item)
         {
             int ret = 0;
-            if (item.ModHeader_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.ModHeader).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.GameSettings).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
@@ -9147,8 +9181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if (item.ModHeader_IsSet
-                && (translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
             {
                 var loquiItem = item.ModHeader;
                 ((ModHeaderXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -13586,7 +13619,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
-            if (item.ModHeader_IsSet)
             {
                 var loquiItem = item.ModHeader;
                 ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -14634,7 +14666,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ModHeader
         private IModHeaderGetter _ModHeader;
         public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
-        public bool ModHeader_IsSet => ModHeader != null;
         #endregion
         #region GameSettings
         private IGroupGetter<IGameSettingGetter> _GameSettings;

@@ -156,13 +156,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ScriptFields _Script_Object = new ScriptFields();
-        public bool Script_IsSet => true;
-        bool IDialogItemGetter.Script_IsSet => Script_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptFields Script => _Script_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter IDialogItemGetter.Script => this.Script;
+        IScriptFieldsGetter IDialogItemGetter.Script => _Script_Object;
         #endregion
         #region DATADataTypeState
         public DialogItem.DATADataType DATADataTypeState { get; set; }
@@ -359,8 +356,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((DialogItem_FieldIndex)index)
             {
-                case DialogItem_FieldIndex.Script:
-                    return _hasBeenSetTracker[index];
                 case DialogItem_FieldIndex.Quest:
                     return Quest_Property.HasBeenSet;
                 case DialogItem_FieldIndex.PreviousTopic:
@@ -377,6 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return LinkFrom.HasBeenSet;
                 case DialogItem_FieldIndex.DialogType:
                 case DialogItem_FieldIndex.Flags:
+                case DialogItem_FieldIndex.Script:
                 case DialogItem_FieldIndex.DATADataTypeState:
                     return true;
                 default:
@@ -606,8 +602,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IScriptFieldsGetter Script { get; }
-        bool Script_IsSet { get; }
-
         #endregion
         #region DATADataTypeState
         DialogItem.DATADataType DATADataTypeState { get; }
@@ -1626,13 +1620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.LinkFrom,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Script = EqualsMaskHelper.EqualsHelper(
-                item.Script_IsSet,
-                rhs.Script_IsSet,
-                item.Script,
-                rhs.Script,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
+            ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1812,8 +1800,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Conditions.Overall.HasValue && checkMask.Conditions.Overall.Value != item.Conditions.HasBeenSet) return false;
             if (checkMask.Choices.Overall.HasValue && checkMask.Choices.Overall.Value != item.Choices.HasBeenSet) return false;
             if (checkMask.LinkFrom.Overall.HasValue && checkMask.LinkFrom.Overall.Value != item.LinkFrom.HasBeenSet) return false;
-            if (checkMask.Script.Overall.HasValue && checkMask.Script.Overall.Value != item.Script_IsSet) return false;
-            if (checkMask.Script.Specific != null && (item.Script == null || !item.Script.HasBeenSet(checkMask.Script.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1832,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition_Mask<bool>>>>(item.Conditions.HasBeenSet, item.Conditions.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Choices = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Choices.HasBeenSet, null);
             mask.LinkFrom = new MaskItem<bool, IEnumerable<(int, bool)>>(item.LinkFrom.HasBeenSet, null);
-            mask.Script = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Script_IsSet, item.Script.GetHasBeenSetMask());
+            mask.Script = new MaskItem<bool, ScriptFields_Mask<bool>>(true, item.Script.GetHasBeenSetMask());
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -1920,11 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.LinkFrom.SequenceEqual(rhs.LinkFrom)) return false;
             }
-            if (lhs.Script_IsSet != rhs.Script_IsSet) return false;
-            if (lhs.Script_IsSet)
-            {
-                if (!object.Equals(lhs.Script, rhs.Script)) return false;
-            }
+            if (!object.Equals(lhs.Script, rhs.Script)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
@@ -1980,10 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.LinkFrom).CombineHashCode(ret);
             }
-            if (item.Script_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.DATADataTypeState).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -2419,8 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.Script_IsSet
-                && (translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
             {
                 var loquiItem = item.Script;
                 ((ScriptFieldsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -3886,7 +3864,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             masterReferences: masterReferences);
                     });
             }
-            if (item.Script_IsSet)
             {
                 var loquiItem = item.Script;
                 ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -4091,7 +4068,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private IScriptFieldsGetter _Script;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();
-        public bool Script_IsSet => Script != null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,

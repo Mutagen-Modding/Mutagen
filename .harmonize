@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>161f0285500ef2ed4997c570bd019eabee41bef2</Sha>
+         <Sha>e3e4441c6c84be1f34138c3c3116f619b0e116b8</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-20-2019 17:45:57</CommitDate>
-         <Description>Initial compiling DeepCopy</Description>
+         <CommitDate>10-29-2019 08:12:17</CommitDate>
+         <Description>Singletons no longer generate Is_Set members</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

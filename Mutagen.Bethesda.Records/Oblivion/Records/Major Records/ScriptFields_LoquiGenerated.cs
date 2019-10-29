@@ -54,13 +54,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MetadataSummary
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
-        public bool MetadataSummary_IsSet => true;
-        bool IScriptFieldsGetter.MetadataSummary_IsSet => MetadataSummary_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptMetaSummary MetadataSummary => _MetadataSummary_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptMetaSummaryGetter IScriptFieldsGetter.MetadataSummary => this.MetadataSummary;
+        IScriptMetaSummaryGetter IScriptFieldsGetter.MetadataSummary => _MetadataSummary_Object;
         #endregion
         #region SourceCode
         public bool SourceCode_IsSet
@@ -307,7 +304,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((ScriptFields_FieldIndex)index)
             {
-                case ScriptFields_FieldIndex.MetadataSummary:
                 case ScriptFields_FieldIndex.CompiledScript:
                 case ScriptFields_FieldIndex.SourceCode:
                     return _hasBeenSetTracker[index];
@@ -315,6 +311,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return LocalVariables.HasBeenSet;
                 case ScriptFields_FieldIndex.References:
                     return References.HasBeenSet;
+                case ScriptFields_FieldIndex.MetadataSummary:
+                    return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }
@@ -451,8 +449,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region MetadataSummary
         IScriptMetaSummaryGetter MetadataSummary { get; }
-        bool MetadataSummary_IsSet { get; }
-
         #endregion
         #region CompiledScript
         ReadOnlySpan<Byte> CompiledScript { get; }
@@ -1345,13 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.MetadataSummary = EqualsMaskHelper.EqualsHelper(
-                item.MetadataSummary_IsSet,
-                rhs.MetadataSummary_IsSet,
-                item.MetadataSummary,
-                rhs.MetadataSummary,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
+            ret.MetadataSummary = MaskItemExt.Factory(item.MetadataSummary.GetEqualsMask(rhs.MetadataSummary, include), include);
             ret.CompiledScript = item.CompiledScript_IsSet == rhs.CompiledScript_IsSet && MemoryExtensions.SequenceEqual(item.CompiledScript, rhs.CompiledScript);
             ret.SourceCode = item.SourceCode_IsSet == rhs.SourceCode_IsSet && string.Equals(item.SourceCode, rhs.SourceCode);
             ret.LocalVariables = item.LocalVariables.CollectionEqualsHelper(
@@ -1462,8 +1452,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptFieldsGetter item,
             ScriptFields_Mask<bool?> checkMask)
         {
-            if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_IsSet) return false;
-            if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary == null || !item.MetadataSummary.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
             if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_IsSet) return false;
             if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_IsSet) return false;
             if (checkMask.LocalVariables.Overall.HasValue && checkMask.LocalVariables.Overall.Value != item.LocalVariables.HasBeenSet) return false;
@@ -1475,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptFieldsGetter item,
             ScriptFields_Mask<bool> mask)
         {
-            mask.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_IsSet, item.MetadataSummary.GetHasBeenSetMask());
+            mask.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(true, item.MetadataSummary.GetHasBeenSetMask());
             mask.CompiledScript = item.CompiledScript_IsSet;
             mask.SourceCode = item.SourceCode_IsSet;
             mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -1489,11 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.MetadataSummary_IsSet != rhs.MetadataSummary_IsSet) return false;
-            if (lhs.MetadataSummary_IsSet)
-            {
-                if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
-            }
+            if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
             if (lhs.CompiledScript_IsSet != rhs.CompiledScript_IsSet) return false;
             if (lhs.CompiledScript_IsSet)
             {
@@ -1520,10 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IScriptFieldsGetter item)
         {
             int ret = 0;
-            if (item.MetadataSummary_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.MetadataSummary).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.MetadataSummary).CombineHashCode(ret);
             if (item.CompiledScript_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.CompiledScript).CombineHashCode(ret);
@@ -1764,8 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if (item.MetadataSummary_IsSet
-                && (translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
                 var loquiItem = item.MetadataSummary;
                 ((ScriptMetaSummaryXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -2786,7 +2766,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.MetadataSummary_IsSet)
             {
                 var loquiItem = item.MetadataSummary;
                 ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -3039,7 +3018,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MetadataSummary
         private IScriptMetaSummaryGetter _MetadataSummary;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
-        public bool MetadataSummary_IsSet => MetadataSummary != null;
         #endregion
         #region MetadataSummaryOld
         partial void MetadataSummaryOldCustomParse(

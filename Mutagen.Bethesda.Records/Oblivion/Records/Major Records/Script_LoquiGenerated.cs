@@ -53,13 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fields
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ScriptFields _Fields_Object = new ScriptFields();
-        public bool Fields_IsSet => true;
-        bool IScriptGetter.Fields_IsSet => Fields_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptFields Fields => _Fields_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter IScriptGetter.Fields => this.Fields;
+        IScriptFieldsGetter IScriptGetter.Fields => _Fields_Object;
         #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptGetter)rhs, include);
@@ -254,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Script_FieldIndex)index)
             {
                 case Script_FieldIndex.Fields:
-                    return _hasBeenSetTracker[index];
+                    return true;
                 default:
                     return base.GetHasBeenSet(index);
             }
@@ -400,8 +397,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fields
         IScriptFieldsGetter Fields { get; }
-        bool Fields_IsSet { get; }
-
         #endregion
 
     }
@@ -1120,13 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fields = EqualsMaskHelper.EqualsHelper(
-                item.Fields_IsSet,
-                rhs.Fields_IsSet,
-                item.Fields,
-                rhs.Fields,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
-                include);
+            ret.Fields = MaskItemExt.Factory(item.Fields.GetEqualsMask(rhs.Fields, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1188,8 +1177,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             Script_Mask<bool?> checkMask)
         {
-            if (checkMask.Fields.Overall.HasValue && checkMask.Fields.Overall.Value != item.Fields_IsSet) return false;
-            if (checkMask.Fields.Specific != null && (item.Fields == null || !item.Fields.HasBeenSet(checkMask.Fields.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1199,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             Script_Mask<bool> mask)
         {
-            mask.Fields = new MaskItem<bool, ScriptFields_Mask<bool>>(item.Fields_IsSet, item.Fields.GetHasBeenSetMask());
+            mask.Fields = new MaskItem<bool, ScriptFields_Mask<bool>>(true, item.Fields.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1249,11 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Fields_IsSet != rhs.Fields_IsSet) return false;
-            if (lhs.Fields_IsSet)
-            {
-                if (!object.Equals(lhs.Fields, rhs.Fields)) return false;
-            }
+            if (!object.Equals(lhs.Fields, rhs.Fields)) return false;
             return true;
         }
         
@@ -1278,10 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IScriptGetter item)
         {
             int ret = 0;
-            if (item.Fields_IsSet)
-            {
-                ret = HashHelper.GetHashCode(item.Fields).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(item.Fields).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1409,8 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Fields_IsSet
-                && (translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
                 var loquiItem = item.Fields;
                 ((ScriptFieldsXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write(
@@ -1891,7 +1870,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            if (item.Fields_IsSet)
             {
                 var loquiItem = item.Fields;
                 ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -2067,7 +2045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Fields
         private IScriptFieldsGetter _Fields;
         public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
-        public bool Fields_IsSet => Fields != null;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
