@@ -6612,8 +6612,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_DamageLocation, 2)) : default;
         #endregion
         #region RelatedWaters
-        public IRelatedWatersGetter RelatedWaters { get; private set; }
-        public bool RelatedWaters_IsSet => RelatedWaters != null;
+        private RangeInt32? _RelatedWatersLocation;
+        private bool _RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
+        public IRelatedWatersGetter RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryWrapper.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -6699,10 +6701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    this.RelatedWaters = RelatedWatersBinaryWrapper.RelatedWatersFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _RelatedWatersLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
                 }
                 default:

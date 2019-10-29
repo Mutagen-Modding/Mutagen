@@ -3834,12 +3834,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         #region DistantLODData
-        public IDistantLODDataGetter DistantLODData { get; private set; }
-        public bool DistantLODData_IsSet => DistantLODData != null;
+        private RangeInt32? _DistantLODDataLocation;
+        private bool _DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
+        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryWrapper.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region EnableParent
-        public IEnableParentGetter EnableParent { get; private set; }
-        public bool EnableParent_IsSet => EnableParent != null;
+        private RangeInt32? _EnableParentLocation;
+        private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
+        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryWrapper.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
@@ -3942,18 +3946,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x444F4C58: // XLOD
                 {
-                    this.DistantLODData = DistantLODDataBinaryWrapper.DistantLODDataFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.DistantLODData);
                 }
                 case 0x50534558: // XESP
                 {
-                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.EnableParent);
                 }
                 case 0x43524D58: // XMRC

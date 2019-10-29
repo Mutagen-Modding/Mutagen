@@ -4898,8 +4898,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
         #endregion
         #region MapData
-        public IMapDataGetter MapData { get; private set; }
-        public bool MapData_IsSet => MapData != null;
+        private RangeInt32? _MapDataLocation;
+        private bool _MapData_IsSet => _MapDataLocation.HasValue;
+        public IMapDataGetter MapData => _MapData_IsSet ? MapDataBinaryWrapper.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -5019,10 +5021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    this.MapData = MapDataBinaryWrapper.MapDataFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _MapDataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
                 case 0x41544144: // DATA

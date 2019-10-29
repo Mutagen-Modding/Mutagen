@@ -5712,8 +5712,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P2Int Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordSpan(_data, _GridLocation.Value, _package.Meta)) : default;
         #endregion
         #region Lighting
-        public ICellLightingGetter Lighting { get; private set; }
-        public bool Lighting_IsSet => Lighting != null;
+        private RangeInt32? _LightingLocation;
+        private bool _Lighting_IsSet => _LightingLocation.HasValue;
+        public ICellLightingGetter Lighting => _Lighting_IsSet ? CellLightingBinaryWrapper.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IRegionGetter>> Regions { get; private set; } = EmptySetList<IFormIDLinkGetter<IRegionGetter>>.Instance;
         #region MusicType
@@ -5830,10 +5832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C4C4358: // XCLL
                 {
-                    this.Lighting = CellLightingBinaryWrapper.CellLightingFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _LightingLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
                 }
                 case 0x524C4358: // XCLR

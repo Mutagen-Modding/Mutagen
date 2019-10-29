@@ -6274,12 +6274,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FULLFluffLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         #region TeleportDestination
-        public ITeleportDestinationGetter TeleportDestination { get; private set; }
-        public bool TeleportDestination_IsSet => TeleportDestination != null;
+        private RangeInt32? _TeleportDestinationLocation;
+        private bool _TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
+        public ITeleportDestinationGetter TeleportDestination => _TeleportDestination_IsSet ? TeleportDestinationBinaryWrapper.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
         #endregion
         #region Lock
-        public ILockInformationGetter Lock { get; private set; }
-        public bool Lock_IsSet => Lock != null;
+        private RangeInt32? _LockLocation;
+        private bool _Lock_IsSet => _LockLocation.HasValue;
+        public ILockInformationGetter Lock => _Lock_IsSet ? LockInformationBinaryWrapper.LockInformationFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Lock_IsSet => _LockLocation.HasValue;
         #endregion
         #region Owner
         private int? _OwnerLocation;
@@ -6299,8 +6303,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IGlobalGetter GlobalVariable => default;
         #endregion
         #region EnableParent
-        public IEnableParentGetter EnableParent { get; private set; }
-        public bool EnableParent_IsSet => EnableParent != null;
+        private RangeInt32? _EnableParentLocation;
+        private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
+        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryWrapper.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region Target
         private int? _TargetLocation;
@@ -6314,8 +6320,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte SpeedTreeSeed => _SpeedTreeSeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _SpeedTreeSeedLocation.Value, _package.Meta)[0] : default;
         #endregion
         #region DistantLODData
-        public IDistantLODDataGetter DistantLODData { get; private set; }
-        public bool DistantLODData_IsSet => DistantLODData != null;
+        private RangeInt32? _DistantLODDataLocation;
+        private bool _DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
+        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryWrapper.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region Charge
         private int? _ChargeLocation;
@@ -6454,18 +6462,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C455458: // XTEL
                 {
-                    this.TeleportDestination = TeleportDestinationBinaryWrapper.TeleportDestinationFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
                 }
                 case 0x434F4C58: // XLOC
                 {
-                    this.Lock = LockInformationBinaryWrapper.LockInformationFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _LockLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
                 }
                 case 0x4E574F58: // XOWN
@@ -6485,10 +6487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x50534558: // XESP
                 {
-                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
                 }
                 case 0x47525458: // XTRG
@@ -6503,10 +6502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x444F4C58: // XLOD
                 {
-                    this.DistantLODData = DistantLODDataBinaryWrapper.DistantLODDataFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLODData);
                 }
                 case 0x47484358: // XCHG

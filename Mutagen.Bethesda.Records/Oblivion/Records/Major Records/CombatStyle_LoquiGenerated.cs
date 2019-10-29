@@ -6602,8 +6602,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         #region Advanced
-        public ICombatStyleAdvancedGetter Advanced { get; private set; }
-        public bool Advanced_IsSet => Advanced != null;
+        private RangeInt32? _AdvancedLocation;
+        private bool _Advanced_IsSet => _AdvancedLocation.HasValue;
+        public ICombatStyleAdvancedGetter Advanced => _Advanced_IsSet ? CombatStyleAdvancedBinaryWrapper.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -6684,10 +6686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44415343: // CSAD
                 {
-                    this.Advanced = CombatStyleAdvancedBinaryWrapper.CombatStyleAdvancedFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _AdvancedLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
                 }
                 default:

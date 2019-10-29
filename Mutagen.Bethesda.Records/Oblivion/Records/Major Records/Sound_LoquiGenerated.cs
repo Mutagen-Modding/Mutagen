@@ -2291,8 +2291,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _FileLocation.Value, _package.Meta)) : default;
         #endregion
         #region Data
-        public ISoundDataInternalGetter Data { get; private set; }
-        public bool Data_IsSet => Data != null;
+        private RecordType _DataType;
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ISoundDataInternalGetter Data
+        {
+            get
+            {
+                if (!_Data_IsSet) return default;
+                switch (_DataType.TypeInt)
+                {
+                    case 0x44444E53: // SNDD
+                        return SoundDataBinaryWrapper.SoundDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
+                    case 0x58444E53: // SNDX
+                        return SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+        }
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             BinaryMemoryReadStream stream,
@@ -2351,18 +2369,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44444E53: // SNDD
                 {
-                    this.Data = SoundDataBinaryWrapper.SoundDataFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DataType = type;
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
                 case 0x58444E53: // SNDX
                 {
-                    this.Data = SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DataType = type;
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
                 default:

@@ -4127,9 +4127,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimModBinaryWrapper :
-        BinaryWrapper,
-        ISkyrimModGetter
+    public partial class SkyrimModBinaryWrapper : ISkyrimModGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4185,37 +4183,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         public ModKey ModKey { get; }
+        private readonly BinaryWrapperFactoryPackage _package = new BinaryWrapperFactoryPackage(GameMode.Skyrim);
+        private readonly ReadOnlyMemorySlice<byte> _data;
 
         #region ModHeader
-        private IModHeaderGetter _ModHeader;
+        private RangeInt32? _ModHeaderLocation;
+        private bool _ModHeader_IsSet => _ModHeaderLocation.HasValue;
+        private IModHeaderGetter _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryWrapper.ModHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_ModHeaderLocation.Value.Min)), _package) : default;
         public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
         #endregion
         #region GameSettings
-        private IGroupGetter<IGameSettingGetter> _GameSettings;
+        private RangeInt32? _GameSettingsLocation;
+        private bool _GameSettings_IsSet => _GameSettingsLocation.HasValue;
+        private IGroupGetter<IGameSettingGetter> _GameSettings => _GameSettings_IsSet ? GroupBinaryWrapper<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_GameSettingsLocation.Value.Min)), _package) : default;
         public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
-        private IGroupGetter<IKeywordGetter> _Keywords;
+        private RangeInt32? _KeywordsLocation;
+        private bool _Keywords_IsSet => _KeywordsLocation.HasValue;
+        private IGroupGetter<IKeywordGetter> _Keywords => _Keywords_IsSet ? GroupBinaryWrapper<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_KeywordsLocation.Value.Min)), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes;
+        private RangeInt32? _LocationReferenceTypesLocation;
+        private bool _LocationReferenceTypes_IsSet => _LocationReferenceTypesLocation.HasValue;
+        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryWrapper<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_LocationReferenceTypesLocation.Value.Min)), _package) : default;
         public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private IGroupGetter<IActionRecordGetter> _Actions;
+        private RangeInt32? _ActionsLocation;
+        private bool _Actions_IsSet => _ActionsLocation.HasValue;
+        private IGroupGetter<IActionRecordGetter> _Actions => _Actions_IsSet ? GroupBinaryWrapper<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_ActionsLocation.Value.Min)), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region TextureSets
-        private IGroupGetter<ITextureSetGetter> _TextureSets;
+        private RangeInt32? _TextureSetsLocation;
+        private bool _TextureSets_IsSet => _TextureSetsLocation.HasValue;
+        private IGroupGetter<ITextureSetGetter> _TextureSets => _TextureSets_IsSet ? GroupBinaryWrapper<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_TextureSetsLocation.Value.Min)), _package) : default;
         public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
         #region Globals
-        private IGroupGetter<IGlobalGetter> _Globals;
+        private RangeInt32? _GlobalsLocation;
+        private bool _Globals_IsSet => _GlobalsLocation.HasValue;
+        private IGroupGetter<IGlobalGetter> _Globals => _Globals_IsSet ? GroupBinaryWrapper<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_GlobalsLocation.Value.Min)), _package) : default;
         public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region Classes
-        private IGroupGetter<IClassGetter> _Classes;
+        private RangeInt32? _ClassesLocation;
+        private bool _Classes_IsSet => _ClassesLocation.HasValue;
+        private IGroupGetter<IClassGetter> _Classes => _Classes_IsSet ? GroupBinaryWrapper<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_ClassesLocation.Value.Min)), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         partial void CustomCtor(
@@ -4226,11 +4242,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected SkyrimModBinaryWrapper(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
-            : base(
-                bytes: bytes,
-                package: new BinaryWrapperFactoryPackage(GameMode.Skyrim))
         {
             this.ModKey = modKey;
+            this._data = bytes;
         }
 
         public static SkyrimModBinaryWrapper SkyrimModFactory(
@@ -4245,8 +4259,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: stream.Length,
                 offset: 0);
-            ret.FillModTypes(
+            BinaryWrapper.FillModTypes(
                 stream: stream,
+                package: ret._package,
                 fill: ret.FillRecordType);
             return ret;
         }
@@ -4264,10 +4279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    this._ModHeader = ModHeaderBinaryWrapper.ModHeaderFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     _package.MasterReferences = new MasterReferences(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -4282,58 +4294,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54534D47: // GMST
                 {
-                    this._GameSettings = GroupBinaryWrapper<IGameSettingGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
                 }
                 case 0x4457594B: // KYWD
                 {
-                    this._Keywords = GroupBinaryWrapper<IKeywordGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _KeywordsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
                 }
                 case 0x5452434C: // LCRT
                 {
-                    this._LocationReferenceTypes = GroupBinaryWrapper<ILocationReferenceTypeGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _LocationReferenceTypesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                 }
                 case 0x54434141: // AACT
                 {
-                    this._Actions = GroupBinaryWrapper<IActionRecordGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _ActionsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
                 }
                 case 0x54535854: // TXST
                 {
-                    this._TextureSets = GroupBinaryWrapper<ITextureSetGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _TextureSetsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
                 }
                 case 0x424F4C47: // GLOB
                 {
-                    this._Globals = GroupBinaryWrapper<IGlobalGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _GlobalsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
                 }
                 case 0x53414C43: // CLAS
                 {
-                    this._Classes = GroupBinaryWrapper<IClassGetter>.GroupFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _ClassesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
                 }
                 default:

@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
 
-                    wrapper.WriteToBinaryParallel(
+                    wrapper.WriteToBinary(
                         binaryWrapper,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 

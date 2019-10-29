@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ClassWrapper(fg, $"{BinaryWrapperClass(obj)}"))
             {
                 args.Partial = true;
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClass(obj.BaseClass) : nameof(BinaryWrapper);
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryWrapper));
                 args.Interfaces.Add(obj.Interface(getter: true, internalInterface: true));
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
             }
@@ -1542,6 +1542,8 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
+                    fg.AppendLine($"private readonly {nameof(BinaryWrapperFactoryPackage)} _package = new {nameof(BinaryWrapperFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                    fg.AppendLine($"private readonly ReadOnlyMemorySlice<byte> _data;");
                 }
 
                 fg.AppendLine();
@@ -1653,18 +1655,14 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
                     }
                 }
-                using (new DepthWrapper(fg))
+                if (obj.GetObjectType() != ObjectType.Mod)
                 {
-                    using (var args = new FunctionWrapper(fg,
-                        ": base"))
+                    using (new DepthWrapper(fg))
                     {
-                        args.AddPassArg("bytes");
-                        if (obj.GetObjectType() == ObjectType.Mod)
+                        using (var args = new FunctionWrapper(fg,
+                            ": base"))
                         {
-                            args.Add($"package: new {nameof(BinaryWrapperFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode})");
-                        }
-                        else
-                        {
+                            args.AddPassArg("bytes");
                             args.AddPassArg($"package");
                         }
                     }
@@ -1674,6 +1672,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         fg.AppendLine("this.ModKey = modKey;");
+                        fg.AppendLine("this._data = bytes;");
                     }
                     foreach (var field in obj.IterateFields(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -1864,32 +1863,32 @@ namespace Mutagen.Bethesda.Generation
                                 case ObjectType.Record:
                                     if (obj.IsTypelessStruct())
                                     {
-                                        call = $"{nameof(BinaryWrapper.FillTypelessSubrecordTypes)}";
+                                        call = $"ret.{nameof(BinaryWrapper.FillTypelessSubrecordTypes)}";
                                     }
                                     else
                                     {
-                                        call = $"{nameof(BinaryWrapper.FillSubrecordTypes)}";
+                                        call = $"ret.{nameof(BinaryWrapper.FillSubrecordTypes)}";
                                     }
                                     break;
                                 case ObjectType.Group:
                                     var grupLoqui = await obj.GetGroupLoquiType();
                                     if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
                                     {
-                                        call = $"{nameof(BinaryWrapper.FillMajorRecords)}";
+                                        call = $"ret.{nameof(BinaryWrapper.FillMajorRecords)}";
                                     }
                                     else
                                     {
-                                        call = $"{nameof(BinaryWrapper.FillGroupRecordsForWrapper)}";
+                                        call = $"ret.{nameof(BinaryWrapper.FillGroupRecordsForWrapper)}";
                                     }
                                     break;
                                 case ObjectType.Mod:
-                                    call = $"{nameof(BinaryWrapper.FillModTypes)}";
+                                    call = $"{nameof(BinaryWrapper)}.{nameof(BinaryWrapper.FillModTypes)}";
                                     break;
                                 default:
                                     throw new NotImplementedException();
                             }
                             using (var args = new ArgsWrapper(fg,
-                                $"ret.{call}"))
+                                $"{call}"))
                             {
                                 args.Add($"stream: stream");
                                 if (obj.GetObjectType() != ObjectType.Mod)
@@ -1904,6 +1903,10 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     args.Add($"offset: offset");
                                     args.AddPassArg($"recordTypeConverter");
+                                }
+                                else
+                                {
+                                    args.Add("package: ret._package");
                                 }
                                 args.Add($"fill: ret.FillRecordType");
                             }

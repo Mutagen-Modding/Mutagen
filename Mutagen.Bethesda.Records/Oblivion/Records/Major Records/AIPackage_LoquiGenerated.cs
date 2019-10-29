@@ -3282,16 +3282,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom();
         #endregion
         #region Location
-        public IAIPackageLocationGetter Location { get; private set; }
-        public bool Location_IsSet => Location != null;
+        private RangeInt32? _LocationLocation;
+        private bool _Location_IsSet => _LocationLocation.HasValue;
+        public IAIPackageLocationGetter Location => _Location_IsSet ? AIPackageLocationBinaryWrapper.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Location_IsSet => _LocationLocation.HasValue;
         #endregion
         #region Schedule
-        public IAIPackageScheduleGetter Schedule { get; private set; }
-        public bool Schedule_IsSet => Schedule != null;
+        private RangeInt32? _ScheduleLocation;
+        private bool _Schedule_IsSet => _ScheduleLocation.HasValue;
+        public IAIPackageScheduleGetter Schedule => _Schedule_IsSet ? AIPackageScheduleBinaryWrapper.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Schedule_IsSet => _ScheduleLocation.HasValue;
         #endregion
         #region Target
-        public IAIPackageTargetGetter Target { get; private set; }
-        public bool Target_IsSet => Target != null;
+        private RangeInt32? _TargetLocation;
+        private bool _Target_IsSet => _TargetLocation.HasValue;
+        public IAIPackageTargetGetter Target => _Target_IsSet ? AIPackageTargetBinaryWrapper.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
         partial void CustomCtor(
@@ -3352,26 +3358,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444C50: // PLDT
                 {
-                    this.Location = AIPackageLocationBinaryWrapper.AIPackageLocationFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _LocationLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
                 }
                 case 0x54445350: // PSDT
                 {
-                    this.Schedule = AIPackageScheduleBinaryWrapper.AIPackageScheduleFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _ScheduleLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
                 }
                 case 0x54445450: // PTDT
                 {
-                    this.Target = AIPackageTargetBinaryWrapper.AIPackageTargetFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _TargetLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
                 }
                 case 0x41445443: // CTDA

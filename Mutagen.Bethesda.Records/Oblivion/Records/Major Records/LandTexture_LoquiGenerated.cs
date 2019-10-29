@@ -2721,8 +2721,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.Meta)) : default;
         #endregion
         #region Havok
-        public IHavokDataGetter Havok { get; private set; }
-        public bool Havok_IsSet => Havok != null;
+        private RangeInt32? _HavokLocation;
+        private bool _Havok_IsSet => _HavokLocation.HasValue;
+        public IHavokDataGetter Havok => _Havok_IsSet ? HavokDataBinaryWrapper.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Havok_IsSet => _HavokLocation.HasValue;
         #endregion
         #region TextureSpecularExponent
         private int? _TextureSpecularExponentLocation;
@@ -2787,10 +2789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    this.Havok = HavokDataBinaryWrapper.HavokDataFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _HavokLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
                 }
                 case 0x4D414E53: // SNAM

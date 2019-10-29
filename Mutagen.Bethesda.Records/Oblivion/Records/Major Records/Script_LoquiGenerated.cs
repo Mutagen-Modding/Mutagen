@@ -2044,6 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Fields
         private IScriptFieldsGetter _Fields;
+        public bool Fields_IsSet => true;
         public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
         #endregion
         partial void CustomCtor(

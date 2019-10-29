@@ -6549,12 +6549,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
         #endregion
         #region Voices
-        public IRaceVoicesGetter Voices { get; private set; }
-        public bool Voices_IsSet => Voices != null;
+        private RangeInt32? _VoicesLocation;
+        private bool _Voices_IsSet => _VoicesLocation.HasValue;
+        public IRaceVoicesGetter Voices => _Voices_IsSet ? RaceVoicesBinaryWrapper.RaceVoicesFactory(new BinaryMemoryReadStream(_data.Slice(_VoicesLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Voices_IsSet => _VoicesLocation.HasValue;
         #endregion
         #region DefaultHair
-        public IRaceHairGetter DefaultHair { get; private set; }
-        public bool DefaultHair_IsSet => DefaultHair != null;
+        private RangeInt32? _DefaultHairLocation;
+        private bool _DefaultHair_IsSet => _DefaultHairLocation.HasValue;
+        public IRaceHairGetter DefaultHair => _DefaultHair_IsSet ? RaceHairBinaryWrapper.RaceHairFactory(new BinaryMemoryReadStream(_data.Slice(_DefaultHairLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool DefaultHair_IsSet => _DefaultHairLocation.HasValue;
         #endregion
         #region DefaultHairColor
         private int? _DefaultHairColorLocation;
@@ -6572,8 +6576,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FaceGenFaceClampLocation.Value, _package.Meta)) : default;
         #endregion
         #region RaceStats
-        public IRaceStatsGenderedGetter RaceStats { get; private set; }
-        public bool RaceStats_IsSet => RaceStats != null;
+        private RangeInt32? _RaceStatsLocation;
+        private bool _RaceStats_IsSet => _RaceStatsLocation.HasValue;
+        public IRaceStatsGenderedGetter RaceStats => _RaceStats_IsSet ? RaceStatsGenderedBinaryWrapper.RaceStatsGenderedFactory(new BinaryMemoryReadStream(_data.Slice(_RaceStatsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool RaceStats_IsSet => _RaceStatsLocation.HasValue;
         #endregion
         public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryWrapper>.Instance;
         #region BodyData
@@ -6688,18 +6694,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E56: // VNAM
                 {
-                    this.Voices = RaceVoicesBinaryWrapper.RaceVoicesFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _VoicesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Voices);
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    this.DefaultHair = RaceHairBinaryWrapper.RaceHairFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DefaultHairLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.DefaultHair);
                 }
                 case 0x4D414E43: // CNAM
@@ -6719,10 +6719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x52545441: // ATTR
                 {
-                    this.RaceStats = RaceStatsGenderedBinaryWrapper.RaceStatsGenderedFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _RaceStatsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case 0x304D414E: // NAM0

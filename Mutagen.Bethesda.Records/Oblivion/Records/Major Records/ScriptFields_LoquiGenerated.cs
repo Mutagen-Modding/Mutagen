@@ -3016,7 +3016,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region MetadataSummary
-        private IScriptMetaSummaryGetter _MetadataSummary;
+        private RangeInt32? _MetadataSummaryLocation;
+        private bool _MetadataSummary_IsSet => _MetadataSummaryLocation.HasValue;
+        private IScriptMetaSummaryGetter _MetadataSummary => _MetadataSummary_IsSet ? ScriptMetaSummaryBinaryWrapper.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation.Value.Min)), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         #endregion
         #region MetadataSummaryOld
@@ -3086,10 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    this._MetadataSummary = ScriptMetaSummaryBinaryWrapper.ScriptMetaSummaryFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
                 case 0x44484353: // SCHD

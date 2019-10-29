@@ -2719,16 +2719,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region ObjectBounds
-        public IObjectBoundsGetter ObjectBounds { get; private set; }
-        public bool ObjectBounds_IsSet => ObjectBounds != null;
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryWrapper.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
         #endregion
         #region Textures
         public ITexturesGetter Textures { get; private set; }
         public bool Textures_IsSet => Textures != null;
         #endregion
         #region Decal
-        public IDecalGetter Decal { get; private set; }
-        public bool Decal_IsSet => Decal != null;
+        private RangeInt32? _DecalLocation;
+        private bool _Decal_IsSet => _DecalLocation.HasValue;
+        public IDecalGetter Decal => _Decal_IsSet ? DecalBinaryWrapper.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -2787,10 +2791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x444E424F: // OBND
                 {
-                    this.ObjectBounds = ObjectBoundsBinaryWrapper.ObjectBoundsFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
                 }
                 case 0x30305854: // TX00
@@ -2810,10 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54444F44: // DODT
                 {
-                    this.Decal = DecalBinaryWrapper.DecalFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _DecalLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
                 }
                 case 0x4D414E44: // DNAM

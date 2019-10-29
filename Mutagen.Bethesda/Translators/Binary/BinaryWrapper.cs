@@ -26,12 +26,13 @@ namespace Mutagen.Bethesda.Binary
             this._package = package;
         }
 
-        public void FillModTypes(
+        public static void FillModTypes(
             BinaryMemoryReadStream stream,
-            RecordTypeFillWrapper fill)
+            RecordTypeFillWrapper fill,
+            BinaryWrapperFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeaderMeta headerMeta = _package.Meta.Header(stream.RemainingSpan);
+            ModHeaderMeta headerMeta = package.Meta.Header(stream.RemainingSpan);
             fill(
                 stream: stream,
                 finalPos: stream.Length,
@@ -39,9 +40,10 @@ namespace Mutagen.Bethesda.Binary
                 type: headerMeta.RecordType,
                 lastParsed: lastParsed,
                 recordTypeConverter: null);
+            stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupRecordMeta groupMeta = _package.Meta.Group(stream.RemainingSpan);
+                GroupRecordMeta groupMeta = package.Meta.Group(stream.RemainingSpan);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");

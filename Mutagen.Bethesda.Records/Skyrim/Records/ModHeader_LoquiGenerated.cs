@@ -4175,7 +4175,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(12, 2));
         public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(14, 2));
         #region Stats
-        private IModStatsGetter _Stats;
+        private RangeInt32? _StatsLocation;
+        private bool _Stats_IsSet => _StatsLocation.HasValue;
+        private IModStatsGetter _Stats => _Stats_IsSet ? ModStatsBinaryWrapper.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation.Value.Min)), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
@@ -4261,10 +4263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x52444548: // HEDR
                 {
-                    this._Stats = ModStatsBinaryWrapper.ModStatsFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
                 }
                 case 0x5453464F: // OFST

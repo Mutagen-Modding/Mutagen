@@ -4067,6 +4067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicGetter>>.Instance;
         #region Script
         private IScriptFieldsGetter _Script;
+        public bool Script_IsSet => true;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();
         #endregion
         partial void CustomCtor(

@@ -3428,8 +3428,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IGlobalGetter GlobalVariable => default;
         #endregion
         #region EnableParent
-        public IEnableParentGetter EnableParent { get; private set; }
-        public bool EnableParent_IsSet => EnableParent != null;
+        private RangeInt32? _EnableParentLocation;
+        private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
+        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryWrapper.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
@@ -3525,10 +3527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x50534558: // XESP
                 {
-                    this.EnableParent = EnableParentBinaryWrapper.EnableParentFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: null);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
                     return TryGet<int?>.Succeed((int)PlacedCreature_FieldIndex.EnableParent);
                 }
                 case 0x44475258: // XRGD
