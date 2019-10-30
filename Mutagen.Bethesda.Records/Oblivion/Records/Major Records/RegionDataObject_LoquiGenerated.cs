@@ -3616,7 +3616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Span.Slice(40, 6));
         public ReadOnlySpan<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

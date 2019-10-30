@@ -4303,7 +4303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlySetList<IEDIDLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = EmptySetList<IEDIDLinkGetter<IMagicEffectGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

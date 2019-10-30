@@ -3039,7 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<ILocalVariableGetter> LocalVariables { get; private set; } = EmptySetList<LocalVariableBinaryWrapper>.Instance;
         public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryWrapper>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

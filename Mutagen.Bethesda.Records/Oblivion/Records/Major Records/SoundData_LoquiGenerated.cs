@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public SByte FrequencyAdjustment => (sbyte)_data.Span.Slice(2, 1)[0];
         public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

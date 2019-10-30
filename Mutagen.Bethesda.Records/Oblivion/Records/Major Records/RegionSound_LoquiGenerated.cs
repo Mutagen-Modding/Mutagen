@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Single Chance => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

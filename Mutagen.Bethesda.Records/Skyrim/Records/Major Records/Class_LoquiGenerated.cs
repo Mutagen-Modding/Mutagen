@@ -5500,7 +5500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte StaminaWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 34] : default;
         public Byte Unknown2 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 35] : default;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

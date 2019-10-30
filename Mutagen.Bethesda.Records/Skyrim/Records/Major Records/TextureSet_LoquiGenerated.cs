@@ -2740,7 +2740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public TextureSet.Flag Flags => (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta));
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

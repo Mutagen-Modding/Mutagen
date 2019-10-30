@@ -2530,7 +2530,7 @@ namespace Mutagen.Bethesda.Internals
         public String EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _EditorIDLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

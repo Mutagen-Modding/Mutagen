@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Internals
         public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FileSizeLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

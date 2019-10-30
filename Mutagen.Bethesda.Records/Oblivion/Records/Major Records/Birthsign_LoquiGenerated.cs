@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<ISpellGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

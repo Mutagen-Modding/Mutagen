@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Unknown1 => SpanExt.GetFloat(_data.Span.Slice(4, 4));
         public Single Unknown2 => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

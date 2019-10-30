@@ -2933,7 +2933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String ActorNotes => _ActorNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _ActorNotesLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

@@ -2872,7 +2872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public INPCAbstractGetter Template => default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

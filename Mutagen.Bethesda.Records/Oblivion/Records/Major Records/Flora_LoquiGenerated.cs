@@ -3126,7 +3126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Fall => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 2] : default;
         public Byte Winter => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 3] : default;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

@@ -2351,7 +2351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte NumConnections => _data.Span[12];
         public ReadOnlySpan<Byte> FluffBytes => _data.Span.Slice(13, 3).ToArray();
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

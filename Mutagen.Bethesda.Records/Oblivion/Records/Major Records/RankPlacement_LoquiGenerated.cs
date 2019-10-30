@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Rank => _data.Span[4];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(5, 3).ToArray();
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

@@ -2833,7 +2833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IIdleAnimationGetter>> RelatedIdleAnimations { get; private set; } = EmptySetList<IFormIDLinkGetter<IIdleAnimationGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

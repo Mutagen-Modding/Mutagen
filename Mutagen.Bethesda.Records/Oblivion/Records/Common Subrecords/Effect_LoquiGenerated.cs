@@ -2958,7 +2958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ScriptEffect_IsSet => ScriptEffect != null;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

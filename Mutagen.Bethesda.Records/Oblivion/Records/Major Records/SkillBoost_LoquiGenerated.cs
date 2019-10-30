@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ActorValue Skill => (ActorValue)_data.Span.Slice(0, 1)[0];
         public SByte Boost => (sbyte)_data.Span.Slice(1, 1)[0];
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

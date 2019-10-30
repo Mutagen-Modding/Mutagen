@@ -2298,7 +2298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Female_IsSet => Female != null;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

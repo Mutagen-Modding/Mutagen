@@ -2262,7 +2262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
         public IReadOnlyList<P3Float> Connections => BinaryWrapperSetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

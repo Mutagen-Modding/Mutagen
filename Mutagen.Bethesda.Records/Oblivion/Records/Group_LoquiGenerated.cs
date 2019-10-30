@@ -2512,7 +2512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

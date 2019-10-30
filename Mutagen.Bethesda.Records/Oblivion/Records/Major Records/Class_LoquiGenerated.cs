@@ -3571,7 +3571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IClassTrainingGetter Training => _Training ?? new ClassTraining();
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

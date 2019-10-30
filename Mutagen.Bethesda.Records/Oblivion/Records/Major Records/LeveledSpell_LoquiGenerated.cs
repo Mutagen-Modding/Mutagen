@@ -2604,7 +2604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlySetList<ILeveledEntryGetter<ISpellAbstractGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<ISpellAbstractGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

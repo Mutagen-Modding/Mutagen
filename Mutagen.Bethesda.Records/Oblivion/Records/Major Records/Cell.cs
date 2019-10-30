@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return ret.ToArray();
             }
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int _)
+            partial void CustomEnd(IBinaryReadStream stream, long finalPos, int _)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         case GroupTypeEnum.CellPersistentChildren:
                             {
-                                this._persistentLocation = subGroupLocation;
+                                this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
                                 this.Persistent = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         case GroupTypeEnum.CellTemporaryChildren:
                             {
-                                this._temporaryLocation = subGroupLocation;
+                                this._temporaryLocation = checked((int)subGroupLocation);
                                 List<int> ret = new List<int>();
                                 var subStartPos = stream.Position;
                                 var endPos = stream.Position + subGroupMeta.ContentLength;
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     var recType = majorMeta.RecordType;
                                     if (TypicalPlacedTypes.Contains(recType))
                                     {
-                                        ret.Add(stream.Position - subStartPos);
+                                        ret.Add(checked((int)(stream.Position - subStartPos)));
                                     }
                                     else
                                     {
@@ -551,14 +551,14 @@ namespace Mutagen.Bethesda.Oblivion
                                                 {
                                                     throw new ArgumentException("Second pathgrid parsed.");
                                                 }
-                                                _pathgridLocation = stream.Position;
+                                                _pathgridLocation = checked((int)stream.Position);
                                                 break;
                                             case 0x444e414c: // LAND
                                                 if (_landscapeLocation.HasValue)
                                                 {
                                                     throw new ArgumentException("Second landscape parsed.");
                                                 }
-                                                _landscapeLocation = stream.Position;
+                                                _landscapeLocation = checked((int)stream.Position);
                                                 break;
                                             default:
                                                 break;
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         case GroupTypeEnum.CellVisibleDistantChildren:
                             {
-                                this._visibleWhenDistantLocation = subGroupLocation;
+                                this._visibleWhenDistantLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
                                 this.VisibleWhenDistant = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,

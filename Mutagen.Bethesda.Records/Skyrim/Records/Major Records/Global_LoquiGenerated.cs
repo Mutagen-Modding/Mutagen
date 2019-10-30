@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

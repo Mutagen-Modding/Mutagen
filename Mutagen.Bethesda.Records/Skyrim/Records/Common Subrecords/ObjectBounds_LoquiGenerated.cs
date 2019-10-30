@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Int16 First => P3Int16BinaryTranslation.Read(_data.Span.Slice(0, 6));
         public P3Int16 Second => P3Int16BinaryTranslation.Read(_data.Span.Slice(6, 6));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

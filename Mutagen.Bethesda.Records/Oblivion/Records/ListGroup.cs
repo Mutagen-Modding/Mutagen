@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
             public IReadOnlyList<T> Items => _Items;
 
             partial void CustomCtor(
-                BinaryMemoryReadStream stream,
+                IBinaryReadStream stream,
                 long finalPos,
                 int offset)
             {

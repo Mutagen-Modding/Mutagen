@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> MarkerFlags => _MarkerFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MarkerFlagsLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

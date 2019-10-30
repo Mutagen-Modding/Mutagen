@@ -6608,7 +6608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

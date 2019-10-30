@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Hair.HairFlag Flags => (Hair.HairFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

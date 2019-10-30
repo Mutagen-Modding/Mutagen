@@ -3608,7 +3608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

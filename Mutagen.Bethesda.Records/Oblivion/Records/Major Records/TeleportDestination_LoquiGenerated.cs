@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Span.Slice(16, 12));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

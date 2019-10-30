@@ -2589,7 +2589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

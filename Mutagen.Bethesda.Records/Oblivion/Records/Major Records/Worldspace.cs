@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._OffsetLengthLocation = stream.Position - offset;
             }
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void CustomEnd(IBinaryReadStream stream, long finalPos, int offset)
             {
                 if (stream.Complete) return;
                 var groupMeta = this._package.Meta.GetGroup(stream);
@@ -535,11 +535,11 @@ namespace Mutagen.Bethesda.Oblivion
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x44414F52: // "ROAD":
-                            this._RoadLocation = stream.Position;
+                            this._RoadLocation = checked((int)stream.Position);
                             stream.Position += checked((int)varMeta.TotalLength);
                             break;
                         case 0x4C4C4543: // "CELL":
-                            this._TopCellLocation = stream.Position;
+                            this._TopCellLocation = checked((int)stream.Position);
                             stream.Position += checked((int)varMeta.TotalLength);
                             if (!stream.Complete)
                             {

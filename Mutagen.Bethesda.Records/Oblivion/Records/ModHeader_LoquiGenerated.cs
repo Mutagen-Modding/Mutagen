@@ -3568,7 +3568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt64 VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VestigialDataLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

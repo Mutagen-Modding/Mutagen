@@ -3201,7 +3201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IBaseLayerGetter> Layers { get; private set; } = EmptySetList<BaseLayerBinaryWrapper>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<ILandTextureGetter>> Textures { get; private set; } = EmptySetList<IFormIDLinkGetter<ILandTextureGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

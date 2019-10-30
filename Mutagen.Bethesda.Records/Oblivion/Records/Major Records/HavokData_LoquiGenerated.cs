@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Friction => _data.Span[1];
         public Byte Restitution => _data.Span[2];
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

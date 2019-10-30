@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(12, 4));
         public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

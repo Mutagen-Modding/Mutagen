@@ -2138,7 +2138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte MaximumTrainingLevel => _data.Span[1];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

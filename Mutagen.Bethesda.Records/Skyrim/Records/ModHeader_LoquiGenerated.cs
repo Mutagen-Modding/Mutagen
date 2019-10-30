@@ -4213,7 +4213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _INCCLocation.Value, _package.Meta)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

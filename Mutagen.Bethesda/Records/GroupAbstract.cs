@@ -136,15 +136,17 @@ namespace Mutagen.Bethesda
             }
 
             public static GroupMajorRecordCacheWrapper<T> Factory(
-                BinaryMemoryReadStream stream, 
+                IBinaryReadStream stream, 
                 ReadOnlyMemorySlice<byte> data,
                 BinaryWrapperFactoryPackage package, 
                 int offset)
             {
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
-                var groupMeta = package.Meta.Group(stream.Data.Span.Slice(stream.Position - package.Meta.GroupConstants.HeaderLength));
-                var finalPos = stream.Position + groupMeta.ContentLength;
+                stream.Position -= package.Meta.GroupConstants.HeaderLength;
+                var groupMeta = package.Meta.GetGroup(stream);
+                var finalPos = stream.Position + groupMeta.TotalLength;
+                stream.Position += package.Meta.GroupConstants.HeaderLength;
                 // Parse MajorRecord locations
                 ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
@@ -167,7 +169,7 @@ namespace Mutagen.Bethesda
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                         }
                         var formKey = FormKey.Factory(package.MasterReferences, majorMeta.FormID.Raw);
-                        locationDict.Add(formKey, stream.Position - offset);
+                        locationDict.Add(formKey, checked((int)(stream.Position - offset)));
                         stream.Position += checked((int)majorMeta.TotalLength);
                         lastParsed = ObjectType.Record;
                     }

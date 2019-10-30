@@ -4112,7 +4112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ISoundGetter Sound => default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

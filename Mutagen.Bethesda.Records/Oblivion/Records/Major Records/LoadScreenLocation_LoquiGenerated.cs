@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

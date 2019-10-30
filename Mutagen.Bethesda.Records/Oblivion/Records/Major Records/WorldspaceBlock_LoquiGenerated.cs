@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
         public IReadOnlySetList<IWorldspaceSubBlockGetter> Items { get; private set; } = EmptySetList<WorldspaceSubBlockBinaryWrapper>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

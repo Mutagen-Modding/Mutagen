@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IReadOnlySetList<IRegionDataObjectGetter> Objects { get; private set; } = EmptySetList<RegionDataObjectBinaryWrapper>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

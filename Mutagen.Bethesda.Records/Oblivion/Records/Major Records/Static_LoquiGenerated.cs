@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Model_IsSet => Model != null;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

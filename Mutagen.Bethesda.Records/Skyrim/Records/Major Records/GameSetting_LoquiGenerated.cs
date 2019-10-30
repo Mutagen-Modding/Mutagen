@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

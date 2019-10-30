@@ -3299,7 +3299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Quality => _Quality_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_QualityLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

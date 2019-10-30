@@ -4118,7 +4118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single PowerAttackFatigueModBase => SpanExt.GetFloat(_data.Span.Slice(76, 4));
         public Single PowerAttackFatigueModMult => SpanExt.GetFloat(_data.Span.Slice(80, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

@@ -3622,7 +3622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryWrapper>.Instance;
         public IReadOnlySetList<IQuestTargetGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryWrapper>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

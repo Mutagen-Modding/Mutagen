@@ -3991,7 +3991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single BillboardHeight => _BillboardHeight_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_BillboardHeightLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

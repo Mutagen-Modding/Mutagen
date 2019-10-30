@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta).ReadColor() : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

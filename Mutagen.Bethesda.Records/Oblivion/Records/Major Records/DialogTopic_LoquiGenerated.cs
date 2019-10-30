@@ -2983,11 +2983,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public DialogType DialogType => (DialogType)HeaderTranslation.ExtractSubrecordSpan(_data, _DialogTypeLocation.Value, _package.Meta)[0];
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
         partial void CustomEnd(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

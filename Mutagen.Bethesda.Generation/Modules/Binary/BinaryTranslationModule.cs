@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"partial void CustomCtor"))
                 {
-                    args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                    args.Add($"{nameof(IBinaryReadStream)} stream");
                     args.Add($"long finalPos");
                     args.Add($"int offset");
                 }
@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"partial void CustomEnd"))
                     {
-                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"{nameof(IBinaryReadStream)} stream");
                         args.Add($"long finalPos");
                         args.Add($"int offset");
                     }

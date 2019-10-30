@@ -9280,7 +9280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ColorKey3ColorKeyTime => _ColorKey3ColorKeyTime_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_ColorKey3ColorKeyTimeLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

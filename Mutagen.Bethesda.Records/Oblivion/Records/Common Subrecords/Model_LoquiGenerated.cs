@@ -2272,7 +2272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _HashesLocation.Value, _package.Meta).ToArray() : default;
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

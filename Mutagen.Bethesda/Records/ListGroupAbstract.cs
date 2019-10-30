@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda
             }
 
             public static GroupListWrapper<T> Factory(
-                BinaryMemoryReadStream stream,
+                IBinaryReadStream stream,
                 ReadOnlyMemorySlice<byte> data,
                 BinaryWrapperFactoryPackage package,
                 ObjectType objectType,
@@ -67,13 +67,15 @@ namespace Mutagen.Bethesda
             {
                 List<int> locations = new List<int>();
 
-                var groupMeta = package.Meta.Group(stream.Data.Span.Slice(stream.Position - package.Meta.GroupConstants.HeaderLength));
-                var finalPos = stream.Position + groupMeta.ContentLength;
+                stream.Position -= package.Meta.GroupConstants.HeaderLength;
+                var groupMeta = package.Meta.GetGroup(stream);
+                var finalPos = stream.Position + groupMeta.TotalLength;
+                stream.Position += package.Meta.GroupConstants.HeaderLength;
                 // Parse locations
                 while (stream.Position < finalPos)
                 {
                     VariableHeaderMeta meta = package.Meta.Constants(objectType).VariableMeta(stream.RemainingSpan);
-                    locations.Add(stream.Position - offset);
+                    locations.Add(checked((int)stream.Position - offset));
                     stream.Position += checked((int)meta.TotalLength);
                 }
 

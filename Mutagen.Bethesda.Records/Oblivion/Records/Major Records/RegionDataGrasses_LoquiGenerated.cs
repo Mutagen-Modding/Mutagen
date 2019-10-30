@@ -2055,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> Grasses { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassGetter>>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

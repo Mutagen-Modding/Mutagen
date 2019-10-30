@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
         #endregion
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

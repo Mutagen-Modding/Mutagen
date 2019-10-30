@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Color Sunset => _data.Span.Slice(8, 4).ReadColor();
         public Color Night => _data.Span.Slice(12, 4).ReadColor();
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

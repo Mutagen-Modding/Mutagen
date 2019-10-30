@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
         public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Span.Slice(12, 4));
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

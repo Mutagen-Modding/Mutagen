@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public Byte Priority => _RDATLocation.HasValue ? _data.Span[_RDATLocation.Value + 5] : default;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 

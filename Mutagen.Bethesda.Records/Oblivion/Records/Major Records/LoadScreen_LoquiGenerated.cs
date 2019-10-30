@@ -2546,7 +2546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlySetList<ILoadScreenLocationGetter> Locations { get; private set; } = EmptySetList<LoadScreenLocationBinaryWrapper>.Instance;
         partial void CustomCtor(
-            BinaryMemoryReadStream stream,
+            IBinaryReadStream stream,
             long finalPos,
             int offset);
 
