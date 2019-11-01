@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
             {
-                fg.AppendLine($"_{typeGen.Name}Location = new {nameof(RangeInt32)}({locationAccessor}, (int)finalPos);");
+                fg.AppendLine($"_{typeGen.Name}Location = new {nameof(RangeInt32)}({locationAccessor}, finalPos);");
                 var severalSubTypes = data.GenerationTypes
                     .Select(i => i.Value)
                     .WhereCastable<TypeGeneration, LoquiType>()

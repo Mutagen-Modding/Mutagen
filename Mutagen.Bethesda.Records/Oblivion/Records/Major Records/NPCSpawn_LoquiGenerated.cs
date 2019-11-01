@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected NPCSpawnBinaryWrapper(

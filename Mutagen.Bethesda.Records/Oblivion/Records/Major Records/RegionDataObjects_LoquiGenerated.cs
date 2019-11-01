@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IRegionDataObjectGetter> Objects { get; private set; } = EmptySetList<RegionDataObjectBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataObjectsBinaryWrapper(
@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

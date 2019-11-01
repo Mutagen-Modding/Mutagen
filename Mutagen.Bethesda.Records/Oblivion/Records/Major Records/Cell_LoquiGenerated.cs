@@ -5759,11 +5759,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
         partial void CustomEnd(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected CellBinaryWrapper(
@@ -5784,7 +5784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new CellBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -5806,7 +5806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -5832,7 +5832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C4C4358: // XCLL
                 {
-                    _LightingLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
                 }
                 case 0x524C4358: // XCLR

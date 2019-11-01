@@ -3040,7 +3040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected ScriptFieldsBinaryWrapper(
@@ -3076,7 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -3088,7 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
                 case 0x44484353: // SCHD

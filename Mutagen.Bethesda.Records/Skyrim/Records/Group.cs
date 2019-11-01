@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void CustomCtor(
                 IBinaryReadStream stream,
-                long finalPos,
+                int finalPos,
                 int offset)
             {
                 _Items = GroupMajorRecordCacheWrapper<T>.Factory(

@@ -3012,7 +3012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Color => _data.Span.Slice(32, 4).ReadColor();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected DecalBinaryWrapper(
@@ -3032,7 +3032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new DecalBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

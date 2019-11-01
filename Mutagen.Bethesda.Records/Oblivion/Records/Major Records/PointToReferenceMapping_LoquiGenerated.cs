@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<Int16> Points => BinaryWrapperSetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected PointToReferenceMappingBinaryWrapper(
@@ -2168,7 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new PointToReferenceMappingBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

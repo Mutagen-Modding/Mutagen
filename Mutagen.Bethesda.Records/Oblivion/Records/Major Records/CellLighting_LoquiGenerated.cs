@@ -2797,7 +2797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single FogClipDistance => SpanExt.GetFloat(_data.Span.Slice(32, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected CellLightingBinaryWrapper(
@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new CellLightingBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

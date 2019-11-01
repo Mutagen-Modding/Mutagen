@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected ClassTrainingBinaryWrapper(

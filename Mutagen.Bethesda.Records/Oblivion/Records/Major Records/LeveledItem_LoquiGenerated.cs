@@ -2642,7 +2642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<ILeveledEntryGetter<IItemAbstractGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<IItemAbstractGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected LeveledItemBinaryWrapper(
@@ -2663,7 +2663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledItemBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

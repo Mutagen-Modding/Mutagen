@@ -2359,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected BodyDataBinaryWrapper(
@@ -2395,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

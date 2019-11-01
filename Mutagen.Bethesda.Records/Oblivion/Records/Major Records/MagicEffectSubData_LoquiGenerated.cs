@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Span.Slice(24, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected MagicEffectSubDataBinaryWrapper(

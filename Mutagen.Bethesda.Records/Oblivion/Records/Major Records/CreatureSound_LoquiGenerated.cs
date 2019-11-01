@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected CreatureSoundBinaryWrapper(
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

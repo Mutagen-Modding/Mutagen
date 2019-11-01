@@ -2497,7 +2497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected QuestTargetBinaryWrapper(
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

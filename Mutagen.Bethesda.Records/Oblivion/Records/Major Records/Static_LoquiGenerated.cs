@@ -2084,7 +2084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected StaticBinaryWrapper(
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new StaticBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

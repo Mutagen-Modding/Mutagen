@@ -2151,7 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(5, 3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RankPlacementBinaryWrapper(
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new RankPlacementBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

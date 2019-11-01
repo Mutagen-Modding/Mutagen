@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IFormIDLinkGetter<IGrassGetter>> Grasses { get; private set; } = EmptySetList<IFormIDLinkGetter<IGrassGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataGrassesBinaryWrapper(
@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

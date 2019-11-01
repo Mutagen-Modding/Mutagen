@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Generation
                     $"partial void CustomCtor"))
                 {
                     args.Add($"{nameof(IBinaryReadStream)} stream");
-                    args.Add($"long finalPos");
+                    args.Add($"int finalPos");
                     args.Add($"int offset");
                 }
                 if (objData.CustomBinaryEnd != CustomEnd.Off)
@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Generation
                         $"partial void CustomEnd"))
                     {
                         args.Add($"{nameof(IBinaryReadStream)} stream");
-                        args.Add($"long finalPos");
+                        args.Add($"int finalPos");
                         args.Add($"int offset");
                     }
                 }
@@ -1800,15 +1800,15 @@ namespace Mutagen.Bethesda.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Subrecord:
-                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Record:
-                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Group:
-                                    fg.AppendLine($"var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Mod:
@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Generation
                         $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
                     {
                         args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                        args.Add($"long finalPos");
+                        args.Add($"int finalPos");
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");

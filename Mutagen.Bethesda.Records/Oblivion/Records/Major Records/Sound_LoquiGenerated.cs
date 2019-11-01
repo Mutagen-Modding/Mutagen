@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected SoundBinaryWrapper(
@@ -2335,7 +2335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new SoundBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2353,7 +2353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -2369,13 +2369,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44444E53: // SNDD
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _DataType = type;
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }
                 case 0x58444E53: // SNDX
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _DataType = type;
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.Data);
                 }

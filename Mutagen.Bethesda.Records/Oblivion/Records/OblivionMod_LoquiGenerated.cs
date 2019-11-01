@@ -15007,7 +15007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected OblivionModBinaryWrapper(
@@ -15043,7 +15043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -15054,7 +15054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _package.MasterReferences = new MasterReferences(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -15069,282 +15069,282 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54534D47: // GMST
                 {
-                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
                 }
                 case 0x424F4C47: // GLOB
                 {
-                    _GlobalsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _GlobalsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
                 }
                 case 0x53414C43: // CLAS
                 {
-                    _ClassesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ClassesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
                 }
                 case 0x54434146: // FACT
                 {
-                    _FactionsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _FactionsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
                 }
                 case 0x52494148: // HAIR
                 {
-                    _HairsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _HairsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
                 }
                 case 0x53455945: // EYES
                 {
-                    _EyesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _EyesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
                 }
                 case 0x45434152: // RACE
                 {
-                    _RacesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _RacesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
                 }
                 case 0x4E554F53: // SOUN
                 {
-                    _SoundsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
                 }
                 case 0x4C494B53: // SKIL
                 {
-                    _SkillsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SkillsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
                 }
                 case 0x4645474D: // MGEF
                 {
-                    _MagicEffectsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _MagicEffectsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
                 }
                 case 0x54504353: // SCPT
                 {
-                    _ScriptsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ScriptsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
                 }
                 case 0x5845544C: // LTEX
                 {
-                    _LandTexturesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LandTexturesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
                 }
                 case 0x48434E45: // ENCH
                 {
-                    _EnchantmentsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _EnchantmentsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
                 }
                 case 0x4C455053: // SPEL
                 {
-                    _SpellsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SpellsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
                 }
                 case 0x4E475342: // BSGN
                 {
-                    _BirthsignsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _BirthsignsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
                 }
                 case 0x49544341: // ACTI
                 {
-                    _ActivatorsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ActivatorsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
                 }
                 case 0x41505041: // APPA
                 {
-                    _AlchemicalApparatusLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _AlchemicalApparatusLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
                 }
                 case 0x4F4D5241: // ARMO
                 {
-                    _ArmorsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ArmorsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
                 }
                 case 0x4B4F4F42: // BOOK
                 {
-                    _BooksLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _BooksLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
                 }
                 case 0x544F4C43: // CLOT
                 {
-                    _ClothesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ClothesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
                 }
                 case 0x544E4F43: // CONT
                 {
-                    _ContainersLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ContainersLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
                 }
                 case 0x524F4F44: // DOOR
                 {
-                    _DoorsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DoorsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
                 }
                 case 0x52474E49: // INGR
                 {
-                    _IngredientsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _IngredientsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
                 }
                 case 0x4847494C: // LIGH
                 {
-                    _LightsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LightsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
                 }
                 case 0x4353494D: // MISC
                 {
-                    _MiscellaneousLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _MiscellaneousLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
                 }
                 case 0x54415453: // STAT
                 {
-                    _StaticsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _StaticsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
                 }
                 case 0x53415247: // GRAS
                 {
-                    _GrassesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _GrassesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
                 }
                 case 0x45455254: // TREE
                 {
-                    _TreesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _TreesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
                 }
                 case 0x524F4C46: // FLOR
                 {
-                    _FloraLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _FloraLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
                 }
                 case 0x4E525546: // FURN
                 {
-                    _FurnatureLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _FurnatureLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furnature);
                 }
                 case 0x50414557: // WEAP
                 {
-                    _WeaponsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _WeaponsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
                 }
                 case 0x4F4D4D41: // AMMO
                 {
-                    _AmmoLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _AmmoLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammo);
                 }
                 case 0x5F43504E: // NPC_
                 {
-                    _NPCsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _NPCsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.NPCs);
                 }
                 case 0x41455243: // CREA
                 {
-                    _CreaturesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _CreaturesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
                 }
                 case 0x434C564C: // LVLC
                 {
-                    _LeveledCreaturesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LeveledCreaturesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
                 }
                 case 0x4D474C53: // SLGM
                 {
-                    _SoulGemsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SoulGemsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
                 }
                 case 0x4D59454B: // KEYM
                 {
-                    _KeysLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _KeysLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
                 }
                 case 0x48434C41: // ALCH
                 {
-                    _PotionsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _PotionsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
                 }
                 case 0x50534253: // SBSP
                 {
-                    _SubspacesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SubspacesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
                 }
                 case 0x54534753: // SGST
                 {
-                    _SigilStonesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _SigilStonesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
                 }
                 case 0x494C564C: // LVLI
                 {
-                    _LeveledItemsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LeveledItemsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
                 }
                 case 0x52485457: // WTHR
                 {
-                    _WeathersLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _WeathersLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
                 }
                 case 0x544D4C43: // CLMT
                 {
-                    _ClimatesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ClimatesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
                 }
                 case 0x4E474552: // REGN
                 {
-                    _RegionsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _RegionsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
                 }
                 case 0x4C4C4543: // CELL
                 {
-                    _CellsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _CellsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
                 }
                 case 0x444C5257: // WRLD
                 {
-                    _WorldspacesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _WorldspacesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
                 }
                 case 0x4C414944: // DIAL
                 {
-                    _DialogTopicsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DialogTopicsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
                 }
                 case 0x54535551: // QUST
                 {
-                    _QuestsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _QuestsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
                 }
                 case 0x454C4449: // IDLE
                 {
-                    _IdleAnimationsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _IdleAnimationsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
                 }
                 case 0x4B434150: // PACK
                 {
-                    _AIPackagesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _AIPackagesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
                 }
                 case 0x59545343: // CSTY
                 {
-                    _CombatStylesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _CombatStylesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
                 }
                 case 0x5243534C: // LSCR
                 {
-                    _LoadScreensLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LoadScreensLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
                 }
                 case 0x5053564C: // LVSP
                 {
-                    _LeveledSpellsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LeveledSpellsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
                 }
                 case 0x4F494E41: // ANIO
                 {
-                    _AnimatedObjectsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _AnimatedObjectsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
                 }
                 case 0x52544157: // WATR
                 {
-                    _WatersLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _WatersLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
                 }
                 case 0x48534645: // EFSH
                 {
-                    _EffectShadersLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _EffectShadersLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
                 }
                 default:

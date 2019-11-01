@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IWeatherChanceGetter> Weathers { get; private set; } = EmptySetList<WeatherChanceBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataWeatherBinaryWrapper(
@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

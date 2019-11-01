@@ -3617,7 +3617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataObjectBinaryWrapper(

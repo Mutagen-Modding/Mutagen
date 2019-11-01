@@ -3302,7 +3302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected AIPackageBinaryWrapper(
@@ -3323,7 +3323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new AIPackageBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -3341,7 +3341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -3358,17 +3358,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444C50: // PLDT
                 {
-                    _LocationLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LocationLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
                 }
                 case 0x54445350: // PSDT
                 {
-                    _ScheduleLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ScheduleLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
                 }
                 case 0x54445450: // PTDT
                 {
-                    _TargetLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _TargetLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
                 }
                 case 0x41445443: // CTDA

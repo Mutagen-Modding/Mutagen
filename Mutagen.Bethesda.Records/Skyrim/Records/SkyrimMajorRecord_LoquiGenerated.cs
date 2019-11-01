@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(14, 2));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected SkyrimMajorRecordBinaryWrapper(

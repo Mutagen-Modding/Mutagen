@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Int16 Second => P3Int16BinaryTranslation.Read(_data.Span.Slice(6, 6));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected ObjectBoundsBinaryWrapper(
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ObjectBoundsBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

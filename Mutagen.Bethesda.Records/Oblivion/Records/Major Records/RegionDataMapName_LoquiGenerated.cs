@@ -1978,7 +1978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataMapNameBinaryWrapper(
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

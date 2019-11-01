@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return ret.ToArray();
             }
 
-            partial void CustomEnd(IBinaryReadStream stream, long finalPos, int _)
+            partial void CustomEnd(IBinaryReadStream stream, int finalPos, int _)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;

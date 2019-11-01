@@ -2741,7 +2741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected TextureSetBinaryWrapper(
@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new TextureSetBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -2791,7 +2791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x444E424F: // OBND
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
                 }
                 case 0x30305854: // TX00
@@ -2811,7 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54444F44: // DODT
                 {
-                    _DecalLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
                 }
                 case 0x4D414E44: // DNAM

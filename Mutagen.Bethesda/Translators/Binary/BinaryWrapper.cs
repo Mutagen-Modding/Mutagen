@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public delegate TryGet<int?> RecordTypeFillWrapper(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
-                var minimumFinalPos = stream.Position + groupMeta.TotalLength;
+                var minimumFinalPos = checked((int)(stream.Position + groupMeta.TotalLength));
                 var parsed = fill(
                     stream: stream,
                     finalPos: minimumFinalPos,
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void FillMajorRecords(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void FillGroupRecordsForWrapper(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void FillSubrecordTypes(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Binary
 
         public void FillTypelessSubrecordTypes(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordTypeConverter recordTypeConverter,
             RecordTypeFillWrapper fill)

@@ -2268,7 +2268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<ILogEntryGetter> LogEntries { get; private set; } = EmptySetList<LogEntryBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected QuestStageBinaryWrapper(
@@ -2304,7 +2304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

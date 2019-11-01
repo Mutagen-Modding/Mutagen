@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(4, 12));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected InterCellPointBinaryWrapper(

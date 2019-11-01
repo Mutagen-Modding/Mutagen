@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             partial void CustomCtor(
                 IBinaryReadStream stream,
-                long finalPos,
+                int finalPos,
                 int offset)
             {
                 _Items = ListGroupAbstract.GroupListWrapper<T>.Factory(

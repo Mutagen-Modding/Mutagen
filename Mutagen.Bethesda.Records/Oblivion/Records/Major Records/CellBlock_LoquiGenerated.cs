@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<ICellSubBlockGetter> Items { get; private set; } = EmptySetList<CellSubBlockBinaryWrapper>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected CellBlockBinaryWrapper(
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new CellBlockBinaryWrapper(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2566,7 +2566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

@@ -2352,7 +2352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlySpan<Byte> FluffBytes => _data.Span.Slice(13, 3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected PathGridPointBinaryWrapper(

@@ -2449,7 +2449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected ListGroupBinaryWrapper(
@@ -2469,7 +2469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new ListGroupBinaryWrapper<T>(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.GroupConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.GroupConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -2487,7 +2487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

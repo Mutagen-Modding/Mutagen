@@ -6397,7 +6397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected PlacedObjectBinaryWrapper(
@@ -6418,7 +6418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new PlacedObjectBinaryWrapper(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
@@ -6436,7 +6436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -6462,12 +6462,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C455458: // XTEL
                 {
-                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
                 }
                 case 0x434F4C58: // XLOC
                 {
-                    _LockLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LockLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
                 }
                 case 0x4E574F58: // XOWN
@@ -6487,7 +6487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x50534558: // XESP
                 {
-                    _EnableParentLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
                 }
                 case 0x47525458: // XTRG
@@ -6502,7 +6502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x444F4C58: // XLOD
                 {
-                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLODData);
                 }
                 case 0x47484358: // XCHG

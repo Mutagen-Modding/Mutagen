@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected LeveledEntryBinaryWrapper(
@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledEntryBinaryWrapper<T>(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

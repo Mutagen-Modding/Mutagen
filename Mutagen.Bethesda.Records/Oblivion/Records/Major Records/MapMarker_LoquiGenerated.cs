@@ -2484,7 +2484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<MapMarker.Type> Types { get; private set; } = EmptySetList<MapMarker.Type>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected MapMarkerBinaryWrapper(
@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,

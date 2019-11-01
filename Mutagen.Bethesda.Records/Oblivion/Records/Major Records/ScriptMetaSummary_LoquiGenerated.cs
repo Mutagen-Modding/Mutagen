@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected ScriptMetaSummaryBinaryWrapper(
@@ -2395,7 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new ScriptMetaSummaryBinaryWrapper(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            var finalPos = stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength;
+            var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(

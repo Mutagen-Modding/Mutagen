@@ -2261,7 +2261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Color Night => _data.Span.Slice(12, 4).ReadColor();
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected WeatherTypeBinaryWrapper(

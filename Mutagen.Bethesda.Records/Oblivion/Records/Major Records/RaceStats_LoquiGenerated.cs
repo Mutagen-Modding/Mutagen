@@ -2599,7 +2599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Luck => _data.Span[7];
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RaceStatsBinaryWrapper(

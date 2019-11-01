@@ -4236,7 +4236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected SkyrimModBinaryWrapper(
@@ -4268,7 +4268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -4279,7 +4279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
                     _package.MasterReferences = new MasterReferences(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -4294,37 +4294,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54534D47: // GMST
                 {
-                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
                 }
                 case 0x4457594B: // KYWD
                 {
-                    _KeywordsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _KeywordsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
                 }
                 case 0x5452434C: // LCRT
                 {
-                    _LocationReferenceTypesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _LocationReferenceTypesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                 }
                 case 0x54434141: // AACT
                 {
-                    _ActionsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ActionsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
                 }
                 case 0x54535854: // TXST
                 {
-                    _TextureSetsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _TextureSetsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
                 }
                 case 0x424F4C47: // GLOB
                 {
-                    _GlobalsLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _GlobalsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
                 }
                 case 0x53414C43: // CLAS
                 {
-                    _ClassesLocation = new RangeInt32((stream.Position - offset), (int)finalPos);
+                    _ClassesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
                 }
                 default:

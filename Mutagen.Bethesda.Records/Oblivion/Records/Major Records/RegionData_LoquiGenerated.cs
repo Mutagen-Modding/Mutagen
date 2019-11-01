@@ -2320,7 +2320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Priority => _RDATLocation.HasValue ? _data.Span[_RDATLocation.Value + 5] : default;
         partial void CustomCtor(
             IBinaryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset);
 
         protected RegionDataBinaryWrapper(
@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
-            long finalPos,
+            int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
