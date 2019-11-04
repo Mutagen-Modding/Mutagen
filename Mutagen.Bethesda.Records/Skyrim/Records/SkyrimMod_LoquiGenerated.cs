@@ -2344,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (group.Items.Count == 0) return;
             var cuts = group.Items.Items.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[MetaDataConstants.Skyrim.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
             using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Skyrim, dispose: false))

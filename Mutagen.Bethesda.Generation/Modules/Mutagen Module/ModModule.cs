@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("if (group.Items.Count == 0) return;");
                     fg.AppendLine($"var cuts = group.Items.Items.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
-                    fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.{obj.GetObjectData().GameMode}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
                     fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.{obj.GetObjectData().GameMode}, dispose: false))");
