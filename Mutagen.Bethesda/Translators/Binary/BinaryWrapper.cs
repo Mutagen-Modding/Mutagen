@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,9 +41,10 @@ namespace Mutagen.Bethesda.Binary
         {
             int? lastParsed = null;
             ModHeaderMeta headerMeta = package.Meta.GetHeader(stream);
+            var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,
-                finalPos: stream.Length,
+                finalPos: minimumFinalPos,
                 offset: 0,
                 type: headerMeta.RecordType,
                 lastParsed: lastParsed,
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
                 }
-                var minimumFinalPos = checked((int)(stream.Position + groupMeta.TotalLength));
+                minimumFinalPos = checked((int)(stream.Position + groupMeta.TotalLength));
                 var parsed = fill(
                     stream: stream,
                     finalPos: minimumFinalPos,
