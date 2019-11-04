@@ -58,7 +58,7 @@
     <Compile Include="Passthrough Tests\OtherTests.cs" />
     <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
     <Compile Include="Passthrough Tests\PassthroughTest.cs" />
-    <Compile Include="Passthrough Tests\Skyrim_Passthrough_Test.cs" />
+    <Compile Include="Passthrough Tests\SkyrimPassthroughTest.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
     <Compile Include="Settings\DataFolderLocations_LoquiGenerated.cs">

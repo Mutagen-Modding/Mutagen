@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
-                    return $"_data.Slice({positionStr})";
+                    return $"{nameof(BinaryWrapper)}.{nameof(BinaryWrapper.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
                 }
                 else
                 {
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"private {nameof(RecordType)} _{typeGen.Name}Type;");
                         }
-                        fg.AppendLine($"private {nameof(RangeInt32)}? _{typeGen.Name}Location;");
+                        fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
                         fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                         using (new LineWrapper(fg))
                         {
@@ -425,6 +425,8 @@ namespace Mutagen.Bethesda.Generation
             return sum;
         }
 
+        private string GetLocationObjectString(ObjectGeneration obj) => obj.GetObjectType() == ObjectType.Mod ? nameof(RangeInt64) : nameof(RangeInt32);
+
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -455,7 +457,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (!loqui.TargetObjectGeneration.IsTypelessStruct() && (loqui.GetFieldData()?.HasTrigger ?? false))
             {
-                fg.AppendLine($"_{typeGen.Name}Location = new {nameof(RangeInt32)}({locationAccessor}, finalPos);");
+                fg.AppendLine($"_{typeGen.Name}Location = new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos);");
                 var severalSubTypes = data.GenerationTypes
                     .Select(i => i.Value)
                     .WhereCastable<TypeGeneration, LoquiType>()

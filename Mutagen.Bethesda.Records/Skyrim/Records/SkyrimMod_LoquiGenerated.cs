@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey)
         {
             return SkyrimModBinaryWrapper.SkyrimModFactory(
-                bytes: bytes,
+                new BinaryMemoryReadStream(bytes),
                 modKey: modKey);
         }
 
@@ -799,20 +799,17 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ModKey modKeyOverride = null)
         {
-            var bytes = File.ReadAllBytes(path);
             return CreateFromBinaryWrapper(
-                bytes: new MemorySlice<byte>(bytes),
+                stream: new BinaryReadStream(path),
                 modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
         }
 
         public static ISkyrimModGetter CreateFromBinaryWrapper(
-            Stream stream,
+            IBinaryReadStream stream,
             ModKey modKey)
         {
-            stream.Position = 0;
-            byte[] bytes = new byte[stream.Length];
-            return CreateFromBinaryWrapper(
-                bytes: new MemorySlice<byte>(bytes),
+            return SkyrimModBinaryWrapper.SkyrimModFactory(
+                stream: stream,
                 modKey: modKey);
         }
 
@@ -4184,77 +4181,85 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         public ModKey ModKey { get; }
         private readonly BinaryWrapperFactoryPackage _package = new BinaryWrapperFactoryPackage(GameMode.Skyrim);
-        private readonly ReadOnlyMemorySlice<byte> _data;
+        private readonly IBinaryReadStream _data;
 
         #region ModHeader
-        private RangeInt32? _ModHeaderLocation;
+        private RangeInt64? _ModHeaderLocation;
         private bool _ModHeader_IsSet => _ModHeaderLocation.HasValue;
-        private IModHeaderGetter _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryWrapper.ModHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_ModHeaderLocation.Value.Min)), _package) : default;
+        private IModHeaderGetter _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryWrapper.ModHeaderFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ModHeaderLocation.Value.Min, _ModHeaderLocation.Value.Max)), _package) : default;
         public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
         #endregion
         #region GameSettings
-        private RangeInt32? _GameSettingsLocation;
+        private RangeInt64? _GameSettingsLocation;
         private bool _GameSettings_IsSet => _GameSettingsLocation.HasValue;
-        private IGroupGetter<IGameSettingGetter> _GameSettings => _GameSettings_IsSet ? GroupBinaryWrapper<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_GameSettingsLocation.Value.Min)), _package) : default;
+        private IGroupGetter<IGameSettingGetter> _GameSettings => _GameSettings_IsSet ? GroupBinaryWrapper<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _GameSettingsLocation.Value.Min, _GameSettingsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
-        private RangeInt32? _KeywordsLocation;
+        private RangeInt64? _KeywordsLocation;
         private bool _Keywords_IsSet => _KeywordsLocation.HasValue;
-        private IGroupGetter<IKeywordGetter> _Keywords => _Keywords_IsSet ? GroupBinaryWrapper<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_KeywordsLocation.Value.Min)), _package) : default;
+        private IGroupGetter<IKeywordGetter> _Keywords => _Keywords_IsSet ? GroupBinaryWrapper<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _KeywordsLocation.Value.Min, _KeywordsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
-        private RangeInt32? _LocationReferenceTypesLocation;
+        private RangeInt64? _LocationReferenceTypesLocation;
         private bool _LocationReferenceTypes_IsSet => _LocationReferenceTypesLocation.HasValue;
-        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryWrapper<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_LocationReferenceTypesLocation.Value.Min)), _package) : default;
+        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryWrapper<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _LocationReferenceTypesLocation.Value.Min, _LocationReferenceTypesLocation.Value.Max)), _package) : default;
         public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
-        private RangeInt32? _ActionsLocation;
+        private RangeInt64? _ActionsLocation;
         private bool _Actions_IsSet => _ActionsLocation.HasValue;
-        private IGroupGetter<IActionRecordGetter> _Actions => _Actions_IsSet ? GroupBinaryWrapper<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_ActionsLocation.Value.Min)), _package) : default;
+        private IGroupGetter<IActionRecordGetter> _Actions => _Actions_IsSet ? GroupBinaryWrapper<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ActionsLocation.Value.Min, _ActionsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region TextureSets
-        private RangeInt32? _TextureSetsLocation;
+        private RangeInt64? _TextureSetsLocation;
         private bool _TextureSets_IsSet => _TextureSetsLocation.HasValue;
-        private IGroupGetter<ITextureSetGetter> _TextureSets => _TextureSets_IsSet ? GroupBinaryWrapper<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_TextureSetsLocation.Value.Min)), _package) : default;
+        private IGroupGetter<ITextureSetGetter> _TextureSets => _TextureSets_IsSet ? GroupBinaryWrapper<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _TextureSetsLocation.Value.Min, _TextureSetsLocation.Value.Max)), _package) : default;
         public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
         #region Globals
-        private RangeInt32? _GlobalsLocation;
+        private RangeInt64? _GlobalsLocation;
         private bool _Globals_IsSet => _GlobalsLocation.HasValue;
-        private IGroupGetter<IGlobalGetter> _Globals => _Globals_IsSet ? GroupBinaryWrapper<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_GlobalsLocation.Value.Min)), _package) : default;
+        private IGroupGetter<IGlobalGetter> _Globals => _Globals_IsSet ? GroupBinaryWrapper<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _GlobalsLocation.Value.Min, _GlobalsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region Classes
-        private RangeInt32? _ClassesLocation;
+        private RangeInt64? _ClassesLocation;
         private bool _Classes_IsSet => _ClassesLocation.HasValue;
-        private IGroupGetter<IClassGetter> _Classes => _Classes_IsSet ? GroupBinaryWrapper<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(_data.Slice(_ClassesLocation.Value.Min)), _package) : default;
+        private IGroupGetter<IClassGetter> _Classes => _Classes_IsSet ? GroupBinaryWrapper<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ClassesLocation.Value.Min, _ClassesLocation.Value.Max)), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
-            int finalPos,
+            long finalPos,
             int offset);
 
         protected SkyrimModBinaryWrapper(
-            ReadOnlyMemorySlice<byte> bytes,
+            IBinaryReadStream stream,
             ModKey modKey)
         {
             this.ModKey = modKey;
-            this._data = bytes;
+            this._data = stream;
         }
 
         public static SkyrimModBinaryWrapper SkyrimModFactory(
-            ReadOnlyMemorySlice<byte> bytes,
+            ReadOnlyMemorySlice<byte> data,
+            ModKey modKey)
+        {
+            return SkyrimModFactory(
+                stream: new BinaryMemoryReadStream(data),
+                modKey: modKey);
+        }
+
+        public static SkyrimModBinaryWrapper SkyrimModFactory(
+            IBinaryReadStream stream,
             ModKey modKey)
         {
             var ret = new SkyrimModBinaryWrapper(
-                bytes: bytes,
+                stream: stream,
                 modKey: modKey);
-            var stream = new BinaryMemoryReadStream(bytes);
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
@@ -4267,8 +4272,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
+            IBinaryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -4279,7 +4284,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    _ModHeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
                     _package.MasterReferences = new MasterReferences(
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
@@ -4294,37 +4299,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54534D47: // GMST
                 {
-                    _GameSettingsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
                 }
                 case 0x4457594B: // KYWD
                 {
-                    _KeywordsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
                 }
                 case 0x5452434C: // LCRT
                 {
-                    _LocationReferenceTypesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
                 }
                 case 0x54434141: // AACT
                 {
-                    _ActionsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
                 }
                 case 0x54535854: // TXST
                 {
-                    _TextureSetsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
                 }
                 case 0x424F4C47: // GLOB
                 {
-                    _GlobalsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
                 }
                 case 0x53414C43: // CLAS
                 {
-                    _ClassesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
                 }
                 default:

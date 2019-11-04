@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -10,6 +11,13 @@ namespace Mutagen.Bethesda.Binary
         public delegate TryGet<int?> RecordTypeFillWrapper(
             BinaryMemoryReadStream stream,
             int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter recordTypeConverter);
+        public delegate TryGet<int?> ModTypeFillWrapper(
+            IBinaryReadStream stream,
+            long finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
@@ -27,12 +35,12 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static void FillModTypes(
-            BinaryMemoryReadStream stream,
-            RecordTypeFillWrapper fill,
+            IBinaryReadStream stream,
+            ModTypeFillWrapper fill,
             BinaryWrapperFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeaderMeta headerMeta = package.Meta.Header(stream.RemainingSpan);
+            ModHeaderMeta headerMeta = package.Meta.GetHeader(stream);
             fill(
                 stream: stream,
                 finalPos: stream.Length,
@@ -43,7 +51,7 @@ namespace Mutagen.Bethesda.Binary
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupRecordMeta groupMeta = package.Meta.Group(stream.RemainingSpan);
+                GroupRecordMeta groupMeta = package.Meta.GetGroup(stream);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");
@@ -329,6 +337,25 @@ namespace Mutagen.Bethesda.Binary
                 trigger,
                 (s, r, p, recConv) => factory(s, p, recConv),
                 recordTypeConverter);
+        }
+
+        public static ReadOnlyMemorySlice<byte> LockExtractMemory(IBinaryReadStream stream, long min, long max)
+        {
+            lock (stream)
+            {
+                stream.Position = min;
+                var size = checked((int)(max - min));
+                if (stream is BinaryMemoryReadStream memReadStream)
+                {
+                    return stream.ReadMemory(size);
+                }
+                else
+                {
+                    byte[] data = new byte[size];
+                    stream.Read(data);
+                    return data;
+                }
+            }
         }
     }
 }

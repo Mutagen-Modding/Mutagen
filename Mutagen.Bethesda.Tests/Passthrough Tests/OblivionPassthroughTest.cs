@@ -27,9 +27,8 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
         {
-            var bytes = File.ReadAllBytes(this.FilePath.Path);
             return OblivionModBinaryWrapper.OblivionModFactory(
-                new MemorySlice<byte>(bytes),
+                new BinaryReadStream(this.FilePath.Path),
                 this.ModKey);
         }
 

@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Tests
                 case GameMode.Oblivion:
                     return new OblivionPassthroughTest(settings, target);
                 case GameMode.Skyrim:
-                    return new Skyrim_Passthrough_Test(settings, target);
+                    return new SkyrimPassthroughTest(settings, target);
                 default:
                     throw new NotImplementedException();
             }

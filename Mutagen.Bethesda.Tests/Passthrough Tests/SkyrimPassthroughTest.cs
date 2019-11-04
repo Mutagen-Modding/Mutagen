@@ -9,11 +9,11 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public class Skyrim_Passthrough_Test : PassthroughTest
+    public class SkyrimPassthroughTest : PassthroughTest
     {
         public override GameMode GameMode => GameMode.Skyrim;
 
-        public Skyrim_Passthrough_Test(TestingSettings settings, Target target) 
+        public SkyrimPassthroughTest(TestingSettings settings, Target target) 
             : base(settings, target)
         {
         }
@@ -25,9 +25,8 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
         {
-            var bytes = File.ReadAllBytes(this.FilePath.Path);
             return SkyrimModBinaryWrapper.SkyrimModFactory(
-                new MemorySlice<byte>(bytes),
+                new BinaryReadStream(this.FilePath.Path),
                 this.ModKey);
         }
 

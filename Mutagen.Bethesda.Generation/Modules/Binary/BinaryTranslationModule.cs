@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryWrapperClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.AddPassArg("bytes");
+                    args.Add($"new {nameof(BinaryMemoryReadStream)}(bytes)");
                     args.AddPassArg("modKey");
                 }
             }
@@ -627,11 +627,10 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var bytes = File.ReadAllBytes(path);");
                 using (var args = new ArgsWrapper(fg,
                     $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
                 {
-                    args.Add("bytes: new MemorySlice<byte>(bytes)");
+                    args.Add($"stream: new {nameof(BinaryReadStream)}(path)");
                     args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                 }
             }
@@ -640,17 +639,15 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
             {
-                args.Add($"Stream stream");
+                args.Add($"{nameof(IBinaryReadStream)} stream");
                 args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("stream.Position = 0;");
-                fg.AppendLine($"byte[] bytes = new byte[stream.Length];");
                 using (var args = new ArgsWrapper(fg,
-                    $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                    $"return {BinaryWrapperClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.Add("bytes: new MemorySlice<byte>(bytes)");
+                    args.AddPassArg($"stream");
                     args.AddPassArg("modKey");
                 }
             }
@@ -1543,7 +1540,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
                     fg.AppendLine($"private readonly {nameof(BinaryWrapperFactoryPackage)} _package = new {nameof(BinaryWrapperFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
-                    fg.AppendLine($"private readonly ReadOnlyMemorySlice<byte> _data;");
+                    fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
                 }
 
                 fg.AppendLine();
@@ -1627,7 +1624,7 @@ namespace Mutagen.Bethesda.Generation
                     $"partial void CustomCtor"))
                 {
                     args.Add($"{nameof(IBinaryReadStream)} stream");
-                    args.Add($"int finalPos");
+                    args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                     args.Add($"int offset");
                 }
                 if (objData.CustomBinaryEnd != CustomEnd.Off)
@@ -1645,13 +1642,14 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new FunctionWrapper(fg,
                     $"protected {BinaryWrapperClassName(obj)}"))
                 {
-                    args.Add($"ReadOnlyMemorySlice<byte> bytes");
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
+                        args.Add($"{nameof(IBinaryReadStream)} stream");
                         args.Add("ModKey modKey");
                     }
                     else
                     {
+                        args.Add($"ReadOnlyMemorySlice<byte> bytes");
                         args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
                     }
                 }
@@ -1672,7 +1670,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         fg.AppendLine("this.ModKey = modKey;");
-                        fg.AppendLine("this._data = bytes;");
+                        fg.AppendLine("this._data = stream;");
                     }
                     foreach (var field in obj.IterateFields(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -1689,23 +1687,37 @@ namespace Mutagen.Bethesda.Generation
 
                 if (!obj.Abstract)
                 {
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                            $"public static {this.BinaryWrapperClass(obj)} {obj.Name}Factory"))
+                        {
+                            args.Add($"ReadOnlyMemorySlice<byte> data");
+                            args.Add("ModKey modKey");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"return {obj.Name}Factory"))
+                            {
+                                args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(data)");
+                                args.AddPassArg("modKey");
+                            }
+                        }
+                        fg.AppendLine();
+                    }
+
                     using (var args = new FunctionWrapper(fg,
                         $"public static {this.BinaryWrapperClass(obj)} {obj.Name}Factory"))
                     {
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
-                            args.Add($"ReadOnlyMemorySlice<byte> bytes");
-                        }
-                        else
-                        {
-                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                        }
-                        if (obj.GetObjectType() == ObjectType.Mod)
-                        {
+                            args.Add($"{nameof(IBinaryReadStream)} stream");
                             args.Add("ModKey modKey");
                         }
                         else
                         {
+                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                             args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
                             args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                         }
@@ -1772,7 +1784,7 @@ namespace Mutagen.Bethesda.Generation
                                         args.Add($"bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta)");
                                         break;
                                     case ObjectType.Mod:
-                                        args.Add($"bytes: bytes");
+                                        args.AddPassArg($"stream");
                                         break;
                                     default:
                                         throw new NotImplementedException();
@@ -1786,10 +1798,6 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("package");
                             }
-                        }
-                        if (obj.GetObjectType() == ObjectType.Mod)
-                        {
-                            fg.AppendLine($"var stream = new {nameof(BinaryMemoryReadStream)}(bytes);");
                         }
                         if (obj.IsTypelessStruct())
                         {
@@ -1977,8 +1985,8 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new FunctionWrapper(fg,
                         $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
                     {
-                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                        args.Add($"int finalPos");
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(BinaryMemoryReadStream))} stream");
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");

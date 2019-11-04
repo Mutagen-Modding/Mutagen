@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bc69fc25825b84783fa7dec016fa747cb3601913</Sha>
+         <Sha>9e3ee4b27c7a4c03f463e973ed4483478326c96e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-20-2019 17:40:13</CommitDate>
-         <Description>SetToWithDefault generic improvements</Description>
+         <CommitDate>11-03-2019 15:04:30</CommitDate>
+         <Description>RangeInt32 width swapped to int</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
