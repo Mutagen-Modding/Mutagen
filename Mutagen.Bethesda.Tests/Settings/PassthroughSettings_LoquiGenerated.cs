@@ -63,6 +63,9 @@ namespace Mutagen.Bethesda.Tests
         #region TestFolder
         public Boolean TestFolder { get; set; }
         #endregion
+        #region TestCopyIn
+        public Boolean TestCopyIn { get; set; }
+        #endregion
 
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsGetter)rhs, include);
         #region To String
@@ -269,6 +272,7 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -278,6 +282,11 @@ namespace Mutagen.Bethesda.Tests
         void IClearable.Clear()
         {
             ((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static PassthroughSettings GetNew()
+        {
+            return new PassthroughSettings();
         }
 
     }
@@ -301,6 +310,8 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestImport { get; set; }
 
         new Boolean TestFolder { get; set; }
+
+        new Boolean TestCopyIn { get; set; }
 
     }
 
@@ -341,6 +352,10 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region TestFolder
         Boolean TestFolder { get; }
+
+        #endregion
+        #region TestCopyIn
+        Boolean TestCopyIn { get; }
 
         #endregion
 
@@ -425,7 +440,6 @@ namespace Mutagen.Bethesda.Tests
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -434,13 +448,11 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
-            PassthroughSettings_TranslationMask copyMask,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -451,14 +463,12 @@ namespace Mutagen.Bethesda.Tests
             IPassthroughSettingsGetter rhs,
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask copyMask = null,
-            IPassthroughSettingsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
@@ -468,26 +478,22 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings_TranslationMask copyMask = null)
         {
             ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static PassthroughSettings DeepCopy(
             this IPassthroughSettingsGetter item,
-            PassthroughSettings_TranslationMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings_TranslationMask copyMask = null)
         {
             return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -651,6 +657,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         TestBinaryWrapper = 4,
         TestImport = 5,
         TestFolder = 6,
+        TestCopyIn = 7,
     }
     #endregion
 
@@ -668,9 +675,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "b6e04291-8a1a-4f43-baa4-0f5fc5074d8b";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(PassthroughSettings_Mask<>);
 
@@ -714,6 +721,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.TestImport;
                 case "TESTFOLDER":
                     return (ushort)PassthroughSettings_FieldIndex.TestFolder;
+                case "TESTCOPYIN":
+                    return (ushort)PassthroughSettings_FieldIndex.TestCopyIn;
                 default:
                     return null;
             }
@@ -731,6 +740,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -749,6 +759,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -767,6 +778,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -792,6 +804,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "TestImport";
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return "TestFolder";
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    return "TestCopyIn";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -809,6 +823,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -827,6 +842,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestBinaryWrapper:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -851,6 +867,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestImport:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestFolder:
+                    return typeof(Boolean);
+                case PassthroughSettings_FieldIndex.TestCopyIn:
                     return typeof(Boolean);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -906,12 +924,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestBinaryWrapper = default(Boolean);
             item.TestImport = default(Boolean);
             item.TestFolder = default(Boolean);
+            item.TestCopyIn = default(Boolean);
         }
         
-        public PassthroughSettings GetNew()
-        {
-            return new PassthroughSettings();
-        }
+        public PassthroughSettings GetNew() => PassthroughSettings.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -975,6 +991,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestBinaryWrapper = item.TestBinaryWrapper == rhs.TestBinaryWrapper;
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
+            ret.TestCopyIn = item.TestCopyIn == rhs.TestCopyIn;
         }
         
         public string ToString(
@@ -1049,6 +1066,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendLine($"TestFolder => {item.TestFolder}");
             }
+            if (printMask?.TestCopyIn ?? true)
+            {
+                fg.AppendLine($"TestCopyIn => {item.TestCopyIn}");
+            }
         }
         
         public bool HasBeenSet(
@@ -1069,6 +1090,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.TestBinaryWrapper = true;
             mask.TestImport = true;
             mask.TestFolder = true;
+            mask.TestCopyIn = true;
         }
         
         #region Equals and Hash
@@ -1085,6 +1107,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs.TestBinaryWrapper != rhs.TestBinaryWrapper) return false;
             if (lhs.TestImport != rhs.TestImport) return false;
             if (lhs.TestFolder != rhs.TestFolder) return false;
+            if (lhs.TestCopyIn != rhs.TestCopyIn) return false;
             return true;
         }
         
@@ -1098,6 +1121,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = HashHelper.GetHashCode(item.TestBinaryWrapper).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestImport).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestFolder).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestCopyIn).CombineHashCode(ret);
             return ret;
         }
         
@@ -1113,7 +1137,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void DeepCopyFieldsFrom(
             IPassthroughSettings item,
             IPassthroughSettingsGetter rhs,
-            IPassthroughSettingsGetter def,
             ErrorMaskBuilder errorMask,
             PassthroughSettings_TranslationMask copyMask)
         {
@@ -1145,20 +1168,22 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 item.TestFolder = rhs.TestFolder;
             }
+            if (copyMask?.TestCopyIn ?? true)
+            {
+                item.TestCopyIn = rhs.TestCopyIn;
+            }
         }
         
         #endregion
         
         public PassthroughSettings DeepCopy(
             IPassthroughSettingsGetter item,
-            PassthroughSettings_TranslationMask copyMask = null,
-            IPassthroughSettingsGetter def = null)
+            PassthroughSettings_TranslationMask copyMask = null)
         {
             PassthroughSettings ret = PassthroughSettingsSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         
@@ -1280,6 +1305,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.TestFolder),
                     item: item.TestFolder,
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestFolder,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestCopyIn) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TestCopyIn),
+                    item: item.TestCopyIn,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestCopyIn,
                     errorMask: errorMask);
             }
         }
@@ -1591,6 +1625,35 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
+                case "TestCopyIn":
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestCopyIn) ?? true))
+                    {
+                        try
+                        {
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestCopyIn);
+                            if (BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                item: out Boolean TestCopyInParse,
+                                errorMask: errorMask))
+                            {
+                                item.TestCopyIn = TestCopyInParse;
+                            }
+                            else
+                            {
+                                item.TestCopyIn = default(Boolean);
+                            }
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1781,6 +1844,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestBinaryWrapper = initialValue;
             this.TestImport = initialValue;
             this.TestFolder = initialValue;
+            this.TestCopyIn = initialValue;
         }
         #endregion
 
@@ -1792,6 +1856,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T TestBinaryWrapper;
         public T TestImport;
         public T TestFolder;
+        public T TestCopyIn;
         #endregion
 
         #region Equals
@@ -1811,6 +1876,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.TestBinaryWrapper, rhs.TestBinaryWrapper)) return false;
             if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
             if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
+            if (!object.Equals(this.TestCopyIn, rhs.TestCopyIn)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1823,6 +1889,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.TestBinaryWrapper?.GetHashCode());
             ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestCopyIn?.GetHashCode());
             return ret;
         }
 
@@ -1838,6 +1905,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.TestBinaryWrapper)) return false;
             if (!eval(this.TestImport)) return false;
             if (!eval(this.TestFolder)) return false;
+            if (!eval(this.TestCopyIn)) return false;
             return true;
         }
         #endregion
@@ -1859,6 +1927,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.TestBinaryWrapper = eval(this.TestBinaryWrapper);
             obj.TestImport = eval(this.TestImport);
             obj.TestFolder = eval(this.TestFolder);
+            obj.TestCopyIn = eval(this.TestCopyIn);
         }
         #endregion
 
@@ -1915,6 +1984,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestFolder => {TestFolder}");
                 }
+                if (printMask?.TestCopyIn ?? true)
+                {
+                    fg.AppendLine($"TestCopyIn => {TestCopyIn}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1945,6 +2018,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception TestBinaryWrapper;
         public Exception TestImport;
         public Exception TestFolder;
+        public Exception TestCopyIn;
         #endregion
 
         #region IErrorMask
@@ -1967,6 +2041,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return TestImport;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     return TestFolder;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    return TestCopyIn;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1997,6 +2073,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                     break;
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = ex;
+                    break;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    this.TestCopyIn = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2029,6 +2108,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestFolder:
                     this.TestFolder = (Exception)obj;
                     break;
+                case PassthroughSettings_FieldIndex.TestCopyIn:
+                    this.TestCopyIn = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2044,6 +2126,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (TestBinaryWrapper != null) return true;
             if (TestImport != null) return true;
             if (TestFolder != null) return true;
+            if (TestCopyIn != null) return true;
             return false;
         }
         #endregion
@@ -2085,6 +2168,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"TestBinaryWrapper => {TestBinaryWrapper}");
             fg.AppendLine($"TestImport => {TestImport}");
             fg.AppendLine($"TestFolder => {TestFolder}");
+            fg.AppendLine($"TestCopyIn => {TestCopyIn}");
         }
         #endregion
 
@@ -2099,6 +2183,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.TestBinaryWrapper = this.TestBinaryWrapper.Combine(rhs.TestBinaryWrapper);
             ret.TestImport = this.TestImport.Combine(rhs.TestImport);
             ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
+            ret.TestCopyIn = this.TestCopyIn.Combine(rhs.TestCopyIn);
             return ret;
         }
         public static PassthroughSettings_ErrorMask Combine(PassthroughSettings_ErrorMask lhs, PassthroughSettings_ErrorMask rhs)
@@ -2128,6 +2213,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool TestBinaryWrapper;
         public bool TestImport;
         public bool TestFolder;
+        public bool TestCopyIn;
         #endregion
 
         #region Ctors
@@ -2144,6 +2230,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.TestBinaryWrapper = defaultOn;
             this.TestImport = defaultOn;
             this.TestFolder = defaultOn;
+            this.TestCopyIn = defaultOn;
         }
 
         #endregion
@@ -2169,6 +2256,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((TestBinaryWrapper, null));
             ret.Add((TestImport, null));
             ret.Add((TestFolder, null));
+            ret.Add((TestCopyIn, null));
         }
     }
 }

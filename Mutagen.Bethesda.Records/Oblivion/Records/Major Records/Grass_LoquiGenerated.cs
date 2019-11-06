@@ -529,6 +529,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((GrassSetterCommon)((IGrassGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Grass GetNew()
+        {
+            return new Grass();
+        }
+
     }
     #endregion
 
@@ -719,13 +724,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IGrassInternal lhs,
             IGrassGetter rhs,
-            Grass_TranslationMask copyMask,
-            IGrassGetter def = null)
+            Grass_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -736,14 +739,12 @@ namespace Mutagen.Bethesda.Oblivion
             IGrassGetter rhs,
             out Grass_ErrorMask errorMask,
             Grass_TranslationMask copyMask = null,
-            IGrassGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
@@ -753,14 +754,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal lhs,
             IGrassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Grass_TranslationMask copyMask = null,
-            IGrassGetter def = null)
+            Grass_TranslationMask copyMask = null)
         {
             ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Grass DeepCopy(
+            this IGrassGetter item,
+            Grass_TranslationMask copyMask = null)
+        {
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1347,6 +1355,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGrassInternal)item);
         }
         
+        public Grass GetNew() => Grass.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGrassInternal item,
@@ -1894,14 +1904,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IGrass item,
             IGrassGetter rhs,
-            IGrassGetter def,
             ErrorMaskBuilder errorMask,
             Grass_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -1909,17 +1917,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1993,6 +1993,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Grass DeepCopy(
+            IGrassGetter item,
+            Grass_TranslationMask copyMask = null)
+        {
+            Grass ret = GrassSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -332,6 +332,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((ObjectBoundsSetterCommon)((IObjectBoundsGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ObjectBounds GetNew()
+        {
+            return new ObjectBounds();
+        }
+
     }
     #endregion
 
@@ -448,7 +453,6 @@ namespace Mutagen.Bethesda.Skyrim
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -457,13 +461,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
-            ObjectBounds_TranslationMask copyMask,
-            IObjectBoundsGetter def = null)
+            ObjectBounds_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -474,14 +476,12 @@ namespace Mutagen.Bethesda.Skyrim
             IObjectBoundsGetter rhs,
             out ObjectBounds_ErrorMask errorMask,
             ObjectBounds_TranslationMask copyMask = null,
-            IObjectBoundsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ObjectBounds_ErrorMask.Factory(errorMaskBuilder);
@@ -491,26 +491,22 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ObjectBounds_TranslationMask copyMask = null,
-            IObjectBoundsGetter def = null)
+            ObjectBounds_TranslationMask copyMask = null)
         {
             ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ObjectBounds DeepCopy(
             this IObjectBoundsGetter item,
-            ObjectBounds_TranslationMask copyMask = null,
-            IObjectBoundsGetter def = null)
+            ObjectBounds_TranslationMask copyMask = null)
         {
             return ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -921,10 +917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
-        public ObjectBounds GetNew()
-        {
-            return new ObjectBounds();
-        }
+        public ObjectBounds GetNew() => ObjectBounds.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1137,7 +1130,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IObjectBounds item,
             IObjectBoundsGetter rhs,
-            IObjectBoundsGetter def,
             ErrorMaskBuilder errorMask,
             ObjectBounds_TranslationMask copyMask)
         {
@@ -1155,14 +1147,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ObjectBounds DeepCopy(
             IObjectBoundsGetter item,
-            ObjectBounds_TranslationMask copyMask = null,
-            IObjectBoundsGetter def = null)
+            ObjectBounds_TranslationMask copyMask = null)
         {
             ObjectBounds ret = ObjectBoundsSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -363,6 +363,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((StaticSetterCommon)((IStaticGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Static GetNew()
+        {
+            return new Static();
+        }
+
     }
     #endregion
 
@@ -475,13 +480,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IStaticInternal lhs,
             IStaticGetter rhs,
-            Static_TranslationMask copyMask,
-            IStaticGetter def = null)
+            Static_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -492,14 +495,12 @@ namespace Mutagen.Bethesda.Oblivion
             IStaticGetter rhs,
             out Static_ErrorMask errorMask,
             Static_TranslationMask copyMask = null,
-            IStaticGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((StaticSetterTranslationCommon)((IStaticGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Static_ErrorMask.Factory(errorMaskBuilder);
@@ -509,14 +510,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IStaticInternal lhs,
             IStaticGetter rhs,
             ErrorMaskBuilder errorMask,
-            Static_TranslationMask copyMask = null,
-            IStaticGetter def = null)
+            Static_TranslationMask copyMask = null)
         {
             ((StaticSetterTranslationCommon)((IStaticGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Static DeepCopy(
+            this IStaticGetter item,
+            Static_TranslationMask copyMask = null)
+        {
+            return ((StaticSetterTranslationCommon)((IStaticGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -932,6 +940,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IStaticInternal)item);
         }
         
+        public Static GetNew() => Static.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IStaticInternal item,
@@ -1296,14 +1306,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IStatic item,
             IStaticGetter rhs,
-            IStaticGetter def,
             ErrorMaskBuilder errorMask,
             Static_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -1311,17 +1319,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1343,6 +1343,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Static DeepCopy(
+            IStaticGetter item,
+            Static_TranslationMask copyMask = null)
+        {
+            Static ret = StaticSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

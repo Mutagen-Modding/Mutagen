@@ -433,6 +433,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((PathGridSetterCommon)((IPathGridGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static PathGrid GetNew()
+        {
+            return new PathGrid();
+        }
+
     }
     #endregion
 
@@ -557,13 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPathGridInternal lhs,
             IPathGridGetter rhs,
-            PathGrid_TranslationMask copyMask,
-            IPathGridGetter def = null)
+            PathGrid_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -574,14 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridGetter rhs,
             out PathGrid_ErrorMask errorMask,
             PathGrid_TranslationMask copyMask = null,
-            IPathGridGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
@@ -591,14 +592,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternal lhs,
             IPathGridGetter rhs,
             ErrorMaskBuilder errorMask,
-            PathGrid_TranslationMask copyMask = null,
-            IPathGridGetter def = null)
+            PathGrid_TranslationMask copyMask = null)
         {
             ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static PathGrid DeepCopy(
+            this IPathGridGetter item,
+            PathGrid_TranslationMask copyMask = null)
+        {
+            return ((PathGridSetterTranslationCommon)((IPathGridGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1057,6 +1065,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IPathGridInternal)item);
         }
+        
+        public PathGrid GetNew() => PathGrid.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1542,14 +1552,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IPathGrid item,
             IPathGridGetter rhs,
-            IPathGridGetter def,
             ErrorMaskBuilder errorMask,
             PathGrid_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.PointToPointConnections.Overall ?? true)
@@ -1557,14 +1565,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
                 try
                 {
-                    item.PointToPointConnections.SetToWithDefault(
-                        rhs: rhs.PointToPointConnections,
-                        def: def?.PointToPointConnections,
-                        converter: (r, d) =>
+                    item.PointToPointConnections.SetTo(
+                        items: rhs.PointToPointConnections,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.PointToPointConnections?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.PointToPointConnections?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1582,15 +1587,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.Unknown);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Unknown,
-                        rhsHasBeenSet: rhs.Unknown_IsSet,
-                        defItem: def.Unknown,
-                        defHasBeenSet: def.Unknown_IsSet,
-                        outRhsItem: out var rhsUnknownItem,
-                        outDefItem: out var defUnknownItem))
+                    if(rhs.Unknown_IsSet)
                     {
-                        item.Unknown = rhsUnknownItem.ToArray();
+                        item.Unknown = rhs.Unknown.ToArray();
                     }
                     else
                     {
@@ -1612,14 +1611,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
                 try
                 {
-                    item.InterCellConnections.SetToWithDefault(
-                        rhs: rhs.InterCellConnections,
-                        def: def?.InterCellConnections,
-                        converter: (r, d) =>
+                    item.InterCellConnections.SetTo(
+                        items: rhs.InterCellConnections,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.InterCellConnections?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.InterCellConnections?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1637,14 +1633,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 try
                 {
-                    item.PointToReferenceMappings.SetToWithDefault(
-                        rhs: rhs.PointToReferenceMappings,
-                        def: def?.PointToReferenceMappings,
-                        converter: (r, d) =>
+                    item.PointToReferenceMappings.SetTo(
+                        items: rhs.PointToReferenceMappings,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.PointToReferenceMappings?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.PointToReferenceMappings?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1660,6 +1653,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new PathGrid DeepCopy(
+            IPathGridGetter item,
+            PathGrid_TranslationMask copyMask = null)
+        {
+            PathGrid ret = PathGridSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

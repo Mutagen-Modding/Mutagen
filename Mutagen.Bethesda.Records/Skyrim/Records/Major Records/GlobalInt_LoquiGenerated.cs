@@ -362,6 +362,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((GlobalIntSetterCommon)((IGlobalIntGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static GlobalInt GetNew()
+        {
+            return new GlobalInt();
+        }
+
     }
     #endregion
 
@@ -474,13 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IGlobalIntInternal lhs,
             IGlobalIntGetter rhs,
-            GlobalInt_TranslationMask copyMask,
-            IGlobalIntGetter def = null)
+            GlobalInt_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -491,14 +494,12 @@ namespace Mutagen.Bethesda.Skyrim
             IGlobalIntGetter rhs,
             out GlobalInt_ErrorMask errorMask,
             GlobalInt_TranslationMask copyMask = null,
-            IGlobalIntGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
@@ -508,14 +509,21 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalIntInternal lhs,
             IGlobalIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalInt_TranslationMask copyMask = null,
-            IGlobalIntGetter def = null)
+            GlobalInt_TranslationMask copyMask = null)
         {
             ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static GlobalInt DeepCopy(
+            this IGlobalIntGetter item,
+            GlobalInt_TranslationMask copyMask = null)
+        {
+            return ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -938,6 +946,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalIntInternal)item);
         }
         
+        public GlobalInt GetNew() => GlobalInt.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalIntInternal item,
@@ -1323,14 +1333,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IGlobalInt item,
             IGlobalIntGetter rhs,
-            IGlobalIntGetter def,
             ErrorMaskBuilder errorMask,
             GlobalInt_TranslationMask copyMask)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Data ?? true)
@@ -1338,15 +1346,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)GlobalInt_FieldIndex.Data);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Data,
-                        rhsHasBeenSet: rhs.Data_IsSet,
-                        defItem: def?.Data ?? default(Int32),
-                        defHasBeenSet: def?.Data_IsSet ?? false,
-                        outRhsItem: out var rhsDataItem,
-                        outDefItem: out var defDataItem))
+                    if (rhs.Data_IsSet)
                     {
-                        item.Data = rhsDataItem;
+                        item.Data = rhs.Data;
                     }
                     else
                     {
@@ -1366,6 +1368,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
+        
+        public new GlobalInt DeepCopy(
+            IGlobalIntGetter item,
+            GlobalInt_TranslationMask copyMask = null)
+        {
+            GlobalInt ret = GlobalIntSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

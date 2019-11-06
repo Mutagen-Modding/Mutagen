@@ -605,6 +605,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((SkillRecordSetterCommon)((ISkillRecordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static SkillRecord GetNew()
+        {
+            return new SkillRecord();
+        }
+
     }
     #endregion
 
@@ -813,13 +818,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
-            SkillRecord_TranslationMask copyMask,
-            ISkillRecordGetter def = null)
+            SkillRecord_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -830,14 +833,12 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillRecordGetter rhs,
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_TranslationMask copyMask = null,
-            ISkillRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
@@ -847,14 +848,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkillRecord_TranslationMask copyMask = null,
-            ISkillRecordGetter def = null)
+            SkillRecord_TranslationMask copyMask = null)
         {
             ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static SkillRecord DeepCopy(
+            this ISkillRecordGetter item,
+            SkillRecord_TranslationMask copyMask = null)
+        {
+            return ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1432,6 +1440,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISkillRecordInternal)item);
         }
+        
+        public SkillRecord GetNew() => SkillRecord.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2086,14 +2096,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISkillRecord item,
             ISkillRecordGetter rhs,
-            ISkillRecordGetter def,
             ErrorMaskBuilder errorMask,
             SkillRecord_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Skill ?? true)
@@ -2101,15 +2109,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Skill,
-                        rhsHasBeenSet: rhs.Skill_IsSet,
-                        defItem: def?.Skill ?? default(ActorValue),
-                        defHasBeenSet: def?.Skill_IsSet ?? false,
-                        outRhsItem: out var rhsSkillItem,
-                        outDefItem: out var defSkillItem))
+                    if (rhs.Skill_IsSet)
                     {
-                        item.Skill = rhsSkillItem;
+                        item.Skill = rhs.Skill;
                     }
                     else
                     {
@@ -2131,15 +2133,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -2161,15 +2157,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2211,15 +2201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ApprenticeText,
-                        rhsHasBeenSet: rhs.ApprenticeText_IsSet,
-                        defItem: def?.ApprenticeText ?? default(String),
-                        defHasBeenSet: def?.ApprenticeText_IsSet ?? false,
-                        outRhsItem: out var rhsApprenticeTextItem,
-                        outDefItem: out var defApprenticeTextItem))
+                    if (rhs.ApprenticeText_IsSet)
                     {
-                        item.ApprenticeText = rhsApprenticeTextItem;
+                        item.ApprenticeText = rhs.ApprenticeText;
                     }
                     else
                     {
@@ -2241,15 +2225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.JourneymanText,
-                        rhsHasBeenSet: rhs.JourneymanText_IsSet,
-                        defItem: def?.JourneymanText ?? default(String),
-                        defHasBeenSet: def?.JourneymanText_IsSet ?? false,
-                        outRhsItem: out var rhsJourneymanTextItem,
-                        outDefItem: out var defJourneymanTextItem))
+                    if (rhs.JourneymanText_IsSet)
                     {
-                        item.JourneymanText = rhsJourneymanTextItem;
+                        item.JourneymanText = rhs.JourneymanText;
                     }
                     else
                     {
@@ -2271,15 +2249,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ExpertText,
-                        rhsHasBeenSet: rhs.ExpertText_IsSet,
-                        defItem: def?.ExpertText ?? default(String),
-                        defHasBeenSet: def?.ExpertText_IsSet ?? false,
-                        outRhsItem: out var rhsExpertTextItem,
-                        outDefItem: out var defExpertTextItem))
+                    if (rhs.ExpertText_IsSet)
                     {
-                        item.ExpertText = rhsExpertTextItem;
+                        item.ExpertText = rhs.ExpertText;
                     }
                     else
                     {
@@ -2301,15 +2273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.MasterText,
-                        rhsHasBeenSet: rhs.MasterText_IsSet,
-                        defItem: def?.MasterText ?? default(String),
-                        defHasBeenSet: def?.MasterText_IsSet ?? false,
-                        outRhsItem: out var rhsMasterTextItem,
-                        outDefItem: out var defMasterTextItem))
+                    if (rhs.MasterText_IsSet)
                     {
-                        item.MasterText = rhsMasterTextItem;
+                        item.MasterText = rhs.MasterText;
                     }
                     else
                     {
@@ -2333,6 +2299,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new SkillRecord DeepCopy(
+            ISkillRecordGetter item,
+            SkillRecord_TranslationMask copyMask = null)
+        {
+            SkillRecord ret = SkillRecordSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -431,6 +431,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LoadScreenSetterCommon)((ILoadScreenGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LoadScreen GetNew()
+        {
+            return new LoadScreen();
+        }
+
     }
     #endregion
 
@@ -557,13 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILoadScreenInternal lhs,
             ILoadScreenGetter rhs,
-            LoadScreen_TranslationMask copyMask,
-            ILoadScreenGetter def = null)
+            LoadScreen_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -574,14 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILoadScreenGetter rhs,
             out LoadScreen_ErrorMask errorMask,
             LoadScreen_TranslationMask copyMask = null,
-            ILoadScreenGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
@@ -591,14 +592,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenInternal lhs,
             ILoadScreenGetter rhs,
             ErrorMaskBuilder errorMask,
-            LoadScreen_TranslationMask copyMask = null,
-            ILoadScreenGetter def = null)
+            LoadScreen_TranslationMask copyMask = null)
         {
             ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static LoadScreen DeepCopy(
+            this ILoadScreenGetter item,
+            LoadScreen_TranslationMask copyMask = null)
+        {
+            return ((LoadScreenSetterTranslationCommon)((ILoadScreenGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1044,6 +1052,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
+        public LoadScreen GetNew() => LoadScreen.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILoadScreenInternal item,
@@ -1479,14 +1489,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILoadScreen item,
             ILoadScreenGetter rhs,
-            ILoadScreenGetter def,
             ErrorMaskBuilder errorMask,
             LoadScreen_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Icon ?? true)
@@ -1494,15 +1502,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1524,15 +1526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -1554,14 +1550,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
                 try
                 {
-                    item.Locations.SetToWithDefault(
-                        rhs: rhs.Locations,
-                        def: def?.Locations,
-                        converter: (r, d) =>
+                    item.Locations.SetTo(
+                        items: rhs.Locations,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Locations?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Locations?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1577,6 +1570,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new LoadScreen DeepCopy(
+            ILoadScreenGetter item,
+            LoadScreen_TranslationMask copyMask = null)
+        {
+            LoadScreen ret = LoadScreenSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

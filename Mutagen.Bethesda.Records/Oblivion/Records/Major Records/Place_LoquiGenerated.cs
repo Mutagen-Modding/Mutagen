@@ -401,13 +401,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
-            Place_TranslationMask copyMask,
-            IPlaceGetter def = null)
+            Place_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -418,14 +416,12 @@ namespace Mutagen.Bethesda.Oblivion
             IPlaceGetter rhs,
             out Place_ErrorMask errorMask,
             Place_TranslationMask copyMask = null,
-            IPlaceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
@@ -435,14 +431,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Place_TranslationMask copyMask = null,
-            IPlaceGetter def = null)
+            Place_TranslationMask copyMask = null)
         {
             ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Place DeepCopy(
+            this IPlaceGetter item,
+            Place_TranslationMask copyMask = null)
+        {
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1144,19 +1147,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IPlace item,
             IPlaceGetter rhs,
-            IPlaceGetter def,
             ErrorMaskBuilder errorMask,
             Place_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
         }
         
         #endregion
+        
+        public new Place DeepCopy(
+            IPlaceGetter item,
+            Place_TranslationMask copyMask = null)
+        {
+            Place ret = (Place)System.Activator.CreateInstance(item.GetType());
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

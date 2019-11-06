@@ -349,6 +349,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RoadPointSetterCommon)((IRoadPointGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RoadPoint GetNew()
+        {
+            return new RoadPoint();
+        }
+
     }
     #endregion
 
@@ -469,7 +474,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -478,13 +482,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
-            RoadPoint_TranslationMask copyMask,
-            IRoadPointGetter def = null)
+            RoadPoint_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -495,14 +497,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadPointGetter rhs,
             out RoadPoint_ErrorMask errorMask,
             RoadPoint_TranslationMask copyMask = null,
-            IRoadPointGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RoadPoint_ErrorMask.Factory(errorMaskBuilder);
@@ -512,26 +512,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            RoadPoint_TranslationMask copyMask = null,
-            IRoadPointGetter def = null)
+            RoadPoint_TranslationMask copyMask = null)
         {
             ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RoadPoint DeepCopy(
             this IRoadPointGetter item,
-            RoadPoint_TranslationMask copyMask = null,
-            IRoadPointGetter def = null)
+            RoadPoint_TranslationMask copyMask = null)
         {
             return ((RoadPointSetterTranslationCommon)((IRoadPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -954,10 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        public RoadPoint GetNew()
-        {
-            return new RoadPoint();
-        }
+        public RoadPoint GetNew() => RoadPoint.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1196,7 +1189,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRoadPoint item,
             IRoadPointGetter rhs,
-            IRoadPointGetter def,
             ErrorMaskBuilder errorMask,
             RoadPoint_TranslationMask copyMask)
         {
@@ -1231,14 +1223,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RoadPoint DeepCopy(
             IRoadPointGetter item,
-            RoadPoint_TranslationMask copyMask = null,
-            IRoadPointGetter def = null)
+            RoadPoint_TranslationMask copyMask = null)
         {
             RoadPoint ret = RoadPointSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

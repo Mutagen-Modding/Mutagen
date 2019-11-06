@@ -446,6 +446,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((IdleAnimationSetterCommon)((IIdleAnimationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static IdleAnimation GetNew()
+        {
+            return new IdleAnimation();
+        }
+
     }
     #endregion
 
@@ -576,13 +581,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IIdleAnimationInternal lhs,
             IIdleAnimationGetter rhs,
-            IdleAnimation_TranslationMask copyMask,
-            IIdleAnimationGetter def = null)
+            IdleAnimation_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -593,14 +596,12 @@ namespace Mutagen.Bethesda.Oblivion
             IIdleAnimationGetter rhs,
             out IdleAnimation_ErrorMask errorMask,
             IdleAnimation_TranslationMask copyMask = null,
-            IIdleAnimationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
@@ -610,14 +611,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationInternal lhs,
             IIdleAnimationGetter rhs,
             ErrorMaskBuilder errorMask,
-            IdleAnimation_TranslationMask copyMask = null,
-            IIdleAnimationGetter def = null)
+            IdleAnimation_TranslationMask copyMask = null)
         {
             ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static IdleAnimation DeepCopy(
+            this IIdleAnimationGetter item,
+            IdleAnimation_TranslationMask copyMask = null)
+        {
+            return ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1077,6 +1085,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IIdleAnimationInternal)item);
         }
+        
+        public IdleAnimation GetNew() => IdleAnimation.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1569,14 +1579,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IIdleAnimation item,
             IIdleAnimationGetter rhs,
-            IIdleAnimationGetter def,
             ErrorMaskBuilder errorMask,
             IdleAnimation_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -1584,17 +1592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1618,14 +1618,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
-                        rhs: rhs.Conditions,
-                        def: def?.Conditions,
-                        converter: (r, d) =>
+                    item.Conditions.SetTo(
+                        items: rhs.Conditions,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Conditions?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Conditions?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1643,15 +1640,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.AnimationGroupSection,
-                        rhsHasBeenSet: rhs.AnimationGroupSection_IsSet,
-                        defItem: def?.AnimationGroupSection ?? default(IdleAnimation.AnimationGroupSectionEnum),
-                        defHasBeenSet: def?.AnimationGroupSection_IsSet ?? false,
-                        outRhsItem: out var rhsAnimationGroupSectionItem,
-                        outDefItem: out var defAnimationGroupSectionItem))
+                    if (rhs.AnimationGroupSection_IsSet)
                     {
-                        item.AnimationGroupSection = rhsAnimationGroupSectionItem;
+                        item.AnimationGroupSection = rhs.AnimationGroupSection;
                     }
                     else
                     {
@@ -1673,10 +1664,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 try
                 {
-                    item.RelatedIdleAnimations.SetToWithDefault(
+                    item.RelatedIdleAnimations.SetTo(
                         rhs.RelatedIdleAnimations,
-                        def?.RelatedIdleAnimations,
-                        (r, d) => new FormIDLink<IdleAnimation>(r.FormKey));
+                        (r) => new FormIDLink<IdleAnimation>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1691,6 +1681,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new IdleAnimation DeepCopy(
+            IIdleAnimationGetter item,
+            IdleAnimation_TranslationMask copyMask = null)
+        {
+            IdleAnimation ret = IdleAnimationSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

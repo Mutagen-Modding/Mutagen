@@ -448,6 +448,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((HairSetterCommon)((IHairGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Hair GetNew()
+        {
+            return new Hair();
+        }
+
     }
     #endregion
 
@@ -590,13 +595,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IHairInternal lhs,
             IHairGetter rhs,
-            Hair_TranslationMask copyMask,
-            IHairGetter def = null)
+            Hair_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -607,14 +610,12 @@ namespace Mutagen.Bethesda.Oblivion
             IHairGetter rhs,
             out Hair_ErrorMask errorMask,
             Hair_TranslationMask copyMask = null,
-            IHairGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
@@ -624,14 +625,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IHairInternal lhs,
             IHairGetter rhs,
             ErrorMaskBuilder errorMask,
-            Hair_TranslationMask copyMask = null,
-            IHairGetter def = null)
+            Hair_TranslationMask copyMask = null)
         {
             ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Hair DeepCopy(
+            this IHairGetter item,
+            Hair_TranslationMask copyMask = null)
+        {
+            return ((HairSetterTranslationCommon)((IHairGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1089,6 +1097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IHairInternal)item);
         }
+        
+        public Hair GetNew() => Hair.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1549,14 +1559,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IHair item,
             IHairGetter rhs,
-            IHairGetter def,
             ErrorMaskBuilder errorMask,
             Hair_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1564,15 +1572,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Hair_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1594,17 +1596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Hair_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1628,15 +1622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Hair_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1658,15 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Hair_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Hair.HairFlag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1686,6 +1668,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Hair DeepCopy(
+            IHairGetter item,
+            Hair_TranslationMask copyMask = null)
+        {
+            Hair ret = HairSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

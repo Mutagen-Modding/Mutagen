@@ -393,6 +393,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((MapMarkerSetterCommon)((IMapMarkerGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MapMarker GetNew()
+        {
+            return new MapMarker();
+        }
+
     }
     #endregion
 
@@ -521,7 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -530,13 +534,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IMapMarker lhs,
             IMapMarkerGetter rhs,
-            MapMarker_TranslationMask copyMask,
-            IMapMarkerGetter def = null)
+            MapMarker_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -547,14 +549,12 @@ namespace Mutagen.Bethesda.Oblivion
             IMapMarkerGetter rhs,
             out MapMarker_ErrorMask errorMask,
             MapMarker_TranslationMask copyMask = null,
-            IMapMarkerGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
@@ -564,26 +564,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarker lhs,
             IMapMarkerGetter rhs,
             ErrorMaskBuilder errorMask,
-            MapMarker_TranslationMask copyMask = null,
-            IMapMarkerGetter def = null)
+            MapMarker_TranslationMask copyMask = null)
         {
             ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static MapMarker DeepCopy(
             this IMapMarkerGetter item,
-            MapMarker_TranslationMask copyMask = null,
-            IMapMarkerGetter def = null)
+            MapMarker_TranslationMask copyMask = null)
         {
             return ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1022,10 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Types.Unset();
         }
         
-        public MapMarker GetNew()
-        {
-            return new MapMarker();
-        }
+        public MapMarker GetNew() => MapMarker.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1331,7 +1324,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IMapMarker item,
             IMapMarkerGetter rhs,
-            IMapMarkerGetter def,
             ErrorMaskBuilder errorMask,
             MapMarker_TranslationMask copyMask)
         {
@@ -1340,15 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(MapMarker.Flag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1370,15 +1356,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1418,14 +1398,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MapMarker DeepCopy(
             IMapMarkerGetter item,
-            MapMarker_TranslationMask copyMask = null,
-            IMapMarkerGetter def = null)
+            MapMarker_TranslationMask copyMask = null)
         {
             MapMarker ret = MapMarkerSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

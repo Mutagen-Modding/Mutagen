@@ -263,6 +263,11 @@ namespace Mutagen.Bethesda.Examples
             ((MainVMSetterCommon)((IMainVMGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MainVM GetNew()
+        {
+            return new MainVM();
+        }
+
     }
     #endregion
 
@@ -372,7 +377,6 @@ namespace Mutagen.Bethesda.Examples
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -381,13 +385,11 @@ namespace Mutagen.Bethesda.Examples
         public static void DeepCopyFieldsFrom(
             this IMainVM lhs,
             IMainVMGetter rhs,
-            MainVM_TranslationMask copyMask,
-            IMainVMGetter def = null)
+            MainVM_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -398,14 +400,12 @@ namespace Mutagen.Bethesda.Examples
             IMainVMGetter rhs,
             out MainVM_ErrorMask errorMask,
             MainVM_TranslationMask copyMask = null,
-            IMainVMGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MainVMSetterTranslationCommon)((IMainVMGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
@@ -415,26 +415,22 @@ namespace Mutagen.Bethesda.Examples
             this IMainVM lhs,
             IMainVMGetter rhs,
             ErrorMaskBuilder errorMask,
-            MainVM_TranslationMask copyMask = null,
-            IMainVMGetter def = null)
+            MainVM_TranslationMask copyMask = null)
         {
             ((MainVMSetterTranslationCommon)((IMainVMGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static MainVM DeepCopy(
             this IMainVMGetter item,
-            MainVM_TranslationMask copyMask = null,
-            IMainVMGetter def = null)
+            MainVM_TranslationMask copyMask = null)
         {
             return ((MainVMSetterTranslationCommon)((IMainVMGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -777,10 +773,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
-        public MainVM GetNew()
-        {
-            return new MainVM();
-        }
+        public MainVM GetNew() => MainVM.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -934,7 +927,6 @@ namespace Mutagen.Bethesda.Examples.Internals
         public void DeepCopyFieldsFrom(
             IMainVM item,
             IMainVMGetter rhs,
-            IMainVMGetter def,
             ErrorMaskBuilder errorMask,
             MainVM_TranslationMask copyMask)
         {
@@ -961,14 +953,12 @@ namespace Mutagen.Bethesda.Examples.Internals
         
         public MainVM DeepCopy(
             IMainVMGetter item,
-            MainVM_TranslationMask copyMask = null,
-            IMainVMGetter def = null)
+            MainVM_TranslationMask copyMask = null)
         {
             MainVM ret = MainVMSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

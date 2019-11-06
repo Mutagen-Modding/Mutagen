@@ -463,6 +463,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectSetterCommon)((IEffectGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Effect GetNew()
+        {
+            return new Effect();
+        }
+
     }
     #endregion
 
@@ -620,7 +625,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -629,13 +633,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEffect lhs,
             IEffectGetter rhs,
-            Effect_TranslationMask copyMask,
-            IEffectGetter def = null)
+            Effect_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -646,14 +648,12 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectGetter rhs,
             out Effect_ErrorMask errorMask,
             Effect_TranslationMask copyMask = null,
-            IEffectGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((EffectSetterTranslationCommon)((IEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Effect_ErrorMask.Factory(errorMaskBuilder);
@@ -663,26 +663,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffect lhs,
             IEffectGetter rhs,
             ErrorMaskBuilder errorMask,
-            Effect_TranslationMask copyMask = null,
-            IEffectGetter def = null)
+            Effect_TranslationMask copyMask = null)
         {
             ((EffectSetterTranslationCommon)((IEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Effect DeepCopy(
             this IEffectGetter item,
-            Effect_TranslationMask copyMask = null,
-            IEffectGetter def = null)
+            Effect_TranslationMask copyMask = null)
         {
             return ((EffectSetterTranslationCommon)((IEffectGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1174,10 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EFITDataTypeState = default(Effect.EFITDataType);
         }
         
-        public Effect GetNew()
-        {
-            return new Effect();
-        }
+        public Effect GetNew() => Effect.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1517,7 +1510,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEffect item,
             IEffectGetter rhs,
-            IEffectGetter def,
             ErrorMaskBuilder errorMask,
             Effect_TranslationMask copyMask)
         {
@@ -1550,17 +1542,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Effect_FieldIndex.ScriptEffect);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ScriptEffect,
-                        rhsHasBeenSet: rhs.ScriptEffect_IsSet,
-                        defItem: def?.ScriptEffect,
-                        defHasBeenSet: def?.ScriptEffect_IsSet ?? false,
-                        outRhsItem: out var rhsScriptEffectItem,
-                        outDefItem: out var defScriptEffectItem))
+                    if(rhs.ScriptEffect_IsSet)
                     {
-                        item.ScriptEffect = rhsScriptEffectItem.DeepCopy(
-                            copyMask?.ScriptEffect?.Specific,
-                            def: defScriptEffectItem);
+                        item.ScriptEffect = rhs.ScriptEffect.DeepCopy(copyMask?.ScriptEffect?.Specific);
                     }
                     else
                     {
@@ -1589,14 +1573,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Effect DeepCopy(
             IEffectGetter item,
-            Effect_TranslationMask copyMask = null,
-            IEffectGetter def = null)
+            Effect_TranslationMask copyMask = null)
         {
             Effect ret = EffectSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

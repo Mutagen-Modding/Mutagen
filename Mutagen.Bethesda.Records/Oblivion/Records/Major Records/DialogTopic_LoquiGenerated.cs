@@ -467,6 +467,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogTopicSetterCommon)((IDialogTopicGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static DialogTopic GetNew()
+        {
+            return new DialogTopic();
+        }
+
     }
     #endregion
 
@@ -605,13 +610,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDialogTopicInternal lhs,
             IDialogTopicGetter rhs,
-            DialogTopic_TranslationMask copyMask,
-            IDialogTopicGetter def = null)
+            DialogTopic_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -622,14 +625,12 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogTopicGetter rhs,
             out DialogTopic_ErrorMask errorMask,
             DialogTopic_TranslationMask copyMask = null,
-            IDialogTopicGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
@@ -639,14 +640,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternal lhs,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogTopic_TranslationMask copyMask = null,
-            IDialogTopicGetter def = null)
+            DialogTopic_TranslationMask copyMask = null)
         {
             ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static DialogTopic DeepCopy(
+            this IDialogTopicGetter item,
+            DialogTopic_TranslationMask copyMask = null)
+        {
+            return ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1131,6 +1139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IDialogTopicInternal)item);
         }
+        
+        public DialogTopic GetNew() => DialogTopic.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1637,14 +1647,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDialogTopic item,
             IDialogTopicGetter rhs,
-            IDialogTopicGetter def,
             ErrorMaskBuilder errorMask,
             DialogTopic_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Quests ?? true)
@@ -1652,10 +1660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
                 try
                 {
-                    item.Quests.SetToWithDefault(
+                    item.Quests.SetTo(
                         rhs.Quests,
-                        def?.Quests,
-                        (r, d) => new FormIDLink<Quest>(r.FormKey));
+                        (r) => new FormIDLink<Quest>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1672,15 +1679,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1702,15 +1703,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.DialogType,
-                        rhsHasBeenSet: rhs.DialogType_IsSet,
-                        defItem: def?.DialogType ?? default(DialogType),
-                        defHasBeenSet: def?.DialogType_IsSet ?? false,
-                        outRhsItem: out var rhsDialogTypeItem,
-                        outDefItem: out var defDialogTypeItem))
+                    if (rhs.DialogType_IsSet)
                     {
-                        item.DialogType = rhsDialogTypeItem;
+                        item.DialogType = rhs.DialogType;
                     }
                     else
                     {
@@ -1736,16 +1731,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetTo(
+                        items: rhs.Items,
+                        converter: (r) =>
                         {
                             var copyRet = new DialogItem(r.FormKey);
                             copyRet.DeepCopyFieldsFrom(
                                 rhs: r,
-                                copyMask: copyMask?.Items?.Specific,
-                                def: d);
+                                copyMask: copyMask?.Items?.Specific);
                             return copyRet;
                         });
                 }
@@ -1762,6 +1755,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new DialogTopic DeepCopy(
+            IDialogTopicGetter item,
+            DialogTopic_TranslationMask copyMask = null)
+        {
+            DialogTopic ret = DialogTopicSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

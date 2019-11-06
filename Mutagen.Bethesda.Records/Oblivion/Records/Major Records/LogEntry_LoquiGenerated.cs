@@ -448,6 +448,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LogEntrySetterCommon)((ILogEntryGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LogEntry GetNew()
+        {
+            return new LogEntry();
+        }
+
     }
     #endregion
 
@@ -586,7 +591,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -595,13 +599,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILogEntry lhs,
             ILogEntryGetter rhs,
-            LogEntry_TranslationMask copyMask,
-            ILogEntryGetter def = null)
+            LogEntry_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -612,14 +614,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILogEntryGetter rhs,
             out LogEntry_ErrorMask errorMask,
             LogEntry_TranslationMask copyMask = null,
-            ILogEntryGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LogEntry_ErrorMask.Factory(errorMaskBuilder);
@@ -629,26 +629,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ILogEntry lhs,
             ILogEntryGetter rhs,
             ErrorMaskBuilder errorMask,
-            LogEntry_TranslationMask copyMask = null,
-            ILogEntryGetter def = null)
+            LogEntry_TranslationMask copyMask = null)
         {
             ((LogEntrySetterTranslationCommon)((ILogEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static LogEntry DeepCopy(
             this ILogEntryGetter item,
-            LogEntry_TranslationMask copyMask = null,
-            ILogEntryGetter def = null)
+            LogEntry_TranslationMask copyMask = null)
         {
             return ((LogEntrySetterTranslationCommon)((ILogEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1107,10 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript_Unset();
         }
         
-        public LogEntry GetNew()
-        {
-            return new LogEntry();
-        }
+        public LogEntry GetNew() => LogEntry.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1469,7 +1462,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILogEntry item,
             ILogEntryGetter rhs,
-            ILogEntryGetter def,
             ErrorMaskBuilder errorMask,
             LogEntry_TranslationMask copyMask)
         {
@@ -1478,15 +1470,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(LogEntry.Flag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1508,14 +1494,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
-                        rhs: rhs.Conditions,
-                        def: def?.Conditions,
-                        converter: (r, d) =>
+                    item.Conditions.SetTo(
+                        items: rhs.Conditions,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Conditions?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Conditions?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1533,15 +1516,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Entry,
-                        rhsHasBeenSet: rhs.Entry_IsSet,
-                        defItem: def?.Entry ?? default(String),
-                        defHasBeenSet: def?.Entry_IsSet ?? false,
-                        outRhsItem: out var rhsEntryItem,
-                        outDefItem: out var defEntryItem))
+                    if (rhs.Entry_IsSet)
                     {
-                        item.Entry = rhsEntryItem;
+                        item.Entry = rhs.Entry;
                     }
                     else
                     {
@@ -1563,17 +1540,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ResultScript,
-                        rhsHasBeenSet: rhs.ResultScript_IsSet,
-                        defItem: def?.ResultScript,
-                        defHasBeenSet: def?.ResultScript_IsSet ?? false,
-                        outRhsItem: out var rhsResultScriptItem,
-                        outDefItem: out var defResultScriptItem))
+                    if(rhs.ResultScript_IsSet)
                     {
-                        item.ResultScript = rhsResultScriptItem.DeepCopy(
-                            copyMask?.ResultScript?.Specific,
-                            def: defResultScriptItem);
+                        item.ResultScript = rhs.ResultScript.DeepCopy(copyMask?.ResultScript?.Specific);
                     }
                     else
                     {
@@ -1598,14 +1567,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LogEntry DeepCopy(
             ILogEntryGetter item,
-            LogEntry_TranslationMask copyMask = null,
-            ILogEntryGetter def = null)
+            LogEntry_TranslationMask copyMask = null)
         {
             LogEntry ret = LogEntrySetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

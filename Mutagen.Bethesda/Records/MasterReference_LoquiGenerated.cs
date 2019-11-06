@@ -356,6 +356,11 @@ namespace Mutagen.Bethesda
             ((MasterReferenceSetterCommon)((IMasterReferenceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MasterReference GetNew()
+        {
+            return new MasterReference();
+        }
+
     }
     #endregion
 
@@ -476,7 +481,6 @@ namespace Mutagen.Bethesda
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -485,13 +489,11 @@ namespace Mutagen.Bethesda
         public static void DeepCopyFieldsFrom(
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
-            MasterReference_TranslationMask copyMask,
-            IMasterReferenceGetter def = null)
+            MasterReference_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -502,14 +504,12 @@ namespace Mutagen.Bethesda
             IMasterReferenceGetter rhs,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask copyMask = null,
-            IMasterReferenceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
@@ -519,26 +519,22 @@ namespace Mutagen.Bethesda
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
             ErrorMaskBuilder errorMask,
-            MasterReference_TranslationMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference_TranslationMask copyMask = null)
         {
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static MasterReference DeepCopy(
             this IMasterReferenceGetter item,
-            MasterReference_TranslationMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference_TranslationMask copyMask = null)
         {
             return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -950,10 +946,7 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
-        public MasterReference GetNew()
-        {
-            return new MasterReference();
-        }
+        public MasterReference GetNew() => MasterReference.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1192,7 +1185,6 @@ namespace Mutagen.Bethesda.Internals
         public void DeepCopyFieldsFrom(
             IMasterReference item,
             IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
             ErrorMaskBuilder errorMask,
             MasterReference_TranslationMask copyMask)
         {
@@ -1205,15 +1197,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FileSize,
-                        rhsHasBeenSet: rhs.FileSize_IsSet,
-                        defItem: def?.FileSize ?? default(UInt64),
-                        defHasBeenSet: def?.FileSize_IsSet ?? false,
-                        outRhsItem: out var rhsFileSizeItem,
-                        outDefItem: out var defFileSizeItem))
+                    if (rhs.FileSize_IsSet)
                     {
-                        item.FileSize = rhsFileSizeItem;
+                        item.FileSize = rhs.FileSize;
                     }
                     else
                     {
@@ -1236,14 +1222,12 @@ namespace Mutagen.Bethesda.Internals
         
         public MasterReference DeepCopy(
             IMasterReferenceGetter item,
-            MasterReference_TranslationMask copyMask = null,
-            IMasterReferenceGetter def = null)
+            MasterReference_TranslationMask copyMask = null)
         {
             MasterReference ret = MasterReferenceSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

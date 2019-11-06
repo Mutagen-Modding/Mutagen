@@ -344,6 +344,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceHairSetterCommon)((IRaceHairGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RaceHair GetNew()
+        {
+            return new RaceHair();
+        }
+
     }
     #endregion
 
@@ -462,7 +467,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -471,13 +475,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRaceHair lhs,
             IRaceHairGetter rhs,
-            RaceHair_TranslationMask copyMask,
-            IRaceHairGetter def = null)
+            RaceHair_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -488,14 +490,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceHairGetter rhs,
             out RaceHair_ErrorMask errorMask,
             RaceHair_TranslationMask copyMask = null,
-            IRaceHairGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RaceHairSetterTranslationCommon)((IRaceHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RaceHair_ErrorMask.Factory(errorMaskBuilder);
@@ -505,26 +505,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHair lhs,
             IRaceHairGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceHair_TranslationMask copyMask = null,
-            IRaceHairGetter def = null)
+            RaceHair_TranslationMask copyMask = null)
         {
             ((RaceHairSetterTranslationCommon)((IRaceHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RaceHair DeepCopy(
             this IRaceHairGetter item,
-            RaceHair_TranslationMask copyMask = null,
-            IRaceHairGetter def = null)
+            RaceHair_TranslationMask copyMask = null)
         {
             return ((RaceHairSetterTranslationCommon)((IRaceHairGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -935,10 +931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Hair);
         }
         
-        public RaceHair GetNew()
-        {
-            return new RaceHair();
-        }
+        public RaceHair GetNew() => RaceHair.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1139,7 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRaceHair item,
             IRaceHairGetter rhs,
-            IRaceHairGetter def,
             ErrorMaskBuilder errorMask,
             RaceHair_TranslationMask copyMask)
         {
@@ -1157,14 +1149,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceHair DeepCopy(
             IRaceHairGetter item,
-            RaceHair_TranslationMask copyMask = null,
-            IRaceHairGetter def = null)
+            RaceHair_TranslationMask copyMask = null)
         {
             RaceHair ret = RaceHairSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

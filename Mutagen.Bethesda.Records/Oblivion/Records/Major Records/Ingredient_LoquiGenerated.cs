@@ -537,6 +537,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((IngredientSetterCommon)((IIngredientGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Ingredient GetNew()
+        {
+            return new Ingredient();
+        }
+
     }
     #endregion
 
@@ -708,13 +713,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IIngredientInternal lhs,
             IIngredientGetter rhs,
-            Ingredient_TranslationMask copyMask,
-            IIngredientGetter def = null)
+            Ingredient_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -725,14 +728,12 @@ namespace Mutagen.Bethesda.Oblivion
             IIngredientGetter rhs,
             out Ingredient_ErrorMask errorMask,
             Ingredient_TranslationMask copyMask = null,
-            IIngredientGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((IngredientSetterTranslationCommon)((IIngredientGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Ingredient_ErrorMask.Factory(errorMaskBuilder);
@@ -742,14 +743,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IIngredientInternal lhs,
             IIngredientGetter rhs,
             ErrorMaskBuilder errorMask,
-            Ingredient_TranslationMask copyMask = null,
-            IIngredientGetter def = null)
+            Ingredient_TranslationMask copyMask = null)
         {
             ((IngredientSetterTranslationCommon)((IIngredientGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Ingredient DeepCopy(
+            this IIngredientGetter item,
+            Ingredient_TranslationMask copyMask = null)
+        {
+            return ((IngredientSetterTranslationCommon)((IIngredientGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1281,6 +1289,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IIngredientInternal)item);
         }
+        
+        public Ingredient GetNew() => Ingredient.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1899,14 +1909,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IIngredient item,
             IIngredientGetter rhs,
-            IIngredientGetter def,
             ErrorMaskBuilder errorMask,
             Ingredient_TranslationMask copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1914,15 +1922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1944,17 +1946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1978,15 +1972,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2008,9 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2027,15 +2013,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Weight);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Weight,
-                        rhsHasBeenSet: rhs.Weight_IsSet,
-                        defItem: def?.Weight ?? default(Single),
-                        defHasBeenSet: def?.Weight_IsSet ?? false,
-                        outRhsItem: out var rhsWeightItem,
-                        outDefItem: out var defWeightItem))
+                    if (rhs.Weight_IsSet)
                     {
-                        item.Weight = rhsWeightItem;
+                        item.Weight = rhs.Weight;
                     }
                     else
                     {
@@ -2065,14 +2045,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault(
-                        rhs: rhs.Effects,
-                        def: def?.Effects,
-                        converter: (r, d) =>
+                    item.Effects.SetTo(
+                        items: rhs.Effects,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Effects?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Effects?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -2092,6 +2069,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Ingredient DeepCopy(
+            IIngredientGetter item,
+            Ingredient_TranslationMask copyMask = null)
+        {
+            Ingredient ret = IngredientSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

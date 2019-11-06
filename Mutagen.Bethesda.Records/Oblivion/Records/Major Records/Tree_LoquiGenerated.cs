@@ -556,6 +556,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((TreeSetterCommon)((ITreeGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Tree GetNew()
+        {
+            return new Tree();
+        }
+
     }
     #endregion
 
@@ -754,13 +759,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ITreeInternal lhs,
             ITreeGetter rhs,
-            Tree_TranslationMask copyMask,
-            ITreeGetter def = null)
+            Tree_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -771,14 +774,12 @@ namespace Mutagen.Bethesda.Oblivion
             ITreeGetter rhs,
             out Tree_ErrorMask errorMask,
             Tree_TranslationMask copyMask = null,
-            ITreeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
@@ -788,14 +789,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternal lhs,
             ITreeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Tree_TranslationMask copyMask = null,
-            ITreeGetter def = null)
+            Tree_TranslationMask copyMask = null)
         {
             ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Tree DeepCopy(
+            this ITreeGetter item,
+            Tree_TranslationMask copyMask = null)
+        {
+            return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1398,6 +1406,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ITreeInternal)item);
         }
+        
+        public Tree GetNew() => Tree.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2050,14 +2060,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ITree item,
             ITreeGetter rhs,
-            ITreeGetter def,
             ErrorMaskBuilder errorMask,
             Tree_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -2065,17 +2073,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -2099,15 +2099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2192,6 +2186,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Tree DeepCopy(
+            ITreeGetter item,
+            Tree_TranslationMask copyMask = null)
+        {
+            Tree ret = TreeSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -364,6 +364,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((KeywordSetterCommon)((IKeywordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Keyword GetNew()
+        {
+            return new Keyword();
+        }
+
     }
     #endregion
 
@@ -476,13 +481,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
-            Keyword_TranslationMask copyMask,
-            IKeywordGetter def = null)
+            Keyword_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -493,14 +496,12 @@ namespace Mutagen.Bethesda.Skyrim
             IKeywordGetter rhs,
             out Keyword_ErrorMask errorMask,
             Keyword_TranslationMask copyMask = null,
-            IKeywordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
@@ -510,14 +511,21 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
             ErrorMaskBuilder errorMask,
-            Keyword_TranslationMask copyMask = null,
-            IKeywordGetter def = null)
+            Keyword_TranslationMask copyMask = null)
         {
             ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Keyword DeepCopy(
+            this IKeywordGetter item,
+            Keyword_TranslationMask copyMask = null)
+        {
+            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -935,6 +943,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
+        public Keyword GetNew() => Keyword.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IKeywordInternal item,
@@ -1290,14 +1300,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IKeyword item,
             IKeywordGetter rhs,
-            IKeywordGetter def,
             ErrorMaskBuilder errorMask,
             Keyword_TranslationMask copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Color ?? true)
@@ -1305,15 +1313,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Keyword_FieldIndex.Color);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Color,
-                        rhsHasBeenSet: rhs.Color_IsSet,
-                        defItem: def?.Color ?? default(Color),
-                        defHasBeenSet: def?.Color_IsSet ?? false,
-                        outRhsItem: out var rhsColorItem,
-                        outDefItem: out var defColorItem))
+                    if (rhs.Color_IsSet)
                     {
-                        item.Color = rhsColorItem;
+                        item.Color = rhs.Color;
                     }
                     else
                     {
@@ -1333,6 +1335,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
+        
+        public new Keyword DeepCopy(
+            IKeywordGetter item,
+            Keyword_TranslationMask copyMask = null)
+        {
+            Keyword ret = KeywordSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

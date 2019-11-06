@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ListGroup<T> GetNew()
+        {
+            return new ListGroup<T>();
+        }
+
     }
     #endregion
 
@@ -470,7 +475,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom<T, TGetter, ErrorMaskPlaceholder, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -479,8 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
-            ListGroup_TranslationMask<T_TranslMask> copyMask,
-            IListGroupGetter<TGetter> def = null)
+            ListGroup_TranslationMask<T_TranslMask> copyMask)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_TranslMask : class, ITranslationMask, new()
@@ -488,7 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom<T, TGetter, ErrorMaskPlaceholder, T_TranslMask>(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -499,7 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
             IListGroupGetter<TGetter> rhs,
             out ListGroup_ErrorMask<T_ErrMask> errorMask,
             ListGroup_TranslationMask<T_TranslMask> copyMask = null,
-            IListGroupGetter<TGetter> def = null,
             bool doMasks = true)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
@@ -510,7 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
@@ -520,8 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
-            IListGroupGetter<TGetter> def = null)
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_TranslMask : class, ITranslationMask, new()
@@ -529,23 +528,20 @@ namespace Mutagen.Bethesda.Oblivion
             ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IListGroupGetter<TGetter> item,
-            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
-            IListGroupGetter<TGetter> def = null)
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_TranslMask : class, ITranslationMask, new()
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -957,10 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
-        public ListGroup<T> GetNew()
-        {
-            return new ListGroup<T>();
-        }
+        public ListGroup<T> GetNew() => ListGroup<T>.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1256,7 +1249,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
             IListGroup<T> item,
             IListGroupGetter<TGetter> rhs,
-            IListGroupGetter<TGetter> def,
             ErrorMaskBuilder errorMask,
             ListGroup_TranslationMask<T_TranslMask> copyMask)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
@@ -1276,12 +1268,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetTo(
+                        items: rhs.Items,
+                        converter: (r) =>
                         {
-                            return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null, d);
+                            return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null);
                         });
                 }
                 catch (Exception ex)
@@ -1300,8 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             IListGroupGetter<TGetter> item,
-            ListGroup_TranslationMask<T_TranslMask> copyMask = null,
-            IListGroupGetter<TGetter> def = null)
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
             where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, TGetter
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_TranslMask : class, ITranslationMask, new()
@@ -1309,8 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup<T> ret = ListGroupSetterCommon<T>.Instance.GetNew();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -35,6 +35,14 @@ namespace Mutagen.Bethesda.Tests
             return await SkyrimMod.CreateFromBinary(path.Path, this.ModKey);
         }
 
+        protected override async Task<IMod> ImportCopyIn(FilePath file)
+        {
+            var wrapper = SkyrimMod.CreateFromBinaryWrapper(file.Path);
+            var ret = new SkyrimMod(this.ModKey);
+            ret.DeepCopyFieldsFrom(wrapper);
+            return ret;
+        }
+
         protected override Processor ProcessorFactory() => new SkyrimProcessor();
 
         protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)

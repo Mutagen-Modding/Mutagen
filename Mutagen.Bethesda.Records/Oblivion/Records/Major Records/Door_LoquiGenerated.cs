@@ -509,6 +509,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((DoorSetterCommon)((IDoorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Door GetNew()
+        {
+            return new Door();
+        }
+
     }
     #endregion
 
@@ -673,13 +678,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDoorInternal lhs,
             IDoorGetter rhs,
-            Door_TranslationMask copyMask,
-            IDoorGetter def = null)
+            Door_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -690,14 +693,12 @@ namespace Mutagen.Bethesda.Oblivion
             IDoorGetter rhs,
             out Door_ErrorMask errorMask,
             Door_TranslationMask copyMask = null,
-            IDoorGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
@@ -707,14 +708,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternal lhs,
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Door_TranslationMask copyMask = null,
-            IDoorGetter def = null)
+            Door_TranslationMask copyMask = null)
         {
             ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Door DeepCopy(
+            this IDoorGetter item,
+            Door_TranslationMask copyMask = null)
+        {
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1229,6 +1237,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IDoorInternal)item);
         }
+        
+        public Door GetNew() => Door.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1801,14 +1811,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDoor item,
             IDoorGetter rhs,
-            IDoorGetter def,
             ErrorMaskBuilder errorMask,
             Door_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1816,15 +1824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1846,17 +1848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1880,9 +1874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1899,9 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                 try
                 {
-                    item.OpenSound_Property.SetToFormKey(
-                        rhs: rhs.OpenSound_Property,
-                        def: def?.OpenSound_Property);
+                    item.OpenSound_Property.SetToFormKey(rhs: rhs.OpenSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1918,9 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                 try
                 {
-                    item.CloseSound_Property.SetToFormKey(
-                        rhs: rhs.CloseSound_Property,
-                        def: def?.CloseSound_Property);
+                    item.CloseSound_Property.SetToFormKey(rhs: rhs.CloseSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1937,9 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                 try
                 {
-                    item.LoopSound_Property.SetToFormKey(
-                        rhs: rhs.LoopSound_Property,
-                        def: def?.LoopSound_Property);
+                    item.LoopSound_Property.SetToFormKey(rhs: rhs.LoopSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1956,15 +1942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Door.DoorFlag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1986,10 +1966,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                 try
                 {
-                    item.RandomTeleportDestinations.SetToWithDefault(
+                    item.RandomTeleportDestinations.SetTo(
                         rhs.RandomTeleportDestinations,
-                        def?.RandomTeleportDestinations,
-                        (r, d) => new FormIDLink<Place>(r.FormKey));
+                        (r) => new FormIDLink<Place>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2004,6 +1983,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Door DeepCopy(
+            IDoorGetter item,
+            Door_TranslationMask copyMask = null)
+        {
+            Door ret = DoorSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

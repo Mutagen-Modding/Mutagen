@@ -374,6 +374,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ConditionSetterCommon)((IConditionGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Condition GetNew()
+        {
+            return new Condition();
+        }
+
     }
     #endregion
 
@@ -526,7 +531,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -535,13 +539,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICondition lhs,
             IConditionGetter rhs,
-            Condition_TranslationMask copyMask,
-            IConditionGetter def = null)
+            Condition_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -552,14 +554,12 @@ namespace Mutagen.Bethesda.Oblivion
             IConditionGetter rhs,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask copyMask = null,
-            IConditionGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Condition_ErrorMask.Factory(errorMaskBuilder);
@@ -569,26 +569,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ICondition lhs,
             IConditionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Condition_TranslationMask copyMask = null,
-            IConditionGetter def = null)
+            Condition_TranslationMask copyMask = null)
         {
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Condition DeepCopy(
             this IConditionGetter item,
-            Condition_TranslationMask copyMask = null,
-            IConditionGetter def = null)
+            Condition_TranslationMask copyMask = null)
         {
             return ((ConditionSetterTranslationCommon)((IConditionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1089,10 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
         
-        public Condition GetNew()
-        {
-            return new Condition();
-        }
+        public Condition GetNew() => Condition.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1371,7 +1364,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICondition item,
             IConditionGetter rhs,
-            IConditionGetter def,
             ErrorMaskBuilder errorMask,
             Condition_TranslationMask copyMask)
         {
@@ -1413,14 +1405,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Condition DeepCopy(
             IConditionGetter item,
-            Condition_TranslationMask copyMask = null,
-            IConditionGetter def = null)
+            Condition_TranslationMask copyMask = null)
         {
             Condition ret = ConditionSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

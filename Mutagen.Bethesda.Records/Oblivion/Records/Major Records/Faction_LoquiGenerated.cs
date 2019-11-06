@@ -475,6 +475,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((FactionSetterCommon)((IFactionGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Faction GetNew()
+        {
+            return new Faction();
+        }
+
     }
     #endregion
 
@@ -615,13 +620,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IFactionInternal lhs,
             IFactionGetter rhs,
-            Faction_TranslationMask copyMask,
-            IFactionGetter def = null)
+            Faction_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -632,14 +635,12 @@ namespace Mutagen.Bethesda.Oblivion
             IFactionGetter rhs,
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask copyMask = null,
-            IFactionGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
@@ -649,14 +650,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionInternal lhs,
             IFactionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Faction_TranslationMask copyMask = null,
-            IFactionGetter def = null)
+            Faction_TranslationMask copyMask = null)
         {
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Faction DeepCopy(
+            this IFactionGetter item,
+            Faction_TranslationMask copyMask = null)
+        {
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1132,6 +1140,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IFactionInternal)item);
         }
+        
+        public Faction GetNew() => Faction.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1653,14 +1663,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IFaction item,
             IFactionGetter rhs,
-            IFactionGetter def,
             ErrorMaskBuilder errorMask,
             Faction_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1668,15 +1676,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1698,14 +1700,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetToWithDefault(
-                        rhs: rhs.Relations,
-                        def: def?.Relations,
-                        converter: (r, d) =>
+                    item.Relations.SetTo(
+                        items: rhs.Relations,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Relations?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Relations?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1723,15 +1722,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Faction.FactionFlag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1753,15 +1746,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.CrimeGoldMultiplier,
-                        rhsHasBeenSet: rhs.CrimeGoldMultiplier_IsSet,
-                        defItem: def?.CrimeGoldMultiplier ?? default(Single),
-                        defHasBeenSet: def?.CrimeGoldMultiplier_IsSet ?? false,
-                        outRhsItem: out var rhsCrimeGoldMultiplierItem,
-                        outDefItem: out var defCrimeGoldMultiplierItem))
+                    if (rhs.CrimeGoldMultiplier_IsSet)
                     {
-                        item.CrimeGoldMultiplier = rhsCrimeGoldMultiplierItem;
+                        item.CrimeGoldMultiplier = rhs.CrimeGoldMultiplier;
                     }
                     else
                     {
@@ -1783,14 +1770,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
-                    item.Ranks.SetToWithDefault(
-                        rhs: rhs.Ranks,
-                        def: def?.Ranks,
-                        converter: (r, d) =>
+                    item.Ranks.SetTo(
+                        items: rhs.Ranks,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Ranks?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Ranks?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1806,6 +1790,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Faction DeepCopy(
+            IFactionGetter item,
+            Faction_TranslationMask copyMask = null)
+        {
+            Faction ret = FactionSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -398,6 +398,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MagicEffectSubData GetNew()
+        {
+            return new MagicEffectSubData();
+        }
+
     }
     #endregion
 
@@ -549,7 +554,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -558,13 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
-            MagicEffectSubData_TranslationMask copyMask,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -575,14 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectSubDataGetter rhs,
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_TranslationMask copyMask = null,
-            IMagicEffectSubDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MagicEffectSubData_ErrorMask.Factory(errorMaskBuilder);
@@ -592,26 +592,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            MagicEffectSubData_TranslationMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData_TranslationMask copyMask = null)
         {
             ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static MagicEffectSubData DeepCopy(
             this IMagicEffectSubDataGetter item,
-            MagicEffectSubData_TranslationMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData_TranslationMask copyMask = null)
         {
             return ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1085,10 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
         
-        public MagicEffectSubData GetNew()
-        {
-            return new MagicEffectSubData();
-        }
+        public MagicEffectSubData GetNew() => MagicEffectSubData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1358,7 +1351,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IMagicEffectSubData item,
             IMagicEffectSubDataGetter rhs,
-            IMagicEffectSubDataGetter def,
             ErrorMaskBuilder errorMask,
             MagicEffectSubData_TranslationMask copyMask)
         {
@@ -1396,14 +1388,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MagicEffectSubData DeepCopy(
             IMagicEffectSubDataGetter item,
-            MagicEffectSubData_TranslationMask copyMask = null,
-            IMagicEffectSubDataGetter def = null)
+            MagicEffectSubData_TranslationMask copyMask = null)
         {
             MagicEffectSubData ret = MagicEffectSubDataSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

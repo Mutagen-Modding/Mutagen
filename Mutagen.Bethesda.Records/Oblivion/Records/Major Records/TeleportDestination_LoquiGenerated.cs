@@ -355,6 +355,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static TeleportDestination GetNew()
+        {
+            return new TeleportDestination();
+        }
+
     }
     #endregion
 
@@ -478,7 +483,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -487,13 +491,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
-            TeleportDestination_TranslationMask copyMask,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -504,14 +506,12 @@ namespace Mutagen.Bethesda.Oblivion
             ITeleportDestinationGetter rhs,
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask copyMask = null,
-            ITeleportDestinationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = TeleportDestination_ErrorMask.Factory(errorMaskBuilder);
@@ -521,26 +521,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
             ErrorMaskBuilder errorMask,
-            TeleportDestination_TranslationMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination_TranslationMask copyMask = null)
         {
             ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static TeleportDestination DeepCopy(
             this ITeleportDestinationGetter item,
-            TeleportDestination_TranslationMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination_TranslationMask copyMask = null)
         {
             return ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -964,10 +960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
-        public TeleportDestination GetNew()
-        {
-            return new TeleportDestination();
-        }
+        public TeleportDestination GetNew() => TeleportDestination.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1192,7 +1185,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ITeleportDestination item,
             ITeleportDestinationGetter rhs,
-            ITeleportDestinationGetter def,
             ErrorMaskBuilder errorMask,
             TeleportDestination_TranslationMask copyMask)
         {
@@ -1214,14 +1206,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public TeleportDestination DeepCopy(
             ITeleportDestinationGetter item,
-            TeleportDestination_TranslationMask copyMask = null,
-            ITeleportDestinationGetter def = null)
+            TeleportDestination_TranslationMask copyMask = null)
         {
             TeleportDestination ret = TeleportDestinationSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

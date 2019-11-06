@@ -436,6 +436,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static SpellUnleveled GetNew()
+        {
+            return new SpellUnleveled();
+        }
+
     }
     #endregion
 
@@ -572,13 +577,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
-            SpellUnleveled_TranslationMask copyMask,
-            ISpellUnleveledGetter def = null)
+            SpellUnleveled_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -589,14 +592,12 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellUnleveledGetter rhs,
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_TranslationMask copyMask = null,
-            ISpellUnleveledGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
@@ -606,14 +607,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_TranslationMask copyMask = null,
-            ISpellUnleveledGetter def = null)
+            SpellUnleveled_TranslationMask copyMask = null)
         {
             ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static SpellUnleveled DeepCopy(
+            this ISpellUnleveledGetter item,
+            SpellUnleveled_TranslationMask copyMask = null)
+        {
+            return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1107,6 +1115,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISpellUnleveledInternal)item);
         }
+        
+        public SpellUnleveled GetNew() => SpellUnleveled.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1631,14 +1641,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISpellUnleveled item,
             ISpellUnleveledGetter rhs,
-            ISpellUnleveledGetter def,
             ErrorMaskBuilder errorMask,
             SpellUnleveled_TranslationMask copyMask)
         {
             ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Type ?? true)
@@ -1662,14 +1670,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault(
-                        rhs: rhs.Effects,
-                        def: def?.Effects,
-                        converter: (r, d) =>
+                    item.Effects.SetTo(
+                        items: rhs.Effects,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Effects?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Effects?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1689,6 +1694,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new SpellUnleveled DeepCopy(
+            ISpellUnleveledGetter item,
+            SpellUnleveled_TranslationMask copyMask = null)
+        {
+            SpellUnleveled ret = SpellUnleveledSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

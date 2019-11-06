@@ -460,6 +460,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((BirthsignSetterCommon)((IBirthsignGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Birthsign GetNew()
+        {
+            return new Birthsign();
+        }
+
     }
     #endregion
 
@@ -596,13 +601,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
-            Birthsign_TranslationMask copyMask,
-            IBirthsignGetter def = null)
+            Birthsign_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -613,14 +616,12 @@ namespace Mutagen.Bethesda.Oblivion
             IBirthsignGetter rhs,
             out Birthsign_ErrorMask errorMask,
             Birthsign_TranslationMask copyMask = null,
-            IBirthsignGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
@@ -630,14 +631,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
             ErrorMaskBuilder errorMask,
-            Birthsign_TranslationMask copyMask = null,
-            IBirthsignGetter def = null)
+            Birthsign_TranslationMask copyMask = null)
         {
             ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Birthsign DeepCopy(
+            this IBirthsignGetter item,
+            Birthsign_TranslationMask copyMask = null)
+        {
+            return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1095,6 +1103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IBirthsignInternal)item);
         }
+        
+        public Birthsign GetNew() => Birthsign.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1555,14 +1565,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IBirthsign item,
             IBirthsignGetter rhs,
-            IBirthsignGetter def,
             ErrorMaskBuilder errorMask,
             Birthsign_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1570,15 +1578,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1600,15 +1602,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1630,15 +1626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -1660,10 +1650,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetToWithDefault(
+                    item.Spells.SetTo(
                         rhs.Spells,
-                        def?.Spells,
-                        (r, d) => new FormIDLink<Spell>(r.FormKey));
+                        (r) => new FormIDLink<Spell>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1678,6 +1667,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Birthsign DeepCopy(
+            IBirthsignGetter item,
+            Birthsign_TranslationMask copyMask = null)
+        {
+            Birthsign ret = BirthsignSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

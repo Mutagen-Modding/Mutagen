@@ -351,6 +351,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RelationSetterCommon)((IRelationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Relation GetNew()
+        {
+            return new Relation();
+        }
+
     }
     #endregion
 
@@ -468,7 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -477,13 +481,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRelation lhs,
             IRelationGetter rhs,
-            Relation_TranslationMask copyMask,
-            IRelationGetter def = null)
+            Relation_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -494,14 +496,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRelationGetter rhs,
             out Relation_ErrorMask errorMask,
             Relation_TranslationMask copyMask = null,
-            IRelationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Relation_ErrorMask.Factory(errorMaskBuilder);
@@ -511,26 +511,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelation lhs,
             IRelationGetter rhs,
             ErrorMaskBuilder errorMask,
-            Relation_TranslationMask copyMask = null,
-            IRelationGetter def = null)
+            Relation_TranslationMask copyMask = null)
         {
             ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Relation DeepCopy(
             this IRelationGetter item,
-            Relation_TranslationMask copyMask = null,
-            IRelationGetter def = null)
+            Relation_TranslationMask copyMask = null)
         {
             return ((RelationSetterTranslationCommon)((IRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -941,10 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public Relation GetNew()
-        {
-            return new Relation();
-        }
+        public Relation GetNew() => Relation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1142,7 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRelation item,
             IRelationGetter rhs,
-            IRelationGetter def,
             ErrorMaskBuilder errorMask,
             Relation_TranslationMask copyMask)
         {
@@ -1160,14 +1152,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Relation DeepCopy(
             IRelationGetter item,
-            Relation_TranslationMask copyMask = null,
-            IRelationGetter def = null)
+            Relation_TranslationMask copyMask = null)
         {
             Relation ret = RelationSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -449,6 +449,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogResponseSetterCommon)((IDialogResponseGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static DialogResponse GetNew()
+        {
+            return new DialogResponse();
+        }
+
     }
     #endregion
 
@@ -609,7 +614,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -618,13 +622,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
-            DialogResponse_TranslationMask copyMask,
-            IDialogResponseGetter def = null)
+            DialogResponse_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -635,14 +637,12 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogResponseGetter rhs,
             out DialogResponse_ErrorMask errorMask,
             DialogResponse_TranslationMask copyMask = null,
-            IDialogResponseGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
@@ -652,26 +652,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask copyMask = null,
-            IDialogResponseGetter def = null)
+            DialogResponse_TranslationMask copyMask = null)
         {
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static DialogResponse DeepCopy(
             this IDialogResponseGetter item,
-            DialogResponse_TranslationMask copyMask = null,
-            IDialogResponseGetter def = null)
+            DialogResponse_TranslationMask copyMask = null)
         {
             return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1162,10 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
         }
         
-        public DialogResponse GetNew()
-        {
-            return new DialogResponse();
-        }
+        public DialogResponse GetNew() => DialogResponse.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1513,7 +1506,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDialogResponse item,
             IDialogResponseGetter rhs,
-            IDialogResponseGetter def,
             ErrorMaskBuilder errorMask,
             DialogResponse_TranslationMask copyMask)
         {
@@ -1542,15 +1534,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ResponseText,
-                        rhsHasBeenSet: rhs.ResponseText_IsSet,
-                        defItem: def?.ResponseText ?? default(String),
-                        defHasBeenSet: def?.ResponseText_IsSet ?? false,
-                        outRhsItem: out var rhsResponseTextItem,
-                        outDefItem: out var defResponseTextItem))
+                    if (rhs.ResponseText_IsSet)
                     {
-                        item.ResponseText = rhsResponseTextItem;
+                        item.ResponseText = rhs.ResponseText;
                     }
                     else
                     {
@@ -1572,15 +1558,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ActorNotes,
-                        rhsHasBeenSet: rhs.ActorNotes_IsSet,
-                        defItem: def?.ActorNotes ?? default(String),
-                        defHasBeenSet: def?.ActorNotes_IsSet ?? false,
-                        outRhsItem: out var rhsActorNotesItem,
-                        outDefItem: out var defActorNotesItem))
+                    if (rhs.ActorNotes_IsSet)
                     {
-                        item.ActorNotes = rhsActorNotesItem;
+                        item.ActorNotes = rhs.ActorNotes;
                     }
                     else
                     {
@@ -1607,14 +1587,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DialogResponse DeepCopy(
             IDialogResponseGetter item,
-            DialogResponse_TranslationMask copyMask = null,
-            IDialogResponseGetter def = null)
+            DialogResponse_TranslationMask copyMask = null)
         {
             DialogResponse ret = DialogResponseSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

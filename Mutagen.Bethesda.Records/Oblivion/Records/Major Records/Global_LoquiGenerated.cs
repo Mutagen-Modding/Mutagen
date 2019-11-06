@@ -381,13 +381,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IGlobalInternal lhs,
             IGlobalGetter rhs,
-            Global_TranslationMask copyMask,
-            IGlobalGetter def = null)
+            Global_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -398,14 +396,12 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalGetter rhs,
             out Global_ErrorMask errorMask,
             Global_TranslationMask copyMask = null,
-            IGlobalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
@@ -415,14 +411,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalInternal lhs,
             IGlobalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Global_TranslationMask copyMask = null,
-            IGlobalGetter def = null)
+            Global_TranslationMask copyMask = null)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Global DeepCopy(
+            this IGlobalGetter item,
+            Global_TranslationMask copyMask = null)
+        {
+            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1122,19 +1125,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IGlobal item,
             IGlobalGetter rhs,
-            IGlobalGetter def,
             ErrorMaskBuilder errorMask,
             Global_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
         }
         
         #endregion
+        
+        public new Global DeepCopy(
+            IGlobalGetter item,
+            Global_TranslationMask copyMask = null)
+        {
+            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

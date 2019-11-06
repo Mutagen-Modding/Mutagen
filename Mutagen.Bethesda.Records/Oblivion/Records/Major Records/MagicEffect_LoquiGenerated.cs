@@ -626,6 +626,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectSetterCommon)((IMagicEffectGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MagicEffect GetNew()
+        {
+            return new MagicEffect();
+        }
+
     }
     #endregion
 
@@ -839,13 +844,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IMagicEffectInternal lhs,
             IMagicEffectGetter rhs,
-            MagicEffect_TranslationMask copyMask,
-            IMagicEffectGetter def = null)
+            MagicEffect_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -856,14 +859,12 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectGetter rhs,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask copyMask = null,
-            IMagicEffectGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
@@ -873,14 +874,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternal lhs,
             IMagicEffectGetter rhs,
             ErrorMaskBuilder errorMask,
-            MagicEffect_TranslationMask copyMask = null,
-            IMagicEffectGetter def = null)
+            MagicEffect_TranslationMask copyMask = null)
         {
             ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static MagicEffect DeepCopy(
+            this IMagicEffectGetter item,
+            MagicEffect_TranslationMask copyMask = null)
+        {
+            return ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1497,6 +1505,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IMagicEffectInternal)item);
         }
+        
+        public MagicEffect GetNew() => MagicEffect.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2195,14 +2205,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IMagicEffect item,
             IMagicEffectGetter rhs,
-            IMagicEffectGetter def,
             ErrorMaskBuilder errorMask,
             MagicEffect_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -2210,15 +2218,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -2240,15 +2242,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -2270,15 +2266,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2300,17 +2290,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -2378,9 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.SubData = rhs.SubData.DeepCopy(
-                                copyMask?.SubData?.Specific,
-                                def?.SubData);
+                            item.SubData = rhs.SubData.DeepCopy(copyMask?.SubData?.Specific);
                         }
                     }
                 }
@@ -2399,10 +2379,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
-                    item.CounterEffects.SetToWithDefault(
+                    item.CounterEffects.SetTo(
                         rhs.CounterEffects,
-                        def?.CounterEffects,
-                        (r, d) => new EDIDLink<MagicEffect>(r.FormKey));
+                        (r) => new EDIDLink<MagicEffect>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2421,6 +2400,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new MagicEffect DeepCopy(
+            IMagicEffectGetter item,
+            MagicEffect_TranslationMask copyMask = null)
+        {
+            MagicEffect ret = MagicEffectSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

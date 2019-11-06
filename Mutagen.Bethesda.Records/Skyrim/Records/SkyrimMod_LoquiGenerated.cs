@@ -820,6 +820,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimModSetterCommon)((ISkyrimModGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static SkyrimMod GetNew()
+        {
+            return new SkyrimMod();
+        }
+
     }
     #endregion
 
@@ -957,7 +962,6 @@ namespace Mutagen.Bethesda.Skyrim
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -966,13 +970,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs,
-            SkyrimMod_TranslationMask copyMask,
-            ISkyrimModGetter def = null)
+            SkyrimMod_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -983,14 +985,12 @@ namespace Mutagen.Bethesda.Skyrim
             ISkyrimModGetter rhs,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask copyMask = null,
-            ISkyrimModGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
@@ -1000,14 +1000,21 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkyrimMod_TranslationMask copyMask = null,
-            ISkyrimModGetter def = null)
+            SkyrimMod_TranslationMask copyMask = null)
         {
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static SkyrimMod DeepCopy(
+            this ISkyrimModGetter item,
+            SkyrimMod_TranslationMask copyMask = null)
+        {
+            return ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1702,6 +1709,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
         }
+        
+        public SkyrimMod GetNew() => SkyrimMod.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2467,7 +2476,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ISkyrimMod item,
             ISkyrimModGetter rhs,
-            ISkyrimModGetter def,
             ErrorMaskBuilder errorMask,
             SkyrimMod_TranslationMask copyMask)
         {
@@ -2478,7 +2486,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ModHeader.DeepCopyFieldsFrom(
                         rhs: rhs.ModHeader,
-                        def: def?.ModHeader,
                         errorMask: errorMask,
                         copyMask: copyMask?.ModHeader.Specific);
                 }
@@ -2499,7 +2506,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.GameSettings.DeepCopyFieldsFrom(
                         rhs: rhs.GameSettings,
-                        def: def?.GameSettings,
                         errorMask: errorMask,
                         copyMask: copyMask?.GameSettings.Specific);
                 }
@@ -2520,7 +2526,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords.DeepCopyFieldsFrom(
                         rhs: rhs.Keywords,
-                        def: def?.Keywords,
                         errorMask: errorMask,
                         copyMask: copyMask?.Keywords.Specific);
                 }
@@ -2541,7 +2546,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LocationReferenceTypes.DeepCopyFieldsFrom(
                         rhs: rhs.LocationReferenceTypes,
-                        def: def?.LocationReferenceTypes,
                         errorMask: errorMask,
                         copyMask: copyMask?.LocationReferenceTypes.Specific);
                 }
@@ -2562,7 +2566,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Actions.DeepCopyFieldsFrom(
                         rhs: rhs.Actions,
-                        def: def?.Actions,
                         errorMask: errorMask,
                         copyMask: copyMask?.Actions.Specific);
                 }
@@ -2583,7 +2586,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TextureSets.DeepCopyFieldsFrom(
                         rhs: rhs.TextureSets,
-                        def: def?.TextureSets,
                         errorMask: errorMask,
                         copyMask: copyMask?.TextureSets.Specific);
                 }
@@ -2604,7 +2606,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Globals.DeepCopyFieldsFrom(
                         rhs: rhs.Globals,
-                        def: def?.Globals,
                         errorMask: errorMask,
                         copyMask: copyMask?.Globals.Specific);
                 }
@@ -2625,7 +2626,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Classes.DeepCopyFieldsFrom(
                         rhs: rhs.Classes,
-                        def: def?.Classes,
                         errorMask: errorMask,
                         copyMask: copyMask?.Classes.Specific);
                 }
@@ -2642,6 +2642,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
+        
+        public SkyrimMod DeepCopy(
+            ISkyrimModGetter item,
+            SkyrimMod_TranslationMask copyMask = null)
+        {
+            SkyrimMod ret = SkyrimModSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -408,6 +408,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static CombatStyleAdvanced GetNew()
+        {
+            return new CombatStyleAdvanced();
+        }
+
     }
     #endregion
 
@@ -638,7 +643,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -647,13 +651,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
-            CombatStyleAdvanced_TranslationMask copyMask,
-            ICombatStyleAdvancedGetter def = null)
+            CombatStyleAdvanced_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -664,14 +666,12 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleAdvancedGetter rhs,
             out CombatStyleAdvanced_ErrorMask errorMask,
             CombatStyleAdvanced_TranslationMask copyMask = null,
-            ICombatStyleAdvancedGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = CombatStyleAdvanced_ErrorMask.Factory(errorMaskBuilder);
@@ -681,26 +681,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleAdvanced lhs,
             ICombatStyleAdvancedGetter rhs,
             ErrorMaskBuilder errorMask,
-            CombatStyleAdvanced_TranslationMask copyMask = null,
-            ICombatStyleAdvancedGetter def = null)
+            CombatStyleAdvanced_TranslationMask copyMask = null)
         {
             ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static CombatStyleAdvanced DeepCopy(
             this ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask copyMask = null,
-            ICombatStyleAdvancedGetter def = null)
+            CombatStyleAdvanced_TranslationMask copyMask = null)
         {
             return ((CombatStyleAdvancedSetterTranslationCommon)((ICombatStyleAdvancedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1358,10 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default(Single);
         }
         
-        public CombatStyleAdvanced GetNew()
-        {
-            return new CombatStyleAdvanced();
-        }
+        public CombatStyleAdvanced GetNew() => CombatStyleAdvanced.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1916,7 +1909,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICombatStyleAdvanced item,
             ICombatStyleAdvancedGetter rhs,
-            ICombatStyleAdvancedGetter def,
             ErrorMaskBuilder errorMask,
             CombatStyleAdvanced_TranslationMask copyMask)
         {
@@ -2010,14 +2002,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CombatStyleAdvanced DeepCopy(
             ICombatStyleAdvancedGetter item,
-            CombatStyleAdvanced_TranslationMask copyMask = null,
-            ICombatStyleAdvancedGetter def = null)
+            CombatStyleAdvanced_TranslationMask copyMask = null)
         {
             CombatStyleAdvanced ret = CombatStyleAdvancedSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

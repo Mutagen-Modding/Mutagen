@@ -21,6 +21,7 @@
       <Bool name="TestBinaryWrapper" />
       <Bool name="TestImport" />
       <Bool name="TestFolder" />
+      <Bool name="TestCopyIn" />
     </Fields>
   </Object>
   <Object name="DataFolderLocations" GUID="352acadd-2222-4274-a2a2-5678a465527e" ID="4">

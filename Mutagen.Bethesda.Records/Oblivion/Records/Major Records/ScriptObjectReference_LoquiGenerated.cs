@@ -339,6 +339,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ScriptObjectReference GetNew()
+        {
+            return new ScriptObjectReference();
+        }
+
     }
     #endregion
 
@@ -441,13 +446,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IScriptObjectReference lhs,
             IScriptObjectReferenceGetter rhs,
-            ScriptObjectReference_TranslationMask copyMask,
-            IScriptObjectReferenceGetter def = null)
+            ScriptObjectReference_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -458,14 +461,12 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptObjectReferenceGetter rhs,
             out ScriptObjectReference_ErrorMask errorMask,
             ScriptObjectReference_TranslationMask copyMask = null,
-            IScriptObjectReferenceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
@@ -475,26 +476,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptObjectReference lhs,
             IScriptObjectReferenceGetter rhs,
             ErrorMaskBuilder errorMask,
-            ScriptObjectReference_TranslationMask copyMask = null,
-            IScriptObjectReferenceGetter def = null)
+            ScriptObjectReference_TranslationMask copyMask = null)
         {
             ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ScriptObjectReference DeepCopy(
             this IScriptObjectReferenceGetter item,
-            ScriptObjectReference_TranslationMask copyMask = null,
-            IScriptObjectReferenceGetter def = null)
+            ScriptObjectReference_TranslationMask copyMask = null)
         {
             return ((ScriptObjectReferenceSetterTranslationCommon)((IScriptObjectReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -898,10 +895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptObjectReference)item);
         }
         
-        public ScriptObjectReference GetNew()
-        {
-            return new ScriptObjectReference();
-        }
+        public ScriptObjectReference GetNew() => ScriptObjectReference.GetNew();
         
         #region Xml Translation
         public new void CopyInFromXml(
@@ -1147,14 +1141,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IScriptObjectReference item,
             IScriptObjectReferenceGetter rhs,
-            IScriptObjectReferenceGetter def,
             ErrorMaskBuilder errorMask,
             ScriptObjectReference_TranslationMask copyMask)
         {
             ((ScriptReferenceSetterTranslationCommon)((IScriptReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Reference ?? true)
@@ -1167,14 +1159,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public new ScriptObjectReference DeepCopy(
             IScriptObjectReferenceGetter item,
-            ScriptObjectReference_TranslationMask copyMask = null,
-            IScriptObjectReferenceGetter def = null)
+            ScriptObjectReference_TranslationMask copyMask = null)
         {
             ScriptObjectReference ret = ScriptObjectReferenceSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

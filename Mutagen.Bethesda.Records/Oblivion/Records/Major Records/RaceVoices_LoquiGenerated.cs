@@ -344,6 +344,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceVoicesSetterCommon)((IRaceVoicesGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RaceVoices GetNew()
+        {
+            return new RaceVoices();
+        }
+
     }
     #endregion
 
@@ -462,7 +467,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -471,13 +475,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRaceVoices lhs,
             IRaceVoicesGetter rhs,
-            RaceVoices_TranslationMask copyMask,
-            IRaceVoicesGetter def = null)
+            RaceVoices_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -488,14 +490,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceVoicesGetter rhs,
             out RaceVoices_ErrorMask errorMask,
             RaceVoices_TranslationMask copyMask = null,
-            IRaceVoicesGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RaceVoices_ErrorMask.Factory(errorMaskBuilder);
@@ -505,26 +505,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceVoices lhs,
             IRaceVoicesGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceVoices_TranslationMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices_TranslationMask copyMask = null)
         {
             ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RaceVoices DeepCopy(
             this IRaceVoicesGetter item,
-            RaceVoices_TranslationMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices_TranslationMask copyMask = null)
         {
             return ((RaceVoicesSetterTranslationCommon)((IRaceVoicesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -935,10 +931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Race);
         }
         
-        public RaceVoices GetNew()
-        {
-            return new RaceVoices();
-        }
+        public RaceVoices GetNew() => RaceVoices.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1139,7 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRaceVoices item,
             IRaceVoicesGetter rhs,
-            IRaceVoicesGetter def,
             ErrorMaskBuilder errorMask,
             RaceVoices_TranslationMask copyMask)
         {
@@ -1157,14 +1149,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceVoices DeepCopy(
             IRaceVoicesGetter item,
-            RaceVoices_TranslationMask copyMask = null,
-            IRaceVoicesGetter def = null)
+            RaceVoices_TranslationMask copyMask = null)
         {
             RaceVoices ret = RaceVoicesSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

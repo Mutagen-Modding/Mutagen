@@ -422,6 +422,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataObjectSetterCommon)((IRegionDataObjectGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RegionDataObject GetNew()
+        {
+            return new RegionDataObject();
+        }
+
     }
     #endregion
 
@@ -629,7 +634,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -638,13 +642,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRegionDataObject lhs,
             IRegionDataObjectGetter rhs,
-            RegionDataObject_TranslationMask copyMask,
-            IRegionDataObjectGetter def = null)
+            RegionDataObject_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -655,14 +657,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataObjectGetter rhs,
             out RegionDataObject_ErrorMask errorMask,
             RegionDataObject_TranslationMask copyMask = null,
-            IRegionDataObjectGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RegionDataObject_ErrorMask.Factory(errorMaskBuilder);
@@ -672,26 +672,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataObject lhs,
             IRegionDataObjectGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataObject_TranslationMask copyMask = null,
-            IRegionDataObjectGetter def = null)
+            RegionDataObject_TranslationMask copyMask = null)
         {
             ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RegionDataObject DeepCopy(
             this IRegionDataObjectGetter item,
-            RegionDataObject_TranslationMask copyMask = null,
-            IRegionDataObjectGetter def = null)
+            RegionDataObject_TranslationMask copyMask = null)
         {
             return ((RegionDataObjectSetterTranslationCommon)((IRegionDataObjectGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1295,10 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Byte[]);
         }
         
-        public RegionDataObject GetNew()
-        {
-            return new RegionDataObject();
-        }
+        public RegionDataObject GetNew() => RegionDataObject.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1718,7 +1711,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRegionDataObject item,
             IRegionDataObjectGetter rhs,
-            IRegionDataObjectGetter def,
             ErrorMaskBuilder errorMask,
             RegionDataObject_TranslationMask copyMask)
         {
@@ -1796,14 +1788,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionDataObject DeepCopy(
             IRegionDataObjectGetter item,
-            RegionDataObject_TranslationMask copyMask = null,
-            IRegionDataObjectGetter def = null)
+            RegionDataObject_TranslationMask copyMask = null)
         {
             RegionDataObject ret = RegionDataObjectSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

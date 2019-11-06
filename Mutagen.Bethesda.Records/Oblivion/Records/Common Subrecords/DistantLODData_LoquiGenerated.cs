@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static DistantLODData GetNew()
+        {
+            return new DistantLODData();
+        }
+
     }
     #endregion
 
@@ -458,7 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -467,13 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
-            DistantLODData_TranslationMask copyMask,
-            IDistantLODDataGetter def = null)
+            DistantLODData_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -484,14 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
             IDistantLODDataGetter rhs,
             out DistantLODData_ErrorMask errorMask,
             DistantLODData_TranslationMask copyMask = null,
-            IDistantLODDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = DistantLODData_ErrorMask.Factory(errorMaskBuilder);
@@ -501,26 +501,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IDistantLODData lhs,
             IDistantLODDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            DistantLODData_TranslationMask copyMask = null,
-            IDistantLODDataGetter def = null)
+            DistantLODData_TranslationMask copyMask = null)
         {
             ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static DistantLODData DeepCopy(
             this IDistantLODDataGetter item,
-            DistantLODData_TranslationMask copyMask = null,
-            IDistantLODDataGetter def = null)
+            DistantLODData_TranslationMask copyMask = null)
         {
             return ((DistantLODDataSetterTranslationCommon)((IDistantLODDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -944,10 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
-        public DistantLODData GetNew()
-        {
-            return new DistantLODData();
-        }
+        public DistantLODData GetNew() => DistantLODData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1178,7 +1171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IDistantLODData item,
             IDistantLODDataGetter rhs,
-            IDistantLODDataGetter def,
             ErrorMaskBuilder errorMask,
             DistantLODData_TranslationMask copyMask)
         {
@@ -1200,14 +1192,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public DistantLODData DeepCopy(
             IDistantLODDataGetter item,
-            DistantLODData_TranslationMask copyMask = null,
-            IDistantLODDataGetter def = null)
+            DistantLODData_TranslationMask copyMask = null)
         {
             DistantLODData ret = DistantLODDataSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

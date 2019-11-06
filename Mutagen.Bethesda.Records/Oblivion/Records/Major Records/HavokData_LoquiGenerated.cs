@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((HavokDataSetterCommon)((IHavokDataGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static HavokData GetNew()
+        {
+            return new HavokData();
+        }
+
     }
     #endregion
 
@@ -458,7 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -467,13 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IHavokData lhs,
             IHavokDataGetter rhs,
-            HavokData_TranslationMask copyMask,
-            IHavokDataGetter def = null)
+            HavokData_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -484,14 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
             IHavokDataGetter rhs,
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask copyMask = null,
-            IHavokDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
@@ -501,26 +501,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData lhs,
             IHavokDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            HavokData_TranslationMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData_TranslationMask copyMask = null)
         {
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static HavokData DeepCopy(
             this IHavokDataGetter item,
-            HavokData_TranslationMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData_TranslationMask copyMask = null)
         {
             return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -944,10 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
-        public HavokData GetNew()
-        {
-            return new HavokData();
-        }
+        public HavokData GetNew() => HavokData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1160,7 +1153,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IHavokData item,
             IHavokDataGetter rhs,
-            IHavokDataGetter def,
             ErrorMaskBuilder errorMask,
             HavokData_TranslationMask copyMask)
         {
@@ -1182,14 +1174,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public HavokData DeepCopy(
             IHavokDataGetter item,
-            HavokData_TranslationMask copyMask = null,
-            IHavokDataGetter def = null)
+            HavokData_TranslationMask copyMask = null)
         {
             HavokData ret = HavokDataSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -391,6 +391,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundSetterCommon)((ISoundGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Sound GetNew()
+        {
+            return new Sound();
+        }
+
     }
     #endregion
 
@@ -513,13 +518,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISoundInternal lhs,
             ISoundGetter rhs,
-            Sound_TranslationMask copyMask,
-            ISoundGetter def = null)
+            Sound_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -530,14 +533,12 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundGetter rhs,
             out Sound_ErrorMask errorMask,
             Sound_TranslationMask copyMask = null,
-            ISoundGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SoundSetterTranslationCommon)((ISoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
@@ -547,14 +548,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundInternal lhs,
             ISoundGetter rhs,
             ErrorMaskBuilder errorMask,
-            Sound_TranslationMask copyMask = null,
-            ISoundGetter def = null)
+            Sound_TranslationMask copyMask = null)
         {
             ((SoundSetterTranslationCommon)((ISoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Sound DeepCopy(
+            this ISoundGetter item,
+            Sound_TranslationMask copyMask = null)
+        {
+            return ((SoundSetterTranslationCommon)((ISoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -986,6 +994,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundInternal)item);
         }
         
+        public Sound GetNew() => Sound.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISoundInternal item,
@@ -1404,14 +1414,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISound item,
             ISoundGetter rhs,
-            ISoundGetter def,
             ErrorMaskBuilder errorMask,
             Sound_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.File ?? true)
@@ -1419,15 +1427,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Sound_FieldIndex.File);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.File,
-                        rhsHasBeenSet: rhs.File_IsSet,
-                        defItem: def?.File ?? default(String),
-                        defHasBeenSet: def?.File_IsSet ?? false,
-                        outRhsItem: out var rhsFileItem,
-                        outDefItem: out var defFileItem))
+                    if (rhs.File_IsSet)
                     {
-                        item.File = rhsFileItem;
+                        item.File = rhs.File;
                     }
                     else
                     {
@@ -1449,17 +1451,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Sound_FieldIndex.Data);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Data,
-                        rhsHasBeenSet: rhs.Data_IsSet,
-                        defItem: def?.Data,
-                        defHasBeenSet: def?.Data_IsSet ?? false,
-                        outRhsItem: out var rhsDataItem,
-                        outDefItem: out var defDataItem))
+                    if(rhs.Data_IsSet)
                     {
-                        item.Data = rhsDataItem.DeepCopy(
-                            copyMask?.Data?.Specific,
-                            def: defDataItem);
+                        item.Data = rhs.Data.DeepCopy(copyMask?.Data?.Specific);
                     }
                     else
                     {
@@ -1481,6 +1475,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Sound DeepCopy(
+            ISoundGetter item,
+            Sound_TranslationMask copyMask = null)
+        {
+            Sound ret = SoundSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

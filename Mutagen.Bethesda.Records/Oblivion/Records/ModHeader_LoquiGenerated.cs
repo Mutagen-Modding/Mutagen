@@ -520,6 +520,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ModHeaderSetterCommon)((IModHeaderGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ModHeader GetNew()
+        {
+            return new ModHeader();
+        }
+
     }
     #endregion
 
@@ -701,7 +706,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -710,13 +714,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IModHeader lhs,
             IModHeaderGetter rhs,
-            ModHeader_TranslationMask copyMask,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -727,14 +729,12 @@ namespace Mutagen.Bethesda.Oblivion
             IModHeaderGetter rhs,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
@@ -744,26 +744,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IModHeader lhs,
             IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ModHeader DeepCopy(
             this IModHeaderGetter item,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1287,10 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.VestigialData_Unset();
         }
         
-        public ModHeader GetNew()
-        {
-            return new ModHeader();
-        }
+        public ModHeader GetNew() => ModHeader.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1745,7 +1738,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IModHeader item,
             IModHeaderGetter rhs,
-            IModHeaderGetter def,
             ErrorMaskBuilder errorMask,
             ModHeader_TranslationMask copyMask)
         {
@@ -1774,9 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Stats = rhs.Stats.DeepCopy(
-                                copyMask?.Stats?.Specific,
-                                def?.Stats);
+                            item.Stats = rhs.Stats.DeepCopy(copyMask?.Stats?.Specific);
                         }
                     }
                 }
@@ -1795,15 +1785,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.TypeOffsets,
-                        rhsHasBeenSet: rhs.TypeOffsets_IsSet,
-                        defItem: def.TypeOffsets,
-                        defHasBeenSet: def.TypeOffsets_IsSet,
-                        outRhsItem: out var rhsTypeOffsetsItem,
-                        outDefItem: out var defTypeOffsetsItem))
+                    if(rhs.TypeOffsets_IsSet)
                     {
-                        item.TypeOffsets = rhsTypeOffsetsItem.ToArray();
+                        item.TypeOffsets = rhs.TypeOffsets.ToArray();
                     }
                     else
                     {
@@ -1825,15 +1809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Deleted,
-                        rhsHasBeenSet: rhs.Deleted_IsSet,
-                        defItem: def.Deleted,
-                        defHasBeenSet: def.Deleted_IsSet,
-                        outRhsItem: out var rhsDeletedItem,
-                        outDefItem: out var defDeletedItem))
+                    if(rhs.Deleted_IsSet)
                     {
-                        item.Deleted = rhsDeletedItem.ToArray();
+                        item.Deleted = rhs.Deleted.ToArray();
                     }
                     else
                     {
@@ -1855,15 +1833,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Author,
-                        rhsHasBeenSet: rhs.Author_IsSet,
-                        defItem: def?.Author ?? default(String),
-                        defHasBeenSet: def?.Author_IsSet ?? false,
-                        outRhsItem: out var rhsAuthorItem,
-                        outDefItem: out var defAuthorItem))
+                    if (rhs.Author_IsSet)
                     {
-                        item.Author = rhsAuthorItem;
+                        item.Author = rhs.Author;
                     }
                     else
                     {
@@ -1885,15 +1857,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -1915,14 +1881,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
-                    item.MasterReferences.SetToWithDefault(
-                        rhs: rhs.MasterReferences,
-                        def: def?.MasterReferences,
-                        converter: (r, d) =>
+                    item.MasterReferences.SetTo(
+                        items: rhs.MasterReferences,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.MasterReferences?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.MasterReferences?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1940,15 +1903,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.VestigialData,
-                        rhsHasBeenSet: rhs.VestigialData_IsSet,
-                        defItem: def?.VestigialData ?? default(UInt64),
-                        defHasBeenSet: def?.VestigialData_IsSet ?? false,
-                        outRhsItem: out var rhsVestigialDataItem,
-                        outDefItem: out var defVestigialDataItem))
+                    if (rhs.VestigialData_IsSet)
                     {
-                        item.VestigialData = rhsVestigialDataItem;
+                        item.VestigialData = rhs.VestigialData;
                     }
                     else
                     {
@@ -1971,14 +1928,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ModHeader DeepCopy(
             IModHeaderGetter item,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             ModHeader ret = ModHeaderSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

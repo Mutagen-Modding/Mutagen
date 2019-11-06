@@ -433,6 +433,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ActivatorSetterCommon)((IActivatorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Activator GetNew()
+        {
+            return new Activator();
+        }
+
     }
     #endregion
 
@@ -569,13 +574,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IActivatorInternal lhs,
             IActivatorGetter rhs,
-            Activator_TranslationMask copyMask,
-            IActivatorGetter def = null)
+            Activator_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -586,14 +589,12 @@ namespace Mutagen.Bethesda.Oblivion
             IActivatorGetter rhs,
             out Activator_ErrorMask errorMask,
             Activator_TranslationMask copyMask = null,
-            IActivatorGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
@@ -603,14 +604,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternal lhs,
             IActivatorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Activator_TranslationMask copyMask = null,
-            IActivatorGetter def = null)
+            Activator_TranslationMask copyMask = null)
         {
             ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
+            Activator_TranslationMask copyMask = null)
+        {
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1069,6 +1077,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
+        public Activator GetNew() => Activator.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IActivatorInternal item,
@@ -1515,14 +1525,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IActivator item,
             IActivatorGetter rhs,
-            IActivatorGetter def,
             ErrorMaskBuilder errorMask,
             Activator_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1530,15 +1538,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Activator_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1560,17 +1562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Activator_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1594,9 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Activator_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1613,9 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Activator_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToFormKey(
-                        rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property);
+                    item.Sound_Property.SetToFormKey(rhs: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1630,6 +1620,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Activator DeepCopy(
+            IActivatorGetter item,
+            Activator_TranslationMask copyMask = null)
+        {
+            Activator ret = ActivatorSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

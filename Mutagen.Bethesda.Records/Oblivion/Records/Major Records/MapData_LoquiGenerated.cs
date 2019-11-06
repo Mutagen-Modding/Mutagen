@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((MapDataSetterCommon)((IMapDataGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static MapData GetNew()
+        {
+            return new MapData();
+        }
+
     }
     #endregion
 
@@ -458,7 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -467,13 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IMapData lhs,
             IMapDataGetter rhs,
-            MapData_TranslationMask copyMask,
-            IMapDataGetter def = null)
+            MapData_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -484,14 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
             IMapDataGetter rhs,
             out MapData_ErrorMask errorMask,
             MapData_TranslationMask copyMask = null,
-            IMapDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MapDataSetterTranslationCommon)((IMapDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MapData_ErrorMask.Factory(errorMaskBuilder);
@@ -501,26 +501,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapData lhs,
             IMapDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            MapData_TranslationMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData_TranslationMask copyMask = null)
         {
             ((MapDataSetterTranslationCommon)((IMapDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static MapData DeepCopy(
             this IMapDataGetter item,
-            MapData_TranslationMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData_TranslationMask copyMask = null)
         {
             return ((MapDataSetterTranslationCommon)((IMapDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -944,10 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
         
-        public MapData GetNew()
-        {
-            return new MapData();
-        }
+        public MapData GetNew() => MapData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1178,7 +1171,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IMapData item,
             IMapDataGetter rhs,
-            IMapDataGetter def,
             ErrorMaskBuilder errorMask,
             MapData_TranslationMask copyMask)
         {
@@ -1200,14 +1192,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public MapData DeepCopy(
             IMapDataGetter item,
-            MapData_TranslationMask copyMask = null,
-            IMapDataGetter def = null)
+            MapData_TranslationMask copyMask = null)
         {
             MapData ret = MapDataSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

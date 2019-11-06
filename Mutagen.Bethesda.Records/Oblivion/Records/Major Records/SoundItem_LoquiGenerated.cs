@@ -375,6 +375,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundItemSetterCommon)((ISoundItemGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static SoundItem GetNew()
+        {
+            return new SoundItem();
+        }
+
     }
     #endregion
 
@@ -496,7 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -505,13 +509,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISoundItem lhs,
             ISoundItemGetter rhs,
-            SoundItem_TranslationMask copyMask,
-            ISoundItemGetter def = null)
+            SoundItem_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -522,14 +524,12 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundItemGetter rhs,
             out SoundItem_ErrorMask errorMask,
             SoundItem_TranslationMask copyMask = null,
-            ISoundItemGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SoundItemSetterTranslationCommon)((ISoundItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
@@ -539,26 +539,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItem lhs,
             ISoundItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundItem_TranslationMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem_TranslationMask copyMask = null)
         {
             ((SoundItemSetterTranslationCommon)((ISoundItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static SoundItem DeepCopy(
             this ISoundItemGetter item,
-            SoundItem_TranslationMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem_TranslationMask copyMask = null)
         {
             return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -981,10 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance_Unset();
         }
         
-        public SoundItem GetNew()
-        {
-            return new SoundItem();
-        }
+        public SoundItem GetNew() => SoundItem.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1226,7 +1219,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISoundItem item,
             ISoundItemGetter rhs,
-            ISoundItemGetter def,
             ErrorMaskBuilder errorMask,
             SoundItem_TranslationMask copyMask)
         {
@@ -1235,9 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToFormKey(
-                        rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property);
+                    item.Sound_Property.SetToFormKey(rhs: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1254,15 +1244,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Chance,
-                        rhsHasBeenSet: rhs.Chance_IsSet,
-                        defItem: def?.Chance ?? default(Byte),
-                        defHasBeenSet: def?.Chance_IsSet ?? false,
-                        outRhsItem: out var rhsChanceItem,
-                        outDefItem: out var defChanceItem))
+                    if (rhs.Chance_IsSet)
                     {
-                        item.Chance = rhsChanceItem;
+                        item.Chance = rhs.Chance;
                     }
                     else
                     {
@@ -1285,14 +1269,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public SoundItem DeepCopy(
             ISoundItemGetter item,
-            SoundItem_TranslationMask copyMask = null,
-            ISoundItemGetter def = null)
+            SoundItem_TranslationMask copyMask = null)
         {
             SoundItem ret = SoundItemSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

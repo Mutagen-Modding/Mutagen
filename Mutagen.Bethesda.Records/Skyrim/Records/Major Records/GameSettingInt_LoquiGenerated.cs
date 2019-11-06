@@ -362,6 +362,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((GameSettingIntSetterCommon)((IGameSettingIntGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static GameSettingInt GetNew()
+        {
+            return new GameSettingInt();
+        }
+
     }
     #endregion
 
@@ -474,13 +479,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IGameSettingIntInternal lhs,
             IGameSettingIntGetter rhs,
-            GameSettingInt_TranslationMask copyMask,
-            IGameSettingIntGetter def = null)
+            GameSettingInt_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -491,14 +494,12 @@ namespace Mutagen.Bethesda.Skyrim
             IGameSettingIntGetter rhs,
             out GameSettingInt_ErrorMask errorMask,
             GameSettingInt_TranslationMask copyMask = null,
-            IGameSettingIntGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
@@ -508,14 +509,21 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingIntInternal lhs,
             IGameSettingIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingInt_TranslationMask copyMask = null,
-            IGameSettingIntGetter def = null)
+            GameSettingInt_TranslationMask copyMask = null)
         {
             ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static GameSettingInt DeepCopy(
+            this IGameSettingIntGetter item,
+            GameSettingInt_TranslationMask copyMask = null)
+        {
+            return ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -938,6 +946,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingIntInternal)item);
         }
         
+        public GameSettingInt GetNew() => GameSettingInt.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGameSettingIntInternal item,
@@ -1320,14 +1330,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IGameSettingInt item,
             IGameSettingIntGetter rhs,
-            IGameSettingIntGetter def,
             ErrorMaskBuilder errorMask,
             GameSettingInt_TranslationMask copyMask)
         {
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Data ?? true)
@@ -1335,15 +1343,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)GameSettingInt_FieldIndex.Data);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Data,
-                        rhsHasBeenSet: rhs.Data_IsSet,
-                        defItem: def?.Data ?? default(Int32),
-                        defHasBeenSet: def?.Data_IsSet ?? false,
-                        outRhsItem: out var rhsDataItem,
-                        outDefItem: out var defDataItem))
+                    if (rhs.Data_IsSet)
                     {
-                        item.Data = rhsDataItem;
+                        item.Data = rhs.Data;
                     }
                     else
                     {
@@ -1363,6 +1365,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
+        
+        public new GameSettingInt DeepCopy(
+            IGameSettingIntGetter item,
+            GameSettingInt_TranslationMask copyMask = null)
+        {
+            GameSettingInt ret = GameSettingIntSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

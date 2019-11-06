@@ -328,6 +328,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((InterCellPointSetterCommon)((IInterCellPointGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static InterCellPoint GetNew()
+        {
+            return new InterCellPoint();
+        }
+
     }
     #endregion
 
@@ -444,7 +449,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -453,13 +457,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
-            InterCellPoint_TranslationMask copyMask,
-            IInterCellPointGetter def = null)
+            InterCellPoint_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -470,14 +472,12 @@ namespace Mutagen.Bethesda.Oblivion
             IInterCellPointGetter rhs,
             out InterCellPoint_ErrorMask errorMask,
             InterCellPoint_TranslationMask copyMask = null,
-            IInterCellPointGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
@@ -487,26 +487,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            InterCellPoint_TranslationMask copyMask = null,
-            IInterCellPointGetter def = null)
+            InterCellPoint_TranslationMask copyMask = null)
         {
             ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static InterCellPoint DeepCopy(
             this IInterCellPointGetter item,
-            InterCellPoint_TranslationMask copyMask = null,
-            IInterCellPointGetter def = null)
+            InterCellPoint_TranslationMask copyMask = null)
         {
             return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -915,10 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default(P3Float);
         }
         
-        public InterCellPoint GetNew()
-        {
-            return new InterCellPoint();
-        }
+        public InterCellPoint GetNew() => InterCellPoint.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1119,7 +1112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IInterCellPoint item,
             IInterCellPointGetter rhs,
-            IInterCellPointGetter def,
             ErrorMaskBuilder errorMask,
             InterCellPoint_TranslationMask copyMask)
         {
@@ -1137,14 +1129,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public InterCellPoint DeepCopy(
             IInterCellPointGetter item,
-            InterCellPoint_TranslationMask copyMask = null,
-            IInterCellPointGetter def = null)
+            InterCellPoint_TranslationMask copyMask = null)
         {
             InterCellPoint ret = InterCellPointSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

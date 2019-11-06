@@ -579,6 +579,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((BookSetterCommon)((IBookGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Book GetNew()
+        {
+            return new Book();
+        }
+
     }
     #endregion
 
@@ -775,13 +780,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IBookInternal lhs,
             IBookGetter rhs,
-            Book_TranslationMask copyMask,
-            IBookGetter def = null)
+            Book_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -792,14 +795,12 @@ namespace Mutagen.Bethesda.Oblivion
             IBookGetter rhs,
             out Book_ErrorMask errorMask,
             Book_TranslationMask copyMask = null,
-            IBookGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((BookSetterTranslationCommon)((IBookGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
@@ -809,14 +810,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IBookInternal lhs,
             IBookGetter rhs,
             ErrorMaskBuilder errorMask,
-            Book_TranslationMask copyMask = null,
-            IBookGetter def = null)
+            Book_TranslationMask copyMask = null)
         {
             ((BookSetterTranslationCommon)((IBookGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Book DeepCopy(
+            this IBookGetter item,
+            Book_TranslationMask copyMask = null)
+        {
+            return ((BookSetterTranslationCommon)((IBookGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1387,6 +1395,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IBookInternal)item);
         }
+        
+        public Book GetNew() => Book.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2046,14 +2056,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IBook item,
             IBookGetter rhs,
-            IBookGetter def,
             ErrorMaskBuilder errorMask,
             Book_TranslationMask copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -2061,15 +2069,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -2091,17 +2093,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -2125,15 +2119,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2155,9 +2143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2174,9 +2160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetToFormKey(
-                        rhs: rhs.Enchantment_Property,
-                        def: def?.Enchantment_Property);
+                    item.Enchantment_Property.SetToFormKey(rhs: rhs.Enchantment_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2193,15 +2177,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.EnchantmentPoints);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.EnchantmentPoints,
-                        rhsHasBeenSet: rhs.EnchantmentPoints_IsSet,
-                        defItem: def?.EnchantmentPoints ?? default(UInt16),
-                        defHasBeenSet: def?.EnchantmentPoints_IsSet ?? false,
-                        outRhsItem: out var rhsEnchantmentPointsItem,
-                        outDefItem: out var defEnchantmentPointsItem))
+                    if (rhs.EnchantmentPoints_IsSet)
                     {
-                        item.EnchantmentPoints = rhsEnchantmentPointsItem;
+                        item.EnchantmentPoints = rhs.EnchantmentPoints;
                     }
                     else
                     {
@@ -2223,15 +2201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Book_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -2271,6 +2243,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Book DeepCopy(
+            IBookGetter item,
+            Book_TranslationMask copyMask = null)
+        {
+            Book ret = BookSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

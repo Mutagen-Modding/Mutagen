@@ -39,6 +39,14 @@ namespace Mutagen.Bethesda.Tests
                 this.ModKey);
         }
 
+        protected override async Task<IMod> ImportCopyIn(FilePath file)
+        {
+            var wrapper = OblivionMod.CreateFromBinaryWrapper(file.Path);
+            var ret = new OblivionMod(this.ModKey);
+            ret.DeepCopyFieldsFrom(wrapper);
+            return ret;
+        }
+
         protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
         {
             return await OblivionMod.CreateFromXmlFolder(dir, this.ModKey);

@@ -541,6 +541,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoulGemSetterCommon)((ISoulGemGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static SoulGem GetNew()
+        {
+            return new SoulGem();
+        }
+
     }
     #endregion
 
@@ -718,13 +723,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ISoulGemInternal lhs,
             ISoulGemGetter rhs,
-            SoulGem_TranslationMask copyMask,
-            ISoulGemGetter def = null)
+            SoulGem_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -735,14 +738,12 @@ namespace Mutagen.Bethesda.Oblivion
             ISoulGemGetter rhs,
             out SoulGem_ErrorMask errorMask,
             SoulGem_TranslationMask copyMask = null,
-            ISoulGemGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((SoulGemSetterTranslationCommon)((ISoulGemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
@@ -752,14 +753,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemInternal lhs,
             ISoulGemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoulGem_TranslationMask copyMask = null,
-            ISoulGemGetter def = null)
+            SoulGem_TranslationMask copyMask = null)
         {
             ((SoulGemSetterTranslationCommon)((ISoulGemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static SoulGem DeepCopy(
+            this ISoulGemGetter item,
+            SoulGem_TranslationMask copyMask = null)
+        {
+            return ((SoulGemSetterTranslationCommon)((ISoulGemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1290,6 +1298,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ISoulGemInternal)item);
         }
+        
+        public SoulGem GetNew() => SoulGem.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1887,14 +1897,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ISoulGem item,
             ISoulGemGetter rhs,
-            ISoulGemGetter def,
             ErrorMaskBuilder errorMask,
             SoulGem_TranslationMask copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1902,15 +1910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1932,17 +1934,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1966,15 +1960,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1996,9 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2023,15 +2009,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ContainedSoul,
-                        rhsHasBeenSet: rhs.ContainedSoul_IsSet,
-                        defItem: def?.ContainedSoul ?? default(SoulLevel),
-                        defHasBeenSet: def?.ContainedSoul_IsSet ?? false,
-                        outRhsItem: out var rhsContainedSoulItem,
-                        outDefItem: out var defContainedSoulItem))
+                    if (rhs.ContainedSoul_IsSet)
                     {
-                        item.ContainedSoul = rhsContainedSoulItem;
+                        item.ContainedSoul = rhs.ContainedSoul;
                     }
                     else
                     {
@@ -2053,15 +2033,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.MaximumCapacity,
-                        rhsHasBeenSet: rhs.MaximumCapacity_IsSet,
-                        defItem: def?.MaximumCapacity ?? default(SoulLevel),
-                        defHasBeenSet: def?.MaximumCapacity_IsSet ?? false,
-                        outRhsItem: out var rhsMaximumCapacityItem,
-                        outDefItem: out var defMaximumCapacityItem))
+                    if (rhs.MaximumCapacity_IsSet)
                     {
-                        item.MaximumCapacity = rhsMaximumCapacityItem;
+                        item.MaximumCapacity = rhs.MaximumCapacity;
                     }
                     else
                     {
@@ -2085,6 +2059,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new SoulGem DeepCopy(
+            ISoulGemGetter item,
+            SoulGem_TranslationMask copyMask = null)
+        {
+            SoulGem ret = SoulGemSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

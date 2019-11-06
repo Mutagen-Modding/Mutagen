@@ -544,6 +544,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((TexturesSetterCommon)((ITexturesGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Textures GetNew()
+        {
+            return new Textures();
+        }
+
     }
     #endregion
 
@@ -728,7 +733,6 @@ namespace Mutagen.Bethesda.Skyrim
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -737,13 +741,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this ITextures lhs,
             ITexturesGetter rhs,
-            Textures_TranslationMask copyMask,
-            ITexturesGetter def = null)
+            Textures_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -754,14 +756,12 @@ namespace Mutagen.Bethesda.Skyrim
             ITexturesGetter rhs,
             out Textures_ErrorMask errorMask,
             Textures_TranslationMask copyMask = null,
-            ITexturesGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
@@ -771,26 +771,22 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextures lhs,
             ITexturesGetter rhs,
             ErrorMaskBuilder errorMask,
-            Textures_TranslationMask copyMask = null,
-            ITexturesGetter def = null)
+            Textures_TranslationMask copyMask = null)
         {
             ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Textures DeepCopy(
             this ITexturesGetter item,
-            Textures_TranslationMask copyMask = null,
-            ITexturesGetter def = null)
+            Textures_TranslationMask copyMask = null)
         {
             return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1303,10 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BacklightMaskOrSpecular_Unset();
         }
         
-        public Textures GetNew()
-        {
-            return new Textures();
-        }
+        public Textures GetNew() => Textures.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1763,7 +1756,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             ITextures item,
             ITexturesGetter rhs,
-            ITexturesGetter def,
             ErrorMaskBuilder errorMask,
             Textures_TranslationMask copyMask)
         {
@@ -1772,15 +1764,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.Diffuse);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Diffuse,
-                        rhsHasBeenSet: rhs.Diffuse_IsSet,
-                        defItem: def?.Diffuse ?? default(String),
-                        defHasBeenSet: def?.Diffuse_IsSet ?? false,
-                        outRhsItem: out var rhsDiffuseItem,
-                        outDefItem: out var defDiffuseItem))
+                    if (rhs.Diffuse_IsSet)
                     {
-                        item.Diffuse = rhsDiffuseItem;
+                        item.Diffuse = rhs.Diffuse;
                     }
                     else
                     {
@@ -1802,15 +1788,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.NormalOrGloss);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.NormalOrGloss,
-                        rhsHasBeenSet: rhs.NormalOrGloss_IsSet,
-                        defItem: def?.NormalOrGloss ?? default(String),
-                        defHasBeenSet: def?.NormalOrGloss_IsSet ?? false,
-                        outRhsItem: out var rhsNormalOrGlossItem,
-                        outDefItem: out var defNormalOrGlossItem))
+                    if (rhs.NormalOrGloss_IsSet)
                     {
-                        item.NormalOrGloss = rhsNormalOrGlossItem;
+                        item.NormalOrGloss = rhs.NormalOrGloss;
                     }
                     else
                     {
@@ -1832,15 +1812,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.EnvironmentMaskOrSubsurfaceTint,
-                        rhsHasBeenSet: rhs.EnvironmentMaskOrSubsurfaceTint_IsSet,
-                        defItem: def?.EnvironmentMaskOrSubsurfaceTint ?? default(String),
-                        defHasBeenSet: def?.EnvironmentMaskOrSubsurfaceTint_IsSet ?? false,
-                        outRhsItem: out var rhsEnvironmentMaskOrSubsurfaceTintItem,
-                        outDefItem: out var defEnvironmentMaskOrSubsurfaceTintItem))
+                    if (rhs.EnvironmentMaskOrSubsurfaceTint_IsSet)
                     {
-                        item.EnvironmentMaskOrSubsurfaceTint = rhsEnvironmentMaskOrSubsurfaceTintItem;
+                        item.EnvironmentMaskOrSubsurfaceTint = rhs.EnvironmentMaskOrSubsurfaceTint;
                     }
                     else
                     {
@@ -1862,15 +1836,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.GlowOrDetailMap);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.GlowOrDetailMap,
-                        rhsHasBeenSet: rhs.GlowOrDetailMap_IsSet,
-                        defItem: def?.GlowOrDetailMap ?? default(String),
-                        defHasBeenSet: def?.GlowOrDetailMap_IsSet ?? false,
-                        outRhsItem: out var rhsGlowOrDetailMapItem,
-                        outDefItem: out var defGlowOrDetailMapItem))
+                    if (rhs.GlowOrDetailMap_IsSet)
                     {
-                        item.GlowOrDetailMap = rhsGlowOrDetailMapItem;
+                        item.GlowOrDetailMap = rhs.GlowOrDetailMap;
                     }
                     else
                     {
@@ -1892,15 +1860,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.Height);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Height,
-                        rhsHasBeenSet: rhs.Height_IsSet,
-                        defItem: def?.Height ?? default(String),
-                        defHasBeenSet: def?.Height_IsSet ?? false,
-                        outRhsItem: out var rhsHeightItem,
-                        outDefItem: out var defHeightItem))
+                    if (rhs.Height_IsSet)
                     {
-                        item.Height = rhsHeightItem;
+                        item.Height = rhs.Height;
                     }
                     else
                     {
@@ -1922,15 +1884,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.Environment);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Environment,
-                        rhsHasBeenSet: rhs.Environment_IsSet,
-                        defItem: def?.Environment ?? default(String),
-                        defHasBeenSet: def?.Environment_IsSet ?? false,
-                        outRhsItem: out var rhsEnvironmentItem,
-                        outDefItem: out var defEnvironmentItem))
+                    if (rhs.Environment_IsSet)
                     {
-                        item.Environment = rhsEnvironmentItem;
+                        item.Environment = rhs.Environment;
                     }
                     else
                     {
@@ -1952,15 +1908,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.Multilayer);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Multilayer,
-                        rhsHasBeenSet: rhs.Multilayer_IsSet,
-                        defItem: def?.Multilayer ?? default(String),
-                        defHasBeenSet: def?.Multilayer_IsSet ?? false,
-                        outRhsItem: out var rhsMultilayerItem,
-                        outDefItem: out var defMultilayerItem))
+                    if (rhs.Multilayer_IsSet)
                     {
-                        item.Multilayer = rhsMultilayerItem;
+                        item.Multilayer = rhs.Multilayer;
                     }
                     else
                     {
@@ -1982,15 +1932,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Textures_FieldIndex.BacklightMaskOrSpecular);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.BacklightMaskOrSpecular,
-                        rhsHasBeenSet: rhs.BacklightMaskOrSpecular_IsSet,
-                        defItem: def?.BacklightMaskOrSpecular ?? default(String),
-                        defHasBeenSet: def?.BacklightMaskOrSpecular_IsSet ?? false,
-                        outRhsItem: out var rhsBacklightMaskOrSpecularItem,
-                        outDefItem: out var defBacklightMaskOrSpecularItem))
+                    if (rhs.BacklightMaskOrSpecular_IsSet)
                     {
-                        item.BacklightMaskOrSpecular = rhsBacklightMaskOrSpecularItem;
+                        item.BacklightMaskOrSpecular = rhs.BacklightMaskOrSpecular;
                     }
                     else
                     {
@@ -2013,14 +1957,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Textures DeepCopy(
             ITexturesGetter item,
-            Textures_TranslationMask copyMask = null,
-            ITexturesGetter def = null)
+            Textures_TranslationMask copyMask = null)
         {
             Textures ret = TexturesSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

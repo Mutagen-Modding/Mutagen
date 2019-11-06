@@ -297,6 +297,11 @@ namespace Mutagen.Bethesda.Tests
             ((TestingSettingsSetterCommon)((ITestingSettingsGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static TestingSettings GetNew()
+        {
+            return new TestingSettings();
+        }
+
     }
     #endregion
 
@@ -444,7 +449,6 @@ namespace Mutagen.Bethesda.Tests
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -453,13 +457,11 @@ namespace Mutagen.Bethesda.Tests
         public static void DeepCopyFieldsFrom(
             this ITestingSettings lhs,
             ITestingSettingsGetter rhs,
-            TestingSettings_TranslationMask copyMask,
-            ITestingSettingsGetter def = null)
+            TestingSettings_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -470,14 +472,12 @@ namespace Mutagen.Bethesda.Tests
             ITestingSettingsGetter rhs,
             out TestingSettings_ErrorMask errorMask,
             TestingSettings_TranslationMask copyMask = null,
-            ITestingSettingsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = TestingSettings_ErrorMask.Factory(errorMaskBuilder);
@@ -487,26 +487,22 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettings lhs,
             ITestingSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            TestingSettings_TranslationMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings_TranslationMask copyMask = null)
         {
             ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static TestingSettings DeepCopy(
             this ITestingSettingsGetter item,
-            TestingSettings_TranslationMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings_TranslationMask copyMask = null)
         {
             return ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -942,10 +938,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
-        public TestingSettings GetNew()
-        {
-            return new TestingSettings();
-        }
+        public TestingSettings GetNew() => TestingSettings.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1172,7 +1165,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void DeepCopyFieldsFrom(
             ITestingSettings item,
             ITestingSettingsGetter rhs,
-            ITestingSettingsGetter def,
             ErrorMaskBuilder errorMask,
             TestingSettings_TranslationMask copyMask)
         {
@@ -1209,9 +1201,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                         else
                         {
-                            item.DataFolderLocations = rhs.DataFolderLocations.DeepCopy(
-                                copyMask?.DataFolderLocations?.Specific,
-                                def?.DataFolderLocations);
+                            item.DataFolderLocations = rhs.DataFolderLocations.DeepCopy(copyMask?.DataFolderLocations?.Specific);
                         }
                     }
                 }
@@ -1238,9 +1228,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                         else
                         {
-                            item.PassthroughSettings = rhs.PassthroughSettings.DeepCopy(
-                                copyMask?.PassthroughSettings?.Specific,
-                                def?.PassthroughSettings);
+                            item.PassthroughSettings = rhs.PassthroughSettings.DeepCopy(copyMask?.PassthroughSettings?.Specific);
                         }
                     }
                 }
@@ -1259,14 +1247,11 @@ namespace Mutagen.Bethesda.Tests.Internals
                 errorMask?.PushIndex((int)TestingSettings_FieldIndex.TargetGroups);
                 try
                 {
-                    item.TargetGroups.SetToWithDefault(
-                        rhs: rhs.TargetGroups,
-                        def: def?.TargetGroups,
-                        converter: (r, d) =>
+                    item.TargetGroups.SetTo(
+                        items: rhs.TargetGroups,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.TargetGroups?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.TargetGroups?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1285,14 +1270,12 @@ namespace Mutagen.Bethesda.Tests.Internals
         
         public TestingSettings DeepCopy(
             ITestingSettingsGetter item,
-            TestingSettings_TranslationMask copyMask = null,
-            ITestingSettingsGetter def = null)
+            TestingSettings_TranslationMask copyMask = null)
         {
             TestingSettings ret = TestingSettingsSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

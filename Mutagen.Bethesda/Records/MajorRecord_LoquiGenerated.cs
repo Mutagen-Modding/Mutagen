@@ -500,7 +500,6 @@ namespace Mutagen.Bethesda
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -509,13 +508,11 @@ namespace Mutagen.Bethesda
         public static void DeepCopyFieldsFrom(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
-            MajorRecord_TranslationMask copyMask,
-            IMajorRecordGetter def = null)
+            MajorRecord_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -526,14 +523,12 @@ namespace Mutagen.Bethesda
             IMajorRecordGetter rhs,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask copyMask = null,
-            IMajorRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
@@ -543,14 +538,21 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            MajorRecord_TranslationMask copyMask = null,
-            IMajorRecordGetter def = null)
+            MajorRecord_TranslationMask copyMask = null)
         {
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static MajorRecord DeepCopy(
+            this IMajorRecordGetter item,
+            MajorRecord_TranslationMask copyMask = null)
+        {
+            return ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1484,7 +1486,6 @@ namespace Mutagen.Bethesda.Internals
         public void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
-            IMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
             MajorRecord_TranslationMask copyMask)
         {
@@ -1501,15 +1502,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.EditorID,
-                        rhsHasBeenSet: rhs.EditorID_IsSet,
-                        defItem: def?.EditorID ?? default(String),
-                        defHasBeenSet: def?.EditorID_IsSet ?? false,
-                        outRhsItem: out var rhsEditorIDItem,
-                        outDefItem: out var defEditorIDItem))
+                    if (rhs.EditorID_IsSet)
                     {
-                        item.EditorID = rhsEditorIDItem;
+                        item.EditorID = rhs.EditorID;
                     }
                     else
                     {
@@ -1529,6 +1524,17 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #endregion
+        
+        public MajorRecord DeepCopy(
+            IMajorRecordGetter item,
+            MajorRecord_TranslationMask copyMask = null)
+        {
+            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

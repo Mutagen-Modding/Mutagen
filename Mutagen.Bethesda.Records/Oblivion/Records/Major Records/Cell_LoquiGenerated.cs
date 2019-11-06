@@ -812,6 +812,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellSetterCommon)((ICellGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Cell GetNew()
+        {
+            return new Cell();
+        }
+
     }
     #endregion
 
@@ -1074,13 +1079,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICellInternal lhs,
             ICellGetter rhs,
-            Cell_TranslationMask copyMask,
-            ICellGetter def = null)
+            Cell_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -1091,14 +1094,12 @@ namespace Mutagen.Bethesda.Oblivion
             ICellGetter rhs,
             out Cell_ErrorMask errorMask,
             Cell_TranslationMask copyMask = null,
-            ICellGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
@@ -1108,14 +1109,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternal lhs,
             ICellGetter rhs,
             ErrorMaskBuilder errorMask,
-            Cell_TranslationMask copyMask = null,
-            ICellGetter def = null)
+            Cell_TranslationMask copyMask = null)
         {
             ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            Cell_TranslationMask copyMask = null)
+        {
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1825,6 +1833,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ICellInternal)item);
         }
+        
+        public Cell GetNew() => Cell.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2799,14 +2809,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICell item,
             ICellGetter rhs,
-            ICellGetter def,
             ErrorMaskBuilder errorMask,
             Cell_TranslationMask copyMask)
         {
             ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -2814,15 +2822,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -2844,15 +2846,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Cell.Flag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -2874,15 +2870,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Grid,
-                        rhsHasBeenSet: rhs.Grid_IsSet,
-                        defItem: def?.Grid ?? default(P2Int),
-                        defHasBeenSet: def?.Grid_IsSet ?? false,
-                        outRhsItem: out var rhsGridItem,
-                        outDefItem: out var defGridItem))
+                    if (rhs.Grid_IsSet)
                     {
-                        item.Grid = rhsGridItem;
+                        item.Grid = rhs.Grid;
                     }
                     else
                     {
@@ -2904,17 +2894,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Lighting,
-                        rhsHasBeenSet: rhs.Lighting_IsSet,
-                        defItem: def?.Lighting,
-                        defHasBeenSet: def?.Lighting_IsSet ?? false,
-                        outRhsItem: out var rhsLightingItem,
-                        outDefItem: out var defLightingItem))
+                    if(rhs.Lighting_IsSet)
                     {
-                        item.Lighting = rhsLightingItem.DeepCopy(
-                            copyMask?.Lighting?.Specific,
-                            def: defLightingItem);
+                        item.Lighting = rhs.Lighting.DeepCopy(copyMask?.Lighting?.Specific);
                     }
                     else
                     {
@@ -2938,10 +2920,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                 try
                 {
-                    item.Regions.SetToWithDefault(
+                    item.Regions.SetTo(
                         rhs.Regions,
-                        def?.Regions,
-                        (r, d) => new FormIDLink<Region>(r.FormKey));
+                        (r) => new FormIDLink<Region>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2958,15 +2939,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.MusicType,
-                        rhsHasBeenSet: rhs.MusicType_IsSet,
-                        defItem: def?.MusicType ?? default(MusicType),
-                        defHasBeenSet: def?.MusicType_IsSet ?? false,
-                        outRhsItem: out var rhsMusicTypeItem,
-                        outDefItem: out var defMusicTypeItem))
+                    if (rhs.MusicType_IsSet)
                     {
-                        item.MusicType = rhsMusicTypeItem;
+                        item.MusicType = rhs.MusicType;
                     }
                     else
                     {
@@ -2988,15 +2963,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.WaterHeight,
-                        rhsHasBeenSet: rhs.WaterHeight_IsSet,
-                        defItem: def?.WaterHeight ?? default(Single),
-                        defHasBeenSet: def?.WaterHeight_IsSet ?? false,
-                        outRhsItem: out var rhsWaterHeightItem,
-                        outDefItem: out var defWaterHeightItem))
+                    if (rhs.WaterHeight_IsSet)
                     {
-                        item.WaterHeight = rhsWaterHeightItem;
+                        item.WaterHeight = rhs.WaterHeight;
                     }
                     else
                     {
@@ -3018,9 +2987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetToFormKey(
-                        rhs: rhs.Climate_Property,
-                        def: def?.Climate_Property);
+                    item.Climate_Property.SetToFormKey(rhs: rhs.Climate_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3037,9 +3004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetToFormKey(
-                        rhs: rhs.Water_Property,
-                        def: def?.Water_Property);
+                    item.Water_Property.SetToFormKey(rhs: rhs.Water_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3056,9 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetToFormKey(
-                        rhs: rhs.Owner_Property,
-                        def: def?.Owner_Property);
+                    item.Owner_Property.SetToFormKey(rhs: rhs.Owner_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3075,15 +3038,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FactionRank,
-                        rhsHasBeenSet: rhs.FactionRank_IsSet,
-                        defItem: def?.FactionRank ?? default(Int32),
-                        defHasBeenSet: def?.FactionRank_IsSet ?? false,
-                        outRhsItem: out var rhsFactionRankItem,
-                        outDefItem: out var defFactionRankItem))
+                    if (rhs.FactionRank_IsSet)
                     {
-                        item.FactionRank = rhsFactionRankItem;
+                        item.FactionRank = rhs.FactionRank;
                     }
                     else
                     {
@@ -3105,9 +3062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetToFormKey(
-                        rhs: rhs.GlobalVariable_Property,
-                        def: def?.GlobalVariable_Property);
+                    item.GlobalVariable_Property.SetToFormKey(rhs: rhs.GlobalVariable_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3124,19 +3079,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.PathGrid,
-                        rhsHasBeenSet: rhs.PathGrid_IsSet,
-                        defItem: def?.PathGrid,
-                        defHasBeenSet: def?.PathGrid_IsSet ?? false,
-                        outRhsItem: out var rhsPathGridItem,
-                        outDefItem: out var defPathGridItem))
+                    if(rhs.PathGrid_IsSet)
                     {
-                        var copyRet = new PathGrid(rhsPathGridItem.FormKey);
+                        var copyRet = new PathGrid(rhs.PathGrid.FormKey);
                         copyRet.DeepCopyFieldsFrom(
-                            rhs: rhsPathGridItem,
-                            copyMask: copyMask?.PathGrid?.Specific,
-                            def: defPathGridItem);
+                            rhs: rhs.PathGrid,
+                            copyMask: copyMask?.PathGrid?.Specific);
                         item.PathGrid = copyRet;
                     }
                     else
@@ -3161,19 +3109,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Landscape,
-                        rhsHasBeenSet: rhs.Landscape_IsSet,
-                        defItem: def?.Landscape,
-                        defHasBeenSet: def?.Landscape_IsSet ?? false,
-                        outRhsItem: out var rhsLandscapeItem,
-                        outDefItem: out var defLandscapeItem))
+                    if(rhs.Landscape_IsSet)
                     {
-                        var copyRet = new Landscape(rhsLandscapeItem.FormKey);
+                        var copyRet = new Landscape(rhs.Landscape.FormKey);
                         copyRet.DeepCopyFieldsFrom(
-                            rhs: rhsLandscapeItem,
-                            copyMask: copyMask?.Landscape?.Specific,
-                            def: defLandscapeItem);
+                            rhs: rhs.Landscape,
+                            copyMask: copyMask?.Landscape?.Specific);
                         item.Landscape = copyRet;
                     }
                     else
@@ -3206,12 +3147,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                 try
                 {
-                    item.Persistent.SetToWithDefault(
-                        rhs: rhs.Persistent,
-                        def: def?.Persistent,
-                        converter: (r, d) =>
+                    item.Persistent.SetTo(
+                        items: rhs.Persistent,
+                        converter: (r) =>
                         {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
                         });
                 }
                 catch (Exception ex)
@@ -3233,12 +3173,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                 try
                 {
-                    item.Temporary.SetToWithDefault(
-                        rhs: rhs.Temporary,
-                        def: def?.Temporary,
-                        converter: (r, d) =>
+                    item.Temporary.SetTo(
+                        items: rhs.Temporary,
+                        converter: (r) =>
                         {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
                         });
                 }
                 catch (Exception ex)
@@ -3260,12 +3199,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                 try
                 {
-                    item.VisibleWhenDistant.SetToWithDefault(
-                        rhs: rhs.VisibleWhenDistant,
-                        def: def?.VisibleWhenDistant,
-                        converter: (r, d) =>
+                    item.VisibleWhenDistant.SetTo(
+                        items: rhs.VisibleWhenDistant,
+                        converter: (r) =>
                         {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null, d);
+                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
                         });
                 }
                 catch (Exception ex)
@@ -3281,6 +3219,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Cell DeepCopy(
+            ICellGetter item,
+            Cell_TranslationMask copyMask = null)
+        {
+            Cell ret = CellSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

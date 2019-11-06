@@ -147,6 +147,7 @@ namespace Mutagen.Bethesda.Tests
         protected abstract Task<IModGetter> ImportBinaryWrapper(FilePath path);
         protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
         protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
+        protected abstract Task<IMod> ImportCopyIn(FilePath file);
 
         public async Task BinaryPassthroughTest()
         {
@@ -155,7 +156,8 @@ namespace Mutagen.Bethesda.Tests
                 var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
                 var processedPath = ProcessedPath(tmp);
                 var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-                var binaryWrapper = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
+                var binaryWrapperPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
+                var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
 
                 List<Exception> delayedExceptions = new List<Exception>();
 
@@ -199,14 +201,14 @@ namespace Mutagen.Bethesda.Tests
                     var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
 
                     wrapper.WriteToBinary(
-                        binaryWrapper,
+                        binaryWrapperPath,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
                         var ret = PassthroughTest.AssertFilesEqual(
                             stream,
-                            binaryWrapper,
+                            binaryWrapperPath,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {
@@ -234,6 +236,33 @@ namespace Mutagen.Bethesda.Tests
                         else
                         {
                             throw ret.Exception;
+                        }
+                    }
+                }
+
+                if (Settings.TestCopyIn)
+                {
+                    var copyIn = await ImportCopyIn(this.FilePath.Path);
+                    copyIn.WriteToBinary(
+                        copyInPath,
+                        Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+
+                    using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
+                    {
+                        var ret = PassthroughTest.AssertFilesEqual(
+                            stream,
+                            copyInPath,
+                            amountToReport: 15);
+                        if (ret.Exception != null)
+                        {
+                            if (ret.HadMore)
+                            {
+                                delayedExceptions.Add(ret.Exception);
+                            }
+                            else
+                            {
+                                throw ret.Exception;
+                            }
                         }
                     }
                 }

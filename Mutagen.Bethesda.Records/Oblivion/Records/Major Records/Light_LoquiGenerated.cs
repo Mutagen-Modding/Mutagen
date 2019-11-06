@@ -611,6 +611,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LightSetterCommon)((ILightGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Light GetNew()
+        {
+            return new Light();
+        }
+
     }
     #endregion
 
@@ -821,13 +826,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILightInternal lhs,
             ILightGetter rhs,
-            Light_TranslationMask copyMask,
-            ILightGetter def = null)
+            Light_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -838,14 +841,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILightGetter rhs,
             out Light_ErrorMask errorMask,
             Light_TranslationMask copyMask = null,
-            ILightGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
@@ -855,14 +856,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternal lhs,
             ILightGetter rhs,
             ErrorMaskBuilder errorMask,
-            Light_TranslationMask copyMask = null,
-            ILightGetter def = null)
+            Light_TranslationMask copyMask = null)
         {
             ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Light DeepCopy(
+            this ILightGetter item,
+            Light_TranslationMask copyMask = null)
+        {
+            return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1471,6 +1479,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILightInternal)item);
         }
+        
+        public Light GetNew() => Light.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2159,14 +2169,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILight item,
             ILightGetter rhs,
-            ILightGetter def,
             ErrorMaskBuilder errorMask,
             Light_TranslationMask copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -2174,17 +2182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -2208,9 +2208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2227,15 +2225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -2257,15 +2249,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -2319,15 +2305,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Fade);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Fade,
-                        rhsHasBeenSet: rhs.Fade_IsSet,
-                        defItem: def?.Fade ?? default(Single),
-                        defHasBeenSet: def?.Fade_IsSet ?? false,
-                        outRhsItem: out var rhsFadeItem,
-                        outDefItem: out var defFadeItem))
+                    if (rhs.Fade_IsSet)
                     {
-                        item.Fade = rhsFadeItem;
+                        item.Fade = rhs.Fade;
                     }
                     else
                     {
@@ -2349,9 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Light_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToFormKey(
-                        rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property);
+                    item.Sound_Property.SetToFormKey(rhs: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2370,6 +2348,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Light DeepCopy(
+            ILightGetter item,
+            Light_TranslationMask copyMask = null)
+        {
+            Light ret = LightSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

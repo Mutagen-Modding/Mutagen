@@ -350,6 +350,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeatherChanceSetterCommon)((IWeatherChanceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static WeatherChance GetNew()
+        {
+            return new WeatherChance();
+        }
+
     }
     #endregion
 
@@ -467,7 +472,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -476,13 +480,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
-            WeatherChance_TranslationMask copyMask,
-            IWeatherChanceGetter def = null)
+            WeatherChance_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -493,14 +495,12 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherChanceGetter rhs,
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask copyMask = null,
-            IWeatherChanceGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
@@ -510,26 +510,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherChance_TranslationMask copyMask = null,
-            IWeatherChanceGetter def = null)
+            WeatherChance_TranslationMask copyMask = null)
         {
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static WeatherChance DeepCopy(
             this IWeatherChanceGetter item,
-            WeatherChance_TranslationMask copyMask = null,
-            IWeatherChanceGetter def = null)
+            WeatherChance_TranslationMask copyMask = null)
         {
             return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -938,10 +934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
-        public WeatherChance GetNew()
-        {
-            return new WeatherChance();
-        }
+        public WeatherChance GetNew() => WeatherChance.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1136,7 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IWeatherChance item,
             IWeatherChanceGetter rhs,
-            IWeatherChanceGetter def,
             ErrorMaskBuilder errorMask,
             WeatherChance_TranslationMask copyMask)
         {
@@ -1154,14 +1146,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public WeatherChance DeepCopy(
             IWeatherChanceGetter item,
-            WeatherChance_TranslationMask copyMask = null,
-            IWeatherChanceGetter def = null)
+            WeatherChance_TranslationMask copyMask = null)
         {
             WeatherChance ret = WeatherChanceSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -355,6 +355,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionSoundSetterCommon)((IRegionSoundGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RegionSound GetNew()
+        {
+            return new RegionSound();
+        }
+
     }
     #endregion
 
@@ -478,7 +483,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -487,13 +491,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
-            RegionSound_TranslationMask copyMask,
-            IRegionSoundGetter def = null)
+            RegionSound_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -504,14 +506,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionSoundGetter rhs,
             out RegionSound_ErrorMask errorMask,
             RegionSound_TranslationMask copyMask = null,
-            IRegionSoundGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RegionSound_ErrorMask.Factory(errorMaskBuilder);
@@ -521,26 +521,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionSound lhs,
             IRegionSoundGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionSound_TranslationMask copyMask = null,
-            IRegionSoundGetter def = null)
+            RegionSound_TranslationMask copyMask = null)
         {
             ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RegionSound DeepCopy(
             this IRegionSoundGetter item,
-            RegionSound_TranslationMask copyMask = null,
-            IRegionSoundGetter def = null)
+            RegionSound_TranslationMask copyMask = null)
         {
             return ((RegionSoundSetterTranslationCommon)((IRegionSoundGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -962,10 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Single);
         }
         
-        public RegionSound GetNew()
-        {
-            return new RegionSound();
-        }
+        public RegionSound GetNew() => RegionSound.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1187,7 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRegionSound item,
             IRegionSoundGetter rhs,
-            IRegionSoundGetter def,
             ErrorMaskBuilder errorMask,
             RegionSound_TranslationMask copyMask)
         {
@@ -1209,14 +1201,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RegionSound DeepCopy(
             IRegionSoundGetter item,
-            RegionSound_TranslationMask copyMask = null,
-            IRegionSoundGetter def = null)
+            RegionSound_TranslationMask copyMask = null)
         {
             RegionSound ret = RegionSoundSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

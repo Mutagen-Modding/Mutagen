@@ -366,6 +366,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((BodyDataSetterCommon)((IBodyDataGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static BodyData GetNew()
+        {
+            return new BodyData();
+        }
+
     }
     #endregion
 
@@ -484,7 +489,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -493,13 +497,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IBodyData lhs,
             IBodyDataGetter rhs,
-            BodyData_TranslationMask copyMask,
-            IBodyDataGetter def = null)
+            BodyData_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -510,14 +512,12 @@ namespace Mutagen.Bethesda.Oblivion
             IBodyDataGetter rhs,
             out BodyData_ErrorMask errorMask,
             BodyData_TranslationMask copyMask = null,
-            IBodyDataGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
@@ -527,26 +527,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyData lhs,
             IBodyDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            BodyData_TranslationMask copyMask = null,
-            IBodyDataGetter def = null)
+            BodyData_TranslationMask copyMask = null)
         {
             ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static BodyData DeepCopy(
             this IBodyDataGetter item,
-            BodyData_TranslationMask copyMask = null,
-            IBodyDataGetter def = null)
+            BodyData_TranslationMask copyMask = null)
         {
             return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -972,10 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BodyParts.Unset();
         }
         
-        public BodyData GetNew()
-        {
-            return new BodyData();
-        }
+        public BodyData GetNew() => BodyData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1268,7 +1261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IBodyData item,
             IBodyDataGetter rhs,
-            IBodyDataGetter def,
             ErrorMaskBuilder errorMask,
             BodyData_TranslationMask copyMask)
         {
@@ -1277,17 +1269,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1311,14 +1295,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
                 try
                 {
-                    item.BodyParts.SetToWithDefault(
-                        rhs: rhs.BodyParts,
-                        def: def?.BodyParts,
-                        converter: (r, d) =>
+                    item.BodyParts.SetTo(
+                        items: rhs.BodyParts,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.BodyParts?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.BodyParts?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1337,14 +1318,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BodyData DeepCopy(
             IBodyDataGetter item,
-            BodyData_TranslationMask copyMask = null,
-            IBodyDataGetter def = null)
+            BodyData_TranslationMask copyMask = null)
         {
             BodyData ret = BodyDataSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

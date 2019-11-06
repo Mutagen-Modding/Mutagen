@@ -339,6 +339,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ClassTraining GetNew()
+        {
+            return new ClassTraining();
+        }
+
     }
     #endregion
 
@@ -461,7 +466,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -470,13 +474,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IClassTraining lhs,
             IClassTrainingGetter rhs,
-            ClassTraining_TranslationMask copyMask,
-            IClassTrainingGetter def = null)
+            ClassTraining_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -487,14 +489,12 @@ namespace Mutagen.Bethesda.Oblivion
             IClassTrainingGetter rhs,
             out ClassTraining_ErrorMask errorMask,
             ClassTraining_TranslationMask copyMask = null,
-            IClassTrainingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ClassTraining_ErrorMask.Factory(errorMaskBuilder);
@@ -504,26 +504,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IClassTraining lhs,
             IClassTrainingGetter rhs,
             ErrorMaskBuilder errorMask,
-            ClassTraining_TranslationMask copyMask = null,
-            IClassTrainingGetter def = null)
+            ClassTraining_TranslationMask copyMask = null)
         {
             ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ClassTraining DeepCopy(
             this IClassTrainingGetter item,
-            ClassTraining_TranslationMask copyMask = null,
-            IClassTrainingGetter def = null)
+            ClassTraining_TranslationMask copyMask = null)
         {
             return ((ClassTrainingSetterTranslationCommon)((IClassTrainingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -945,10 +941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
-        public ClassTraining GetNew()
-        {
-            return new ClassTraining();
-        }
+        public ClassTraining GetNew() => ClassTraining.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1167,7 +1160,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IClassTraining item,
             IClassTrainingGetter rhs,
-            IClassTrainingGetter def,
             ErrorMaskBuilder errorMask,
             ClassTraining_TranslationMask copyMask)
         {
@@ -1189,14 +1181,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ClassTraining DeepCopy(
             IClassTrainingGetter item,
-            ClassTraining_TranslationMask copyMask = null,
-            IClassTrainingGetter def = null)
+            ClassTraining_TranslationMask copyMask = null)
         {
             ClassTraining ret = ClassTrainingSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

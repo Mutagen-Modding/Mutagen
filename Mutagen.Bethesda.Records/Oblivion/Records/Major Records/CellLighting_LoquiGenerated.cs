@@ -362,6 +362,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellLightingSetterCommon)((ICellLightingGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static CellLighting GetNew()
+        {
+            return new CellLighting();
+        }
+
     }
     #endregion
 
@@ -520,7 +525,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -529,13 +533,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICellLighting lhs,
             ICellLightingGetter rhs,
-            CellLighting_TranslationMask copyMask,
-            ICellLightingGetter def = null)
+            CellLighting_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -546,14 +548,12 @@ namespace Mutagen.Bethesda.Oblivion
             ICellLightingGetter rhs,
             out CellLighting_ErrorMask errorMask,
             CellLighting_TranslationMask copyMask = null,
-            ICellLightingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
@@ -563,26 +563,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLighting lhs,
             ICellLightingGetter rhs,
             ErrorMaskBuilder errorMask,
-            CellLighting_TranslationMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting_TranslationMask copyMask = null)
         {
             ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static CellLighting DeepCopy(
             this ICellLightingGetter item,
-            CellLighting_TranslationMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting_TranslationMask copyMask = null)
         {
             return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1084,10 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
-        public CellLighting GetNew()
-        {
-            return new CellLighting();
-        }
+        public CellLighting GetNew() => CellLighting.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1411,7 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICellLighting item,
             ICellLightingGetter rhs,
-            ICellLightingGetter def,
             ErrorMaskBuilder errorMask,
             CellLighting_TranslationMask copyMask)
         {
@@ -1457,14 +1449,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellLighting DeepCopy(
             ICellLightingGetter item,
-            CellLighting_TranslationMask copyMask = null,
-            ICellLightingGetter def = null)
+            CellLighting_TranslationMask copyMask = null)
         {
             CellLighting ret = CellLightingSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

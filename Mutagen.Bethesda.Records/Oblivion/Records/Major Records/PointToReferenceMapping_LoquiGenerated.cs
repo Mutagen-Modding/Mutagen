@@ -348,6 +348,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static PointToReferenceMapping GetNew()
+        {
+            return new PointToReferenceMapping();
+        }
+
     }
     #endregion
 
@@ -463,7 +468,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -472,13 +476,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
-            PointToReferenceMapping_TranslationMask copyMask,
-            IPointToReferenceMappingGetter def = null)
+            PointToReferenceMapping_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -489,14 +491,12 @@ namespace Mutagen.Bethesda.Oblivion
             IPointToReferenceMappingGetter rhs,
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask copyMask = null,
-            IPointToReferenceMappingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = PointToReferenceMapping_ErrorMask.Factory(errorMaskBuilder);
@@ -506,26 +506,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
             ErrorMaskBuilder errorMask,
-            PointToReferenceMapping_TranslationMask copyMask = null,
-            IPointToReferenceMappingGetter def = null)
+            PointToReferenceMapping_TranslationMask copyMask = null)
         {
             ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static PointToReferenceMapping DeepCopy(
             this IPointToReferenceMappingGetter item,
-            PointToReferenceMapping_TranslationMask copyMask = null,
-            IPointToReferenceMappingGetter def = null)
+            PointToReferenceMapping_TranslationMask copyMask = null)
         {
             return ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -937,10 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.Clear();
         }
         
-        public PointToReferenceMapping GetNew()
-        {
-            return new PointToReferenceMapping();
-        }
+        public PointToReferenceMapping GetNew() => PointToReferenceMapping.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1158,7 +1151,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IPointToReferenceMapping item,
             IPointToReferenceMappingGetter rhs,
-            IPointToReferenceMappingGetter def,
             ErrorMaskBuilder errorMask,
             PointToReferenceMapping_TranslationMask copyMask)
         {
@@ -1189,14 +1181,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public PointToReferenceMapping DeepCopy(
             IPointToReferenceMappingGetter item,
-            PointToReferenceMapping_TranslationMask copyMask = null,
-            IPointToReferenceMappingGetter def = null)
+            PointToReferenceMapping_TranslationMask copyMask = null)
         {
             PointToReferenceMapping ret = PointToReferenceMappingSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

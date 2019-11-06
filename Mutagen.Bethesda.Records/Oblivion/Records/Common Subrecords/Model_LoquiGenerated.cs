@@ -363,6 +363,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ModelSetterCommon)((IModelGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Model GetNew()
+        {
+            return new Model();
+        }
+
     }
     #endregion
 
@@ -489,7 +494,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -498,13 +502,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IModel lhs,
             IModelGetter rhs,
-            Model_TranslationMask copyMask,
-            IModelGetter def = null)
+            Model_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -515,14 +517,12 @@ namespace Mutagen.Bethesda.Oblivion
             IModelGetter rhs,
             out Model_ErrorMask errorMask,
             Model_TranslationMask copyMask = null,
-            IModelGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Model_ErrorMask.Factory(errorMaskBuilder);
@@ -532,26 +532,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IModel lhs,
             IModelGetter rhs,
             ErrorMaskBuilder errorMask,
-            Model_TranslationMask copyMask = null,
-            IModelGetter def = null)
+            Model_TranslationMask copyMask = null)
         {
             ((ModelSetterTranslationCommon)((IModelGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Model DeepCopy(
             this IModelGetter item,
-            Model_TranslationMask copyMask = null,
-            IModelGetter def = null)
+            Model_TranslationMask copyMask = null)
         {
             return ((ModelSetterTranslationCommon)((IModelGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -977,10 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hashes_Unset();
         }
         
-        public Model GetNew()
-        {
-            return new Model();
-        }
+        public Model GetNew() => Model.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1252,7 +1245,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IModel item,
             IModelGetter rhs,
-            IModelGetter def,
             ErrorMaskBuilder errorMask,
             Model_TranslationMask copyMask)
         {
@@ -1269,15 +1261,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Hashes,
-                        rhsHasBeenSet: rhs.Hashes_IsSet,
-                        defItem: def.Hashes,
-                        defHasBeenSet: def.Hashes_IsSet,
-                        outRhsItem: out var rhsHashesItem,
-                        outDefItem: out var defHashesItem))
+                    if(rhs.Hashes_IsSet)
                     {
-                        item.Hashes = rhsHashesItem.ToArray();
+                        item.Hashes = rhs.Hashes.ToArray();
                     }
                     else
                     {
@@ -1300,14 +1286,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Model DeepCopy(
             IModelGetter item,
-            Model_TranslationMask copyMask = null,
-            IModelGetter def = null)
+            Model_TranslationMask copyMask = null)
         {
             Model ret = ModelSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

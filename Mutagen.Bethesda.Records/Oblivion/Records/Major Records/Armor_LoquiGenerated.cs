@@ -395,6 +395,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ArmorSetterCommon)((IArmorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Armor GetNew()
+        {
+            return new Armor();
+        }
+
     }
     #endregion
 
@@ -527,13 +532,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IArmorInternal lhs,
             IArmorGetter rhs,
-            Armor_TranslationMask copyMask,
-            IArmorGetter def = null)
+            Armor_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -544,14 +547,12 @@ namespace Mutagen.Bethesda.Oblivion
             IArmorGetter rhs,
             out Armor_ErrorMask errorMask,
             Armor_TranslationMask copyMask = null,
-            IArmorGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
@@ -561,14 +562,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternal lhs,
             IArmorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Armor_TranslationMask copyMask = null,
-            IArmorGetter def = null)
+            Armor_TranslationMask copyMask = null)
         {
             ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Armor DeepCopy(
+            this IArmorGetter item,
+            Armor_TranslationMask copyMask = null)
+        {
+            return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1059,6 +1067,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IArmorInternal)item);
         }
         
+        public Armor GetNew() => Armor.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IArmorInternal item,
@@ -1540,14 +1550,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IArmor item,
             IArmorGetter rhs,
-            IArmorGetter def,
             ErrorMaskBuilder errorMask,
             Armor_TranslationMask copyMask)
         {
             ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.ArmorValue ?? true)
@@ -1573,6 +1581,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Armor DeepCopy(
+            IArmorGetter item,
+            Armor_TranslationMask copyMask = null)
+        {
+            Armor ret = ArmorSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

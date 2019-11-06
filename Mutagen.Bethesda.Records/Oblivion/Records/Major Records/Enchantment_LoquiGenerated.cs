@@ -466,6 +466,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((EnchantmentSetterCommon)((IEnchantmentGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Enchantment GetNew()
+        {
+            return new Enchantment();
+        }
+
     }
     #endregion
 
@@ -612,13 +617,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEnchantmentInternal lhs,
             IEnchantmentGetter rhs,
-            Enchantment_TranslationMask copyMask,
-            IEnchantmentGetter def = null)
+            Enchantment_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -629,14 +632,12 @@ namespace Mutagen.Bethesda.Oblivion
             IEnchantmentGetter rhs,
             out Enchantment_ErrorMask errorMask,
             Enchantment_TranslationMask copyMask = null,
-            IEnchantmentGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Enchantment_ErrorMask.Factory(errorMaskBuilder);
@@ -646,14 +647,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternal lhs,
             IEnchantmentGetter rhs,
             ErrorMaskBuilder errorMask,
-            Enchantment_TranslationMask copyMask = null,
-            IEnchantmentGetter def = null)
+            Enchantment_TranslationMask copyMask = null)
         {
             ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Enchantment DeepCopy(
+            this IEnchantmentGetter item,
+            Enchantment_TranslationMask copyMask = null)
+        {
+            return ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1151,6 +1159,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
+        public Enchantment GetNew() => Enchantment.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IEnchantmentInternal item,
@@ -1629,14 +1639,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEnchantment item,
             IEnchantmentGetter rhs,
-            IEnchantmentGetter def,
             ErrorMaskBuilder errorMask,
             Enchantment_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1644,15 +1652,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1690,14 +1692,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Enchantment_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetToWithDefault(
-                        rhs: rhs.Effects,
-                        def: def?.Effects,
-                        converter: (r, d) =>
+                    item.Effects.SetTo(
+                        items: rhs.Effects,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Effects?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Effects?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1717,6 +1716,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Enchantment DeepCopy(
+            IEnchantmentGetter item,
+            Enchantment_TranslationMask copyMask = null)
+        {
+            Enchantment ret = EnchantmentSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

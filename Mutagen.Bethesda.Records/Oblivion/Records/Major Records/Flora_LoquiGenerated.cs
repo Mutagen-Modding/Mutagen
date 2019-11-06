@@ -495,6 +495,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((FloraSetterCommon)((IFloraGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Flora GetNew()
+        {
+            return new Flora();
+        }
+
     }
     #endregion
 
@@ -661,13 +666,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IFloraInternal lhs,
             IFloraGetter rhs,
-            Flora_TranslationMask copyMask,
-            IFloraGetter def = null)
+            Flora_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -678,14 +681,12 @@ namespace Mutagen.Bethesda.Oblivion
             IFloraGetter rhs,
             out Flora_ErrorMask errorMask,
             Flora_TranslationMask copyMask = null,
-            IFloraGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
@@ -695,14 +696,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal lhs,
             IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
-            Flora_TranslationMask copyMask = null,
-            IFloraGetter def = null)
+            Flora_TranslationMask copyMask = null)
         {
             ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Flora DeepCopy(
+            this IFloraGetter item,
+            Flora_TranslationMask copyMask = null)
+        {
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1227,6 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFloraInternal)item);
         }
         
+        public Flora GetNew() => Flora.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IFloraInternal item,
@@ -1730,14 +1740,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IFlora item,
             IFloraGetter rhs,
-            IFloraGetter def,
             ErrorMaskBuilder errorMask,
             Flora_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1745,15 +1753,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1775,17 +1777,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1809,9 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1828,9 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
                 {
-                    item.Ingredient_Property.SetToFormKey(
-                        rhs: rhs.Ingredient_Property,
-                        def: def?.Ingredient_Property);
+                    item.Ingredient_Property.SetToFormKey(rhs: rhs.Ingredient_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1865,6 +1855,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Flora DeepCopy(
+            IFloraGetter item,
+            Flora_TranslationMask copyMask = null)
+        {
+            Flora ret = FloraSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

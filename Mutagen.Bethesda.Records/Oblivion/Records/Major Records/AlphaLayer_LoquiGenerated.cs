@@ -352,6 +352,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static AlphaLayer GetNew()
+        {
+            return new AlphaLayer();
+        }
+
     }
     #endregion
 
@@ -464,13 +469,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAlphaLayerInternal lhs,
             IAlphaLayerGetter rhs,
-            AlphaLayer_TranslationMask copyMask,
-            IAlphaLayerGetter def = null)
+            AlphaLayer_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -481,14 +484,12 @@ namespace Mutagen.Bethesda.Oblivion
             IAlphaLayerGetter rhs,
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask copyMask = null,
-            IAlphaLayerGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
@@ -498,26 +499,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal lhs,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlphaLayer_TranslationMask copyMask = null,
-            IAlphaLayerGetter def = null)
+            AlphaLayer_TranslationMask copyMask = null)
         {
             ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static AlphaLayer DeepCopy(
             this IAlphaLayerGetter item,
-            AlphaLayer_TranslationMask copyMask = null,
-            IAlphaLayerGetter def = null)
+            AlphaLayer_TranslationMask copyMask = null)
         {
             return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -930,10 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayerInternal)item);
         }
         
-        public new AlphaLayer GetNew()
-        {
-            return new AlphaLayer();
-        }
+        public new AlphaLayer GetNew() => AlphaLayer.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1226,14 +1220,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IAlphaLayer item,
             IAlphaLayerGetter rhs,
-            IAlphaLayerGetter def,
             ErrorMaskBuilder errorMask,
             AlphaLayer_TranslationMask copyMask)
         {
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.AlphaLayerData ?? true)
@@ -1241,15 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.AlphaLayerData,
-                        rhsHasBeenSet: rhs.AlphaLayerData_IsSet,
-                        defItem: def.AlphaLayerData,
-                        defHasBeenSet: def.AlphaLayerData_IsSet,
-                        outRhsItem: out var rhsAlphaLayerDataItem,
-                        outDefItem: out var defAlphaLayerDataItem))
+                    if(rhs.AlphaLayerData_IsSet)
                     {
-                        item.AlphaLayerData = rhsAlphaLayerDataItem.ToArray();
+                        item.AlphaLayerData = rhs.AlphaLayerData.ToArray();
                     }
                     else
                     {
@@ -1272,14 +1258,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public new AlphaLayer DeepCopy(
             IAlphaLayerGetter item,
-            AlphaLayer_TranslationMask copyMask = null,
-            IAlphaLayerGetter def = null)
+            AlphaLayer_TranslationMask copyMask = null)
         {
             AlphaLayer ret = AlphaLayerSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

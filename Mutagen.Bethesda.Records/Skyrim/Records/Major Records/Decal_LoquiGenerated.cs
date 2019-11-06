@@ -370,6 +370,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((DecalSetterCommon)((IDecalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Decal GetNew()
+        {
+            return new Decal();
+        }
+
     }
     #endregion
 
@@ -540,7 +545,6 @@ namespace Mutagen.Bethesda.Skyrim
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -549,13 +553,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IDecal lhs,
             IDecalGetter rhs,
-            Decal_TranslationMask copyMask,
-            IDecalGetter def = null)
+            Decal_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -566,14 +568,12 @@ namespace Mutagen.Bethesda.Skyrim
             IDecalGetter rhs,
             out Decal_ErrorMask errorMask,
             Decal_TranslationMask copyMask = null,
-            IDecalGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
@@ -583,26 +583,22 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal lhs,
             IDecalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Decal_TranslationMask copyMask = null,
-            IDecalGetter def = null)
+            Decal_TranslationMask copyMask = null)
         {
             ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Decal DeepCopy(
             this IDecalGetter item,
-            Decal_TranslationMask copyMask = null,
-            IDecalGetter def = null)
+            Decal_TranslationMask copyMask = null)
         {
             return ((DecalSetterTranslationCommon)((IDecalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1130,10 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default(Color);
         }
         
-        public Decal GetNew()
-        {
-            return new Decal();
-        }
+        public Decal GetNew() => Decal.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1491,7 +1484,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IDecal item,
             IDecalGetter rhs,
-            IDecalGetter def,
             ErrorMaskBuilder errorMask,
             Decal_TranslationMask copyMask)
         {
@@ -1545,14 +1537,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public Decal DeepCopy(
             IDecalGetter item,
-            Decal_TranslationMask copyMask = null,
-            IDecalGetter def = null)
+            Decal_TranslationMask copyMask = null)
         {
             Decal ret = DecalSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

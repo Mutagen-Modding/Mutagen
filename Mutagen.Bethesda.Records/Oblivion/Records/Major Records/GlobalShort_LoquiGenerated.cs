@@ -362,6 +362,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((GlobalShortSetterCommon)((IGlobalShortGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static GlobalShort GetNew()
+        {
+            return new GlobalShort();
+        }
+
     }
     #endregion
 
@@ -474,13 +479,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IGlobalShortInternal lhs,
             IGlobalShortGetter rhs,
-            GlobalShort_TranslationMask copyMask,
-            IGlobalShortGetter def = null)
+            GlobalShort_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -491,14 +494,12 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalShortGetter rhs,
             out GlobalShort_ErrorMask errorMask,
             GlobalShort_TranslationMask copyMask = null,
-            IGlobalShortGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
@@ -508,14 +509,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalShortInternal lhs,
             IGlobalShortGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalShort_TranslationMask copyMask = null,
-            IGlobalShortGetter def = null)
+            GlobalShort_TranslationMask copyMask = null)
         {
             ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static GlobalShort DeepCopy(
+            this IGlobalShortGetter item,
+            GlobalShort_TranslationMask copyMask = null)
+        {
+            return ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -936,6 +944,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
+        public GlobalShort GetNew() => GlobalShort.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalShortInternal item,
@@ -1313,14 +1323,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IGlobalShort item,
             IGlobalShortGetter rhs,
-            IGlobalShortGetter def,
             ErrorMaskBuilder errorMask,
             GlobalShort_TranslationMask copyMask)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Data ?? true)
@@ -1328,15 +1336,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Data,
-                        rhsHasBeenSet: rhs.Data_IsSet,
-                        defItem: def?.Data ?? default(Int16),
-                        defHasBeenSet: def?.Data_IsSet ?? false,
-                        outRhsItem: out var rhsDataItem,
-                        outDefItem: out var defDataItem))
+                    if (rhs.Data_IsSet)
                     {
-                        item.Data = rhsDataItem;
+                        item.Data = rhs.Data;
                     }
                     else
                     {
@@ -1356,6 +1358,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new GlobalShort DeepCopy(
+            IGlobalShortGetter item,
+            GlobalShort_TranslationMask copyMask = null)
+        {
+            GlobalShort ret = GlobalShortSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

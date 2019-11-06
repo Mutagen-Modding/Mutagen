@@ -386,6 +386,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((BaseLayerSetterCommon)((IBaseLayerGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static BaseLayer GetNew()
+        {
+            return new BaseLayer();
+        }
+
     }
     #endregion
 
@@ -521,7 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -530,13 +534,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs,
-            BaseLayer_TranslationMask copyMask,
-            IBaseLayerGetter def = null)
+            BaseLayer_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -547,14 +549,12 @@ namespace Mutagen.Bethesda.Oblivion
             IBaseLayerGetter rhs,
             out BaseLayer_ErrorMask errorMask,
             BaseLayer_TranslationMask copyMask = null,
-            IBaseLayerGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = BaseLayer_ErrorMask.Factory(errorMaskBuilder);
@@ -564,26 +564,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs,
             ErrorMaskBuilder errorMask,
-            BaseLayer_TranslationMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer_TranslationMask copyMask = null)
         {
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static BaseLayer DeepCopy(
             this IBaseLayerGetter item,
-            BaseLayer_TranslationMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer_TranslationMask copyMask = null)
         {
             return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1032,10 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BTXTDataTypeState = default(BaseLayer.BTXTDataType);
         }
         
-        public BaseLayer GetNew()
-        {
-            return new BaseLayer();
-        }
+        public BaseLayer GetNew() => BaseLayer.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1335,7 +1328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IBaseLayer item,
             IBaseLayerGetter rhs,
-            IBaseLayerGetter def,
             ErrorMaskBuilder errorMask,
             BaseLayer_TranslationMask copyMask)
         {
@@ -1357,14 +1349,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public BaseLayer DeepCopy(
             IBaseLayerGetter item,
-            BaseLayer_TranslationMask copyMask = null,
-            IBaseLayerGetter def = null)
+            BaseLayer_TranslationMask copyMask = null)
         {
             BaseLayer ret = BaseLayerSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

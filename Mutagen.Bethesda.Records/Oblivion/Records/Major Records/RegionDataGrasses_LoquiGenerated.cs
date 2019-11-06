@@ -351,6 +351,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RegionDataGrasses GetNew()
+        {
+            return new RegionDataGrasses();
+        }
+
     }
     #endregion
 
@@ -457,13 +462,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRegionDataGrassesInternal lhs,
             IRegionDataGrassesGetter rhs,
-            RegionDataGrasses_TranslationMask copyMask,
-            IRegionDataGrassesGetter def = null)
+            RegionDataGrasses_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -474,14 +477,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataGrassesGetter rhs,
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask copyMask = null,
-            IRegionDataGrassesGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RegionDataGrasses_ErrorMask.Factory(errorMaskBuilder);
@@ -491,26 +492,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternal lhs,
             IRegionDataGrassesGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataGrasses_TranslationMask copyMask = null,
-            IRegionDataGrassesGetter def = null)
+            RegionDataGrasses_TranslationMask copyMask = null)
         {
             ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RegionDataGrasses DeepCopy(
             this IRegionDataGrassesGetter item,
-            RegionDataGrasses_TranslationMask copyMask = null,
-            IRegionDataGrassesGetter def = null)
+            RegionDataGrasses_TranslationMask copyMask = null)
         {
             return ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -919,10 +916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataGrassesInternal)item);
         }
         
-        public RegionDataGrasses GetNew()
-        {
-            return new RegionDataGrasses();
-        }
+        public RegionDataGrasses GetNew() => RegionDataGrasses.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1239,14 +1233,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRegionDataGrasses item,
             IRegionDataGrassesGetter rhs,
-            IRegionDataGrassesGetter def,
             ErrorMaskBuilder errorMask,
             RegionDataGrasses_TranslationMask copyMask)
         {
             ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Grasses ?? true)
@@ -1254,10 +1246,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
                 try
                 {
-                    item.Grasses.SetToWithDefault(
+                    item.Grasses.SetTo(
                         rhs.Grasses,
-                        def?.Grasses,
-                        (r, d) => new FormIDLink<Grass>(r.FormKey));
+                        (r) => new FormIDLink<Grass>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1275,14 +1266,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public new RegionDataGrasses DeepCopy(
             IRegionDataGrassesGetter item,
-            RegionDataGrasses_TranslationMask copyMask = null,
-            IRegionDataGrassesGetter def = null)
+            RegionDataGrasses_TranslationMask copyMask = null)
         {
             RegionDataGrasses ret = RegionDataGrassesSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

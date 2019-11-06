@@ -351,6 +351,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ContainerItemSetterCommon)((IContainerItemGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ContainerItem GetNew()
+        {
+            return new ContainerItem();
+        }
+
     }
     #endregion
 
@@ -468,7 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -477,13 +481,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IContainerItem lhs,
             IContainerItemGetter rhs,
-            ContainerItem_TranslationMask copyMask,
-            IContainerItemGetter def = null)
+            ContainerItem_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -494,14 +496,12 @@ namespace Mutagen.Bethesda.Oblivion
             IContainerItemGetter rhs,
             out ContainerItem_ErrorMask errorMask,
             ContainerItem_TranslationMask copyMask = null,
-            IContainerItemGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ContainerItem_ErrorMask.Factory(errorMaskBuilder);
@@ -511,26 +511,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerItem lhs,
             IContainerItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            ContainerItem_TranslationMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem_TranslationMask copyMask = null)
         {
             ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ContainerItem DeepCopy(
             this IContainerItemGetter item,
-            ContainerItem_TranslationMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem_TranslationMask copyMask = null)
         {
             return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -941,10 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(UInt32);
         }
         
-        public ContainerItem GetNew()
-        {
-            return new ContainerItem();
-        }
+        public ContainerItem GetNew() => ContainerItem.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1142,7 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IContainerItem item,
             IContainerItemGetter rhs,
-            IContainerItemGetter def,
             ErrorMaskBuilder errorMask,
             ContainerItem_TranslationMask copyMask)
         {
@@ -1160,14 +1152,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ContainerItem DeepCopy(
             IContainerItemGetter item,
-            ContainerItem_TranslationMask copyMask = null,
-            IContainerItemGetter def = null)
+            ContainerItem_TranslationMask copyMask = null)
         {
             ContainerItem ret = ContainerItemSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

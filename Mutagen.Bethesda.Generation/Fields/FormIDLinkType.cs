@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, bool protectedMembers, bool getter)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, bool protectedMembers, bool getter)
         {
             if (this.HasBeenSet)
             {
@@ -152,7 +152,6 @@ namespace Mutagen.Bethesda.Generation
                     $"{accessor.PropertyAccess}.{(getter ? "SetToFormKey" : "SetLink")}"))
                 {
                     args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
-                    args.Add($"def: {defaultFallbackAccessor}?.{this.GetName(false, property: true)}");
                 }
             }
             else
@@ -227,7 +226,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            fg.AppendLine($"(r, d) => new {DirectTypeName(getter: false)}(r.FormKey)");
+            fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.FormKey)");
         }
     }
 }

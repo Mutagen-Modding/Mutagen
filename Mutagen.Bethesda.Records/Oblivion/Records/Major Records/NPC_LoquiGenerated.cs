@@ -1396,6 +1396,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((NPCSetterCommon)((INPCGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static NPC GetNew()
+        {
+            return new NPC();
+        }
+
     }
     #endregion
 
@@ -1932,13 +1937,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this INPCInternal lhs,
             INPCGetter rhs,
-            NPC_TranslationMask copyMask,
-            INPCGetter def = null)
+            NPC_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -1949,14 +1952,12 @@ namespace Mutagen.Bethesda.Oblivion
             INPCGetter rhs,
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask copyMask = null,
-            INPCGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
@@ -1966,14 +1967,21 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternal lhs,
             INPCGetter rhs,
             ErrorMaskBuilder errorMask,
-            NPC_TranslationMask copyMask = null,
-            INPCGetter def = null)
+            NPC_TranslationMask copyMask = null)
         {
             ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static NPC DeepCopy(
+            this INPCGetter item,
+            NPC_TranslationMask copyMask = null)
+        {
+            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -3293,6 +3301,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (INPCInternal)item);
         }
+        
+        public NPC GetNew() => NPC.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -4880,14 +4890,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             INPC item,
             INPCGetter rhs,
-            INPCGetter def,
             ErrorMaskBuilder errorMask,
             NPC_TranslationMask copyMask)
         {
             ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -4895,15 +4903,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -4925,17 +4927,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -4987,14 +4981,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetToWithDefault(
-                        rhs: rhs.Factions,
-                        def: def?.Factions,
-                        converter: (r, d) =>
+                    item.Factions.SetTo(
+                        items: rhs.Factions,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Factions?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Factions?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -5012,9 +5003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetToFormKey(
-                        rhs: rhs.DeathItem_Property,
-                        def: def?.DeathItem_Property);
+                    item.DeathItem_Property.SetToFormKey(rhs: rhs.DeathItem_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5031,9 +5020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Race);
                 try
                 {
-                    item.Race_Property.SetToFormKey(
-                        rhs: rhs.Race_Property,
-                        def: def?.Race_Property);
+                    item.Race_Property.SetToFormKey(rhs: rhs.Race_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5050,10 +5037,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetToWithDefault(
+                    item.Spells.SetTo(
                         rhs.Spells,
-                        def?.Spells,
-                        (r, d) => new FormIDLink<SpellAbstract>(r.FormKey));
+                        (r) => new FormIDLink<SpellAbstract>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5070,9 +5056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5089,14 +5073,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetTo(
+                        items: rhs.Items,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Items?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Items?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -5146,10 +5127,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
                 {
-                    item.AIPackages.SetToWithDefault(
+                    item.AIPackages.SetTo(
                         rhs.AIPackages,
-                        def?.AIPackages,
-                        (r, d) => new FormIDLink<AIPackage>(r.FormKey));
+                        (r) => new FormIDLink<AIPackage>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5183,9 +5163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Class);
                 try
                 {
-                    item.Class_Property.SetToFormKey(
-                        rhs: rhs.Class_Property,
-                        def: def?.Class_Property);
+                    item.Class_Property.SetToFormKey(rhs: rhs.Class_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5322,9 +5300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Hair);
                 try
                 {
-                    item.Hair_Property.SetToFormKey(
-                        rhs: rhs.Hair_Property,
-                        def: def?.Hair_Property);
+                    item.Hair_Property.SetToFormKey(rhs: rhs.Hair_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5341,15 +5317,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.HairLength);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.HairLength,
-                        rhsHasBeenSet: rhs.HairLength_IsSet,
-                        defItem: def?.HairLength ?? default(Single),
-                        defHasBeenSet: def?.HairLength_IsSet ?? false,
-                        outRhsItem: out var rhsHairLengthItem,
-                        outDefItem: out var defHairLengthItem))
+                    if (rhs.HairLength_IsSet)
                     {
-                        item.HairLength = rhsHairLengthItem;
+                        item.HairLength = rhs.HairLength;
                     }
                     else
                     {
@@ -5371,10 +5341,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
                 {
-                    item.Eyes.SetToWithDefault(
+                    item.Eyes.SetTo(
                         rhs.Eyes,
-                        def?.Eyes,
-                        (r, d) => new FormIDLink<Eye>(r.FormKey));
+                        (r) => new FormIDLink<Eye>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5391,15 +5360,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.HairColor);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.HairColor,
-                        rhsHasBeenSet: rhs.HairColor_IsSet,
-                        defItem: def?.HairColor ?? default(Color),
-                        defHasBeenSet: def?.HairColor_IsSet ?? false,
-                        outRhsItem: out var rhsHairColorItem,
-                        outDefItem: out var defHairColorItem))
+                    if (rhs.HairColor_IsSet)
                     {
-                        item.HairColor = rhsHairColorItem;
+                        item.HairColor = rhs.HairColor;
                     }
                     else
                     {
@@ -5421,9 +5384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetToFormKey(
-                        rhs: rhs.CombatStyle_Property,
-                        def: def?.CombatStyle_Property);
+                    item.CombatStyle_Property.SetToFormKey(rhs: rhs.CombatStyle_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5440,15 +5401,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FaceGenGeometrySymmetric,
-                        rhsHasBeenSet: rhs.FaceGenGeometrySymmetric_IsSet,
-                        defItem: def.FaceGenGeometrySymmetric,
-                        defHasBeenSet: def.FaceGenGeometrySymmetric_IsSet,
-                        outRhsItem: out var rhsFaceGenGeometrySymmetricItem,
-                        outDefItem: out var defFaceGenGeometrySymmetricItem))
+                    if(rhs.FaceGenGeometrySymmetric_IsSet)
                     {
-                        item.FaceGenGeometrySymmetric = rhsFaceGenGeometrySymmetricItem.ToArray();
+                        item.FaceGenGeometrySymmetric = rhs.FaceGenGeometrySymmetric.ToArray();
                     }
                     else
                     {
@@ -5470,15 +5425,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FaceGenGeometryAsymmetric,
-                        rhsHasBeenSet: rhs.FaceGenGeometryAsymmetric_IsSet,
-                        defItem: def.FaceGenGeometryAsymmetric,
-                        defHasBeenSet: def.FaceGenGeometryAsymmetric_IsSet,
-                        outRhsItem: out var rhsFaceGenGeometryAsymmetricItem,
-                        outDefItem: out var defFaceGenGeometryAsymmetricItem))
+                    if(rhs.FaceGenGeometryAsymmetric_IsSet)
                     {
-                        item.FaceGenGeometryAsymmetric = rhsFaceGenGeometryAsymmetricItem.ToArray();
+                        item.FaceGenGeometryAsymmetric = rhs.FaceGenGeometryAsymmetric.ToArray();
                     }
                     else
                     {
@@ -5500,15 +5449,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FaceGenTextureSymmetric,
-                        rhsHasBeenSet: rhs.FaceGenTextureSymmetric_IsSet,
-                        defItem: def.FaceGenTextureSymmetric,
-                        defHasBeenSet: def.FaceGenTextureSymmetric_IsSet,
-                        outRhsItem: out var rhsFaceGenTextureSymmetricItem,
-                        outDefItem: out var defFaceGenTextureSymmetricItem))
+                    if(rhs.FaceGenTextureSymmetric_IsSet)
                     {
-                        item.FaceGenTextureSymmetric = rhsFaceGenTextureSymmetricItem.ToArray();
+                        item.FaceGenTextureSymmetric = rhs.FaceGenTextureSymmetric.ToArray();
                     }
                     else
                     {
@@ -5530,15 +5473,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Unknown);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Unknown,
-                        rhsHasBeenSet: rhs.Unknown_IsSet,
-                        defItem: def.Unknown,
-                        defHasBeenSet: def.Unknown_IsSet,
-                        outRhsItem: out var rhsUnknownItem,
-                        outDefItem: out var defUnknownItem))
+                    if(rhs.Unknown_IsSet)
                     {
-                        item.Unknown = rhsUnknownItem.ToArray();
+                        item.Unknown = rhs.Unknown.ToArray();
                     }
                     else
                     {
@@ -5570,6 +5507,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new NPC DeepCopy(
+            INPCGetter item,
+            NPC_TranslationMask copyMask = null)
+        {
+            NPC ret = NPCSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

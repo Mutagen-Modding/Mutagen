@@ -590,6 +590,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((ModHeaderSetterCommon)((IModHeaderGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ModHeader GetNew()
+        {
+            return new ModHeader();
+        }
+
     }
     #endregion
 
@@ -797,7 +802,6 @@ namespace Mutagen.Bethesda.Skyrim
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -806,13 +810,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IModHeader lhs,
             IModHeaderGetter rhs,
-            ModHeader_TranslationMask copyMask,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -823,14 +825,12 @@ namespace Mutagen.Bethesda.Skyrim
             IModHeaderGetter rhs,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
@@ -840,26 +840,22 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeader lhs,
             IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ModHeader DeepCopy(
             this IModHeaderGetter item,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1437,10 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.INCC_Unset();
         }
         
-        public ModHeader GetNew()
-        {
-            return new ModHeader();
-        }
+        public ModHeader GetNew() => ModHeader.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1978,7 +1971,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IModHeader item,
             IModHeaderGetter rhs,
-            IModHeaderGetter def,
             ErrorMaskBuilder errorMask,
             ModHeader_TranslationMask copyMask)
         {
@@ -2015,9 +2007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                         else
                         {
-                            item.Stats = rhs.Stats.DeepCopy(
-                                copyMask?.Stats?.Specific,
-                                def?.Stats);
+                            item.Stats = rhs.Stats.DeepCopy(copyMask?.Stats?.Specific);
                         }
                     }
                 }
@@ -2036,15 +2026,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.TypeOffsets,
-                        rhsHasBeenSet: rhs.TypeOffsets_IsSet,
-                        defItem: def.TypeOffsets,
-                        defHasBeenSet: def.TypeOffsets_IsSet,
-                        outRhsItem: out var rhsTypeOffsetsItem,
-                        outDefItem: out var defTypeOffsetsItem))
+                    if(rhs.TypeOffsets_IsSet)
                     {
-                        item.TypeOffsets = rhsTypeOffsetsItem.ToArray();
+                        item.TypeOffsets = rhs.TypeOffsets.ToArray();
                     }
                     else
                     {
@@ -2066,15 +2050,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Deleted,
-                        rhsHasBeenSet: rhs.Deleted_IsSet,
-                        defItem: def.Deleted,
-                        defHasBeenSet: def.Deleted_IsSet,
-                        outRhsItem: out var rhsDeletedItem,
-                        outDefItem: out var defDeletedItem))
+                    if(rhs.Deleted_IsSet)
                     {
-                        item.Deleted = rhsDeletedItem.ToArray();
+                        item.Deleted = rhs.Deleted.ToArray();
                     }
                     else
                     {
@@ -2096,15 +2074,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Author,
-                        rhsHasBeenSet: rhs.Author_IsSet,
-                        defItem: def?.Author ?? default(String),
-                        defHasBeenSet: def?.Author_IsSet ?? false,
-                        outRhsItem: out var rhsAuthorItem,
-                        outDefItem: out var defAuthorItem))
+                    if (rhs.Author_IsSet)
                     {
-                        item.Author = rhsAuthorItem;
+                        item.Author = rhs.Author;
                     }
                     else
                     {
@@ -2126,15 +2098,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Description,
-                        rhsHasBeenSet: rhs.Description_IsSet,
-                        defItem: def?.Description ?? default(String),
-                        defHasBeenSet: def?.Description_IsSet ?? false,
-                        outRhsItem: out var rhsDescriptionItem,
-                        outDefItem: out var defDescriptionItem))
+                    if (rhs.Description_IsSet)
                     {
-                        item.Description = rhsDescriptionItem;
+                        item.Description = rhs.Description;
                     }
                     else
                     {
@@ -2156,14 +2122,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
                 {
-                    item.MasterReferences.SetToWithDefault(
-                        rhs: rhs.MasterReferences,
-                        def: def?.MasterReferences,
-                        converter: (r, d) =>
+                    item.MasterReferences.SetTo(
+                        items: rhs.MasterReferences,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.MasterReferences?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.MasterReferences?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -2181,10 +2144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
                 try
                 {
-                    item.OverriddenForms.SetToWithDefault(
+                    item.OverriddenForms.SetTo(
                         rhs.OverriddenForms,
-                        def?.OverriddenForms,
-                        (r, d) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
+                        (r) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2201,15 +2163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.INTV);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.INTV,
-                        rhsHasBeenSet: rhs.INTV_IsSet,
-                        defItem: def?.INTV ?? default(Int32),
-                        defHasBeenSet: def?.INTV_IsSet ?? false,
-                        outRhsItem: out var rhsINTVItem,
-                        outDefItem: out var defINTVItem))
+                    if (rhs.INTV_IsSet)
                     {
-                        item.INTV = rhsINTVItem;
+                        item.INTV = rhs.INTV;
                     }
                     else
                     {
@@ -2231,15 +2187,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.INCC);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.INCC,
-                        rhsHasBeenSet: rhs.INCC_IsSet,
-                        defItem: def?.INCC ?? default(Int32),
-                        defHasBeenSet: def?.INCC_IsSet ?? false,
-                        outRhsItem: out var rhsINCCItem,
-                        outDefItem: out var defINCCItem))
+                    if (rhs.INCC_IsSet)
                     {
-                        item.INCC = rhsINCCItem;
+                        item.INCC = rhs.INCC;
                     }
                     else
                     {
@@ -2262,14 +2212,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public ModHeader DeepCopy(
             IModHeaderGetter item,
-            ModHeader_TranslationMask copyMask = null,
-            IModHeaderGetter def = null)
+            ModHeader_TranslationMask copyMask = null)
         {
             ModHeader ret = ModHeaderSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

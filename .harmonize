@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>9e3ee4b27c7a4c03f463e973ed4483478326c96e</Sha>
+         <Sha>be189bfdbbd2f7a0b6842e52f427b68a93f2b838</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-03-2019 15:04:30</CommitDate>
-         <Description>RangeInt32 width swapped to int</Description>
+         <CommitDate>11-06-2019 17:26:24</CommitDate>
+         <Description>ListExt.SetTo /w converter</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e3e4441c6c84be1f34138c3c3116f619b0e116b8</Sha>
+         <Sha>14d8f07d9a6ba93add52ff0c69d762018cbcd3d7</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-29-2019 08:12:17</CommitDate>
-         <Description>Singletons no longer generate Is_Set members</Description>
+         <CommitDate>11-08-2019 17:39:57</CommitDate>
+         <Description>Internal static GetNew.  DeepCopy for all</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

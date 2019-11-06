@@ -365,6 +365,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LockInformationSetterCommon)((ILockInformationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LockInformation GetNew()
+        {
+            return new LockInformation();
+        }
+
     }
     #endregion
 
@@ -494,7 +499,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -503,13 +507,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILockInformation lhs,
             ILockInformationGetter rhs,
-            LockInformation_TranslationMask copyMask,
-            ILockInformationGetter def = null)
+            LockInformation_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -520,14 +522,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILockInformationGetter rhs,
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask copyMask = null,
-            ILockInformationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LockInformationSetterTranslationCommon)((ILockInformationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
@@ -537,26 +537,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformation lhs,
             ILockInformationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LockInformation_TranslationMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation_TranslationMask copyMask = null)
         {
             ((LockInformationSetterTranslationCommon)((ILockInformationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static LockInformation DeepCopy(
             this ILockInformationGetter item,
-            LockInformation_TranslationMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation_TranslationMask copyMask = null)
         {
             return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -993,10 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(LockInformation.Flag);
         }
         
-        public LockInformation GetNew()
-        {
-            return new LockInformation();
-        }
+        public LockInformation GetNew() => LockInformation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1230,7 +1223,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILockInformation item,
             ILockInformationGetter rhs,
-            ILockInformationGetter def,
             ErrorMaskBuilder errorMask,
             LockInformation_TranslationMask copyMask)
         {
@@ -1256,14 +1248,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LockInformation DeepCopy(
             ILockInformationGetter item,
-            LockInformation_TranslationMask copyMask = null,
-            ILockInformationGetter def = null)
+            LockInformation_TranslationMask copyMask = null)
         {
             LockInformation ret = LockInformationSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Tests
             };
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
                 || (settings.PassthroughSettings?.TestBinaryWrapper ?? false)
+                || (settings.PassthroughSettings?.TestCopyIn ?? false)
                 || (settings.PassthroughSettings?.TestFolder ?? false);
             foreach (var targetGroup in settings.TargetGroups)
             {

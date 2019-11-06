@@ -412,6 +412,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ScriptFields GetNew()
+        {
+            return new ScriptFields();
+        }
+
     }
     #endregion
 
@@ -548,7 +553,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -557,13 +561,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IScriptFields lhs,
             IScriptFieldsGetter rhs,
-            ScriptFields_TranslationMask copyMask,
-            IScriptFieldsGetter def = null)
+            ScriptFields_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -574,14 +576,12 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptFieldsGetter rhs,
             out ScriptFields_ErrorMask errorMask,
             ScriptFields_TranslationMask copyMask = null,
-            IScriptFieldsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
@@ -591,26 +591,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptFields lhs,
             IScriptFieldsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ScriptFields_TranslationMask copyMask = null,
-            IScriptFieldsGetter def = null)
+            ScriptFields_TranslationMask copyMask = null)
         {
             ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ScriptFields DeepCopy(
             this IScriptFieldsGetter item,
-            ScriptFields_TranslationMask copyMask = null,
-            IScriptFieldsGetter def = null)
+            ScriptFields_TranslationMask copyMask = null)
         {
             return ((ScriptFieldsSetterTranslationCommon)((IScriptFieldsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1080,10 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.References.Unset();
         }
         
-        public ScriptFields GetNew()
-        {
-            return new ScriptFields();
-        }
+        public ScriptFields GetNew() => ScriptFields.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1536,7 +1529,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IScriptFields item,
             IScriptFieldsGetter rhs,
-            IScriptFieldsGetter def,
             ErrorMaskBuilder errorMask,
             ScriptFields_TranslationMask copyMask)
         {
@@ -1547,7 +1539,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MetadataSummary.DeepCopyFieldsFrom(
                         rhs: rhs.MetadataSummary,
-                        def: def?.MetadataSummary,
                         errorMask: errorMask,
                         copyMask: copyMask?.MetadataSummary.Specific);
                 }
@@ -1566,15 +1557,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.CompiledScript,
-                        rhsHasBeenSet: rhs.CompiledScript_IsSet,
-                        defItem: def.CompiledScript,
-                        defHasBeenSet: def.CompiledScript_IsSet,
-                        outRhsItem: out var rhsCompiledScriptItem,
-                        outDefItem: out var defCompiledScriptItem))
+                    if(rhs.CompiledScript_IsSet)
                     {
-                        item.CompiledScript = rhsCompiledScriptItem.ToArray();
+                        item.CompiledScript = rhs.CompiledScript.ToArray();
                     }
                     else
                     {
@@ -1596,15 +1581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.SourceCode,
-                        rhsHasBeenSet: rhs.SourceCode_IsSet,
-                        defItem: def?.SourceCode ?? default(String),
-                        defHasBeenSet: def?.SourceCode_IsSet ?? false,
-                        outRhsItem: out var rhsSourceCodeItem,
-                        outDefItem: out var defSourceCodeItem))
+                    if (rhs.SourceCode_IsSet)
                     {
-                        item.SourceCode = rhsSourceCodeItem;
+                        item.SourceCode = rhs.SourceCode;
                     }
                     else
                     {
@@ -1626,14 +1605,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
                 try
                 {
-                    item.LocalVariables.SetToWithDefault(
-                        rhs: rhs.LocalVariables,
-                        def: def?.LocalVariables,
-                        converter: (r, d) =>
+                    item.LocalVariables.SetTo(
+                        items: rhs.LocalVariables,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.LocalVariables?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.LocalVariables?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1651,14 +1627,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
                 try
                 {
-                    item.References.SetToWithDefault(
-                        rhs: rhs.References,
-                        def: def?.References,
-                        converter: (r, d) =>
+                    item.References.SetTo(
+                        items: rhs.References,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.References?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.References?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1677,14 +1650,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ScriptFields DeepCopy(
             IScriptFieldsGetter item,
-            ScriptFields_TranslationMask copyMask = null,
-            IScriptFieldsGetter def = null)
+            ScriptFields_TranslationMask copyMask = null)
         {
             ScriptFields ret = ScriptFieldsSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -378,6 +378,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellBlockSetterCommon)((ICellBlockGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static CellBlock GetNew()
+        {
+            return new CellBlock();
+        }
+
     }
     #endregion
 
@@ -506,7 +511,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -515,13 +519,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ICellBlock lhs,
             ICellBlockGetter rhs,
-            CellBlock_TranslationMask copyMask,
-            ICellBlockGetter def = null)
+            CellBlock_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -532,14 +534,12 @@ namespace Mutagen.Bethesda.Oblivion
             ICellBlockGetter rhs,
             out CellBlock_ErrorMask errorMask,
             CellBlock_TranslationMask copyMask = null,
-            ICellBlockGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((CellBlockSetterTranslationCommon)((ICellBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = CellBlock_ErrorMask.Factory(errorMaskBuilder);
@@ -549,26 +549,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlock lhs,
             ICellBlockGetter rhs,
             ErrorMaskBuilder errorMask,
-            CellBlock_TranslationMask copyMask = null,
-            ICellBlockGetter def = null)
+            CellBlock_TranslationMask copyMask = null)
         {
             ((CellBlockSetterTranslationCommon)((ICellBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static CellBlock DeepCopy(
             this ICellBlockGetter item,
-            CellBlock_TranslationMask copyMask = null,
-            ICellBlockGetter def = null)
+            CellBlock_TranslationMask copyMask = null)
         {
             return ((CellBlockSetterTranslationCommon)((ICellBlockGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1019,10 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
-        public CellBlock GetNew()
-        {
-            return new CellBlock();
-        }
+        public CellBlock GetNew() => CellBlock.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1338,7 +1331,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ICellBlock item,
             ICellBlockGetter rhs,
-            ICellBlockGetter def,
             ErrorMaskBuilder errorMask,
             CellBlock_TranslationMask copyMask)
         {
@@ -1359,14 +1351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellBlock_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetTo(
+                        items: rhs.Items,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Items?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Items?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1385,14 +1374,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public CellBlock DeepCopy(
             ICellBlockGetter item,
-            CellBlock_TranslationMask copyMask = null,
-            ICellBlockGetter def = null)
+            CellBlock_TranslationMask copyMask = null)
         {
             CellBlock ret = CellBlockSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

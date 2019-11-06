@@ -419,6 +419,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((EyeSetterCommon)((IEyeGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Eye GetNew()
+        {
+            return new Eye();
+        }
+
     }
     #endregion
 
@@ -551,13 +556,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEyeInternal lhs,
             IEyeGetter rhs,
-            Eye_TranslationMask copyMask,
-            IEyeGetter def = null)
+            Eye_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -568,14 +571,12 @@ namespace Mutagen.Bethesda.Oblivion
             IEyeGetter rhs,
             out Eye_ErrorMask errorMask,
             Eye_TranslationMask copyMask = null,
-            IEyeGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
@@ -585,14 +586,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal lhs,
             IEyeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Eye_TranslationMask copyMask = null,
-            IEyeGetter def = null)
+            Eye_TranslationMask copyMask = null)
         {
             ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Eye DeepCopy(
+            this IEyeGetter item,
+            Eye_TranslationMask copyMask = null)
+        {
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1036,6 +1044,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
+        public Eye GetNew() => Eye.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IEyeInternal item,
@@ -1450,14 +1460,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEye item,
             IEyeGetter rhs,
-            IEyeGetter def,
             ErrorMaskBuilder errorMask,
             Eye_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1465,15 +1473,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Eye_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1495,15 +1497,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Eye_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1525,15 +1521,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Eye_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Eye.Flag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1553,6 +1543,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Eye DeepCopy(
+            IEyeGetter item,
+            Eye_TranslationMask copyMask = null)
+        {
+            Eye ret = EyeSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -1163,6 +1163,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectShaderSetterCommon)((IEffectShaderGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static EffectShader GetNew()
+        {
+            return new EffectShader();
+        }
+
     }
     #endregion
 
@@ -1627,13 +1632,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
-            EffectShader_TranslationMask copyMask,
-            IEffectShaderGetter def = null)
+            EffectShader_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -1644,14 +1647,12 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectShaderGetter rhs,
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask copyMask = null,
-            IEffectShaderGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
@@ -1661,14 +1662,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask copyMask = null,
-            IEffectShaderGetter def = null)
+            EffectShader_TranslationMask copyMask = null)
         {
             ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static EffectShader DeepCopy(
+            this IEffectShaderGetter item,
+            EffectShader_TranslationMask copyMask = null)
+        {
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -2839,6 +2847,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IEffectShaderInternal)item);
         }
+        
+        public EffectShader GetNew() => EffectShader.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -4263,14 +4273,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IEffectShader item,
             IEffectShaderGetter rhs,
-            IEffectShaderGetter def,
             ErrorMaskBuilder errorMask,
             EffectShader_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.FillTexture ?? true)
@@ -4278,15 +4286,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FillTexture,
-                        rhsHasBeenSet: rhs.FillTexture_IsSet,
-                        defItem: def?.FillTexture ?? default(String),
-                        defHasBeenSet: def?.FillTexture_IsSet ?? false,
-                        outRhsItem: out var rhsFillTextureItem,
-                        outDefItem: out var defFillTextureItem))
+                    if (rhs.FillTexture_IsSet)
                     {
-                        item.FillTexture = rhsFillTextureItem;
+                        item.FillTexture = rhs.FillTexture;
                     }
                     else
                     {
@@ -4308,15 +4310,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ParticleShaderTexture,
-                        rhsHasBeenSet: rhs.ParticleShaderTexture_IsSet,
-                        defItem: def?.ParticleShaderTexture ?? default(String),
-                        defHasBeenSet: def?.ParticleShaderTexture_IsSet ?? false,
-                        outRhsItem: out var rhsParticleShaderTextureItem,
-                        outDefItem: out var defParticleShaderTextureItem))
+                    if (rhs.ParticleShaderTexture_IsSet)
                     {
-                        item.ParticleShaderTexture = rhsParticleShaderTextureItem;
+                        item.ParticleShaderTexture = rhs.ParticleShaderTexture;
                     }
                     else
                     {
@@ -4564,6 +4560,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new EffectShader DeepCopy(
+            IEffectShaderGetter item,
+            EffectShader_TranslationMask copyMask = null)
+        {
+            EffectShader ret = EffectShaderSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

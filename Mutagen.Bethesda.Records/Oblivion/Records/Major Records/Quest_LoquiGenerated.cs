@@ -517,6 +517,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((QuestSetterCommon)((IQuestGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Quest GetNew()
+        {
+            return new Quest();
+        }
+
     }
     #endregion
 
@@ -676,13 +681,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IQuestInternal lhs,
             IQuestGetter rhs,
-            Quest_TranslationMask copyMask,
-            IQuestGetter def = null)
+            Quest_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -693,14 +696,12 @@ namespace Mutagen.Bethesda.Oblivion
             IQuestGetter rhs,
             out Quest_ErrorMask errorMask,
             Quest_TranslationMask copyMask = null,
-            IQuestGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((QuestSetterTranslationCommon)((IQuestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
@@ -710,14 +711,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestInternal lhs,
             IQuestGetter rhs,
             ErrorMaskBuilder errorMask,
-            Quest_TranslationMask copyMask = null,
-            IQuestGetter def = null)
+            Quest_TranslationMask copyMask = null)
         {
             ((QuestSetterTranslationCommon)((IQuestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Quest DeepCopy(
+            this IQuestGetter item,
+            Quest_TranslationMask copyMask = null)
+        {
+            return ((QuestSetterTranslationCommon)((IQuestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1245,6 +1253,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IQuestInternal)item);
         }
+        
+        public Quest GetNew() => Quest.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1859,14 +1869,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IQuest item,
             IQuestGetter rhs,
-            IQuestGetter def,
             ErrorMaskBuilder errorMask,
             Quest_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Script ?? true)
@@ -1874,9 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1893,15 +1899,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1923,15 +1923,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Icon);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Icon,
-                        rhsHasBeenSet: rhs.Icon_IsSet,
-                        defItem: def?.Icon ?? default(String),
-                        defHasBeenSet: def?.Icon_IsSet ?? false,
-                        outRhsItem: out var rhsIconItem,
-                        outDefItem: out var defIconItem))
+                    if (rhs.Icon_IsSet)
                     {
-                        item.Icon = rhsIconItem;
+                        item.Icon = rhs.Icon;
                     }
                     else
                     {
@@ -1961,14 +1955,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetToWithDefault(
-                        rhs: rhs.Conditions,
-                        def: def?.Conditions,
-                        converter: (r, d) =>
+                    item.Conditions.SetTo(
+                        items: rhs.Conditions,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Conditions?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Conditions?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1986,14 +1977,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
                 {
-                    item.Stages.SetToWithDefault(
-                        rhs: rhs.Stages,
-                        def: def?.Stages,
-                        converter: (r, d) =>
+                    item.Stages.SetTo(
+                        items: rhs.Stages,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Stages?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Stages?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -2011,14 +1999,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
                 {
-                    item.Targets.SetToWithDefault(
-                        rhs: rhs.Targets,
-                        def: def?.Targets,
-                        converter: (r, d) =>
+                    item.Targets.SetTo(
+                        items: rhs.Targets,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Targets?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Targets?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -2038,6 +2023,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Quest DeepCopy(
+            IQuestGetter item,
+            Quest_TranslationMask copyMask = null)
+        {
+            Quest ret = QuestSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

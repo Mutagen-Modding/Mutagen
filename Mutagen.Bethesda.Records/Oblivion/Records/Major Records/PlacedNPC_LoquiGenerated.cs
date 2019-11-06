@@ -610,6 +610,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlacedNPCSetterCommon)((IPlacedNPCGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static PlacedNPC GetNew()
+        {
+            return new PlacedNPC();
+        }
+
     }
     #endregion
 
@@ -813,13 +818,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IPlacedNPCInternal lhs,
             IPlacedNPCGetter rhs,
-            PlacedNPC_TranslationMask copyMask,
-            IPlacedNPCGetter def = null)
+            PlacedNPC_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -830,14 +833,12 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedNPCGetter rhs,
             out PlacedNPC_ErrorMask errorMask,
             PlacedNPC_TranslationMask copyMask = null,
-            IPlacedNPCGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = PlacedNPC_ErrorMask.Factory(errorMaskBuilder);
@@ -847,14 +848,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternal lhs,
             IPlacedNPCGetter rhs,
             ErrorMaskBuilder errorMask,
-            PlacedNPC_TranslationMask copyMask = null,
-            IPlacedNPCGetter def = null)
+            PlacedNPC_TranslationMask copyMask = null)
         {
             ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static PlacedNPC DeepCopy(
+            this IPlacedNPCGetter item,
+            PlacedNPC_TranslationMask copyMask = null)
+        {
+            return ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1422,6 +1430,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IPlacedNPCInternal)item);
         }
+        
+        public PlacedNPC GetNew() => PlacedNPC.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2088,14 +2098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IPlacedNPC item,
             IPlacedNPCGetter rhs,
-            IPlacedNPCGetter def,
             ErrorMaskBuilder errorMask,
             PlacedNPC_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Base ?? true)
@@ -2103,9 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToFormKey(
-                        rhs: rhs.Base_Property,
-                        def: def?.Base_Property);
+                    item.Base_Property.SetToFormKey(rhs: rhs.Base_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2122,15 +2128,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.XPCIFluff);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.XPCIFluff,
-                        rhsHasBeenSet: rhs.XPCIFluff_IsSet,
-                        defItem: def.XPCIFluff,
-                        defHasBeenSet: def.XPCIFluff_IsSet,
-                        outRhsItem: out var rhsXPCIFluffItem,
-                        outDefItem: out var defXPCIFluffItem))
+                    if(rhs.XPCIFluff_IsSet)
                     {
-                        item.XPCIFluff = rhsXPCIFluffItem.ToArray();
+                        item.XPCIFluff = rhs.XPCIFluff.ToArray();
                     }
                     else
                     {
@@ -2152,15 +2152,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.FULLFluff);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FULLFluff,
-                        rhsHasBeenSet: rhs.FULLFluff_IsSet,
-                        defItem: def.FULLFluff,
-                        defHasBeenSet: def.FULLFluff_IsSet,
-                        outRhsItem: out var rhsFULLFluffItem,
-                        outDefItem: out var defFULLFluffItem))
+                    if(rhs.FULLFluff_IsSet)
                     {
-                        item.FULLFluff = rhsFULLFluffItem.ToArray();
+                        item.FULLFluff = rhs.FULLFluff.ToArray();
                     }
                     else
                     {
@@ -2182,17 +2176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.DistantLODData);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.DistantLODData,
-                        rhsHasBeenSet: rhs.DistantLODData_IsSet,
-                        defItem: def?.DistantLODData,
-                        defHasBeenSet: def?.DistantLODData_IsSet ?? false,
-                        outRhsItem: out var rhsDistantLODDataItem,
-                        outDefItem: out var defDistantLODDataItem))
+                    if(rhs.DistantLODData_IsSet)
                     {
-                        item.DistantLODData = rhsDistantLODDataItem.DeepCopy(
-                            copyMask?.DistantLODData?.Specific,
-                            def: defDistantLODDataItem);
+                        item.DistantLODData = rhs.DistantLODData.DeepCopy(copyMask?.DistantLODData?.Specific);
                     }
                     else
                     {
@@ -2216,17 +2202,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.EnableParent);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.EnableParent,
-                        rhsHasBeenSet: rhs.EnableParent_IsSet,
-                        defItem: def?.EnableParent,
-                        defHasBeenSet: def?.EnableParent_IsSet ?? false,
-                        outRhsItem: out var rhsEnableParentItem,
-                        outDefItem: out var defEnableParentItem))
+                    if(rhs.EnableParent_IsSet)
                     {
-                        item.EnableParent = rhsEnableParentItem.DeepCopy(
-                            copyMask?.EnableParent?.Specific,
-                            def: defEnableParentItem);
+                        item.EnableParent = rhs.EnableParent.DeepCopy(copyMask?.EnableParent?.Specific);
                     }
                     else
                     {
@@ -2250,9 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                 try
                 {
-                    item.MerchantContainer_Property.SetToFormKey(
-                        rhs: rhs.MerchantContainer_Property,
-                        def: def?.MerchantContainer_Property);
+                    item.MerchantContainer_Property.SetToFormKey(rhs: rhs.MerchantContainer_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2269,9 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                 try
                 {
-                    item.Horse_Property.SetToFormKey(
-                        rhs: rhs.Horse_Property,
-                        def: def?.Horse_Property);
+                    item.Horse_Property.SetToFormKey(rhs: rhs.Horse_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2288,15 +2262,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.RagdollData);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.RagdollData,
-                        rhsHasBeenSet: rhs.RagdollData_IsSet,
-                        defItem: def.RagdollData,
-                        defHasBeenSet: def.RagdollData_IsSet,
-                        outRhsItem: out var rhsRagdollDataItem,
-                        outDefItem: out var defRagdollDataItem))
+                    if(rhs.RagdollData_IsSet)
                     {
-                        item.RagdollData = rhsRagdollDataItem.ToArray();
+                        item.RagdollData = rhs.RagdollData.ToArray();
                     }
                     else
                     {
@@ -2318,15 +2286,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Scale);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Scale,
-                        rhsHasBeenSet: rhs.Scale_IsSet,
-                        defItem: def?.Scale ?? default(Single),
-                        defHasBeenSet: def?.Scale_IsSet ?? false,
-                        outRhsItem: out var rhsScaleItem,
-                        outDefItem: out var defScaleItem))
+                    if (rhs.Scale_IsSet)
                     {
-                        item.Scale = rhsScaleItem;
+                        item.Scale = rhs.Scale;
                     }
                     else
                     {
@@ -2358,6 +2320,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new PlacedNPC DeepCopy(
+            IPlacedNPCGetter item,
+            PlacedNPC_TranslationMask copyMask = null)
+        {
+            PlacedNPC ret = PlacedNPCSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

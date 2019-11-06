@@ -431,6 +431,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LeveledItemSetterCommon)((ILeveledItemGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LeveledItem GetNew()
+        {
+            return new LeveledItem();
+        }
+
     }
     #endregion
 
@@ -557,13 +562,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILeveledItemInternal lhs,
             ILeveledItemGetter rhs,
-            LeveledItem_TranslationMask copyMask,
-            ILeveledItemGetter def = null)
+            LeveledItem_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -574,14 +577,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledItemGetter rhs,
             out LeveledItem_ErrorMask errorMask,
             LeveledItem_TranslationMask copyMask = null,
-            ILeveledItemGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LeveledItem_ErrorMask.Factory(errorMaskBuilder);
@@ -591,14 +592,21 @@ namespace Mutagen.Bethesda.Oblivion
             this ILeveledItemInternal lhs,
             ILeveledItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            LeveledItem_TranslationMask copyMask = null,
-            ILeveledItemGetter def = null)
+            LeveledItem_TranslationMask copyMask = null)
         {
             ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static LeveledItem DeepCopy(
+            this ILeveledItemGetter item,
+            LeveledItem_TranslationMask copyMask = null)
+        {
+            return ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1049,6 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (ILeveledItemInternal)item);
         }
+        
+        public LeveledItem GetNew() => LeveledItem.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1536,14 +1546,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILeveledItem item,
             ILeveledItemGetter rhs,
-            ILeveledItemGetter def,
             ErrorMaskBuilder errorMask,
             LeveledItem_TranslationMask copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.ChanceNone ?? true)
@@ -1551,15 +1559,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.ChanceNone,
-                        rhsHasBeenSet: rhs.ChanceNone_IsSet,
-                        defItem: def?.ChanceNone ?? default(Byte),
-                        defHasBeenSet: def?.ChanceNone_IsSet ?? false,
-                        outRhsItem: out var rhsChanceNoneItem,
-                        outDefItem: out var defChanceNoneItem))
+                    if (rhs.ChanceNone_IsSet)
                     {
-                        item.ChanceNone = rhsChanceNoneItem;
+                        item.ChanceNone = rhs.ChanceNone;
                     }
                     else
                     {
@@ -1581,15 +1583,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(LeveledFlag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -1611,14 +1607,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
                 try
                 {
-                    item.Entries.SetToWithDefault(
-                        rhs: rhs.Entries,
-                        def: def?.Entries,
-                        converter: (r, d) =>
+                    item.Entries.SetTo(
+                        items: rhs.Entries,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy<ItemAbstract, IItemAbstractGetter, ItemAbstract_TranslationMask>(
-                                copyMask?.Entries?.Specific,
-                                def: d);
+                            return r.DeepCopy<ItemAbstract, IItemAbstractGetter, ItemAbstract_TranslationMask>(copyMask?.Entries?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1634,6 +1627,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new LeveledItem DeepCopy(
+            ILeveledItemGetter item,
+            LeveledItem_TranslationMask copyMask = null)
+        {
+            LeveledItem ret = LeveledItemSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

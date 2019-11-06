@@ -381,13 +381,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IGameSettingInternal lhs,
             IGameSettingGetter rhs,
-            GameSetting_TranslationMask copyMask,
-            IGameSettingGetter def = null)
+            GameSetting_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -398,14 +396,12 @@ namespace Mutagen.Bethesda.Skyrim
             IGameSettingGetter rhs,
             out GameSetting_ErrorMask errorMask,
             GameSetting_TranslationMask copyMask = null,
-            IGameSettingGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
@@ -415,14 +411,21 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingInternal lhs,
             IGameSettingGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSetting_TranslationMask copyMask = null,
-            IGameSettingGetter def = null)
+            GameSetting_TranslationMask copyMask = null)
         {
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static GameSetting DeepCopy(
+            this IGameSettingGetter item,
+            GameSetting_TranslationMask copyMask = null)
+        {
+            return ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1094,19 +1097,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IGameSetting item,
             IGameSettingGetter rhs,
-            IGameSettingGetter def,
             ErrorMaskBuilder errorMask,
             GameSetting_TranslationMask copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
         }
         
         #endregion
+        
+        public new GameSetting DeepCopy(
+            IGameSettingGetter item,
+            GameSetting_TranslationMask copyMask = null)
+        {
+            GameSetting ret = (GameSetting)System.Activator.CreateInstance(item.GetType());
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

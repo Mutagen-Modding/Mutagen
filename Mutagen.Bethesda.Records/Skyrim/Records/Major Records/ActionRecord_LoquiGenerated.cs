@@ -364,6 +364,11 @@ namespace Mutagen.Bethesda.Skyrim
             ((ActionRecordSetterCommon)((IActionRecordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ActionRecord GetNew()
+        {
+            return new ActionRecord();
+        }
+
     }
     #endregion
 
@@ -476,13 +481,11 @@ namespace Mutagen.Bethesda.Skyrim
         public static void DeepCopyFieldsFrom(
             this IActionRecordInternal lhs,
             IActionRecordGetter rhs,
-            ActionRecord_TranslationMask copyMask,
-            IActionRecordGetter def = null)
+            ActionRecord_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -493,14 +496,12 @@ namespace Mutagen.Bethesda.Skyrim
             IActionRecordGetter rhs,
             out ActionRecord_ErrorMask errorMask,
             ActionRecord_TranslationMask copyMask = null,
-            IActionRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
@@ -510,14 +511,21 @@ namespace Mutagen.Bethesda.Skyrim
             this IActionRecordInternal lhs,
             IActionRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            ActionRecord_TranslationMask copyMask = null,
-            IActionRecordGetter def = null)
+            ActionRecord_TranslationMask copyMask = null)
         {
             ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static ActionRecord DeepCopy(
+            this IActionRecordGetter item,
+            ActionRecord_TranslationMask copyMask = null)
+        {
+            return ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -935,6 +943,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActionRecordInternal)item);
         }
         
+        public ActionRecord GetNew() => ActionRecord.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IActionRecordInternal item,
@@ -1290,14 +1300,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void DeepCopyFieldsFrom(
             IActionRecord item,
             IActionRecordGetter rhs,
-            IActionRecordGetter def,
             ErrorMaskBuilder errorMask,
             ActionRecord_TranslationMask copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Color ?? true)
@@ -1305,15 +1313,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ActionRecord_FieldIndex.Color);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Color,
-                        rhsHasBeenSet: rhs.Color_IsSet,
-                        defItem: def?.Color ?? default(Color),
-                        defHasBeenSet: def?.Color_IsSet ?? false,
-                        outRhsItem: out var rhsColorItem,
-                        outDefItem: out var defColorItem))
+                    if (rhs.Color_IsSet)
                     {
-                        item.Color = rhsColorItem;
+                        item.Color = rhs.Color;
                     }
                     else
                     {
@@ -1333,6 +1335,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #endregion
+        
+        public new ActionRecord DeepCopy(
+            IActionRecordGetter item,
+            ActionRecord_TranslationMask copyMask = null)
+        {
+            ActionRecord ret = ActionRecordSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

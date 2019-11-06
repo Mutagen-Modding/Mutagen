@@ -505,6 +505,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ContainerSetterCommon)((IContainerGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Container GetNew()
+        {
+            return new Container();
+        }
+
     }
     #endregion
 
@@ -670,13 +675,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IContainerInternal lhs,
             IContainerGetter rhs,
-            Container_TranslationMask copyMask,
-            IContainerGetter def = null)
+            Container_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -687,14 +690,12 @@ namespace Mutagen.Bethesda.Oblivion
             IContainerGetter rhs,
             out Container_ErrorMask errorMask,
             Container_TranslationMask copyMask = null,
-            IContainerGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Container_ErrorMask.Factory(errorMaskBuilder);
@@ -704,14 +705,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternal lhs,
             IContainerGetter rhs,
             ErrorMaskBuilder errorMask,
-            Container_TranslationMask copyMask = null,
-            IContainerGetter def = null)
+            Container_TranslationMask copyMask = null)
         {
             ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Container DeepCopy(
+            this IContainerGetter item,
+            Container_TranslationMask copyMask = null)
+        {
+            return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1238,6 +1246,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IContainerInternal)item);
         }
+        
+        public Container GetNew() => Container.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1819,14 +1829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IContainer item,
             IContainerGetter rhs,
-            IContainerGetter def,
             ErrorMaskBuilder errorMask,
             Container_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Name ?? true)
@@ -1834,15 +1842,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1864,17 +1866,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1898,9 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(
-                        rhs: rhs.Script_Property,
-                        def: def?.Script_Property);
+                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1917,14 +1909,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        converter: (r, d) =>
+                    item.Items.SetTo(
+                        items: rhs.Items,
+                        converter: (r) =>
                         {
-                            return r.DeepCopy(
-                                copyMask?.Items?.Specific,
-                                def: d);
+                            return r.DeepCopy(copyMask?.Items?.Specific);
                         });
                 }
                 catch (Exception ex)
@@ -1950,9 +1939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.OpenSound);
                 try
                 {
-                    item.OpenSound_Property.SetToFormKey(
-                        rhs: rhs.OpenSound_Property,
-                        def: def?.OpenSound_Property);
+                    item.OpenSound_Property.SetToFormKey(rhs: rhs.OpenSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1969,9 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Container_FieldIndex.CloseSound);
                 try
                 {
-                    item.CloseSound_Property.SetToFormKey(
-                        rhs: rhs.CloseSound_Property,
-                        def: def?.CloseSound_Property);
+                    item.CloseSound_Property.SetToFormKey(rhs: rhs.CloseSound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1990,6 +1975,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Container DeepCopy(
+            IContainerGetter item,
+            Container_TranslationMask copyMask = null)
+        {
+            Container ret = ContainerSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

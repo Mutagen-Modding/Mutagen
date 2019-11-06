@@ -117,18 +117,12 @@ namespace Mutagen.Bethesda
             this.HasBeenSet = true;
         }
 
-        public void SetLink(ISetLinkGetter<T> rhs, ISetLinkGetter<T> def)
+        public void SetLink(ISetLinkGetter<T> rhs)
         {
             if (rhs.HasBeenSet)
             {
                 this.UnlinkedForm = rhs.FormKey;
                 this._Item = rhs.Item;
-                this._HasBeenSet = true;
-            }
-            else if (def.HasBeenSet)
-            {
-                this.UnlinkedForm = def.FormKey;
-                this._Item = def.Item;
                 this._HasBeenSet = true;
             }
             else

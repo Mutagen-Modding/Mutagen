@@ -362,6 +362,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LoadScreenLocation GetNew()
+        {
+            return new LoadScreenLocation();
+        }
+
     }
     #endregion
 
@@ -486,7 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -495,13 +499,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
-            LoadScreenLocation_TranslationMask copyMask,
-            ILoadScreenLocationGetter def = null)
+            LoadScreenLocation_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -512,14 +514,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILoadScreenLocationGetter rhs,
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask copyMask = null,
-            ILoadScreenLocationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
@@ -529,26 +529,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LoadScreenLocation_TranslationMask copyMask = null,
-            ILoadScreenLocationGetter def = null)
+            LoadScreenLocation_TranslationMask copyMask = null)
         {
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static LoadScreenLocation DeepCopy(
             this ILoadScreenLocationGetter item,
-            LoadScreenLocation_TranslationMask copyMask = null,
-            ILoadScreenLocationGetter def = null)
+            LoadScreenLocation_TranslationMask copyMask = null)
         {
             return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -972,10 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default(P2Int16);
         }
         
-        public LoadScreenLocation GetNew()
-        {
-            return new LoadScreenLocation();
-        }
+        public LoadScreenLocation GetNew() => LoadScreenLocation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1194,7 +1187,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILoadScreenLocation item,
             ILoadScreenLocationGetter rhs,
-            ILoadScreenLocationGetter def,
             ErrorMaskBuilder errorMask,
             LoadScreenLocation_TranslationMask copyMask)
         {
@@ -1216,14 +1208,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LoadScreenLocation DeepCopy(
             ILoadScreenLocationGetter item,
-            LoadScreenLocation_TranslationMask copyMask = null,
-            ILoadScreenLocationGetter def = null)
+            LoadScreenLocation_TranslationMask copyMask = null)
         {
             LoadScreenLocation ret = LoadScreenLocationSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

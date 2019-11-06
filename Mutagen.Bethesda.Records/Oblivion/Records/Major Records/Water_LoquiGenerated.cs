@@ -927,6 +927,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((WaterSetterCommon)((IWaterGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Water GetNew()
+        {
+            return new Water();
+        }
+
     }
     #endregion
 
@@ -1248,13 +1253,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IWaterInternal lhs,
             IWaterGetter rhs,
-            Water_TranslationMask copyMask,
-            IWaterGetter def = null)
+            Water_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -1265,14 +1268,12 @@ namespace Mutagen.Bethesda.Oblivion
             IWaterGetter rhs,
             out Water_ErrorMask errorMask,
             Water_TranslationMask copyMask = null,
-            IWaterGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Water_ErrorMask.Factory(errorMaskBuilder);
@@ -1282,14 +1283,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal lhs,
             IWaterGetter rhs,
             ErrorMaskBuilder errorMask,
-            Water_TranslationMask copyMask = null,
-            IWaterGetter def = null)
+            Water_TranslationMask copyMask = null)
         {
             ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static Water DeepCopy(
+            this IWaterGetter item,
+            Water_TranslationMask copyMask = null)
+        {
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -2127,6 +2135,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IWaterInternal)item);
         }
+        
+        public Water GetNew() => Water.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -3153,14 +3163,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IWater item,
             IWaterGetter rhs,
-            IWaterGetter def,
             ErrorMaskBuilder errorMask,
             Water_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Texture ?? true)
@@ -3168,15 +3176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Texture);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Texture,
-                        rhsHasBeenSet: rhs.Texture_IsSet,
-                        defItem: def?.Texture ?? default(String),
-                        defHasBeenSet: def?.Texture_IsSet ?? false,
-                        outRhsItem: out var rhsTextureItem,
-                        outDefItem: out var defTextureItem))
+                    if (rhs.Texture_IsSet)
                     {
-                        item.Texture = rhsTextureItem;
+                        item.Texture = rhs.Texture;
                     }
                     else
                     {
@@ -3198,15 +3200,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Opacity,
-                        rhsHasBeenSet: rhs.Opacity_IsSet,
-                        defItem: def?.Opacity ?? default(Byte),
-                        defHasBeenSet: def?.Opacity_IsSet ?? false,
-                        outRhsItem: out var rhsOpacityItem,
-                        outDefItem: out var defOpacityItem))
+                    if (rhs.Opacity_IsSet)
                     {
-                        item.Opacity = rhsOpacityItem;
+                        item.Opacity = rhs.Opacity;
                     }
                     else
                     {
@@ -3228,15 +3224,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Flags);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Flags,
-                        rhsHasBeenSet: rhs.Flags_IsSet,
-                        defItem: def?.Flags ?? default(Water.Flag),
-                        defHasBeenSet: def?.Flags_IsSet ?? false,
-                        outRhsItem: out var rhsFlagsItem,
-                        outDefItem: out var defFlagsItem))
+                    if (rhs.Flags_IsSet)
                     {
-                        item.Flags = rhsFlagsItem;
+                        item.Flags = rhs.Flags;
                     }
                     else
                     {
@@ -3258,15 +3248,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.MaterialID,
-                        rhsHasBeenSet: rhs.MaterialID_IsSet,
-                        defItem: def?.MaterialID ?? default(String),
-                        defHasBeenSet: def?.MaterialID_IsSet ?? false,
-                        outRhsItem: out var rhsMaterialIDItem,
-                        outDefItem: out var defMaterialIDItem))
+                    if (rhs.MaterialID_IsSet)
                     {
-                        item.MaterialID = rhsMaterialIDItem;
+                        item.MaterialID = rhs.MaterialID;
                     }
                     else
                     {
@@ -3288,9 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToFormKey(
-                        rhs: rhs.Sound_Property,
-                        def: def?.Sound_Property);
+                    item.Sound_Property.SetToFormKey(rhs: rhs.Sound_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3411,17 +3393,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.RelatedWaters,
-                        rhsHasBeenSet: rhs.RelatedWaters_IsSet,
-                        defItem: def?.RelatedWaters,
-                        defHasBeenSet: def?.RelatedWaters_IsSet ?? false,
-                        outRhsItem: out var rhsRelatedWatersItem,
-                        outDefItem: out var defRelatedWatersItem))
+                    if(rhs.RelatedWaters_IsSet)
                     {
-                        item.RelatedWaters = rhsRelatedWatersItem.DeepCopy(
-                            copyMask?.RelatedWaters?.Specific,
-                            def: defRelatedWatersItem);
+                        item.RelatedWaters = rhs.RelatedWaters.DeepCopy(copyMask?.RelatedWaters?.Specific);
                     }
                     else
                     {
@@ -3447,6 +3421,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new Water DeepCopy(
+            IWaterGetter item,
+            Water_TranslationMask copyMask = null)
+        {
+            Water ret = WaterSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

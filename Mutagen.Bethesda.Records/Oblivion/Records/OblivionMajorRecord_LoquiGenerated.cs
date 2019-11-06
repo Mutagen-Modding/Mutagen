@@ -417,13 +417,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IOblivionMajorRecordInternal lhs,
             IOblivionMajorRecordGetter rhs,
-            OblivionMajorRecord_TranslationMask copyMask,
-            IOblivionMajorRecordGetter def = null)
+            OblivionMajorRecord_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -434,14 +432,12 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionMajorRecordGetter rhs,
             out OblivionMajorRecord_ErrorMask errorMask,
             OblivionMajorRecord_TranslationMask copyMask = null,
-            IOblivionMajorRecordGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
@@ -451,14 +447,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMajorRecordInternal lhs,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMajorRecord_TranslationMask copyMask = null,
-            IOblivionMajorRecordGetter def = null)
+            OblivionMajorRecord_TranslationMask copyMask = null)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static OblivionMajorRecord DeepCopy(
+            this IOblivionMajorRecordGetter item,
+            OblivionMajorRecord_TranslationMask copyMask = null)
+        {
+            return ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -1292,14 +1295,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
-            IOblivionMajorRecordGetter def,
             ErrorMaskBuilder errorMask,
             OblivionMajorRecord_TranslationMask copyMask)
         {
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.OblivionMajorRecordFlags ?? true)
@@ -1309,6 +1310,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new OblivionMajorRecord DeepCopy(
+            IOblivionMajorRecordGetter item,
+            OblivionMajorRecord_TranslationMask copyMask = null)
+        {
+            OblivionMajorRecord ret = (OblivionMajorRecord)System.Activator.CreateInstance(item.GetType());
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

@@ -351,6 +351,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceRelationSetterCommon)((IRaceRelationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static RaceRelation GetNew()
+        {
+            return new RaceRelation();
+        }
+
     }
     #endregion
 
@@ -468,7 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -477,13 +481,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRaceRelation lhs,
             IRaceRelationGetter rhs,
-            RaceRelation_TranslationMask copyMask,
-            IRaceRelationGetter def = null)
+            RaceRelation_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -494,14 +496,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceRelationGetter rhs,
             out RaceRelation_ErrorMask errorMask,
             RaceRelation_TranslationMask copyMask = null,
-            IRaceRelationGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
@@ -511,26 +511,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceRelation lhs,
             IRaceRelationGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceRelation_TranslationMask copyMask = null,
-            IRaceRelationGetter def = null)
+            RaceRelation_TranslationMask copyMask = null)
         {
             ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static RaceRelation DeepCopy(
             this IRaceRelationGetter item,
-            RaceRelation_TranslationMask copyMask = null,
-            IRaceRelationGetter def = null)
+            RaceRelation_TranslationMask copyMask = null)
         {
             return ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -941,10 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public RaceRelation GetNew()
-        {
-            return new RaceRelation();
-        }
+        public RaceRelation GetNew() => RaceRelation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1142,7 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRaceRelation item,
             IRaceRelationGetter rhs,
-            IRaceRelationGetter def,
             ErrorMaskBuilder errorMask,
             RaceRelation_TranslationMask copyMask)
         {
@@ -1160,14 +1152,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public RaceRelation DeepCopy(
             IRaceRelationGetter item,
-            RaceRelation_TranslationMask copyMask = null,
-            IRaceRelationGetter def = null)
+            RaceRelation_TranslationMask copyMask = null)
         {
             RaceRelation ret = RaceRelationSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

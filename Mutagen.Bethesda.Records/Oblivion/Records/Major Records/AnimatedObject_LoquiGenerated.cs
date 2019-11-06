@@ -392,6 +392,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static AnimatedObject GetNew()
+        {
+            return new AnimatedObject();
+        }
+
     }
     #endregion
 
@@ -511,13 +516,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IAnimatedObjectInternal lhs,
             IAnimatedObjectGetter rhs,
-            AnimatedObject_TranslationMask copyMask,
-            IAnimatedObjectGetter def = null)
+            AnimatedObject_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -528,14 +531,12 @@ namespace Mutagen.Bethesda.Oblivion
             IAnimatedObjectGetter rhs,
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_TranslationMask copyMask = null,
-            IAnimatedObjectGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = AnimatedObject_ErrorMask.Factory(errorMaskBuilder);
@@ -545,14 +546,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectInternal lhs,
             IAnimatedObjectGetter rhs,
             ErrorMaskBuilder errorMask,
-            AnimatedObject_TranslationMask copyMask = null,
-            IAnimatedObjectGetter def = null)
+            AnimatedObject_TranslationMask copyMask = null)
         {
             ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static AnimatedObject DeepCopy(
+            this IAnimatedObjectGetter item,
+            AnimatedObject_TranslationMask copyMask = null)
+        {
+            return ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -983,6 +991,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAnimatedObjectInternal)item);
         }
         
+        public AnimatedObject GetNew() => AnimatedObject.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IAnimatedObjectInternal item,
@@ -1372,14 +1382,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IAnimatedObject item,
             IAnimatedObjectGetter rhs,
-            IAnimatedObjectGetter def,
             ErrorMaskBuilder errorMask,
             AnimatedObject_TranslationMask copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
-                def,
                 errorMask,
                 copyMask);
             if (copyMask?.Model.Overall ?? true)
@@ -1387,17 +1395,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Model,
-                        rhsHasBeenSet: rhs.Model_IsSet,
-                        defItem: def?.Model,
-                        defHasBeenSet: def?.Model_IsSet ?? false,
-                        outRhsItem: out var rhsModelItem,
-                        outDefItem: out var defModelItem))
+                    if(rhs.Model_IsSet)
                     {
-                        item.Model = rhsModelItem.DeepCopy(
-                            copyMask?.Model?.Specific,
-                            def: defModelItem);
+                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
                     }
                     else
                     {
@@ -1421,9 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
                 try
                 {
-                    item.IdleAnimation_Property.SetToFormKey(
-                        rhs: rhs.IdleAnimation_Property,
-                        def: def?.IdleAnimation_Property);
+                    item.IdleAnimation_Property.SetToFormKey(rhs: rhs.IdleAnimation_Property);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1438,6 +1436,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public new AnimatedObject DeepCopy(
+            IAnimatedObjectGetter item,
+            AnimatedObject_TranslationMask copyMask = null)
+        {
+            AnimatedObject ret = AnimatedObjectSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

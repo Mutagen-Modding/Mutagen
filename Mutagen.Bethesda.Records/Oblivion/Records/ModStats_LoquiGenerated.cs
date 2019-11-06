@@ -336,6 +336,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ModStatsSetterCommon)((IModStatsGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ModStats GetNew()
+        {
+            return new ModStats();
+        }
+
     }
     #endregion
 
@@ -458,7 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -467,13 +471,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IModStats lhs,
             IModStatsGetter rhs,
-            ModStats_TranslationMask copyMask,
-            IModStatsGetter def = null)
+            ModStats_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -484,14 +486,12 @@ namespace Mutagen.Bethesda.Oblivion
             IModStatsGetter rhs,
             out ModStats_ErrorMask errorMask,
             ModStats_TranslationMask copyMask = null,
-            IModStatsGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
@@ -501,26 +501,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IModStats lhs,
             IModStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModStats_TranslationMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats_TranslationMask copyMask = null)
         {
             ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ModStats DeepCopy(
             this IModStatsGetter item,
-            ModStats_TranslationMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats_TranslationMask copyMask = null)
         {
             return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -944,10 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NextObjectID = default(UInt32);
         }
         
-        public ModStats GetNew()
-        {
-            return new ModStats();
-        }
+        public ModStats GetNew() => ModStats.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1160,7 +1153,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IModStats item,
             IModStatsGetter rhs,
-            IModStatsGetter def,
             ErrorMaskBuilder errorMask,
             ModStats_TranslationMask copyMask)
         {
@@ -1182,14 +1174,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ModStats DeepCopy(
             IModStatsGetter item,
-            ModStats_TranslationMask copyMask = null,
-            IModStatsGetter def = null)
+            ModStats_TranslationMask copyMask = null)
         {
             ModStats ret = ModStatsSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

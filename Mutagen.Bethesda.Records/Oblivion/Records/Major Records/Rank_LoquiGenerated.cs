@@ -432,6 +432,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((RankSetterCommon)((IRankGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static Rank GetNew()
+        {
+            return new Rank();
+        }
+
     }
     #endregion
 
@@ -576,7 +581,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -585,13 +589,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
             IRankGetter rhs,
-            Rank_TranslationMask copyMask,
-            IRankGetter def = null)
+            Rank_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -602,14 +604,12 @@ namespace Mutagen.Bethesda.Oblivion
             IRankGetter rhs,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask copyMask = null,
-            IRankGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = Rank_ErrorMask.Factory(errorMaskBuilder);
@@ -619,26 +619,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IRank lhs,
             IRankGetter rhs,
             ErrorMaskBuilder errorMask,
-            Rank_TranslationMask copyMask = null,
-            IRankGetter def = null)
+            Rank_TranslationMask copyMask = null)
         {
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static Rank DeepCopy(
             this IRankGetter item,
-            Rank_TranslationMask copyMask = null,
-            IRankGetter def = null)
+            Rank_TranslationMask copyMask = null)
         {
             return ((RankSetterTranslationCommon)((IRankGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1091,10 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia_Unset();
         }
         
-        public Rank GetNew()
-        {
-            return new Rank();
-        }
+        public Rank GetNew() => Rank.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1409,7 +1402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IRank item,
             IRankGetter rhs,
-            IRankGetter def,
             ErrorMaskBuilder errorMask,
             Rank_TranslationMask copyMask)
         {
@@ -1418,15 +1410,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.RankNumber,
-                        rhsHasBeenSet: rhs.RankNumber_IsSet,
-                        defItem: def?.RankNumber ?? default(Int32),
-                        defHasBeenSet: def?.RankNumber_IsSet ?? false,
-                        outRhsItem: out var rhsRankNumberItem,
-                        outDefItem: out var defRankNumberItem))
+                    if (rhs.RankNumber_IsSet)
                     {
-                        item.RankNumber = rhsRankNumberItem;
+                        item.RankNumber = rhs.RankNumber;
                     }
                     else
                     {
@@ -1448,15 +1434,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.MaleName,
-                        rhsHasBeenSet: rhs.MaleName_IsSet,
-                        defItem: def?.MaleName ?? default(String),
-                        defHasBeenSet: def?.MaleName_IsSet ?? false,
-                        outRhsItem: out var rhsMaleNameItem,
-                        outDefItem: out var defMaleNameItem))
+                    if (rhs.MaleName_IsSet)
                     {
-                        item.MaleName = rhsMaleNameItem;
+                        item.MaleName = rhs.MaleName;
                     }
                     else
                     {
@@ -1478,15 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.FemaleName,
-                        rhsHasBeenSet: rhs.FemaleName_IsSet,
-                        defItem: def?.FemaleName ?? default(String),
-                        defHasBeenSet: def?.FemaleName_IsSet ?? false,
-                        outRhsItem: out var rhsFemaleNameItem,
-                        outDefItem: out var defFemaleNameItem))
+                    if (rhs.FemaleName_IsSet)
                     {
-                        item.FemaleName = rhsFemaleNameItem;
+                        item.FemaleName = rhs.FemaleName;
                     }
                     else
                     {
@@ -1508,15 +1482,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Insignia,
-                        rhsHasBeenSet: rhs.Insignia_IsSet,
-                        defItem: def?.Insignia ?? default(String),
-                        defHasBeenSet: def?.Insignia_IsSet ?? false,
-                        outRhsItem: out var rhsInsigniaItem,
-                        outDefItem: out var defInsigniaItem))
+                    if (rhs.Insignia_IsSet)
                     {
-                        item.Insignia = rhsInsigniaItem;
+                        item.Insignia = rhs.Insignia;
                     }
                     else
                     {
@@ -1539,14 +1507,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public Rank DeepCopy(
             IRankGetter item,
-            Rank_TranslationMask copyMask = null,
-            IRankGetter def = null)
+            Rank_TranslationMask copyMask = null)
         {
             Rank ret = RankSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -376,6 +376,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((ItemEntrySetterCommon)((IItemEntryGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static ItemEntry GetNew()
+        {
+            return new ItemEntry();
+        }
+
     }
     #endregion
 
@@ -497,7 +502,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -506,13 +510,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IItemEntry lhs,
             IItemEntryGetter rhs,
-            ItemEntry_TranslationMask copyMask,
-            IItemEntryGetter def = null)
+            ItemEntry_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -523,14 +525,12 @@ namespace Mutagen.Bethesda.Oblivion
             IItemEntryGetter rhs,
             out ItemEntry_ErrorMask errorMask,
             ItemEntry_TranslationMask copyMask = null,
-            IItemEntryGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
@@ -540,26 +540,22 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry lhs,
             IItemEntryGetter rhs,
             ErrorMaskBuilder errorMask,
-            ItemEntry_TranslationMask copyMask = null,
-            IItemEntryGetter def = null)
+            ItemEntry_TranslationMask copyMask = null)
         {
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static ItemEntry DeepCopy(
             this IItemEntryGetter item,
-            ItemEntry_TranslationMask copyMask = null,
-            IItemEntryGetter def = null)
+            ItemEntry_TranslationMask copyMask = null)
         {
             return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -970,10 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count_Unset();
         }
         
-        public ItemEntry GetNew()
-        {
-            return new ItemEntry();
-        }
+        public ItemEntry GetNew() => ItemEntry.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1180,7 +1173,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IItemEntry item,
             IItemEntryGetter rhs,
-            IItemEntryGetter def,
             ErrorMaskBuilder errorMask,
             ItemEntry_TranslationMask copyMask)
         {
@@ -1193,15 +1185,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ItemEntry_FieldIndex.Count);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Count,
-                        rhsHasBeenSet: rhs.Count_IsSet,
-                        defItem: def?.Count ?? default(Int32),
-                        defHasBeenSet: def?.Count_IsSet ?? false,
-                        outRhsItem: out var rhsCountItem,
-                        outDefItem: out var defCountItem))
+                    if (rhs.Count_IsSet)
                     {
-                        item.Count = rhsCountItem;
+                        item.Count = rhs.Count;
                     }
                     else
                     {
@@ -1224,14 +1210,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public ItemEntry DeepCopy(
             IItemEntryGetter item,
-            ItemEntry_TranslationMask copyMask = null,
-            IItemEntryGetter def = null)
+            ItemEntry_TranslationMask copyMask = null)
         {
             ItemEntry ret = ItemEntrySetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         

@@ -2821,6 +2821,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((OblivionModSetterCommon)((IOblivionModGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static OblivionMod GetNew()
+        {
+            return new OblivionMod();
+        }
+
     }
     #endregion
 
@@ -3154,7 +3159,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -3163,13 +3167,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
-            OblivionMod_TranslationMask copyMask,
-            IOblivionModGetter def = null)
+            OblivionMod_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -3180,14 +3182,12 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionModGetter rhs,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask copyMask = null,
-            IOblivionModGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = OblivionMod_ErrorMask.Factory(errorMaskBuilder);
@@ -3197,14 +3197,21 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMod_TranslationMask copyMask = null,
-            IOblivionModGetter def = null)
+            OblivionMod_TranslationMask copyMask = null)
         {
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
+                copyMask: copyMask);
+        }
+
+        public static OblivionMod DeepCopy(
+            this IOblivionModGetter item,
+            OblivionMod_TranslationMask copyMask = null)
+        {
+            return ((OblivionModSetterTranslationCommon)((IOblivionModGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
                 copyMask: copyMask);
         }
 
@@ -4585,6 +4592,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
         }
+        
+        public OblivionMod GetNew() => OblivionMod.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -7916,7 +7925,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             IOblivionMod item,
             IOblivionModGetter rhs,
-            IOblivionModGetter def,
             ErrorMaskBuilder errorMask,
             OblivionMod_TranslationMask copyMask)
         {
@@ -7927,7 +7935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.ModHeader.DeepCopyFieldsFrom(
                         rhs: rhs.ModHeader,
-                        def: def?.ModHeader,
                         errorMask: errorMask,
                         copyMask: copyMask?.ModHeader.Specific);
                 }
@@ -7948,7 +7955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.GameSettings.DeepCopyFieldsFrom(
                         rhs: rhs.GameSettings,
-                        def: def?.GameSettings,
                         errorMask: errorMask,
                         copyMask: copyMask?.GameSettings.Specific);
                 }
@@ -7969,7 +7975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Globals.DeepCopyFieldsFrom(
                         rhs: rhs.Globals,
-                        def: def?.Globals,
                         errorMask: errorMask,
                         copyMask: copyMask?.Globals.Specific);
                 }
@@ -7990,7 +7995,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Classes.DeepCopyFieldsFrom(
                         rhs: rhs.Classes,
-                        def: def?.Classes,
                         errorMask: errorMask,
                         copyMask: copyMask?.Classes.Specific);
                 }
@@ -8011,7 +8015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Factions.DeepCopyFieldsFrom(
                         rhs: rhs.Factions,
-                        def: def?.Factions,
                         errorMask: errorMask,
                         copyMask: copyMask?.Factions.Specific);
                 }
@@ -8032,7 +8035,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Hairs.DeepCopyFieldsFrom(
                         rhs: rhs.Hairs,
-                        def: def?.Hairs,
                         errorMask: errorMask,
                         copyMask: copyMask?.Hairs.Specific);
                 }
@@ -8053,7 +8055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Eyes.DeepCopyFieldsFrom(
                         rhs: rhs.Eyes,
-                        def: def?.Eyes,
                         errorMask: errorMask,
                         copyMask: copyMask?.Eyes.Specific);
                 }
@@ -8074,7 +8075,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Races.DeepCopyFieldsFrom(
                         rhs: rhs.Races,
-                        def: def?.Races,
                         errorMask: errorMask,
                         copyMask: copyMask?.Races.Specific);
                 }
@@ -8095,7 +8095,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sounds.DeepCopyFieldsFrom(
                         rhs: rhs.Sounds,
-                        def: def?.Sounds,
                         errorMask: errorMask,
                         copyMask: copyMask?.Sounds.Specific);
                 }
@@ -8116,7 +8115,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Skills.DeepCopyFieldsFrom(
                         rhs: rhs.Skills,
-                        def: def?.Skills,
                         errorMask: errorMask,
                         copyMask: copyMask?.Skills.Specific);
                 }
@@ -8137,7 +8135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.MagicEffects.DeepCopyFieldsFrom(
                         rhs: rhs.MagicEffects,
-                        def: def?.MagicEffects,
                         errorMask: errorMask,
                         copyMask: copyMask?.MagicEffects.Specific);
                 }
@@ -8158,7 +8155,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Scripts.DeepCopyFieldsFrom(
                         rhs: rhs.Scripts,
-                        def: def?.Scripts,
                         errorMask: errorMask,
                         copyMask: copyMask?.Scripts.Specific);
                 }
@@ -8179,7 +8175,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LandTextures.DeepCopyFieldsFrom(
                         rhs: rhs.LandTextures,
-                        def: def?.LandTextures,
                         errorMask: errorMask,
                         copyMask: copyMask?.LandTextures.Specific);
                 }
@@ -8200,7 +8195,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Enchantments.DeepCopyFieldsFrom(
                         rhs: rhs.Enchantments,
-                        def: def?.Enchantments,
                         errorMask: errorMask,
                         copyMask: copyMask?.Enchantments.Specific);
                 }
@@ -8221,7 +8215,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.DeepCopyFieldsFrom(
                         rhs: rhs.Spells,
-                        def: def?.Spells,
                         errorMask: errorMask,
                         copyMask: copyMask?.Spells.Specific);
                 }
@@ -8242,7 +8235,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Birthsigns.DeepCopyFieldsFrom(
                         rhs: rhs.Birthsigns,
-                        def: def?.Birthsigns,
                         errorMask: errorMask,
                         copyMask: copyMask?.Birthsigns.Specific);
                 }
@@ -8263,7 +8255,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Activators.DeepCopyFieldsFrom(
                         rhs: rhs.Activators,
-                        def: def?.Activators,
                         errorMask: errorMask,
                         copyMask: copyMask?.Activators.Specific);
                 }
@@ -8284,7 +8275,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AlchemicalApparatus.DeepCopyFieldsFrom(
                         rhs: rhs.AlchemicalApparatus,
-                        def: def?.AlchemicalApparatus,
                         errorMask: errorMask,
                         copyMask: copyMask?.AlchemicalApparatus.Specific);
                 }
@@ -8305,7 +8295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Armors.DeepCopyFieldsFrom(
                         rhs: rhs.Armors,
-                        def: def?.Armors,
                         errorMask: errorMask,
                         copyMask: copyMask?.Armors.Specific);
                 }
@@ -8326,7 +8315,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Books.DeepCopyFieldsFrom(
                         rhs: rhs.Books,
-                        def: def?.Books,
                         errorMask: errorMask,
                         copyMask: copyMask?.Books.Specific);
                 }
@@ -8347,7 +8335,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Clothes.DeepCopyFieldsFrom(
                         rhs: rhs.Clothes,
-                        def: def?.Clothes,
                         errorMask: errorMask,
                         copyMask: copyMask?.Clothes.Specific);
                 }
@@ -8368,7 +8355,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Containers.DeepCopyFieldsFrom(
                         rhs: rhs.Containers,
-                        def: def?.Containers,
                         errorMask: errorMask,
                         copyMask: copyMask?.Containers.Specific);
                 }
@@ -8389,7 +8375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Doors.DeepCopyFieldsFrom(
                         rhs: rhs.Doors,
-                        def: def?.Doors,
                         errorMask: errorMask,
                         copyMask: copyMask?.Doors.Specific);
                 }
@@ -8410,7 +8395,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Ingredients.DeepCopyFieldsFrom(
                         rhs: rhs.Ingredients,
-                        def: def?.Ingredients,
                         errorMask: errorMask,
                         copyMask: copyMask?.Ingredients.Specific);
                 }
@@ -8431,7 +8415,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Lights.DeepCopyFieldsFrom(
                         rhs: rhs.Lights,
-                        def: def?.Lights,
                         errorMask: errorMask,
                         copyMask: copyMask?.Lights.Specific);
                 }
@@ -8452,7 +8435,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Miscellaneous.DeepCopyFieldsFrom(
                         rhs: rhs.Miscellaneous,
-                        def: def?.Miscellaneous,
                         errorMask: errorMask,
                         copyMask: copyMask?.Miscellaneous.Specific);
                 }
@@ -8473,7 +8455,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Statics.DeepCopyFieldsFrom(
                         rhs: rhs.Statics,
-                        def: def?.Statics,
                         errorMask: errorMask,
                         copyMask: copyMask?.Statics.Specific);
                 }
@@ -8494,7 +8475,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Grasses.DeepCopyFieldsFrom(
                         rhs: rhs.Grasses,
-                        def: def?.Grasses,
                         errorMask: errorMask,
                         copyMask: copyMask?.Grasses.Specific);
                 }
@@ -8515,7 +8495,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Trees.DeepCopyFieldsFrom(
                         rhs: rhs.Trees,
-                        def: def?.Trees,
                         errorMask: errorMask,
                         copyMask: copyMask?.Trees.Specific);
                 }
@@ -8536,7 +8515,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Flora.DeepCopyFieldsFrom(
                         rhs: rhs.Flora,
-                        def: def?.Flora,
                         errorMask: errorMask,
                         copyMask: copyMask?.Flora.Specific);
                 }
@@ -8557,7 +8535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Furnature.DeepCopyFieldsFrom(
                         rhs: rhs.Furnature,
-                        def: def?.Furnature,
                         errorMask: errorMask,
                         copyMask: copyMask?.Furnature.Specific);
                 }
@@ -8578,7 +8555,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Weapons.DeepCopyFieldsFrom(
                         rhs: rhs.Weapons,
-                        def: def?.Weapons,
                         errorMask: errorMask,
                         copyMask: copyMask?.Weapons.Specific);
                 }
@@ -8599,7 +8575,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Ammo.DeepCopyFieldsFrom(
                         rhs: rhs.Ammo,
-                        def: def?.Ammo,
                         errorMask: errorMask,
                         copyMask: copyMask?.Ammo.Specific);
                 }
@@ -8620,7 +8595,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.NPCs.DeepCopyFieldsFrom(
                         rhs: rhs.NPCs,
-                        def: def?.NPCs,
                         errorMask: errorMask,
                         copyMask: copyMask?.NPCs.Specific);
                 }
@@ -8641,7 +8615,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Creatures.DeepCopyFieldsFrom(
                         rhs: rhs.Creatures,
-                        def: def?.Creatures,
                         errorMask: errorMask,
                         copyMask: copyMask?.Creatures.Specific);
                 }
@@ -8662,7 +8635,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LeveledCreatures.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledCreatures,
-                        def: def?.LeveledCreatures,
                         errorMask: errorMask,
                         copyMask: copyMask?.LeveledCreatures.Specific);
                 }
@@ -8683,7 +8655,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SoulGems.DeepCopyFieldsFrom(
                         rhs: rhs.SoulGems,
-                        def: def?.SoulGems,
                         errorMask: errorMask,
                         copyMask: copyMask?.SoulGems.Specific);
                 }
@@ -8704,7 +8675,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Keys.DeepCopyFieldsFrom(
                         rhs: rhs.Keys,
-                        def: def?.Keys,
                         errorMask: errorMask,
                         copyMask: copyMask?.Keys.Specific);
                 }
@@ -8725,7 +8695,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Potions.DeepCopyFieldsFrom(
                         rhs: rhs.Potions,
-                        def: def?.Potions,
                         errorMask: errorMask,
                         copyMask: copyMask?.Potions.Specific);
                 }
@@ -8746,7 +8715,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Subspaces.DeepCopyFieldsFrom(
                         rhs: rhs.Subspaces,
-                        def: def?.Subspaces,
                         errorMask: errorMask,
                         copyMask: copyMask?.Subspaces.Specific);
                 }
@@ -8767,7 +8735,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SigilStones.DeepCopyFieldsFrom(
                         rhs: rhs.SigilStones,
-                        def: def?.SigilStones,
                         errorMask: errorMask,
                         copyMask: copyMask?.SigilStones.Specific);
                 }
@@ -8788,7 +8755,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LeveledItems.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledItems,
-                        def: def?.LeveledItems,
                         errorMask: errorMask,
                         copyMask: copyMask?.LeveledItems.Specific);
                 }
@@ -8809,7 +8775,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Weathers.DeepCopyFieldsFrom(
                         rhs: rhs.Weathers,
-                        def: def?.Weathers,
                         errorMask: errorMask,
                         copyMask: copyMask?.Weathers.Specific);
                 }
@@ -8830,7 +8795,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Climates.DeepCopyFieldsFrom(
                         rhs: rhs.Climates,
-                        def: def?.Climates,
                         errorMask: errorMask,
                         copyMask: copyMask?.Climates.Specific);
                 }
@@ -8851,7 +8815,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Regions.DeepCopyFieldsFrom(
                         rhs: rhs.Regions,
-                        def: def?.Regions,
                         errorMask: errorMask,
                         copyMask: copyMask?.Regions.Specific);
                 }
@@ -8872,7 +8835,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Cells.DeepCopyFieldsFrom(
                         rhs: rhs.Cells,
-                        def: def?.Cells,
                         errorMask: errorMask,
                         copyMask: copyMask?.Cells.Specific);
                 }
@@ -8893,7 +8855,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Worldspaces.DeepCopyFieldsFrom(
                         rhs: rhs.Worldspaces,
-                        def: def?.Worldspaces,
                         errorMask: errorMask,
                         copyMask: copyMask?.Worldspaces.Specific);
                 }
@@ -8914,7 +8875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.DialogTopics.DeepCopyFieldsFrom(
                         rhs: rhs.DialogTopics,
-                        def: def?.DialogTopics,
                         errorMask: errorMask,
                         copyMask: copyMask?.DialogTopics.Specific);
                 }
@@ -8935,7 +8895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Quests.DeepCopyFieldsFrom(
                         rhs: rhs.Quests,
-                        def: def?.Quests,
                         errorMask: errorMask,
                         copyMask: copyMask?.Quests.Specific);
                 }
@@ -8956,7 +8915,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.IdleAnimations.DeepCopyFieldsFrom(
                         rhs: rhs.IdleAnimations,
-                        def: def?.IdleAnimations,
                         errorMask: errorMask,
                         copyMask: copyMask?.IdleAnimations.Specific);
                 }
@@ -8977,7 +8935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.DeepCopyFieldsFrom(
                         rhs: rhs.AIPackages,
-                        def: def?.AIPackages,
                         errorMask: errorMask,
                         copyMask: copyMask?.AIPackages.Specific);
                 }
@@ -8998,7 +8955,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.CombatStyles.DeepCopyFieldsFrom(
                         rhs: rhs.CombatStyles,
-                        def: def?.CombatStyles,
                         errorMask: errorMask,
                         copyMask: copyMask?.CombatStyles.Specific);
                 }
@@ -9019,7 +8975,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LoadScreens.DeepCopyFieldsFrom(
                         rhs: rhs.LoadScreens,
-                        def: def?.LoadScreens,
                         errorMask: errorMask,
                         copyMask: copyMask?.LoadScreens.Specific);
                 }
@@ -9040,7 +8995,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LeveledSpells.DeepCopyFieldsFrom(
                         rhs: rhs.LeveledSpells,
-                        def: def?.LeveledSpells,
                         errorMask: errorMask,
                         copyMask: copyMask?.LeveledSpells.Specific);
                 }
@@ -9061,7 +9015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AnimatedObjects.DeepCopyFieldsFrom(
                         rhs: rhs.AnimatedObjects,
-                        def: def?.AnimatedObjects,
                         errorMask: errorMask,
                         copyMask: copyMask?.AnimatedObjects.Specific);
                 }
@@ -9082,7 +9035,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Waters.DeepCopyFieldsFrom(
                         rhs: rhs.Waters,
-                        def: def?.Waters,
                         errorMask: errorMask,
                         copyMask: copyMask?.Waters.Specific);
                 }
@@ -9103,7 +9055,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.EffectShaders.DeepCopyFieldsFrom(
                         rhs: rhs.EffectShaders,
-                        def: def?.EffectShaders,
                         errorMask: errorMask,
                         copyMask: copyMask?.EffectShaders.Specific);
                 }
@@ -9120,6 +9071,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #endregion
+        
+        public OblivionMod DeepCopy(
+            IOblivionModGetter item,
+            OblivionMod_TranslationMask copyMask = null)
+        {
+            OblivionMod ret = OblivionModSetterCommon.Instance.GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                copyMask: copyMask);
+            return ret;
+        }
         
     }
     #endregion

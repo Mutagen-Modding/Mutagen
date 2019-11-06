@@ -408,6 +408,11 @@ namespace Mutagen.Bethesda.Oblivion
             ((LocalVariableSetterCommon)((ILocalVariableGetter)this).CommonSetterInstance()).Clear(this);
         }
 
+        internal static LocalVariable GetNew()
+        {
+            return new LocalVariable();
+        }
+
     }
     #endregion
 
@@ -552,7 +557,6 @@ namespace Mutagen.Bethesda.Oblivion
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: null,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: null);
@@ -561,13 +565,11 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom(
             this ILocalVariable lhs,
             ILocalVariableGetter rhs,
-            LocalVariable_TranslationMask copyMask,
-            ILocalVariableGetter def = null)
+            LocalVariable_TranslationMask copyMask)
         {
             DeepCopyFieldsFrom(
                 lhs: lhs,
                 rhs: rhs,
-                def: def,
                 doMasks: false,
                 errorMask: out var errMask,
                 copyMask: copyMask);
@@ -578,14 +580,12 @@ namespace Mutagen.Bethesda.Oblivion
             ILocalVariableGetter rhs,
             out LocalVariable_ErrorMask errorMask,
             LocalVariable_TranslationMask copyMask = null,
-            ILocalVariableGetter def = null,
             bool doMasks = true)
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
             ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask);
             errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
@@ -595,26 +595,22 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariable lhs,
             ILocalVariableGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocalVariable_TranslationMask copyMask = null,
-            ILocalVariableGetter def = null)
+            LocalVariable_TranslationMask copyMask = null)
         {
             ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
-                def: def,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
         public static LocalVariable DeepCopy(
             this ILocalVariableGetter item,
-            LocalVariable_TranslationMask copyMask = null,
-            ILocalVariableGetter def = null)
+            LocalVariable_TranslationMask copyMask = null)
         {
             return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
         }
 
         #region Xml Translation
@@ -1078,10 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SLSDDataTypeState = default(LocalVariable.SLSDDataType);
         }
         
-        public LocalVariable GetNew()
-        {
-            return new LocalVariable();
-        }
+        public LocalVariable GetNew() => LocalVariable.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1388,7 +1381,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void DeepCopyFieldsFrom(
             ILocalVariable item,
             ILocalVariableGetter rhs,
-            ILocalVariableGetter def,
             ErrorMaskBuilder errorMask,
             LocalVariable_TranslationMask copyMask)
         {
@@ -1413,15 +1405,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
                 try
                 {
-                    if (LoquiHelper.DefaultSwitch(
-                        rhsItem: rhs.Name,
-                        rhsHasBeenSet: rhs.Name_IsSet,
-                        defItem: def?.Name ?? default(String),
-                        defHasBeenSet: def?.Name_IsSet ?? false,
-                        outRhsItem: out var rhsNameItem,
-                        outDefItem: out var defNameItem))
+                    if (rhs.Name_IsSet)
                     {
-                        item.Name = rhsNameItem;
+                        item.Name = rhs.Name;
                     }
                     else
                     {
@@ -1448,14 +1434,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public LocalVariable DeepCopy(
             ILocalVariableGetter item,
-            LocalVariable_TranslationMask copyMask = null,
-            ILocalVariableGetter def = null)
+            LocalVariable_TranslationMask copyMask = null)
         {
             LocalVariable ret = LocalVariableSetterCommon.Instance.GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
-                copyMask: copyMask,
-                def: def);
+                copyMask: copyMask);
             return ret;
         }
         
