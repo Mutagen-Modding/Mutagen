@@ -148,7 +148,6 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptFieldsGetter ILogEntryGetter.ResultScript => this.ResultScript;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -162,7 +161,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -442,6 +440,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1103,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ResultScript_Unset();
         }
         
-        public LogEntry GetNew() => LogEntry.GetNew();
+        public object GetNew() => LogEntry.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1569,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILogEntryGetter item,
             LogEntry_TranslationMask copyMask = null)
         {
-            LogEntry ret = LogEntrySetterCommon.Instance.GetNew();
+            LogEntry ret = (LogEntry)((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -178,7 +178,6 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackage.PKDTDataType PKDTDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -192,7 +191,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -495,6 +493,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1205,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAIPackageInternal)item);
         }
         
-        public AIPackage GetNew() => AIPackage.GetNew();
+        public override object GetNew() => AIPackage.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1889,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageGetter item,
             AIPackage_TranslationMask copyMask = null)
         {
-            AIPackage ret = AIPackageSetterCommon.Instance.GetNew();
+            AIPackage ret = (AIPackage)((AIPackageSetterCommon)((IAIPackageGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

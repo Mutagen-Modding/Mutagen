@@ -66,7 +66,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IHairGetter> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceHairGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -80,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -338,6 +336,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceHairGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -931,7 +933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(Hair);
         }
         
-        public RaceHair GetNew() => RaceHair.GetNew();
+        public object GetNew() => RaceHair.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1151,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceHairGetter item,
             RaceHair_TranslationMask copyMask = null)
         {
-            RaceHair ret = RaceHairSetterCommon.Instance.GetNew();
+            RaceHair ret = (RaceHair)((RaceHairSetterCommon)((IRaceHairGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -91,7 +91,6 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -105,7 +104,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -355,9 +353,18 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((MajorRecordSetterCommon)((IMajorRecordGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static MajorRecord GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -1166,6 +1173,8 @@ namespace Mutagen.Bethesda.Internals
             item.EditorID_Unset();
         }
         
+        public virtual object GetNew() => MajorRecord.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IMajorRecordInternal item,
@@ -1529,7 +1538,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter item,
             MajorRecord_TranslationMask copyMask = null)
         {
-            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
+            MajorRecord ret = (MajorRecord)((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

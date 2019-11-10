@@ -63,7 +63,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -77,7 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -331,6 +329,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataExtendedInternalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -948,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
-        public new SoundDataExtended GetNew() => SoundDataExtended.GetNew();
+        public override object GetNew() => SoundDataExtended.GetNew();
         
         #region Xml Translation
         public new void CopyInFromXml(
@@ -1240,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter item,
             SoundDataExtended_TranslationMask copyMask = null)
         {
-            SoundDataExtended ret = SoundDataExtendedSetterCommon.Instance.GetNew();
+            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

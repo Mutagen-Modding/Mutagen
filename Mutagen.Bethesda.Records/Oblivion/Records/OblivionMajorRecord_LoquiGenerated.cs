@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -66,7 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -302,9 +300,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static OblivionMajorRecord GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -1027,6 +1034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IOblivionMajorRecordInternal)item);
         }
         
+        public override object GetNew() => OblivionMajorRecord.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IOblivionMajorRecordInternal item,
@@ -1315,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecordGetter item,
             OblivionMajorRecord_TranslationMask copyMask = null)
         {
-            OblivionMajorRecord ret = (OblivionMajorRecord)System.Activator.CreateInstance(item.GetType());
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

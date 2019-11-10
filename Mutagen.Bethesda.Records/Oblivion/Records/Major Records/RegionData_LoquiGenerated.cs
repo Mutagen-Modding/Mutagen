@@ -95,7 +95,6 @@ namespace Mutagen.Bethesda.Oblivion
         public RegionData.RDATDataType RDATDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -109,7 +108,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -339,9 +337,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((RegionDataSetterCommon)((IRegionDataGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static RegionData GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -968,6 +975,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RDATDataTypeState = default(RegionData.RDATDataType);
         }
         
+        public virtual object GetNew() => RegionData.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataInternal item,
@@ -1286,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             RegionData_TranslationMask copyMask = null)
         {
-            RegionData ret = (RegionData)System.Activator.CreateInstance(item.GetType());
+            RegionData ret = (RegionData)((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -62,7 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 Modifier { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -76,7 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -345,6 +343,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceRelationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -937,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public RaceRelation GetNew() => RaceRelation.GetNew();
+        public object GetNew() => RaceRelation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1154,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceRelationGetter item,
             RaceRelation_TranslationMask copyMask = null)
         {
-            RaceRelation ret = RaceRelationSetterCommon.Instance.GetNew();
+            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

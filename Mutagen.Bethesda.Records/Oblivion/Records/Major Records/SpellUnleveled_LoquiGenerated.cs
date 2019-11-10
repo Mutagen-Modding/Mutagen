@@ -118,7 +118,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SpellUnleveled.SPITDataType SPITDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -132,7 +131,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -430,6 +428,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1116,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellUnleveledInternal)item);
         }
         
-        public SpellUnleveled GetNew() => SpellUnleveled.GetNew();
+        public override object GetNew() => SpellUnleveled.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1699,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter item,
             SpellUnleveled_TranslationMask copyMask = null)
         {
-            SpellUnleveled ret = SpellUnleveledSetterCommon.Instance.GetNew();
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

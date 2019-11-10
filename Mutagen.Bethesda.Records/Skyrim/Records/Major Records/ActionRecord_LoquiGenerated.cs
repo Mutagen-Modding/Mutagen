@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionRecordGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -95,7 +94,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -358,6 +356,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActionRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -943,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActionRecordInternal)item);
         }
         
-        public ActionRecord GetNew() => ActionRecord.GetNew();
+        public override object GetNew() => ActionRecord.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1340,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActionRecordGetter item,
             ActionRecord_TranslationMask copyMask = null)
         {
-            ActionRecord ret = ActionRecordSetterCommon.Instance.GetNew();
+            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

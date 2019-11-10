@@ -452,7 +452,6 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<IEffectShaderGetter> IOblivionModGetter.EffectShaders => _EffectShaders_Object;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -466,7 +465,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -2816,6 +2814,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionModGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)this).CommonSetterInstance()).Clear(this);
@@ -4594,7 +4596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
-        public OblivionMod GetNew() => OblivionMod.GetNew();
+        public object GetNew() => OblivionMod.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -9077,7 +9079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             OblivionMod_TranslationMask copyMask = null)
         {
-            OblivionMod ret = OblivionModSetterCommon.Instance.GetNew();
+            OblivionMod ret = (OblivionMod)((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

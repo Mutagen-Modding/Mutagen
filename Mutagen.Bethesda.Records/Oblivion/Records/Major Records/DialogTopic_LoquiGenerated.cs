@@ -143,7 +143,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -157,7 +156,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -461,6 +459,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1140,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
-        public DialogTopic GetNew() => DialogTopic.GetNew();
+        public override object GetNew() => DialogTopic.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1760,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter item,
             DialogTopic_TranslationMask copyMask = null)
         {
-            DialogTopic ret = DialogTopicSetterCommon.Instance.GetNew();
+            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

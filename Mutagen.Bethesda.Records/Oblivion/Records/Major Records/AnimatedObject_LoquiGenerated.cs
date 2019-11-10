@@ -89,7 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDSetLinkGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation_Property => this.IdleAnimation_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAnimatedObjectGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -103,7 +102,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -386,6 +384,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAnimatedObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -991,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAnimatedObjectInternal)item);
         }
         
-        public AnimatedObject GetNew() => AnimatedObject.GetNew();
+        public override object GetNew() => AnimatedObject.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1441,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAnimatedObjectGetter item,
             AnimatedObject_TranslationMask copyMask = null)
         {
-            AnimatedObject ret = AnimatedObjectSetterCommon.Instance.GetNew();
+            AnimatedObject ret = (AnimatedObject)((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

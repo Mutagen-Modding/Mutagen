@@ -212,7 +212,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Ingredient.ENITDataType ENITDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -226,7 +225,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -531,6 +529,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1290,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIngredientInternal)item);
         }
         
-        public Ingredient GetNew() => Ingredient.GetNew();
+        public override object GetNew() => Ingredient.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2074,7 +2076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientGetter item,
             Ingredient_TranslationMask copyMask = null)
         {
-            Ingredient ret = IngredientSetterCommon.Instance.GetNew();
+            Ingredient ret = (Ingredient)((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

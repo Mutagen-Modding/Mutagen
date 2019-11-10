@@ -59,7 +59,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte Restitution { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -73,7 +72,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -330,6 +328,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHavokDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -940,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
-        public HavokData GetNew() => HavokData.GetNew();
+        public object GetNew() => HavokData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1176,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             HavokData_TranslationMask copyMask = null)
         {
-            HavokData ret = HavokDataSetterCommon.Instance.GetNew();
+            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

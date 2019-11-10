@@ -161,7 +161,6 @@ namespace Mutagen.Bethesda.Oblivion
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -175,7 +174,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -443,6 +441,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1158,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
         }
         
-        public DialogResponse GetNew() => DialogResponse.GetNew();
+        public object GetNew() => DialogResponse.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1589,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseGetter item,
             DialogResponse_TranslationMask copyMask = null)
         {
-            DialogResponse ret = DialogResponseSetterCommon.Instance.GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

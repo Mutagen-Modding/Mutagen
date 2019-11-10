@@ -76,7 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -90,7 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -343,6 +341,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadPointGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -950,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        public RoadPoint GetNew() => RoadPoint.GetNew();
+        public object GetNew() => RoadPoint.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1225,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPointGetter item,
             RoadPoint_TranslationMask copyMask = null)
         {
-            RoadPoint ret = RoadPointSetterCommon.Instance.GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

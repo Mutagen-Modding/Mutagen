@@ -48,7 +48,6 @@ namespace Mutagen.Bethesda.Tests
         public String Skyrim { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -67,7 +66,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -253,6 +251,10 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDataFolderLocationsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -788,7 +790,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
         
-        public DataFolderLocations GetNew() => DataFolderLocations.GetNew();
+        public object GetNew() => DataFolderLocations.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -969,7 +971,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IDataFolderLocationsGetter item,
             DataFolderLocations_TranslationMask copyMask = null)
         {
-            DataFolderLocations ret = DataFolderLocationsSetterCommon.Instance.GetNew();
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

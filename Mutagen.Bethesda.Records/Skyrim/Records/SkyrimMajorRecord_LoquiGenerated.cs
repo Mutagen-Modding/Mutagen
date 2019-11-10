@@ -57,7 +57,6 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Version2 { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -71,7 +70,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -291,9 +289,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static SkyrimMajorRecord GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -917,6 +924,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISkyrimMajorRecordInternal)item);
         }
         
+        public override object GetNew() => SkyrimMajorRecord.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISkyrimMajorRecordInternal item,
@@ -1220,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord_TranslationMask copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)System.Activator.CreateInstance(item.GetType());
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

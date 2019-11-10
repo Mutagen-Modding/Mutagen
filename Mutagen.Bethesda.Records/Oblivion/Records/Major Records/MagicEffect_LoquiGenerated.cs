@@ -287,7 +287,6 @@ namespace Mutagen.Bethesda.Oblivion
         public MagicEffect.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -301,7 +300,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -620,6 +618,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1506,7 +1508,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMagicEffectInternal)item);
         }
         
-        public MagicEffect GetNew() => MagicEffect.GetNew();
+        public override object GetNew() => MagicEffect.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2405,7 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectGetter item,
             MagicEffect_TranslationMask copyMask = null)
         {
-            MagicEffect ret = MagicEffectSetterCommon.Instance.GetNew();
+            MagicEffect ret = (MagicEffect)((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

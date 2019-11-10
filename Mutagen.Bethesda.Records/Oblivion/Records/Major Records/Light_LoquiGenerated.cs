@@ -285,7 +285,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Light.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -299,7 +298,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -605,6 +603,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1480,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILightInternal)item);
         }
         
-        public Light GetNew() => Light.GetNew();
+        public override object GetNew() => Light.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2353,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILightGetter item,
             Light_TranslationMask copyMask = null)
         {
-            Light ret = LightSetterCommon.Instance.GetNew();
+            Light ret = (Light)((LightSetterCommon)((ILightGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

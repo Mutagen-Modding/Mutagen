@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -95,7 +94,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -329,9 +327,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((SpellSetterCommon)((ISpellGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static Spell GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -924,6 +931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellInternal)item);
         }
         
+        public override object GetNew() => Spell.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISpellInternal item,
@@ -1322,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellGetter item,
             Spell_TranslationMask copyMask = null)
         {
-            Spell ret = (Spell)System.Activator.CreateInstance(item.GetType());
+            Spell ret = (Spell)((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

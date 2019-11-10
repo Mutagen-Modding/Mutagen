@@ -119,7 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -133,7 +132,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -416,6 +414,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1291,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Byte[]);
         }
         
-        public RegionDataObject GetNew() => RegionDataObject.GetNew();
+        public object GetNew() => RegionDataObject.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1790,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectGetter item,
             RegionDataObject_TranslationMask copyMask = null)
         {
-            RegionDataObject ret = RegionDataObjectSetterCommon.Instance.GetNew();
+            RegionDataObject ret = (RegionDataObject)((RegionDataObjectSetterCommon)((IRegionDataObjectGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

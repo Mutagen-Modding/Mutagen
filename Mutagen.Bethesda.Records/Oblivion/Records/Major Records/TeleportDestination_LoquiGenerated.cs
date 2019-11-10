@@ -65,7 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         public P3Float Rotation { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -79,7 +78,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -349,6 +347,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITeleportDestinationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -960,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
-        public TeleportDestination GetNew() => TeleportDestination.GetNew();
+        public object GetNew() => TeleportDestination.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1208,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             TeleportDestination_TranslationMask copyMask = null)
         {
-            TeleportDestination ret = TeleportDestinationSetterCommon.Instance.GetNew();
+            TeleportDestination ret = (TeleportDestination)((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

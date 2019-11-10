@@ -125,7 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDSetLinkGetter<ISoundGetter> IActivatorGetter.Sound_Property => this.Sound_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -139,7 +138,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -427,6 +425,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1077,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
-        public Activator GetNew() => Activator.GetNew();
+        public override object GetNew() => Activator.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1625,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IActivatorGetter item,
             Activator_TranslationMask copyMask = null)
         {
-            Activator ret = ActivatorSetterCommon.Instance.GetNew();
+            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

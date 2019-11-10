@@ -59,7 +59,6 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 NextObjectID { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -73,7 +72,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -330,6 +328,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModStatsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -940,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NextObjectID = default(UInt32);
         }
         
-        public ModStats GetNew() => ModStats.GetNew();
+        public object GetNew() => ModStats.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1176,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModStatsGetter item,
             ModStats_TranslationMask copyMask = null)
         {
-            ModStats ret = ModStatsSetterCommon.Instance.GetNew();
+            ModStats ret = (ModStats)((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -76,7 +76,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
         #region To String
 
         public void ToString(
@@ -90,7 +89,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -362,6 +360,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1066,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
-        public Group<T> GetNew() => Group<T>.GetNew();
+        public object GetNew() => Group<T>.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1424,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            Group<T> ret = GroupSetterCommon<T>.Instance.GetNew();
+            Group<T> ret = (Group<T>)((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);

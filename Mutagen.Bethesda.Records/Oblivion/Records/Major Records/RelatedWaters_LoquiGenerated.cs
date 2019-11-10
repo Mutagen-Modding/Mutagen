@@ -74,7 +74,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -88,7 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -348,6 +346,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -961,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
         
-        public RelatedWaters GetNew() => RelatedWaters.GetNew();
+        public object GetNew() => RelatedWaters.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1197,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWatersGetter item,
             RelatedWaters_TranslationMask copyMask = null)
         {
-            RelatedWaters ret = RelatedWatersSetterCommon.Instance.GetNew();
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

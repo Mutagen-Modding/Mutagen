@@ -176,7 +176,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Flora.PFPCDataType PFPCDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -190,7 +189,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -489,6 +487,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1235,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFloraInternal)item);
         }
         
-        public Flora GetNew() => Flora.GetNew();
+        public override object GetNew() => Flora.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1860,7 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter item,
             Flora_TranslationMask copyMask = null)
         {
-            Flora ret = FloraSetterCommon.Instance.GetNew();
+            Flora ret = (Flora)((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -137,7 +137,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDSetLinkGetter<INPCAbstractGetter> ILeveledCreatureGetter.Template_Property => this.Template_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -151,7 +150,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -449,6 +447,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1123,7 +1125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
-        public LeveledCreature GetNew() => LeveledCreature.GetNew();
+        public override object GetNew() => LeveledCreature.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1752,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureGetter item,
             LeveledCreature_TranslationMask copyMask = null)
         {
-            LeveledCreature ret = LeveledCreatureSetterCommon.Instance.GetNew();
+            LeveledCreature ret = (LeveledCreature)((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

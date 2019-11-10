@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalIntGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -93,7 +92,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -356,6 +354,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalIntGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -946,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalIntInternal)item);
         }
         
-        public GlobalInt GetNew() => GlobalInt.GetNew();
+        public override object GetNew() => GlobalInt.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1373,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalIntGetter item,
             GlobalInt_TranslationMask copyMask = null)
         {
-            GlobalInt ret = GlobalIntSetterCommon.Instance.GetNew();
+            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Single FogClipDistance { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -93,7 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -356,6 +354,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellLightingGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1080,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
-        public CellLighting GetNew() => CellLighting.GetNew();
+        public object GetNew() => CellLighting.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1451,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLightingGetter item,
             CellLighting_TranslationMask copyMask = null)
         {
-            CellLighting ret = CellLightingSetterCommon.Instance.GetNew();
+            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

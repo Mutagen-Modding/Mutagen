@@ -544,7 +544,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Weather.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -558,7 +557,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -901,6 +899,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2219,7 +2221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
-        public Weather GetNew() => Weather.GetNew();
+        public override object GetNew() => Weather.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -3544,7 +3546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherGetter item,
             Weather_TranslationMask copyMask = null)
         {
-            Weather ret = WeatherSetterCommon.Instance.GetNew();
+            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

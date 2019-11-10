@@ -119,7 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -133,7 +132,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -387,6 +385,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Types.Unset();
         }
         
-        public MapMarker GetNew() => MapMarker.GetNew();
+        public object GetNew() => MapMarker.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1400,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapMarkerGetter item,
             MapMarker_TranslationMask copyMask = null)
         {
-            MapMarker ret = MapMarkerSetterCommon.Instance.GetNew();
+            MapMarker ret = (MapMarker)((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

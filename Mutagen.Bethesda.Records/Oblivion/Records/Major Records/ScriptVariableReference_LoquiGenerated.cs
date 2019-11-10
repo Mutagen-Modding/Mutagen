@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 VariableIndex { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -69,7 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -322,6 +320,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptVariableReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -883,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptVariableReference)item);
         }
         
-        public ScriptVariableReference GetNew() => ScriptVariableReference.GetNew();
+        public override object GetNew() => ScriptVariableReference.GetNew();
         
         #region Xml Translation
         public new void CopyInFromXml(
@@ -1146,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptVariableReferenceGetter item,
             ScriptVariableReference_TranslationMask copyMask = null)
         {
-            ScriptVariableReference ret = ScriptVariableReferenceSetterCommon.Instance.GetNew();
+            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

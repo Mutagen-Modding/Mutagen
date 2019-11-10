@@ -549,7 +549,6 @@ namespace Mutagen.Bethesda.Oblivion
         public CombatStyle.CSTDDataType CSTDDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -563,7 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -874,6 +872,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2162,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
-        public CombatStyle GetNew() => CombatStyle.GetNew();
+        public override object GetNew() => CombatStyle.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -3320,7 +3322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             CombatStyle_TranslationMask copyMask = null)
         {
-            CombatStyle ret = CombatStyleSetterCommon.Instance.GetNew();
+            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

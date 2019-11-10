@@ -162,7 +162,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -176,7 +175,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -469,6 +467,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1141,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFactionInternal)item);
         }
         
-        public Faction GetNew() => Faction.GetNew();
+        public override object GetNew() => Faction.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1795,7 +1797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFactionGetter item,
             Faction_TranslationMask copyMask = null)
         {
-            Faction ret = FactionSetterCommon.Instance.GetNew();
+            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

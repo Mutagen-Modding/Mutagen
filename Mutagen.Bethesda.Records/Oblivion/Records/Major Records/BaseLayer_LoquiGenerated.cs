@@ -91,7 +91,6 @@ namespace Mutagen.Bethesda.Oblivion
         public BaseLayer.BTXTDataType BTXTDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -105,7 +104,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -380,6 +378,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1028,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BTXTDataTypeState = default(BaseLayer.BTXTDataType);
         }
         
-        public BaseLayer GetNew() => BaseLayer.GetNew();
+        public virtual object GetNew() => BaseLayer.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1351,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayerGetter item,
             BaseLayer_TranslationMask copyMask = null)
         {
-            BaseLayer ret = BaseLayerSetterCommon.Instance.GetNew();
+            BaseLayer ret = (BaseLayer)((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

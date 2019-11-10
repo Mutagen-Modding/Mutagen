@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITestingSettingsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -99,7 +98,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -291,6 +289,10 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITestingSettingsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -938,7 +940,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
-        public TestingSettings GetNew() => TestingSettings.GetNew();
+        public object GetNew() => TestingSettings.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1272,7 +1274,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITestingSettingsGetter item,
             TestingSettings_TranslationMask copyMask = null)
         {
-            TestingSettings ret = TestingSettingsSetterCommon.Instance.GetNew();
+            TestingSettings ret = (TestingSettings)((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

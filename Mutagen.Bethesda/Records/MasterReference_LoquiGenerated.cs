@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -93,7 +92,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -350,6 +348,10 @@ namespace Mutagen.Bethesda
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -946,7 +948,7 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
-        public MasterReference GetNew() => MasterReference.GetNew();
+        public object GetNew() => MasterReference.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1224,7 +1226,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReferenceGetter item,
             MasterReference_TranslationMask copyMask = null)
         {
-            MasterReference ret = MasterReferenceSetterCommon.Instance.GetNew();
+            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

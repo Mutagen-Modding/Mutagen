@@ -59,7 +59,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Single Unknown2 { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -73,7 +72,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -330,6 +328,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDistantLODDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -940,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
-        public DistantLODData GetNew() => DistantLODData.GetNew();
+        public object GetNew() => DistantLODData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1194,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter item,
             DistantLODData_TranslationMask copyMask = null)
         {
-            DistantLODData ret = DistantLODDataSetterCommon.Instance.GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

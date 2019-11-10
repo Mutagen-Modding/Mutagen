@@ -574,7 +574,6 @@ namespace Mutagen.Bethesda.Oblivion
         public PlacedObject.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -588,7 +587,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -949,6 +947,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -2099,7 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedObjectInternal)item);
         }
         
-        public PlacedObject GetNew() => PlacedObject.GetNew();
+        public override object GetNew() => PlacedObject.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -3694,7 +3696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectGetter item,
             PlacedObject_TranslationMask copyMask = null)
         {
-            PlacedObject ret = PlacedObjectSetterCommon.Instance.GetNew();
+            PlacedObject ret = (PlacedObject)((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

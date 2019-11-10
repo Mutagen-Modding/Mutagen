@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemAbstractGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -67,7 +66,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -290,9 +288,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IItemAbstractGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((ItemAbstractSetterCommon)((IItemAbstractGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static ItemAbstract GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -884,6 +891,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IItemAbstractInternal)item);
         }
         
+        public override object GetNew() => ItemAbstract.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IItemAbstractInternal item,
@@ -1169,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractGetter item,
             ItemAbstract_TranslationMask copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)System.Activator.CreateInstance(item.GetType());
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

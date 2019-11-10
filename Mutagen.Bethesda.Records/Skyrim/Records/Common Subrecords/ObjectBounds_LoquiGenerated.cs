@@ -56,7 +56,6 @@ namespace Mutagen.Bethesda.Skyrim
         public P3Int16 Second { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectBoundsGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -70,7 +69,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -326,6 +324,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectBoundsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -917,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
-        public ObjectBounds GetNew() => ObjectBounds.GetNew();
+        public object GetNew() => ObjectBounds.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1149,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBoundsGetter item,
             ObjectBounds_TranslationMask copyMask = null)
         {
-            ObjectBounds ret = ObjectBoundsSetterCommon.Instance.GetNew();
+            ObjectBounds ret = (ObjectBounds)((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -53,7 +53,6 @@ namespace Mutagen.Bethesda.Examples
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMainVMGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -72,7 +71,6 @@ namespace Mutagen.Bethesda.Examples
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -257,6 +255,10 @@ namespace Mutagen.Bethesda.Examples
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMainVMGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -773,7 +775,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
-        public MainVM GetNew() => MainVM.GetNew();
+        public object GetNew() => MainVM.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -955,7 +957,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             IMainVMGetter item,
             MainVM_TranslationMask copyMask = null)
         {
-            MainVM ret = MainVMSetterCommon.Instance.GetNew();
+            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

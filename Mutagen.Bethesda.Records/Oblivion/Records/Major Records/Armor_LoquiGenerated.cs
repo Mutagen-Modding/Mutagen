@@ -103,7 +103,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Armor.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -117,7 +116,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -389,6 +387,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1067,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IArmorInternal)item);
         }
         
-        public Armor GetNew() => Armor.GetNew();
+        public override object GetNew() => Armor.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1586,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorGetter item,
             Armor_TranslationMask copyMask = null)
         {
-            Armor ret = ArmorSetterCommon.Instance.GetNew();
+            Armor ret = (Armor)((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

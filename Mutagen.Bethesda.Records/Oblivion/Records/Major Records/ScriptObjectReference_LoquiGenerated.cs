@@ -60,7 +60,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFormIDLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -74,7 +73,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -333,6 +331,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -895,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptObjectReference)item);
         }
         
-        public ScriptObjectReference GetNew() => ScriptObjectReference.GetNew();
+        public override object GetNew() => ScriptObjectReference.GetNew();
         
         #region Xml Translation
         public new void CopyInFromXml(
@@ -1161,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReferenceGetter item,
             ScriptObjectReference_TranslationMask copyMask = null)
         {
-            ScriptObjectReference ret = ScriptObjectReferenceSetterCommon.Instance.GetNew();
+            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -68,7 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestStageGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -82,7 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -359,6 +357,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestStageGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -956,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LogEntries.Unset();
         }
         
-        public QuestStage GetNew() => QuestStage.GetNew();
+        public object GetNew() => QuestStage.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1258,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestStageGetter item,
             QuestStage_TranslationMask copyMask = null)
         {
-            QuestStage ret = QuestStageSetterCommon.Instance.GetNew();
+            QuestStage ret = (QuestStage)((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

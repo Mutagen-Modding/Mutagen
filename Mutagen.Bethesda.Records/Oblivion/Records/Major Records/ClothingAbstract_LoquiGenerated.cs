@@ -317,7 +317,6 @@ namespace Mutagen.Bethesda.Oblivion
         public ClothingAbstract.BMDTDataType BMDTDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingAbstractGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -331,7 +330,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -589,9 +587,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingAbstractGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static ClothingAbstract GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -1486,6 +1493,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Clear(item: (IClothingAbstractInternal)item);
         }
+        
+        public override object GetNew() => ClothingAbstract.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2493,7 +2502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstractGetter item,
             ClothingAbstract_TranslationMask copyMask = null)
         {
-            ClothingAbstract ret = (ClothingAbstract)System.Activator.CreateInstance(item.GetType());
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -134,7 +134,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyeGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -148,7 +147,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -413,6 +411,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyeGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1044,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEyeInternal)item);
         }
         
-        public Eye GetNew() => Eye.GetNew();
+        public override object GetNew() => Eye.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1548,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEyeGetter item,
             Eye_TranslationMask copyMask = null)
         {
-            Eye ret = EyeSetterCommon.Instance.GetNew();
+            Eye ret = (Eye)((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

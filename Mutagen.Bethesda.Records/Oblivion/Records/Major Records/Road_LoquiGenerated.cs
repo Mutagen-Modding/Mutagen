@@ -66,7 +66,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -80,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -332,6 +330,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRoadGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -909,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
-        public Road GetNew() => Road.GetNew();
+        public override object GetNew() => Road.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1310,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             Road_TranslationMask copyMask = null)
         {
-            Road ret = RoadSetterCommon.Instance.GetNew();
+            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -65,7 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 Duration { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageScheduleGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -79,7 +78,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -338,6 +336,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageScheduleGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -986,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
         
-        public AIPackageSchedule GetNew() => AIPackageSchedule.GetNew();
+        public object GetNew() => AIPackageSchedule.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1257,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             AIPackageSchedule_TranslationMask copyMask = null)
         {
-            AIPackageSchedule ret = AIPackageScheduleSetterCommon.Instance.GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

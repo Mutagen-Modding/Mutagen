@@ -52,7 +52,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -66,7 +65,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -274,9 +272,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalGetter)rhs, include);
+
         void IClearable.Clear()
         {
             ((GlobalSetterCommon)((IGlobalGetter)this).CommonSetterInstance()).Clear(this);
+        }
+
+        internal static Global GetNew()
+        {
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
@@ -825,6 +832,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalInternal)item);
         }
         
+        public override object GetNew() => Global.GetNew();
+        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalInternal item,
@@ -1147,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalGetter item,
             Global_TranslationMask copyMask = null)
         {
-            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
+            Global ret = (Global)((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

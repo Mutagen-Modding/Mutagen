@@ -107,7 +107,6 @@ namespace Mutagen.Bethesda.Oblivion
         IBodyDataGetter IGenderedBodyDataGetter.Female => this.Female;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGenderedBodyDataGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -121,7 +120,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -373,6 +371,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGenderedBodyDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -984,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female_Unset();
         }
         
-        public GenderedBodyData GetNew() => GenderedBodyData.GetNew();
+        public object GetNew() => GenderedBodyData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1334,7 +1336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyDataGetter item,
             GenderedBodyData_TranslationMask copyMask = null)
         {
-            GenderedBodyData ret = GenderedBodyDataSetterCommon.Instance.GetNew();
+            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataSetterCommon)((IGenderedBodyDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

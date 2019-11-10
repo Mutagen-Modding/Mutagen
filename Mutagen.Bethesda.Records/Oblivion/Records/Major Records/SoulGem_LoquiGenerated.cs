@@ -225,7 +225,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SoulGem.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -239,7 +238,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -535,6 +533,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1299,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoulGemInternal)item);
         }
         
-        public SoulGem GetNew() => SoulGem.GetNew();
+        public override object GetNew() => SoulGem.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2064,7 +2066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemGetter item,
             SoulGem_TranslationMask copyMask = null)
         {
-            SoulGem ret = SoulGemSetterCommon.Instance.GetNew();
+            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -93,7 +92,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -356,6 +354,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingFloatGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -946,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
-        public GameSettingFloat GetNew() => GameSettingFloat.GetNew();
+        public override object GetNew() => GameSettingFloat.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1379,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingFloatGetter item,
             GameSettingFloat_TranslationMask copyMask = null)
         {
-            GameSettingFloat ret = GameSettingFloatSetterCommon.Instance.GetNew();
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

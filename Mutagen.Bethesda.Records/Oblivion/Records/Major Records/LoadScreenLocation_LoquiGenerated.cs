@@ -70,7 +70,6 @@ namespace Mutagen.Bethesda.Oblivion
         public P2Int16 GridPoint { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -84,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -356,6 +354,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -968,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default(P2Int16);
         }
         
-        public LoadScreenLocation GetNew() => LoadScreenLocation.GetNew();
+        public object GetNew() => LoadScreenLocation.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1210,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter item,
             LoadScreenLocation_TranslationMask copyMask = null)
         {
-            LoadScreenLocation ret = LoadScreenLocationSetterCommon.Instance.GetNew();
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -237,7 +237,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Climate.TNAMDataType TNAMDataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -251,7 +250,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -556,6 +554,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1360,7 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClimateInternal)item);
         }
         
-        public Climate GetNew() => Climate.GetNew();
+        public override object GetNew() => Climate.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2093,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateGetter item,
             Climate_TranslationMask copyMask = null)
         {
-            Climate ret = ClimateSetterCommon.Instance.GetNew();
+            Climate ret = (Climate)((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -88,7 +88,6 @@ namespace Mutagen.Bethesda.Oblivion
         public QuestTarget.QSTADataType QSTADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -102,7 +101,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -379,6 +377,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1011,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.QSTADataTypeState = default(QuestTarget.QSTADataType);
         }
         
-        public QuestTarget GetNew() => QuestTarget.GetNew();
+        public object GetNew() => QuestTarget.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1351,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetGetter item,
             QuestTarget_TranslationMask copyMask = null)
         {
-            QuestTarget ret = QuestTargetSetterCommon.Instance.GetNew();
+            QuestTarget ret = (QuestTarget)((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

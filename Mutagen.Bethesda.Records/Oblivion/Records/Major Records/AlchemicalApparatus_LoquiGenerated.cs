@@ -196,7 +196,6 @@ namespace Mutagen.Bethesda.Oblivion
         public AlchemicalApparatus.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -210,7 +209,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -506,6 +504,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1260,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
-        public AlchemicalApparatus GetNew() => AlchemicalApparatus.GetNew();
+        public override object GetNew() => AlchemicalApparatus.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1959,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusGetter item,
             AlchemicalApparatus_TranslationMask copyMask = null)
         {
-            AlchemicalApparatus ret = AlchemicalApparatusSetterCommon.Instance.GetNew();
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -56,7 +56,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SByte Boost { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -70,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -322,6 +320,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillBoostGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -911,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Boost = default(SByte);
         }
         
-        public SkillBoost GetNew() => SkillBoost.GetNew();
+        public object GetNew() => SkillBoost.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1131,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoostGetter item,
             SkillBoost_TranslationMask copyMask = null)
         {
-            SkillBoost ret = SkillBoostSetterCommon.Instance.GetNew();
+            SkillBoost ret = (SkillBoost)((SkillBoostSetterCommon)((ISkillBoostGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

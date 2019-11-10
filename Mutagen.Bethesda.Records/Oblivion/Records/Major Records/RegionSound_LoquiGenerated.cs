@@ -66,7 +66,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat Chance_Range = new RangeFloat(0f, 100f);
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionSoundGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -80,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -349,6 +347,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionSoundGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -958,7 +960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Single);
         }
         
-        public RegionSound GetNew() => RegionSound.GetNew();
+        public object GetNew() => RegionSound.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1203,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSoundGetter item,
             RegionSound_TranslationMask copyMask = null)
         {
-            RegionSound ret = RegionSoundSetterCommon.Instance.GetNew();
+            RegionSound ret = (RegionSound)((RegionSoundSetterCommon)((IRegionSoundGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -77,7 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
         #region To String
 
         public void ToString(
@@ -91,7 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -330,6 +328,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
 
         void IClearable.Clear()
         {
@@ -953,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
-        public ListGroup<T> GetNew() => ListGroup<T>.GetNew();
+        public object GetNew() => ListGroup<T>.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1296,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : IXmlItem, IBinaryItem, ILoquiObject<TGetter>
             where T_TranslMask : class, ITranslationMask, new()
         {
-            ListGroup<T> ret = ListGroupSetterCommon<T>.Instance.GetNew();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);

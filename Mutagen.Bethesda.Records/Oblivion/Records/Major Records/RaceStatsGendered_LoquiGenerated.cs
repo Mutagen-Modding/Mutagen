@@ -59,7 +59,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceStatsGetter IRaceStatsGenderedGetter.Female => Female;
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -73,7 +72,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -329,6 +327,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceStatsGenderedGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -918,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(RaceStats);
         }
         
-        public RaceStatsGendered GetNew() => RaceStatsGendered.GetNew();
+        public object GetNew() => RaceStatsGendered.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1212,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGenderedGetter item,
             RaceStatsGendered_TranslationMask copyMask = null)
         {
-            RaceStatsGendered ret = RaceStatsGenderedSetterCommon.Instance.GetNew();
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

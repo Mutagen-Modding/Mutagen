@@ -121,7 +121,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -135,7 +134,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -425,6 +423,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1052,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
-        public LoadScreen GetNew() => LoadScreen.GetNew();
+        public override object GetNew() => LoadScreen.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -1575,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenGetter item,
             LoadScreen_TranslationMask copyMask = null)
         {
-            LoadScreen ret = LoadScreenSetterCommon.Instance.GetNew();
+            LoadScreen ret = (LoadScreen)((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

@@ -67,7 +67,6 @@ namespace Mutagen.Bethesda.Tests
         public Boolean TestCopyIn { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsGetter)rhs, include);
         #region To String
         public override string ToString()
         {
@@ -86,7 +85,6 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -278,6 +276,10 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPassthroughSettingsGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -927,7 +929,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestCopyIn = default(Boolean);
         }
         
-        public PassthroughSettings GetNew() => PassthroughSettings.GetNew();
+        public object GetNew() => PassthroughSettings.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1180,7 +1182,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettingsGetter item,
             PassthroughSettings_TranslationMask copyMask = null)
         {
-            PassthroughSettings ret = PassthroughSettingsSetterCommon.Instance.GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

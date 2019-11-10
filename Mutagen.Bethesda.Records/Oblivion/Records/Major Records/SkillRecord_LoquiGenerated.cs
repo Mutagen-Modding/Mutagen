@@ -304,7 +304,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SkillRecord.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -318,7 +317,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -599,6 +597,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1441,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
-        public SkillRecord GetNew() => SkillRecord.GetNew();
+        public override object GetNew() => SkillRecord.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2304,7 +2306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecordGetter item,
             SkillRecord_TranslationMask copyMask = null)
         {
-            SkillRecord ret = SkillRecordSetterCommon.Instance.GetNew();
+            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

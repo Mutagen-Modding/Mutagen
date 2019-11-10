@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 ThirdParameter { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -94,7 +93,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -368,6 +366,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IConditionGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1085,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
         
-        public Condition GetNew() => Condition.GetNew();
+        public object GetNew() => Condition.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1407,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IConditionGetter item,
             Condition_TranslationMask copyMask = null)
         {
-            Condition ret = ConditionSetterCommon.Instance.GetNew();
+            Condition ret = (Condition)((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

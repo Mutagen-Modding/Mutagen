@@ -62,7 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         public Int32 Chance { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
         #region To String
 
         public void ToString(
@@ -76,7 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -344,6 +342,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -934,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
-        public WeatherChance GetNew() => WeatherChance.GetNew();
+        public object GetNew() => WeatherChance.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1148,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChanceGetter item,
             WeatherChance_TranslationMask copyMask = null)
         {
-            WeatherChance ret = WeatherChanceSetterCommon.Instance.GetNew();
+            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

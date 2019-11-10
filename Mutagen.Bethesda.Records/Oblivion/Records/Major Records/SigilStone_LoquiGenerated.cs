@@ -197,7 +197,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SigilStone.DATADataType DATADataTypeState { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISigilStoneGetter)rhs, include);
         #region To String
 
         public override void ToString(
@@ -211,7 +210,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -516,6 +514,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISigilStoneGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -1270,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISigilStoneInternal)item);
         }
         
-        public SigilStone GetNew() => SigilStone.GetNew();
+        public override object GetNew() => SigilStone.GetNew();
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
@@ -2012,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneGetter item,
             SigilStone_TranslationMask copyMask = null)
         {
-            SigilStone ret = SigilStoneSetterCommon.Instance.GetNew();
+            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);

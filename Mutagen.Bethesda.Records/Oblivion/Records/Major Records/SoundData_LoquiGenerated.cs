@@ -62,7 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         public SoundData.Flag Flags { get; set; }
         #endregion
 
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
         #region To String
 
         public virtual void ToString(
@@ -76,7 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         #region Equals and Hash
         public override bool Equals(object obj)
         {
@@ -330,6 +328,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+
+        void ILoquiObjectGetter.ToString(FileGeneration fg, string name) => this.ToString(fg, name);
+        IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundDataInternalGetter)rhs, include);
 
         void IClearable.Clear()
         {
@@ -982,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
         
-        public SoundData GetNew() => SoundData.GetNew();
+        public virtual object GetNew() => SoundData.GetNew();
         
         #region Xml Translation
         public void CopyInFromXml(
@@ -1240,7 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataInternalGetter item,
             SoundData_TranslationMask copyMask = null)
         {
-            SoundData ret = SoundDataSetterCommon.Instance.GetNew();
+            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
