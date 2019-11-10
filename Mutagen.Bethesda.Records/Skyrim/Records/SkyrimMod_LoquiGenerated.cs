@@ -321,9 +321,9 @@ namespace Mutagen.Bethesda.Skyrim
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
+        void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static async Task<SkyrimMod> CreateFromBinary(
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static async Task<SkyrimMod> CreateFromBinary(
             string path,
             ErrorMaskBuilder errorMask,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ISkyrimModGetter CreateFromBinaryWrapper(
             string path,
-            ModKey modKeyOverride = null)
+            ModKey? modKeyOverride = null)
         {
             return CreateFromBinaryWrapper(
                 stream: new BinaryReadStream(path),
@@ -1189,14 +1189,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static async Task WriteToBinaryAsync(
             this ISkyrimModGetter item,
             string path,
-            ModKey modKey)
+            ModKey? modKeyOverride)
         {
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 await SkyrimModCommon.WriteAsync(
                     item: item,
                     stream: stream,
-                    modKey: modKey);
+                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
             }
         }
         public static void WriteToBinaryParallel(
@@ -1213,16 +1213,17 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
             string path,
-            ModKey modKey)
+            ModKey? modKeyOverride)
         {
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
                     item: item,
                     stream: stream,
-                    modKey: modKey);
+                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
             }
         }
+
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimModGetter obj)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
@@ -1291,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static async Task CopyInFromBinary(
             this ISkyrimMod item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -1309,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
             this ISkyrimMod item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -1328,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             string path,
             ErrorMaskBuilder errorMask,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
@@ -3961,7 +3962,7 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out SkyrimMod_ErrorMask errorMask,
             bool doMasks = true,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -3990,7 +3991,7 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             bool doMasks = true,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -4086,7 +4087,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -4170,9 +4171,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
+        void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;

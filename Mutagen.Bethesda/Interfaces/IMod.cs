@@ -15,9 +15,9 @@ namespace Mutagen.Bethesda
         GameMode GameMode { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyCache<T, FormKey> GetGroupGetter<T>() where T : IMajorRecordCommonGetter;
-        void WriteToBinary(string path, ModKey modKeyOverride = null);
-        Task WriteToBinaryAsync(string path, ModKey modKeyOverride = null);
-        void WriteToBinaryParallel(string path, ModKey modKeyOverride = null);
+        void WriteToBinary(string path, ModKey? modKeyOverride = null);
+        Task WriteToBinaryAsync(string path, ModKey? modKeyOverride = null);
+        void WriteToBinaryParallel(string path, ModKey? modKeyOverride = null);
         ModKey ModKey { get; }
     }
 

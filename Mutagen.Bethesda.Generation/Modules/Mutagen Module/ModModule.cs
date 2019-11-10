@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{gameMode};");
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
-            fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
-            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
+            fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);");
+            fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
 
             using (var args = new FunctionWrapper(fg,
                 "protected void SetMajorRecord"))
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"string path");
-                args.Add($"ModKey modKey");
+                args.Add($"ModKey? modKeyOverride");
             }
             using (new BraceWrapper(fg))
             {
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("item");
                         args.AddPassArg("stream");
-                        args.AddPassArg("modKey");
+                        args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                     }
                 }
             }
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"string path");
-                args.Add($"ModKey modKey");
+                args.Add($"ModKey? modKeyOverride");
             }
             using (new BraceWrapper(fg))
             {
@@ -386,10 +386,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("item");
                         args.AddPassArg("stream");
-                        args.AddPassArg("modKey");
+                        args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                     }
                 }
             }
+            fg.AppendLine();
         }
 
         public override async Task GenerateInCommon(ObjectGeneration obj, FileGeneration fg, MaskTypeSet maskTypes)

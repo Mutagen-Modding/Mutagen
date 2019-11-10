@@ -712,9 +712,9 @@ namespace Mutagen.Bethesda.Oblivion
         public GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path, ModKey modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
+        void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
         protected void SetMajorRecord(
             FormKey id,
             IMajorRecord record)
@@ -2688,7 +2688,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<OblivionMod> CreateFromBinary(
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -2704,7 +2704,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static async Task<(OblivionMod Object, OblivionMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -2721,7 +2721,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<OblivionMod> CreateFromBinary(
             string path,
             ErrorMaskBuilder errorMask,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -2798,7 +2798,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IOblivionModGetter CreateFromBinaryWrapper(
             string path,
-            ModKey modKeyOverride = null)
+            ModKey? modKeyOverride = null)
         {
             return CreateFromBinaryWrapper(
                 stream: new BinaryReadStream(path),
@@ -3386,14 +3386,14 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task WriteToBinaryAsync(
             this IOblivionModGetter item,
             string path,
-            ModKey modKey)
+            ModKey? modKeyOverride)
         {
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 await OblivionModCommon.WriteAsync(
                     item: item,
                     stream: stream,
-                    modKey: modKey);
+                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
             }
         }
         public static void WriteToBinaryParallel(
@@ -3410,16 +3410,17 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinaryParallel(
             this IOblivionModGetter item,
             string path,
-            ModKey modKey)
+            ModKey? modKeyOverride)
         {
             using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 OblivionModCommon.WriteParallel(
                     item: item,
                     stream: stream,
-                    modKey: modKey);
+                    modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
             }
         }
+
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
@@ -3488,7 +3489,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task CopyInFromBinary(
             this IOblivionMod item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -3506,7 +3507,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static async Task<OblivionMod_ErrorMask> CopyInFromBinaryWithErrorMask(
             this IOblivionMod item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -3525,7 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             string path,
             ErrorMaskBuilder errorMask,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
@@ -14389,7 +14390,7 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out OblivionMod_ErrorMask errorMask,
             bool doMasks = true,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -14418,7 +14419,7 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             bool doMasks = true,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -14514,7 +14515,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModGetter item,
             string path,
-            ModKey modKeyOverride = null,
+            ModKey? modKeyOverride = null,
             GroupMask importMask = null)
         {
             using (var memStream = new MemoryTributary())
@@ -14598,9 +14599,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);
-        Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);
-        void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);
+        void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);
+        Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);
+        void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;

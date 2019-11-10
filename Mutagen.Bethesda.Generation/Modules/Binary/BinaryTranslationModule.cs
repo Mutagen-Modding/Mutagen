@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
                 when: (obj) => obj.GetObjectType() == ObjectType.Mod);
             var modKeyOptional = new APILine(
                 nicknameKey: "ModKeyOptional",
-                resolutionString: "ModKey modKeyOverride = null",
+                resolutionString: "ModKey? modKeyOverride = null",
                 when: (obj) => obj.GetObjectType() == ObjectType.Mod);
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Generation
                 $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
             {
                 args.Add($"string path");
-                args.Add($"ModKey modKeyOverride = null");
+                args.Add($"ModKey? modKeyOverride = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -1516,9 +1516,9 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
-                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey modKey) => this.WriteToBinary(path, modKey, importMask: null);");
-                    fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey modKey) => this.WriteToBinaryAsync(path, modKey);");
-                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey modKey) => this.WriteToBinaryParallel(path, modKey);");
+                    fg.AppendLine($"void IModGetter.WriteToBinary(string path, ModKey? modKey) => this.WriteToBinary(path, modKey, importMask: null);");
+                    fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);");
+                    fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
                 }
 

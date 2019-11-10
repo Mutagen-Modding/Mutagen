@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal("Oblivion", modKey2.Name);
             Assert.Equal("Oblivion.esm", modKey2.FileName);
             Assert.True(modKey2.Master);
-            Assert.Same(modKey, modKey2);
+            Assert.Same(modKey.Name, modKey2.Name);
         }
 
         [Fact]
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal("Oblivion.esp", modKey2.FileName);
             Assert.False(modKey2.Master);
 
-            Assert.Same(masterKey, masterKey2);
-            Assert.Same(modKey, modKey2);
+            Assert.Same(masterKey.Name, masterKey2.Name);
+            Assert.Same(modKey.Name, modKey2.Name);
         }
 
         [Fact]

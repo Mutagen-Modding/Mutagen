@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ic static readonly RecordType SCHR_HEADER = new RecordType(\"SCHR\");";
+            string testString = "ic static void WriteToBinaryParallel(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

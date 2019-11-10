@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda
     /// General practice is:
     ///  - Use ModKey.TryFactory on a mod's file name when at all possible
     ///  - Use the Dummy singleton only when it is unknown, and no record cross pollination is planned to occur.
-    public class ModKey : IEquatable<ModKey>
+    public struct ModKey : IEquatable<ModKey>
     {
-        public static readonly ModKey NULL = new ModKey(string.Empty, master: true);
+        public static readonly ModKey NULL = new ModKey(null, master: false);
         public string Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda
             this.Name = name;
             this.Master = master;
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
-            this._hash = Name.ToUpper().GetHashCode()
+            this._hash = (Name?.ToUpper().GetHashCode() ?? 0)
                 .CombineHashCode(Master.GetHashCode());
         }
 

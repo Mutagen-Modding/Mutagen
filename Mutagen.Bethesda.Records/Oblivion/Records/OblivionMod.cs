@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         public OblivionMod(ModKey modKey)
             : this()
         {
-            this.ModKey = modKey ?? throw new ArgumentNullException();
+            this.ModKey = modKey;
         }
 
         partial void CustomCtor()
