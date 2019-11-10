@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkSubContainer,
         IEquatable<Group<T>>,
         IEqualsMask
-        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         #region Ctor
         protected Group()
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<T>,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IGroup<T>>
-        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new GroupTypeEnum GroupType { get; set; }
 
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IGroupGetter<T>>,
         IXmlItem,
         IBinaryItem
-        where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
     public static class GroupMixIn
     {
         public static void Clear<T>(this IGroup<T> item)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).Clear(item: item);
         }
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetEqualsMask(
                 item: item,
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).ToString(
                 item: item,
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).ToString(
                 item: item,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group_Mask<bool?> checkMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).HasBeenSet(
                 item: item,
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static Group_Mask<bool> GetHasBeenSetMask<T>(this IGroupGetter<T> item)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             var ret = new Group_Mask<bool>();
             ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).FillHasBeenSetMask(
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool Equals<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).Equals(
                 lhs: item,
@@ -517,8 +517,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             DeepCopyFieldsFrom<T, TGetter, OblivionMajorRecord_ErrorMask, T_TranslMask>(
@@ -533,8 +533,8 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs,
             Group_TranslationMask<T_TranslMask> copyMask)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             DeepCopyFieldsFrom<T, TGetter, OblivionMajorRecord_ErrorMask, T_TranslMask>(
@@ -551,8 +551,8 @@ namespace Mutagen.Bethesda.Oblivion
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> copyMask = null,
             bool doMasks = true)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
@@ -570,8 +570,8 @@ namespace Mutagen.Bethesda.Oblivion
             IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
             Group_TranslationMask<T_TranslMask> copyMask = null)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
@@ -584,8 +584,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IGroupGetter<TGetter> item,
             Group_TranslationMask<T_TranslMask> copyMask = null)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             return ((GroupSetterTranslationCommon)((IGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             MissingCreate missing = MissingCreate.New)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromXml(
                 item: item,
@@ -761,13 +761,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroup<T> obj)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
@@ -815,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     #region Common
     public partial class GroupSetterCommon<T>
-        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         public static readonly GroupSetterCommon<T> Instance = new GroupSetterCommon<T>();
 
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
     }
     public partial class GroupCommon<T>
-        where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
         public static readonly GroupCommon<T> Instance = new GroupCommon<T>();
 
@@ -1364,8 +1364,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
             Group_TranslationMask<T_TranslMask> copyMask)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             if (copyMask?.GroupType ?? true)
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Items.Items
                             .Select((r) =>
                             {
-                                return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null);
+                                return r.DeepCopy() as T;
                             }));
                 }
                 catch (Exception ex)
@@ -1405,8 +1405,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Group<T> DeepCopy<T, TGetter, T_TranslMask>(
             IGroupGetter<TGetter> item,
             Group_TranslationMask<T_TranslMask> copyMask = null)
-            where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
-            where TGetter : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             Group<T> ret = GroupSetterCommon<T>.Instance.GetNew();
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             XElement node,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.GroupType) ?? true))
             {
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Group");
             node.Add(elem);
@@ -1564,7 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int fieldIndex,
             TranslationCrystal translationMask,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             try
             {
@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public partial class GroupXmlCreateTranslation<T>
-        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         public readonly static GroupXmlCreateTranslation<T> Instance = new GroupXmlCreateTranslation<T>();
 
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion
             Group_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
             WriteToXml<T>(
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
             Group_TranslationMask<T_TranslMask> translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal translationMask = null,
             bool doMasks = true,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             var node = new XElement("topnode");
             WriteToXml<T>(
@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement node,
             string name = null,
             Group_TranslationMask<T_TranslMask> translationMask = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             string path,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
@@ -1859,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             Stream stream,
             string name = null)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
             var node = new XElement("topnode");
@@ -2273,14 +2273,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem;
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
@@ -2294,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
@@ -2339,7 +2339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             RecordTypeConverter recordTypeConverter,
             ErrorMaskBuilder errorMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2373,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public partial class GroupBinaryCreateTranslation<T>
-        where T : IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         public readonly static GroupBinaryCreateTranslation<T> Instance = new GroupBinaryCreateTranslation<T>();
 
@@ -2410,7 +2410,7 @@ namespace Mutagen.Bethesda.Oblivion
             MasterReferences masterReferences,
             out Group_ErrorMask<T_ErrMask> errorMask,
             bool doMasks = true)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
@@ -2428,7 +2428,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2442,7 +2442,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             MutagenWriter writer,
             MasterReferences masterReferences)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
@@ -2463,7 +2463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public partial class GroupBinaryWrapper<T> :
         BinaryWrapper,
         IGroupGetter<T>
-        where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

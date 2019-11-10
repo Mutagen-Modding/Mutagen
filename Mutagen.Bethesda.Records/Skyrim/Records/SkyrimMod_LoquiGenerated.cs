@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masters,
             int targetIndex,
             Stream[] streamDepositArray)
-            where T : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             if (group.Items.Count == 0) return;
             var cuts = group.Items.Items.Cut(CutCount).ToArray();
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>(
             IGroupGetter<T> group,
             MasterReferences masters)
-            where T : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();

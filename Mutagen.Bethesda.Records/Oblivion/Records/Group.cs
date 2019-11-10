@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+                where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

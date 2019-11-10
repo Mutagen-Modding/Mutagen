@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
                 IGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+                where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

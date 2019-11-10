@@ -7552,7 +7552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masters,
             int targetIndex,
             Stream[] streamDepositArray)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             if (group.Items.Count == 0) return;
             var cuts = group.Items.Items.Cut(CutCount).ToArray();
@@ -7656,7 +7656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static async Task<IEnumerable<Stream>> WriteGroupAsync<T>(
             IGroupGetter<T> group,
             MasterReferences masters)
-            where T : IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();
