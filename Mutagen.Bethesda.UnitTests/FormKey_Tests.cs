@@ -52,5 +52,17 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(
                 FormKey.TryFactory("00C51AOblivionesm", out FormKey id));
         }
+
+        [Fact]
+        public void Null_Equality()
+        {
+            Assert.Equal(FormKey.NULL, new FormKey());
+        }
+
+        [Fact]
+        public void Null_Hash()
+        {
+            Assert.Equal(0, FormKey.NULL.GetHashCode());
+        }
     }
 }
