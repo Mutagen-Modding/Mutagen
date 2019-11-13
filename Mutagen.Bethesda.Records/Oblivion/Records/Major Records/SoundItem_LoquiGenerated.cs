@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SoundItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundItem lhs,
             ISoundItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundItem_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SoundItemSetterTranslationCommon)((ISoundItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -557,6 +557,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SoundItem DeepCopy(
+            this ISoundItemGetter item,
+            out SoundItem_ErrorMask errorMask,
+            SoundItem_TranslationMask copyMask = null)
+        {
+            return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SoundItem DeepCopy(
+            this ISoundItemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SoundItemSetterTranslationCommon)((ISoundItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1222,9 +1244,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItem item,
             ISoundItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundItem_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Sound ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
                 errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
                 try
@@ -1241,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Chance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {
                 errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
                 try
@@ -1276,6 +1298,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundItem ret = (SoundItem)((SoundItemSetterCommon)((ISoundItemGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoundItem DeepCopy(
+            ISoundItemGetter item,
+            out SoundItem_ErrorMask errorMask,
+            SoundItem_TranslationMask copyMask = null)
+        {
+            SoundItem ret = (SoundItem)((SoundItemSetterCommon)((ISoundItemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoundItem DeepCopy(
+            ISoundItemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SoundItem ret = (SoundItem)((SoundItemSetterCommon)((ISoundItemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

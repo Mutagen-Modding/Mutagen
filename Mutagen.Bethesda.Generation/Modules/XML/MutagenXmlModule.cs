@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (this.TranslationMaskParameter)
                     {
-                        conditions.Add(generator.GetTranslationIfAccessor(field, "translationMask"));
+                        conditions.Add(field.GetTranslationIfAccessor("translationMask"));
                     }
                     if (conditions.Count > 0)
                     {

@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlaceInternal lhs,
             IPlaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Place_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((PlaceSetterTranslationCommon)((IPlaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -454,6 +454,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Place DeepCopy(
+            this IPlaceGetter item,
+            out Place_ErrorMask errorMask,
+            Place_TranslationMask copyMask = null)
+        {
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Place DeepCopy(
+            this IPlaceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1157,7 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlace item,
             IPlaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Place_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
@@ -1168,13 +1190,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Place DeepCopy(
+        public Place DeepCopy(
             IPlaceGetter item,
             Place_TranslationMask copyMask = null)
         {
             Place ret = (Place)((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Place DeepCopy(
+            IPlaceGetter item,
+            out Place_ErrorMask errorMask,
+            Place_TranslationMask copyMask = null)
+        {
+            Place ret = (Place)((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Place DeepCopy(
+            IPlaceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Place ret = (Place)((PlaceSetterCommon)((IPlaceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

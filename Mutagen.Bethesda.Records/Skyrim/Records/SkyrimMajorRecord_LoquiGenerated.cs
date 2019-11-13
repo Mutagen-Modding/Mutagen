@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMajorRecordInternal lhs,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkyrimMajorRecord_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -469,6 +469,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SkyrimMajorRecord DeepCopy(
+            this ISkyrimMajorRecordGetter item,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            SkyrimMajorRecord_TranslationMask copyMask = null)
+        {
+            return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SkyrimMajorRecord DeepCopy(
+            this ISkyrimMajorRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1202,22 +1224,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecord item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkyrimMajorRecord_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.SkyrimMajorRecordFlags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
             {
                 item.SkyrimMajorRecordFlags = rhs.SkyrimMajorRecordFlags;
             }
-            if (copyMask?.FormVersion ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
             {
                 item.FormVersion = rhs.FormVersion;
             }
-            if (copyMask?.Version2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.Version2) ?? true))
             {
                 item.Version2 = rhs.Version2;
             }
@@ -1225,13 +1247,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new SkyrimMajorRecord DeepCopy(
+        public SkyrimMajorRecord DeepCopy(
             ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord_TranslationMask copyMask = null)
         {
             SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SkyrimMajorRecord DeepCopy(
+            ISkyrimMajorRecordGetter item,
+            out SkyrimMajorRecord_ErrorMask errorMask,
+            SkyrimMajorRecord_TranslationMask copyMask = null)
+        {
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SkyrimMajorRecord DeepCopy(
+            ISkyrimMajorRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionInternal lhs,
             IFactionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Faction_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -668,6 +668,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Faction DeepCopy(
+            this IFactionGetter item,
+            out Faction_ErrorMask errorMask,
+            Faction_TranslationMask copyMask = null)
+        {
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Faction DeepCopy(
+            this IFactionGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((FactionSetterTranslationCommon)((IFactionGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1666,14 +1688,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaction item,
             IFactionGetter rhs,
             ErrorMaskBuilder errorMask,
-            Faction_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Name);
                 try
@@ -1697,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Relations.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
@@ -1706,7 +1728,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Relations,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Relations?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1719,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
                 try
@@ -1743,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.CrimeGoldMultiplier ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGoldMultiplier) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 try
@@ -1767,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Ranks.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
@@ -1776,7 +1800,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Ranks,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Ranks?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1793,13 +1819,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Faction DeepCopy(
+        public Faction DeepCopy(
             IFactionGetter item,
             Faction_TranslationMask copyMask = null)
         {
             Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Faction DeepCopy(
+            IFactionGetter item,
+            out Faction_ErrorMask errorMask,
+            Faction_TranslationMask copyMask = null)
+        {
+            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Faction DeepCopy(
+            IFactionGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

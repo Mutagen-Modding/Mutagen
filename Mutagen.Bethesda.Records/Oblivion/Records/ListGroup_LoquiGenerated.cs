@@ -561,24 +561,23 @@ namespace Mutagen.Bethesda.Oblivion
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
             var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ListGroup_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+        public static void DeepCopyFieldsFrom<T, TGetter>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
+            TranslationCrystal copyMask)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -595,6 +594,35 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ListGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            this IListGroupGetter<TGetter> item,
+            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
+        {
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+            this IListGroupGetter<TGetter> item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
+        {
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter>(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1363,24 +1391,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ListGroupSetterTranslationCommon Instance = new ListGroupSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
+        public void DeepCopyFieldsFrom<T, TGetter>(
             IListGroup<T> item,
             IListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder errorMask,
-            ListGroup_TranslationMask<T_TranslMask> copyMask)
+            TranslationCrystal copyMask)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            if (copyMask?.GroupType ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.GroupType) ?? true))
             {
                 item.GroupType = rhs.GroupType;
             }
-            if (copyMask?.LastModified ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
             }
-            if (copyMask?.Items.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ListGroup_FieldIndex.Items) ?? true))
             {
                 errorMask?.PushIndex((int)ListGroup_FieldIndex.Items);
                 try
@@ -1416,6 +1443,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ListGroup<T> DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            IListGroupGetter<TGetter> item,
+            out ListGroup_ErrorMask<T_ErrMask> errorMask,
+            ListGroup_TranslationMask<T_TranslMask> copyMask = null)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>, new()
+            where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
+        {
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ListGroup<T> DeepCopy<T, TGetter>(
+            IListGroupGetter<TGetter> item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        {
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom<T, TGetter>(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

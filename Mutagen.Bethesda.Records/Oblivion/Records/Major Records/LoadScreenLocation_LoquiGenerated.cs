@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = LoadScreenLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LoadScreenLocation_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -547,6 +547,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static LoadScreenLocation DeepCopy(
+            this ILoadScreenLocationGetter item,
+            out LoadScreenLocation_ErrorMask errorMask,
+            LoadScreenLocation_TranslationMask copyMask = null)
+        {
+            return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static LoadScreenLocation DeepCopy(
+            this ILoadScreenLocationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1190,17 +1212,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             ILoadScreenLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LoadScreenLocation_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Direct ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
                 item.Direct_Property.FormKey = rhs.Direct_Property.FormKey;
             }
-            if (copyMask?.Indirect ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
                 item.Indirect_Property.FormKey = rhs.Indirect_Property.FormKey;
             }
-            if (copyMask?.GridPoint ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {
                 item.GridPoint = rhs.GridPoint;
             }
@@ -1215,6 +1237,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LoadScreenLocation DeepCopy(
+            ILoadScreenLocationGetter item,
+            out LoadScreenLocation_ErrorMask errorMask,
+            LoadScreenLocation_TranslationMask copyMask = null)
+        {
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LoadScreenLocation DeepCopy(
+            ILoadScreenLocationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

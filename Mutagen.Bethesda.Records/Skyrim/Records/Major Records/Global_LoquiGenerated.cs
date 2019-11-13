@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalInternal lhs,
             IGlobalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Global_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -434,6 +434,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Global DeepCopy(
+            this IGlobalGetter item,
+            out Global_ErrorMask errorMask,
+            Global_TranslationMask copyMask = null)
+        {
+            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Global DeepCopy(
+            this IGlobalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1141,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobal item,
             IGlobalGetter rhs,
             ErrorMaskBuilder errorMask,
-            Global_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
@@ -1152,13 +1174,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new Global DeepCopy(
+        public Global DeepCopy(
             IGlobalGetter item,
             Global_TranslationMask copyMask = null)
         {
             Global ret = (Global)((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Global DeepCopy(
+            IGlobalGetter item,
+            out Global_ErrorMask errorMask,
+            Global_TranslationMask copyMask = null)
+        {
+            Global ret = (Global)((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Global DeepCopy(
+            IGlobalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Global ret = (Global)((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Generation
                 if (this.XmlMod.TranslationMaskParameter
                     && subField.Field.IntegrateField)
                 {
-                    conditions.Add(subGenerator.GetTranslationIfAccessor(subField.Field, "translationMask"));
+                    conditions.Add(subField.Field.GetTranslationIfAccessor("translationMask"));
                 }
                 if (conditions.Count > 0)
                 {

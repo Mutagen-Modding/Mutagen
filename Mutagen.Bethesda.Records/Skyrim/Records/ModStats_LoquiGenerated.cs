@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ModStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModStats lhs,
             IModStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModStats_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -519,6 +519,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ModStats DeepCopy(
+            this IModStatsGetter item,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask copyMask = null)
+        {
+            return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ModStats DeepCopy(
+            this IModStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1156,17 +1178,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModStats item,
             IModStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModStats_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Version ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
             }
-            if (copyMask?.NumRecords ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
             {
                 item.NumRecords = rhs.NumRecords;
             }
-            if (copyMask?.NextObjectID ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextObjectID) ?? true))
             {
                 item.NextObjectID = rhs.NextObjectID;
             }
@@ -1181,6 +1203,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModStats ret = (ModStats)((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ModStats DeepCopy(
+            IModStatsGetter item,
+            out ModStats_ErrorMask errorMask,
+            ModStats_TranslationMask copyMask = null)
+        {
+            ModStats ret = (ModStats)((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ModStats DeepCopy(
+            IModStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ModStats ret = (ModStats)((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

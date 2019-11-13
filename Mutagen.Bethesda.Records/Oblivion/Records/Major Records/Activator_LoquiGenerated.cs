@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IActivatorInternal lhs,
             IActivatorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Activator_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -622,6 +622,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
+            out Activator_ErrorMask errorMask,
+            Activator_TranslationMask copyMask = null)
+        {
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1528,14 +1550,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IActivator item,
             IActivatorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Activator_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.Name);
                 try
@@ -1559,14 +1581,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
                     }
                     else
                     {
@@ -1585,7 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.Script);
                 try
@@ -1602,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Sound ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Sound) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.Sound);
                 try
@@ -1623,13 +1647,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Activator DeepCopy(
+        public Activator DeepCopy(
             IActivatorGetter item,
             Activator_TranslationMask copyMask = null)
         {
             Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Activator DeepCopy(
+            IActivatorGetter item,
+            out Activator_ErrorMask errorMask,
+            Activator_TranslationMask copyMask = null)
+        {
+            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Activator DeepCopy(
+            IActivatorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

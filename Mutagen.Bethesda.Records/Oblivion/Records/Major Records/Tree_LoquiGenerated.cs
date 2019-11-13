@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternal lhs,
             ITreeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Tree_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -807,6 +807,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Tree DeepCopy(
+            this ITreeGetter item,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask copyMask = null)
+        {
+            return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Tree DeepCopy(
+            this ITreeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((TreeSetterTranslationCommon)((ITreeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2063,21 +2085,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITree item,
             ITreeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Tree_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Tree_FieldIndex.Model));
                     }
                     else
                     {
@@ -2096,7 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.Icon);
                 try
@@ -2120,7 +2144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SpeedTreeSeeds ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.SpeedTreeSeeds) ?? true))
             {
                 errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
@@ -2137,51 +2161,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.LeafCurvature ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
             {
                 item.LeafCurvature = rhs.LeafCurvature;
             }
-            if (copyMask?.MinimumLeafAngle ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
             {
                 item.MinimumLeafAngle = rhs.MinimumLeafAngle;
             }
-            if (copyMask?.MaximumLeafAngle ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
             {
                 item.MaximumLeafAngle = rhs.MaximumLeafAngle;
             }
-            if (copyMask?.BranchDimmingValue ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
             {
                 item.BranchDimmingValue = rhs.BranchDimmingValue;
             }
-            if (copyMask?.LeafDimmingValue ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
             {
                 item.LeafDimmingValue = rhs.LeafDimmingValue;
             }
-            if (copyMask?.ShadowRadius ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
             {
                 item.ShadowRadius = rhs.ShadowRadius;
             }
-            if (copyMask?.RockingSpeed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
             {
                 item.RockingSpeed = rhs.RockingSpeed;
             }
-            if (copyMask?.RustleSpeed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
             {
                 item.RustleSpeed = rhs.RustleSpeed;
             }
-            if (copyMask?.BillboardWidth ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
             {
                 item.BillboardWidth = rhs.BillboardWidth;
             }
-            if (copyMask?.BillboardHeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
             {
                 item.BillboardHeight = rhs.BillboardHeight;
             }
-            if (copyMask?.CNAMDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
             {
                 item.CNAMDataTypeState = rhs.CNAMDataTypeState;
             }
-            if (copyMask?.BNAMDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
             {
                 item.BNAMDataTypeState = rhs.BNAMDataTypeState;
             }
@@ -2189,13 +2213,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Tree DeepCopy(
+        public Tree DeepCopy(
             ITreeGetter item,
             Tree_TranslationMask copyMask = null)
         {
             Tree ret = (Tree)((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Tree DeepCopy(
+            ITreeGetter item,
+            out Tree_ErrorMask errorMask,
+            Tree_TranslationMask copyMask = null)
+        {
+            Tree ret = (Tree)((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Tree DeepCopy(
+            ITreeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Tree ret = (Tree)((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

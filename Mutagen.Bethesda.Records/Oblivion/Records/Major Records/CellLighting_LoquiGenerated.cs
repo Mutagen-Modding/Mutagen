@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = CellLighting_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellLighting lhs,
             ICellLightingGetter rhs,
             ErrorMaskBuilder errorMask,
-            CellLighting_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((CellLightingSetterTranslationCommon)((ICellLightingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -581,6 +581,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static CellLighting DeepCopy(
+            this ICellLightingGetter item,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask copyMask = null)
+        {
+            return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static CellLighting DeepCopy(
+            this ICellLightingGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((CellLightingSetterTranslationCommon)((ICellLightingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1407,41 +1429,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLighting item,
             ICellLightingGetter rhs,
             ErrorMaskBuilder errorMask,
-            CellLighting_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.AmbientColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 item.AmbientColor = rhs.AmbientColor;
             }
-            if (copyMask?.DirectionalColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalColor) ?? true))
             {
                 item.DirectionalColor = rhs.DirectionalColor;
             }
-            if (copyMask?.FogColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogColor) ?? true))
             {
                 item.FogColor = rhs.FogColor;
             }
-            if (copyMask?.FogNear ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNear) ?? true))
             {
                 item.FogNear = rhs.FogNear;
             }
-            if (copyMask?.FogFar ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFar) ?? true))
             {
                 item.FogFar = rhs.FogFar;
             }
-            if (copyMask?.DirectionalRotationXY ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationXY) ?? true))
             {
                 item.DirectionalRotationXY = rhs.DirectionalRotationXY;
             }
-            if (copyMask?.DirectionalRotationZ ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationZ) ?? true))
             {
                 item.DirectionalRotationZ = rhs.DirectionalRotationZ;
             }
-            if (copyMask?.DirectionalFade ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
             {
                 item.DirectionalFade = rhs.DirectionalFade;
             }
-            if (copyMask?.FogClipDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
             {
                 item.FogClipDistance = rhs.FogClipDistance;
             }
@@ -1456,6 +1478,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public CellLighting DeepCopy(
+            ICellLightingGetter item,
+            out CellLighting_ErrorMask errorMask,
+            CellLighting_TranslationMask copyMask = null)
+        {
+            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public CellLighting DeepCopy(
+            ICellLightingGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

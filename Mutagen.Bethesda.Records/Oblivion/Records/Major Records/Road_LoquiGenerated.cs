@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadInternal lhs,
             IRoadGetter rhs,
             ErrorMaskBuilder errorMask,
-            Road_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RoadSetterTranslationCommon)((IRoadGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -497,6 +497,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RoadSetterTranslationCommon)((IRoadGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Road DeepCopy(
+            this IRoadGetter item,
+            out Road_ErrorMask errorMask,
+            Road_TranslationMask copyMask = null)
+        {
+            return ((RoadSetterTranslationCommon)((IRoadGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Road DeepCopy(
+            this IRoadGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RoadSetterTranslationCommon)((IRoadGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1275,14 +1297,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoad item,
             IRoadGetter rhs,
             ErrorMaskBuilder errorMask,
-            Road_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Points.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Road_FieldIndex.Points) ?? true))
             {
                 errorMask?.PushIndex((int)Road_FieldIndex.Points);
                 try
@@ -1291,7 +1313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Points,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Points?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1308,13 +1332,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Road DeepCopy(
+        public Road DeepCopy(
             IRoadGetter item,
             Road_TranslationMask copyMask = null)
         {
             Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Road DeepCopy(
+            IRoadGetter item,
+            out Road_ErrorMask errorMask,
+            Road_TranslationMask copyMask = null)
+        {
+            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Road DeepCopy(
+            IRoadGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

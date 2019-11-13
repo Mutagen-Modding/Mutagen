@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = AIPackageSchedule_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageSchedule lhs,
             IAIPackageScheduleGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -539,6 +539,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static AIPackageSchedule DeepCopy(
+            this IAIPackageScheduleGetter item,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask copyMask = null)
+        {
+            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static AIPackageSchedule DeepCopy(
+            this IAIPackageScheduleGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((AIPackageScheduleSetterTranslationCommon)((IAIPackageScheduleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1229,25 +1251,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             IAIPackageScheduleGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackageSchedule_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Month ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
             {
                 item.Month = rhs.Month;
             }
-            if (copyMask?.DayOfWeek ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.DayOfWeek) ?? true))
             {
                 item.DayOfWeek = rhs.DayOfWeek;
             }
-            if (copyMask?.Day ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Day) ?? true))
             {
                 item.Day = rhs.Day;
             }
-            if (copyMask?.Time ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Time) ?? true))
             {
                 item.Time = rhs.Time;
             }
-            if (copyMask?.Duration ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Duration) ?? true))
             {
                 item.Duration = rhs.Duration;
             }
@@ -1262,6 +1284,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AIPackageSchedule DeepCopy(
+            IAIPackageScheduleGetter item,
+            out AIPackageSchedule_ErrorMask errorMask,
+            AIPackageSchedule_TranslationMask copyMask = null)
+        {
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AIPackageSchedule DeepCopy(
+            IAIPackageScheduleGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

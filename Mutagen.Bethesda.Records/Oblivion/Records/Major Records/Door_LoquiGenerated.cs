@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternal lhs,
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Door_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -726,6 +726,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Door DeepCopy(
+            this IDoorGetter item,
+            out Door_ErrorMask errorMask,
+            Door_TranslationMask copyMask = null)
+        {
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Door DeepCopy(
+            this IDoorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((DoorSetterTranslationCommon)((IDoorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1814,14 +1836,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDoor item,
             IDoorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Door_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.Name);
                 try
@@ -1845,14 +1867,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.Model));
                     }
                     else
                     {
@@ -1871,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.Script);
                 try
@@ -1888,7 +1912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.OpenSound ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
                 try
@@ -1905,7 +1929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.CloseSound ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
                 try
@@ -1922,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.LoopSound ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                 try
@@ -1939,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.Flags);
                 try
@@ -1963,7 +1987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.RandomTeleportDestinations ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
             {
                 errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                 try
@@ -1986,13 +2010,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Door DeepCopy(
+        public Door DeepCopy(
             IDoorGetter item,
             Door_TranslationMask copyMask = null)
         {
             Door ret = (Door)((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Door DeepCopy(
+            IDoorGetter item,
+            out Door_ErrorMask errorMask,
+            Door_TranslationMask copyMask = null)
+        {
+            Door ret = (Door)((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Door DeepCopy(
+            IDoorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Door ret = (Door)((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

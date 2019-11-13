@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = PathGridPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint lhs,
             IPathGridPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            PathGridPoint_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -540,6 +540,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static PathGridPoint DeepCopy(
+            this IPathGridPointGetter item,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask copyMask = null)
+        {
+            return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static PathGridPoint DeepCopy(
+            this IPathGridPointGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1220,21 +1242,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPoint item,
             IPathGridPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            PathGridPoint_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Point ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
             {
                 item.Point = rhs.Point;
             }
-            if (copyMask?.NumConnections ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnections) ?? true))
             {
                 item.NumConnections = rhs.NumConnections;
             }
-            if (copyMask?.FluffBytes ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.FluffBytes) ?? true))
             {
                 item.FluffBytes = rhs.FluffBytes.ToArray();
             }
-            if (copyMask?.Connections ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
             {
                 errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Connections);
                 try
@@ -1262,6 +1284,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGridPoint ret = (PathGridPoint)((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public PathGridPoint DeepCopy(
+            IPathGridPointGetter item,
+            out PathGridPoint_ErrorMask errorMask,
+            PathGridPoint_TranslationMask copyMask = null)
+        {
+            PathGridPoint ret = (PathGridPoint)((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public PathGridPoint DeepCopy(
+            IPathGridPointGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            PathGridPoint ret = (PathGridPoint)((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

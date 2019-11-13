@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = AIPackageLocation_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageLocation lhs,
             IAIPackageLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -539,6 +539,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static AIPackageLocation DeepCopy(
+            this IAIPackageLocationGetter item,
+            out AIPackageLocation_ErrorMask errorMask,
+            AIPackageLocation_TranslationMask copyMask = null)
+        {
+            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static AIPackageLocation DeepCopy(
+            this IAIPackageLocationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((AIPackageLocationSetterTranslationCommon)((IAIPackageLocationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1188,17 +1210,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocation item,
             IAIPackageLocationGetter rhs,
             ErrorMaskBuilder errorMask,
-            AIPackageLocation_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Type ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if (copyMask?.LocationReference ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
                 item.LocationReference_Property.FormKey = rhs.LocationReference_Property.FormKey;
             }
-            if (copyMask?.Radius ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
                 item.Radius = rhs.Radius;
             }
@@ -1213,6 +1235,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AIPackageLocation DeepCopy(
+            IAIPackageLocationGetter item,
+            out AIPackageLocation_ErrorMask errorMask,
+            AIPackageLocation_TranslationMask copyMask = null)
+        {
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AIPackageLocation DeepCopy(
+            IAIPackageLocationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

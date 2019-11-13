@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClothingAbstractInternal lhs,
             IClothingAbstractGetter rhs,
             ErrorMaskBuilder errorMask,
-            ClothingAbstract_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -861,6 +861,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ClothingAbstract DeepCopy(
+            this IClothingAbstractGetter item,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask copyMask = null)
+        {
+            return ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ClothingAbstract DeepCopy(
+            this IClothingAbstractGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2241,14 +2263,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstract item,
             IClothingAbstractGetter rhs,
             ErrorMaskBuilder errorMask,
-            ClothingAbstract_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Name);
                 try
@@ -2272,7 +2294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Script);
                 try
@@ -2289,7 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Enchantment ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Enchantment) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.Enchantment);
                 try
@@ -2306,7 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.EnchantmentPoints ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.EnchantmentPoints) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.EnchantmentPoints);
                 try
@@ -2330,22 +2352,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.BipedFlags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BipedFlags) ?? true))
             {
                 item.BipedFlags = rhs.BipedFlags;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.MaleBipedModel.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleBipedModel) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 try
                 {
                     if(rhs.MaleBipedModel_IsSet)
                     {
-                        item.MaleBipedModel = rhs.MaleBipedModel.DeepCopy(copyMask?.MaleBipedModel?.Specific);
+                        item.MaleBipedModel = rhs.MaleBipedModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleBipedModel));
                     }
                     else
                     {
@@ -2364,14 +2388,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MaleWorldModel.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleWorldModel) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 try
                 {
                     if(rhs.MaleWorldModel_IsSet)
                     {
-                        item.MaleWorldModel = rhs.MaleWorldModel.DeepCopy(copyMask?.MaleWorldModel?.Specific);
+                        item.MaleWorldModel = rhs.MaleWorldModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.MaleWorldModel));
                     }
                     else
                     {
@@ -2390,7 +2416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MaleIcon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.MaleIcon) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleIcon);
                 try
@@ -2414,14 +2440,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FemaleBipedModel.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleBipedModel) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 try
                 {
                     if(rhs.FemaleBipedModel_IsSet)
                     {
-                        item.FemaleBipedModel = rhs.FemaleBipedModel.DeepCopy(copyMask?.FemaleBipedModel?.Specific);
+                        item.FemaleBipedModel = rhs.FemaleBipedModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleBipedModel));
                     }
                     else
                     {
@@ -2440,14 +2468,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FemaleWorldModel.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleWorldModel) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 try
                 {
                     if(rhs.FemaleWorldModel_IsSet)
                     {
-                        item.FemaleWorldModel = rhs.FemaleWorldModel.DeepCopy(copyMask?.FemaleWorldModel?.Specific);
+                        item.FemaleWorldModel = rhs.FemaleWorldModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ClothingAbstract_FieldIndex.FemaleWorldModel));
                     }
                     else
                     {
@@ -2466,7 +2496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FemaleIcon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.FemaleIcon) ?? true))
             {
                 errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleIcon);
                 try
@@ -2490,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.BMDTDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ClothingAbstract_FieldIndex.BMDTDataTypeState) ?? true))
             {
                 item.BMDTDataTypeState = rhs.BMDTDataTypeState;
             }
@@ -2498,13 +2528,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new ClothingAbstract DeepCopy(
+        public ClothingAbstract DeepCopy(
             IClothingAbstractGetter item,
             ClothingAbstract_TranslationMask copyMask = null)
         {
             ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ClothingAbstract DeepCopy(
+            IClothingAbstractGetter item,
+            out ClothingAbstract_ErrorMask errorMask,
+            ClothingAbstract_TranslationMask copyMask = null)
+        {
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ClothingAbstract DeepCopy(
+            IClothingAbstractGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

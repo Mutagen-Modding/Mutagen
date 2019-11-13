@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = HavokData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData lhs,
             IHavokDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            HavokData_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -519,6 +519,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static HavokData DeepCopy(
+            this IHavokDataGetter item,
+            out HavokData_ErrorMask errorMask,
+            HavokData_TranslationMask copyMask = null)
+        {
+            return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static HavokData DeepCopy(
+            this IHavokDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((HavokDataSetterTranslationCommon)((IHavokDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1156,17 +1178,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             IHavokDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            HavokData_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Material ?? true)
+            if ((copyMask?.GetShouldTranslate((int)HavokData_FieldIndex.Material) ?? true))
             {
                 item.Material = rhs.Material;
             }
-            if (copyMask?.Friction ?? true)
+            if ((copyMask?.GetShouldTranslate((int)HavokData_FieldIndex.Friction) ?? true))
             {
                 item.Friction = rhs.Friction;
             }
-            if (copyMask?.Restitution ?? true)
+            if ((copyMask?.GetShouldTranslate((int)HavokData_FieldIndex.Restitution) ?? true))
             {
                 item.Restitution = rhs.Restitution;
             }
@@ -1181,6 +1203,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public HavokData DeepCopy(
+            IHavokDataGetter item,
+            out HavokData_ErrorMask errorMask,
+            HavokData_TranslationMask copyMask = null)
+        {
+            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public HavokData DeepCopy(
+            IHavokDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

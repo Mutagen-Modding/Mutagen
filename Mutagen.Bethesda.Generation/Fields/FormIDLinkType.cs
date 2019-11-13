@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiType.Name = this.Name;
             LoquiType.GetterInterfaceType = LoquiInterfaceType.IGetter;
             _rawFormID.Name = this.Name;
+            _rawFormID.SetObjectGeneration(this.ObjectGen, false);
             this.NotifyingProperty.Subscribe(i => LoquiType.NotifyingProperty.OnNext(i));
             this.NotifyingProperty.Subscribe(i => _rawFormID.NotifyingProperty.OnNext(i));
             this.ObjectCentralizedProperty.Subscribe(i => LoquiType.ObjectCentralizedProperty.OnNext(i));

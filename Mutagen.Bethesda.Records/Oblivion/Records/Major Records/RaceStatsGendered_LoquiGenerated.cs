@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RaceStatsGendered_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGendered lhs,
             IRaceStatsGenderedGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceStatsGendered_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -510,6 +510,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RaceStatsGendered DeepCopy(
+            this IRaceStatsGenderedGetter item,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_TranslationMask copyMask = null)
+        {
+            return ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RaceStatsGendered DeepCopy(
+            this IRaceStatsGenderedGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RaceStatsGenderedSetterTranslationCommon)((IRaceStatsGenderedGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1150,14 +1172,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGendered item,
             IRaceStatsGenderedGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceStatsGendered_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Male.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Male) ?? true))
             {
                 errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Male);
                 try
                 {
-                    if (copyMask?.Male?.Overall ?? true)
+                    if ((copyMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Male) ?? true))
                     {
                         if (rhs.Male == null)
                         {
@@ -1165,7 +1187,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Male = rhs.Male.DeepCopy(copyMask?.Male?.Specific);
+                            item.Male = rhs.Male.DeepCopy(
+                                copyMask: copyMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Male),
+                                errorMask: errorMask);
                         }
                     }
                 }
@@ -1179,12 +1203,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Female.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Female) ?? true))
             {
                 errorMask?.PushIndex((int)RaceStatsGendered_FieldIndex.Female);
                 try
                 {
-                    if (copyMask?.Female?.Overall ?? true)
+                    if ((copyMask?.GetShouldTranslate((int)RaceStatsGendered_FieldIndex.Female) ?? true))
                     {
                         if (rhs.Female == null)
                         {
@@ -1192,7 +1216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.Female = rhs.Female.DeepCopy(copyMask?.Female?.Specific);
+                            item.Female = rhs.Female.DeepCopy(
+                                copyMask: copyMask?.GetSubCrystal((int)RaceStatsGendered_FieldIndex.Female),
+                                errorMask: errorMask);
                         }
                     }
                 }
@@ -1217,6 +1243,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceStatsGendered DeepCopy(
+            IRaceStatsGenderedGetter item,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_TranslationMask copyMask = null)
+        {
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceStatsGendered DeepCopy(
+            IRaceStatsGenderedGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

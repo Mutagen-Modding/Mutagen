@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceInternal lhs,
             IWorldspaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Worldspace_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1018,6 +1018,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Worldspace DeepCopy(
+            this IWorldspaceGetter item,
+            out Worldspace_ErrorMask errorMask,
+            Worldspace_TranslationMask copyMask = null)
+        {
+            return ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Worldspace DeepCopy(
+            this IWorldspaceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WorldspaceSetterTranslationCommon)((IWorldspaceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2520,14 +2542,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspace item,
             IWorldspaceGetter rhs,
             ErrorMaskBuilder errorMask,
-            Worldspace_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Name);
                 try
@@ -2551,7 +2573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Parent ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
@@ -2568,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Climate ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                 try
@@ -2585,7 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Water ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                 try
@@ -2602,7 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Icon);
                 try
@@ -2626,14 +2648,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MapData.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
                 try
                 {
                     if(rhs.MapData_IsSet)
                     {
-                        item.MapData = rhs.MapData.DeepCopy(copyMask?.MapData?.Specific);
+                        item.MapData = rhs.MapData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.MapData));
                     }
                     else
                     {
@@ -2652,7 +2676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Flags);
                 try
@@ -2676,7 +2700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ObjectBoundsMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMin) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMin);
                 try
@@ -2700,7 +2724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ObjectBoundsMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBoundsMax) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.ObjectBoundsMax);
                 try
@@ -2724,7 +2748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Music ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Music);
                 try
@@ -2748,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.OffsetData ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
                 try
@@ -2772,7 +2796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Road.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Road);
                 try
@@ -2782,7 +2806,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var copyRet = new Road(rhs.Road.FormKey);
                         copyRet.DeepCopyFieldsFrom(
                             rhs: rhs.Road,
-                            copyMask: copyMask?.Road?.Specific);
+                            copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.Road),
+                            errorMask: errorMask);
                         item.Road = copyRet;
                     }
                     else
@@ -2802,7 +2827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TopCell.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.TopCell);
                 try
@@ -2812,7 +2837,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var copyRet = new Cell(rhs.TopCell.FormKey);
                         copyRet.DeepCopyFieldsFrom(
                             rhs: rhs.TopCell,
-                            copyMask: copyMask?.TopCell?.Specific);
+                            copyMask: copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell),
+                            errorMask: errorMask);
                         item.TopCell = copyRet;
                     }
                     else
@@ -2832,11 +2858,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SubCellsTimestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
                 item.SubCellsTimestamp = rhs.SubCellsTimestamp.ToArray();
             }
-            if (copyMask?.SubCells.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCells);
                 try
@@ -2845,7 +2871,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.SubCells,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.SubCells?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -2858,7 +2886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.UsingOffsetLength ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.UsingOffsetLength) ?? true))
             {
                 item.UsingOffsetLength = rhs.UsingOffsetLength;
             }
@@ -2866,13 +2894,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Worldspace DeepCopy(
+        public Worldspace DeepCopy(
             IWorldspaceGetter item,
             Worldspace_TranslationMask copyMask = null)
         {
             Worldspace ret = (Worldspace)((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Worldspace DeepCopy(
+            IWorldspaceGetter item,
+            out Worldspace_ErrorMask errorMask,
+            Worldspace_TranslationMask copyMask = null)
+        {
+            Worldspace ret = (Worldspace)((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Worldspace DeepCopy(
+            IWorldspaceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Worldspace ret = (Worldspace)((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

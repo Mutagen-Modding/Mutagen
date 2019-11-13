@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ItemEntry_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry lhs,
             IItemEntryGetter rhs,
             ErrorMaskBuilder errorMask,
-            ItemEntry_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -558,6 +558,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ItemEntry DeepCopy(
+            this IItemEntryGetter item,
+            out ItemEntry_ErrorMask errorMask,
+            ItemEntry_TranslationMask copyMask = null)
+        {
+            return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ItemEntry DeepCopy(
+            this IItemEntryGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1176,13 +1198,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemEntry item,
             IItemEntryGetter rhs,
             ErrorMaskBuilder errorMask,
-            ItemEntry_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Item ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Item) ?? true))
             {
                 item.Item_Property.FormKey = rhs.Item_Property.FormKey;
             }
-            if (copyMask?.Count ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ItemEntry_FieldIndex.Count) ?? true))
             {
                 errorMask?.PushIndex((int)ItemEntry_FieldIndex.Count);
                 try
@@ -1217,6 +1239,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ItemEntry ret = (ItemEntry)((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ItemEntry DeepCopy(
+            IItemEntryGetter item,
+            out ItemEntry_ErrorMask errorMask,
+            ItemEntry_TranslationMask copyMask = null)
+        {
+            ItemEntry ret = (ItemEntry)((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ItemEntry DeepCopy(
+            IItemEntryGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ItemEntry ret = (ItemEntry)((ItemEntrySetterCommon)((IItemEntryGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

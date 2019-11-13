@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = FaceGenData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFaceGenData lhs,
             IFaceGenDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            FaceGenData_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -605,6 +605,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static FaceGenData DeepCopy(
+            this IFaceGenDataGetter item,
+            out FaceGenData_ErrorMask errorMask,
+            FaceGenData_TranslationMask copyMask = null)
+        {
+            return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static FaceGenData DeepCopy(
+            this IFaceGenDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((FaceGenDataSetterTranslationCommon)((IFaceGenDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1332,9 +1354,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenData item,
             IFaceGenDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            FaceGenData_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.SymmetricGeometry ?? true)
+            if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricGeometry) ?? true))
             {
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 try
@@ -1358,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.AsymmetricGeometry ?? true)
+            if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.AsymmetricGeometry) ?? true))
             {
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 try
@@ -1382,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SymmetricTexture ?? true)
+            if ((copyMask?.GetShouldTranslate((int)FaceGenData_FieldIndex.SymmetricTexture) ?? true))
             {
                 errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
                 try
@@ -1417,6 +1439,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public FaceGenData DeepCopy(
+            IFaceGenDataGetter item,
+            out FaceGenData_ErrorMask errorMask,
+            FaceGenData_TranslationMask copyMask = null)
+        {
+            FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public FaceGenData DeepCopy(
+            IFaceGenDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

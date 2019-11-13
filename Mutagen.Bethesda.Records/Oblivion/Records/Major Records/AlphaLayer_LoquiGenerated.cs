@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal lhs,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlphaLayer_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -517,6 +517,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static AlphaLayer DeepCopy(
+            this IAlphaLayerGetter item,
+            out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask copyMask = null)
+        {
+            return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static AlphaLayer DeepCopy(
+            this IAlphaLayerGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1223,14 +1245,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayer item,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlphaLayer_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.AlphaLayerData ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
                 errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 try
@@ -1258,13 +1280,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new AlphaLayer DeepCopy(
+        public AlphaLayer DeepCopy(
             IAlphaLayerGetter item,
             AlphaLayer_TranslationMask copyMask = null)
         {
             AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AlphaLayer DeepCopy(
+            IAlphaLayerGetter item,
+            out AlphaLayer_ErrorMask errorMask,
+            AlphaLayer_TranslationMask copyMask = null)
+        {
+            AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AlphaLayer DeepCopy(
+            IAlphaLayerGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

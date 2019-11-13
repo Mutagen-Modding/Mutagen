@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternal lhs,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder errorMask,
-            SigilStone_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -742,6 +742,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SigilStone DeepCopy(
+            this ISigilStoneGetter item,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_TranslationMask copyMask = null)
+        {
+            return ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SigilStone DeepCopy(
+            this ISigilStoneGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1870,14 +1892,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStone item,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder errorMask,
-            SigilStone_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Name);
                 try
@@ -1901,14 +1923,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SigilStone_FieldIndex.Model));
                     }
                     else
                     {
@@ -1927,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Icon);
                 try
@@ -1951,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Script);
                 try
@@ -1968,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Effects.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
                 try
@@ -1977,7 +2001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Effects,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Effects?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1990,19 +2016,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Uses ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
             {
                 item.Uses = rhs.Uses;
             }
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2010,13 +2036,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new SigilStone DeepCopy(
+        public SigilStone DeepCopy(
             ISigilStoneGetter item,
             SigilStone_TranslationMask copyMask = null)
         {
             SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SigilStone DeepCopy(
+            ISigilStoneGetter item,
+            out SigilStone_ErrorMask errorMask,
+            SigilStone_TranslationMask copyMask = null)
+        {
+            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SigilStone DeepCopy(
+            ISigilStoneGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

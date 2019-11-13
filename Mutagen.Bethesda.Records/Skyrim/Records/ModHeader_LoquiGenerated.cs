@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ModHeader_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IModHeader lhs,
             IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModHeader_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -858,6 +858,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ModHeader DeepCopy(
+            this IModHeaderGetter item,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask copyMask = null)
+        {
+            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ModHeader DeepCopy(
+            this IModHeaderGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1974,34 +1996,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModHeader item,
             IModHeaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            ModHeader_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.FormID ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormID) ?? true))
             {
                 item.FormID = rhs.FormID;
             }
-            if (copyMask?.Version ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
             }
-            if (copyMask?.FormVersion ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormVersion) ?? true))
             {
                 item.FormVersion = rhs.FormVersion;
             }
-            if (copyMask?.Version2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version2) ?? true))
             {
                 item.Version2 = rhs.Version2;
             }
-            if (copyMask?.Stats.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
                 try
                 {
-                    if (copyMask?.Stats?.Overall ?? true)
+                    if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
                     {
                         if (rhs.Stats == null)
                         {
@@ -2009,7 +2031,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                         else
                         {
-                            item.Stats = rhs.Stats.DeepCopy(copyMask?.Stats?.Specific);
+                            item.Stats = rhs.Stats.DeepCopy(
+                                copyMask: copyMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats),
+                                errorMask: errorMask);
                         }
                     }
                 }
@@ -2023,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TypeOffsets ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.TypeOffsets) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.TypeOffsets);
                 try
@@ -2047,7 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Deleted ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Deleted) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Deleted);
                 try
@@ -2071,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Author ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Author) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Author);
                 try
@@ -2095,7 +2119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Description ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Description) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.Description);
                 try
@@ -2119,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MasterReferences.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
                 try
@@ -2128,7 +2152,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         items: rhs.MasterReferences,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.MasterReferences?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -2141,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.OverriddenForms ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.OverriddenForms) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
                 try
@@ -2160,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.INTV ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INTV) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.INTV);
                 try
@@ -2184,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.INCC ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INCC) ?? true))
             {
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.INCC);
                 try
@@ -2219,6 +2245,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModHeader ret = (ModHeader)((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ModHeader DeepCopy(
+            IModHeaderGetter item,
+            out ModHeader_ErrorMask errorMask,
+            ModHeader_TranslationMask copyMask = null)
+        {
+            ModHeader ret = (ModHeader)((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ModHeader DeepCopy(
+            IModHeaderGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ModHeader ret = (ModHeader)((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

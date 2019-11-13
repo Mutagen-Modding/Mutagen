@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternal lhs,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder errorMask,
-            CombatStyle_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1267,6 +1267,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static CombatStyle DeepCopy(
+            this ICombatStyleGetter item,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask copyMask = null)
+        {
+            return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static CombatStyle DeepCopy(
+            this ICombatStyleGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -3133,165 +3155,167 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyle item,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder errorMask,
-            CombatStyle_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.DodgePercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgePercentChance) ?? true))
             {
                 item.DodgePercentChance = rhs.DodgePercentChance;
             }
-            if (copyMask?.LeftRightPercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightPercentChance) ?? true))
             {
                 item.LeftRightPercentChance = rhs.LeftRightPercentChance;
             }
-            if (copyMask?.DodgeLeftRightTimerMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin) ?? true))
             {
                 item.DodgeLeftRightTimerMin = rhs.DodgeLeftRightTimerMin;
             }
-            if (copyMask?.DodgeLeftRightTimerMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax) ?? true))
             {
                 item.DodgeLeftRightTimerMax = rhs.DodgeLeftRightTimerMax;
             }
-            if (copyMask?.DodgeForwardTimerMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
             {
                 item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
             }
-            if (copyMask?.DodgeForwardTimerMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
             {
                 item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
             }
-            if (copyMask?.DodgeBackTimerMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
             {
                 item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
             }
-            if (copyMask?.DodgeBackTimerMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
             {
                 item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
             }
-            if (copyMask?.IdleTimerMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
             {
                 item.IdleTimerMin = rhs.IdleTimerMin;
             }
-            if (copyMask?.IdleTimerMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
             {
                 item.IdleTimerMax = rhs.IdleTimerMax;
             }
-            if (copyMask?.BlockPercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockPercentChance) ?? true))
             {
                 item.BlockPercentChance = rhs.BlockPercentChance;
             }
-            if (copyMask?.AttackPercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackPercentChance) ?? true))
             {
                 item.AttackPercentChance = rhs.AttackPercentChance;
             }
-            if (copyMask?.RecoilStaggerBonusToAttack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
             {
                 item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
             }
-            if (copyMask?.UnconsciousBonusToAttack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
             {
                 item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
             }
-            if (copyMask?.HandToHandBonusToAttack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
             {
                 item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
             }
-            if (copyMask?.PowerAttackPercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackPercentChance) ?? true))
             {
                 item.PowerAttackPercentChance = rhs.PowerAttackPercentChance;
             }
-            if (copyMask?.RecoilStaggerBonusToPowerAttack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
             {
                 item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
             }
-            if (copyMask?.UnconsciousBonusToPowerAttack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
             {
                 item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
             }
-            if (copyMask?.PowerAttackNormal ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
             {
                 item.PowerAttackNormal = rhs.PowerAttackNormal;
             }
-            if (copyMask?.PowerAttackForward ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
             {
                 item.PowerAttackForward = rhs.PowerAttackForward;
             }
-            if (copyMask?.PowerAttackBack ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
             {
                 item.PowerAttackBack = rhs.PowerAttackBack;
             }
-            if (copyMask?.PowerAttackLeft ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
             {
                 item.PowerAttackLeft = rhs.PowerAttackLeft;
             }
-            if (copyMask?.PowerAttackRight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
             {
                 item.PowerAttackRight = rhs.PowerAttackRight;
             }
-            if (copyMask?.HoldTimerMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
             {
                 item.HoldTimerMin = rhs.HoldTimerMin;
             }
-            if (copyMask?.HoldTimerMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
             {
                 item.HoldTimerMax = rhs.HoldTimerMax;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.AcrobaticDodgePercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance) ?? true))
             {
                 item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
             }
-            if (copyMask?.RangeMultOptimal ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultOptimal) ?? true))
             {
                 item.RangeMultOptimal = rhs.RangeMultOptimal;
             }
-            if (copyMask?.RangeMultMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangeMultMax) ?? true))
             {
                 item.RangeMultMax = rhs.RangeMultMax;
             }
-            if (copyMask?.SwitchDistanceMelee ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceMelee) ?? true))
             {
                 item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
             }
-            if (copyMask?.SwitchDistanceRanged ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SwitchDistanceRanged) ?? true))
             {
                 item.SwitchDistanceRanged = rhs.SwitchDistanceRanged;
             }
-            if (copyMask?.BuffStandoffDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BuffStandoffDistance) ?? true))
             {
                 item.BuffStandoffDistance = rhs.BuffStandoffDistance;
             }
-            if (copyMask?.RangedStandoffDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedStandoffDistance) ?? true))
             {
                 item.RangedStandoffDistance = rhs.RangedStandoffDistance;
             }
-            if (copyMask?.GroupStandoffDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupStandoffDistance) ?? true))
             {
                 item.GroupStandoffDistance = rhs.GroupStandoffDistance;
             }
-            if (copyMask?.RushingAttackPercentChance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackPercentChance) ?? true))
             {
                 item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
             }
-            if (copyMask?.RushingAttackDistanceMult ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
             {
                 item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
             }
-            if (copyMask?.Advanced.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
                 errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
                 try
                 {
                     if(rhs.Advanced_IsSet)
                     {
-                        item.Advanced = rhs.Advanced.DeepCopy(copyMask?.Advanced?.Specific);
+                        item.Advanced = rhs.Advanced.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
                     }
                     else
                     {
@@ -3310,7 +3334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.CSTDDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTDDataTypeState) ?? true))
             {
                 item.CSTDDataTypeState = rhs.CSTDDataTypeState;
             }
@@ -3318,13 +3342,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new CombatStyle DeepCopy(
+        public CombatStyle DeepCopy(
             ICombatStyleGetter item,
             CombatStyle_TranslationMask copyMask = null)
         {
             CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public CombatStyle DeepCopy(
+            ICombatStyleGetter item,
+            out CombatStyle_ErrorMask errorMask,
+            CombatStyle_TranslationMask copyMask = null)
+        {
+            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public CombatStyle DeepCopy(
+            ICombatStyleGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

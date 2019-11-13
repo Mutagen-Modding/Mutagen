@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Examples
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Examples
             this IMainVM lhs,
             IMainVMGetter rhs,
             ErrorMaskBuilder errorMask,
-            MainVM_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((MainVMSetterTranslationCommon)((IMainVMGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -433,6 +433,28 @@ namespace Mutagen.Bethesda.Examples
             return ((MainVMSetterTranslationCommon)((IMainVMGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static MainVM DeepCopy(
+            this IMainVMGetter item,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask copyMask = null)
+        {
+            return ((MainVMSetterTranslationCommon)((IMainVMGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static MainVM DeepCopy(
+            this IMainVMGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((MainVMSetterTranslationCommon)((IMainVMGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -930,9 +952,9 @@ namespace Mutagen.Bethesda.Examples.Internals
             IMainVM item,
             IMainVMGetter rhs,
             ErrorMaskBuilder errorMask,
-            MainVM_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.ModFilePath ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MainVM_FieldIndex.ModFilePath) ?? true))
             {
                 errorMask?.PushIndex((int)MainVM_FieldIndex.ModFilePath);
                 try
@@ -960,6 +982,32 @@ namespace Mutagen.Bethesda.Examples.Internals
             MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MainVM DeepCopy(
+            IMainVMGetter item,
+            out MainVM_ErrorMask errorMask,
+            MainVM_TranslationMask copyMask = null)
+        {
+            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MainVM DeepCopy(
+            IMainVMGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

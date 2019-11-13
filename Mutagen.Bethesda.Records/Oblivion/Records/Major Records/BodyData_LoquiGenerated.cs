@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = BodyData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -529,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBodyData lhs,
             IBodyDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            BodyData_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -545,6 +545,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static BodyData DeepCopy(
+            this IBodyDataGetter item,
+            out BodyData_ErrorMask errorMask,
+            BodyData_TranslationMask copyMask = null)
+        {
+            return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static BodyData DeepCopy(
+            this IBodyDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1264,16 +1286,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyData item,
             IBodyDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            BodyData_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
                     }
                     else
                     {
@@ -1292,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.BodyParts.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.BodyParts) ?? true))
             {
                 errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
                 try
@@ -1301,7 +1325,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.BodyParts,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.BodyParts?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1325,6 +1351,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public BodyData DeepCopy(
+            IBodyDataGetter item,
+            out BodyData_ErrorMask errorMask,
+            BodyData_TranslationMask copyMask = null)
+        {
+            BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public BodyData DeepCopy(
+            IBodyDataGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

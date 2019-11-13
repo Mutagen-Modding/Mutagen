@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlchemicalApparatusInternal lhs,
             IAlchemicalApparatusGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlchemicalApparatus_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -734,6 +734,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static AlchemicalApparatus DeepCopy(
+            this IAlchemicalApparatusGetter item,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            AlchemicalApparatus_TranslationMask copyMask = null)
+        {
+            return ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static AlchemicalApparatus DeepCopy(
+            this IAlchemicalApparatusGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((AlchemicalApparatusSetterTranslationCommon)((IAlchemicalApparatusGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1835,14 +1857,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatus item,
             IAlchemicalApparatusGetter rhs,
             ErrorMaskBuilder errorMask,
-            AlchemicalApparatus_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
                 try
@@ -1866,14 +1888,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Model));
                     }
                     else
                     {
@@ -1892,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Icon);
                 try
@@ -1916,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Script);
                 try
@@ -1933,23 +1957,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Type ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.Quality ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
             {
                 item.Quality = rhs.Quality;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -1957,13 +1981,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new AlchemicalApparatus DeepCopy(
+        public AlchemicalApparatus DeepCopy(
             IAlchemicalApparatusGetter item,
             AlchemicalApparatus_TranslationMask copyMask = null)
         {
             AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AlchemicalApparatus DeepCopy(
+            IAlchemicalApparatusGetter item,
+            out AlchemicalApparatus_ErrorMask errorMask,
+            AlchemicalApparatus_TranslationMask copyMask = null)
+        {
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public AlchemicalApparatus DeepCopy(
+            IAlchemicalApparatusGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

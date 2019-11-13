@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IBirthsignInternal lhs,
             IBirthsignGetter rhs,
             ErrorMaskBuilder errorMask,
-            Birthsign_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((BirthsignSetterTranslationCommon)((IBirthsignGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -649,6 +649,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Birthsign DeepCopy(
+            this IBirthsignGetter item,
+            out Birthsign_ErrorMask errorMask,
+            Birthsign_TranslationMask copyMask = null)
+        {
+            return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Birthsign DeepCopy(
+            this IBirthsignGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((BirthsignSetterTranslationCommon)((IBirthsignGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1568,14 +1590,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsign item,
             IBirthsignGetter rhs,
             ErrorMaskBuilder errorMask,
-            Birthsign_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Name);
                 try
@@ -1599,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Icon);
                 try
@@ -1623,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Description ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Description) ?? true))
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Description);
                 try
@@ -1647,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
             {
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
                 try
@@ -1670,13 +1692,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Birthsign DeepCopy(
+        public Birthsign DeepCopy(
             IBirthsignGetter item,
             Birthsign_TranslationMask copyMask = null)
         {
             Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Birthsign DeepCopy(
+            IBirthsignGetter item,
+            out Birthsign_ErrorMask errorMask,
+            Birthsign_TranslationMask copyMask = null)
+        {
+            Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Birthsign DeepCopy(
+            IBirthsignGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

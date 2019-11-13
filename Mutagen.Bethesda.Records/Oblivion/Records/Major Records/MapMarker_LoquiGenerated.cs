@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = MapMarker_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarker lhs,
             IMapMarkerGetter rhs,
             ErrorMaskBuilder errorMask,
-            MapMarker_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -582,6 +582,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static MapMarker DeepCopy(
+            this IMapMarkerGetter item,
+            out MapMarker_ErrorMask errorMask,
+            MapMarker_TranslationMask copyMask = null)
+        {
+            return ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static MapMarker DeepCopy(
+            this IMapMarkerGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1327,9 +1349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapMarker item,
             IMapMarkerGetter rhs,
             ErrorMaskBuilder errorMask,
-            MapMarker_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Flags);
                 try
@@ -1353,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Name);
                 try
@@ -1377,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Types ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
             {
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                 try
@@ -1405,6 +1427,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MapMarker ret = (MapMarker)((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MapMarker DeepCopy(
+            IMapMarkerGetter item,
+            out MapMarker_ErrorMask errorMask,
+            MapMarker_TranslationMask copyMask = null)
+        {
+            MapMarker ret = (MapMarker)((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MapMarker DeepCopy(
+            IMapMarkerGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            MapMarker ret = (MapMarker)((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

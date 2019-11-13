@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal lhs,
             IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
-            Flora_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -714,6 +714,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Flora DeepCopy(
+            this IFloraGetter item,
+            out Flora_ErrorMask errorMask,
+            Flora_TranslationMask copyMask = null)
+        {
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Flora DeepCopy(
+            this IFloraGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((FloraSetterTranslationCommon)((IFloraGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1743,14 +1765,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFlora item,
             IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
-            Flora_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Name);
                 try
@@ -1774,14 +1796,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
                     }
                     else
                     {
@@ -1800,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                 try
@@ -1817,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Ingredient ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                 try
@@ -1834,23 +1858,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spring ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Spring) ?? true))
             {
                 item.Spring = rhs.Spring;
             }
-            if (copyMask?.Summer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Summer) ?? true))
             {
                 item.Summer = rhs.Summer;
             }
-            if (copyMask?.Fall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Fall) ?? true))
             {
                 item.Fall = rhs.Fall;
             }
-            if (copyMask?.Winter ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Winter) ?? true))
             {
                 item.Winter = rhs.Winter;
             }
-            if (copyMask?.PFPCDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PFPCDataTypeState) ?? true))
             {
                 item.PFPCDataTypeState = rhs.PFPCDataTypeState;
             }
@@ -1858,13 +1882,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Flora DeepCopy(
+        public Flora DeepCopy(
             IFloraGetter item,
             Flora_TranslationMask copyMask = null)
         {
             Flora ret = (Flora)((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Flora DeepCopy(
+            IFloraGetter item,
+            out Flora_ErrorMask errorMask,
+            Flora_TranslationMask copyMask = null)
+        {
+            Flora ret = (Flora)((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Flora DeepCopy(
+            IFloraGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Flora ret = (Flora)((FloraSetterCommon)((IFloraGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

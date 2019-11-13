@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = MasterReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -521,7 +521,7 @@ namespace Mutagen.Bethesda
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
             ErrorMaskBuilder errorMask,
-            MasterReference_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -537,6 +537,28 @@ namespace Mutagen.Bethesda
             return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static MasterReference DeepCopy(
+            this IMasterReferenceGetter item,
+            out MasterReference_ErrorMask errorMask,
+            MasterReference_TranslationMask copyMask = null)
+        {
+            return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static MasterReference DeepCopy(
+            this IMasterReferenceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1188,13 +1210,13 @@ namespace Mutagen.Bethesda.Internals
             IMasterReference item,
             IMasterReferenceGetter rhs,
             ErrorMaskBuilder errorMask,
-            MasterReference_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Master ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
                 item.Master = rhs.Master;
             }
-            if (copyMask?.FileSize ?? true)
+            if ((copyMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
             {
                 errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
                 try
@@ -1229,6 +1251,32 @@ namespace Mutagen.Bethesda.Internals
             MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MasterReference DeepCopy(
+            IMasterReferenceGetter item,
+            out MasterReference_ErrorMask errorMask,
+            MasterReference_TranslationMask copyMask = null)
+        {
+            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public MasterReference DeepCopy(
+            IMasterReferenceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

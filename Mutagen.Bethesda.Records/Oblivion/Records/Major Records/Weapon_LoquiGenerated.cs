@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeaponInternal lhs,
             IWeaponGetter rhs,
             ErrorMaskBuilder errorMask,
-            Weapon_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WeaponSetterTranslationCommon)((IWeaponGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -866,6 +866,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeaponSetterTranslationCommon)((IWeaponGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Weapon DeepCopy(
+            this IWeaponGetter item,
+            out Weapon_ErrorMask errorMask,
+            Weapon_TranslationMask copyMask = null)
+        {
+            return ((WeaponSetterTranslationCommon)((IWeaponGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Weapon DeepCopy(
+            this IWeaponGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WeaponSetterTranslationCommon)((IWeaponGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2148,14 +2170,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeapon item,
             IWeaponGetter rhs,
             ErrorMaskBuilder errorMask,
-            Weapon_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Name);
                 try
@@ -2179,14 +2201,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
                     }
                     else
                     {
@@ -2205,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Icon);
                 try
@@ -2229,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Script);
                 try
@@ -2246,7 +2270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Enchantment ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Enchantment);
                 try
@@ -2263,7 +2287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.EnchantmentPoints ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.EnchantmentPoints);
                 try
@@ -2287,39 +2311,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Type ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if (copyMask?.Speed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Speed) ?? true))
             {
                 item.Speed = rhs.Speed;
             }
-            if (copyMask?.Reach ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Reach) ?? true))
             {
                 item.Reach = rhs.Reach;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Health ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Health) ?? true))
             {
                 item.Health = rhs.Health;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.Damage ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Damage) ?? true))
             {
                 item.Damage = rhs.Damage;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2327,13 +2351,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Weapon DeepCopy(
+        public Weapon DeepCopy(
             IWeaponGetter item,
             Weapon_TranslationMask copyMask = null)
         {
             Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Weapon DeepCopy(
+            IWeaponGetter item,
+            out Weapon_ErrorMask errorMask,
+            Weapon_TranslationMask copyMask = null)
+        {
+            Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Weapon DeepCopy(
+            IWeaponGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

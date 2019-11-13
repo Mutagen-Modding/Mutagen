@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1680,6 +1680,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static EffectShader DeepCopy(
+            this IEffectShaderGetter item,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_TranslationMask copyMask = null)
+        {
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static EffectShader DeepCopy(
+            this IEffectShaderGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -4276,14 +4298,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShader item,
             IEffectShaderGetter rhs,
             ErrorMaskBuilder errorMask,
-            EffectShader_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.FillTexture ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.FillTexture);
                 try
@@ -4307,7 +4329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ParticleShaderTexture ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
                 errorMask?.PushIndex((int)EffectShader_FieldIndex.ParticleShaderTexture);
                 try
@@ -4331,231 +4353,231 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.MembraneShaderSourceBlendMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderSourceBlendMode) ?? true))
             {
                 item.MembraneShaderSourceBlendMode = rhs.MembraneShaderSourceBlendMode;
             }
-            if (copyMask?.MembraneShaderBlendOperation ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderBlendOperation) ?? true))
             {
                 item.MembraneShaderBlendOperation = rhs.MembraneShaderBlendOperation;
             }
-            if (copyMask?.MembraneShaderZTestFunction ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderZTestFunction) ?? true))
             {
                 item.MembraneShaderZTestFunction = rhs.MembraneShaderZTestFunction;
             }
-            if (copyMask?.FillTextureEffectColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectColor) ?? true))
             {
                 item.FillTextureEffectColor = rhs.FillTextureEffectColor;
             }
-            if (copyMask?.FillTextureEffectAlphaFadeInTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeInTime) ?? true))
             {
                 item.FillTextureEffectAlphaFadeInTime = rhs.FillTextureEffectAlphaFadeInTime;
             }
-            if (copyMask?.FillTextureEffectFullAlphaTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaTime) ?? true))
             {
                 item.FillTextureEffectFullAlphaTime = rhs.FillTextureEffectFullAlphaTime;
             }
-            if (copyMask?.FillTextureEffectAlphaFadeOutTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaFadeOutTime) ?? true))
             {
                 item.FillTextureEffectAlphaFadeOutTime = rhs.FillTextureEffectAlphaFadeOutTime;
             }
-            if (copyMask?.FillTextureEffectPersistentAlphaRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectPersistentAlphaRatio) ?? true))
             {
                 item.FillTextureEffectPersistentAlphaRatio = rhs.FillTextureEffectPersistentAlphaRatio;
             }
-            if (copyMask?.FillTextureEffectAlphaPulseAmplitude ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseAmplitude) ?? true))
             {
                 item.FillTextureEffectAlphaPulseAmplitude = rhs.FillTextureEffectAlphaPulseAmplitude;
             }
-            if (copyMask?.FillTextureEffectAlphaPulseFrequency ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectAlphaPulseFrequency) ?? true))
             {
                 item.FillTextureEffectAlphaPulseFrequency = rhs.FillTextureEffectAlphaPulseFrequency;
             }
-            if (copyMask?.FillTextureEffectTextureAnimationSpeedU ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedU) ?? true))
             {
                 item.FillTextureEffectTextureAnimationSpeedU = rhs.FillTextureEffectTextureAnimationSpeedU;
             }
-            if (copyMask?.FillTextureEffectTextureAnimationSpeedV ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectTextureAnimationSpeedV) ?? true))
             {
                 item.FillTextureEffectTextureAnimationSpeedV = rhs.FillTextureEffectTextureAnimationSpeedV;
             }
-            if (copyMask?.EdgeEffectFallOff ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
                 item.EdgeEffectFallOff = rhs.EdgeEffectFallOff;
             }
-            if (copyMask?.EdgeEffectColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
                 item.EdgeEffectColor = rhs.EdgeEffectColor;
             }
-            if (copyMask?.EdgeEffectAlphaFadeInTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
                 item.EdgeEffectAlphaFadeInTime = rhs.EdgeEffectAlphaFadeInTime;
             }
-            if (copyMask?.EdgeEffectFullAlphaTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
                 item.EdgeEffectFullAlphaTime = rhs.EdgeEffectFullAlphaTime;
             }
-            if (copyMask?.EdgeEffectAlphaFadeOutTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
                 item.EdgeEffectAlphaFadeOutTime = rhs.EdgeEffectAlphaFadeOutTime;
             }
-            if (copyMask?.EdgeEffectPersistentAlphaRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
                 item.EdgeEffectPersistentAlphaRatio = rhs.EdgeEffectPersistentAlphaRatio;
             }
-            if (copyMask?.EdgeEffectAlphaPulseAmplitude ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
                 item.EdgeEffectAlphaPulseAmplitude = rhs.EdgeEffectAlphaPulseAmplitude;
             }
-            if (copyMask?.EdgeEffectAlphaPulseFrequency ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
                 item.EdgeEffectAlphaPulseFrequency = rhs.EdgeEffectAlphaPulseFrequency;
             }
-            if (copyMask?.FillTextureEffectFullAlphaRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureEffectFullAlphaRatio) ?? true))
             {
                 item.FillTextureEffectFullAlphaRatio = rhs.FillTextureEffectFullAlphaRatio;
             }
-            if (copyMask?.EdgeEffectFullAlphaRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
                 item.EdgeEffectFullAlphaRatio = rhs.EdgeEffectFullAlphaRatio;
             }
-            if (copyMask?.MembraneShaderDestBlendMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneShaderDestBlendMode) ?? true))
             {
                 item.MembraneShaderDestBlendMode = rhs.MembraneShaderDestBlendMode;
             }
-            if (copyMask?.ParticleShaderSourceBlendMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderSourceBlendMode) ?? true))
             {
                 item.ParticleShaderSourceBlendMode = rhs.ParticleShaderSourceBlendMode;
             }
-            if (copyMask?.ParticleShaderBlendOperation ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderBlendOperation) ?? true))
             {
                 item.ParticleShaderBlendOperation = rhs.ParticleShaderBlendOperation;
             }
-            if (copyMask?.ParticleShaderZTestFunction ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderZTestFunction) ?? true))
             {
                 item.ParticleShaderZTestFunction = rhs.ParticleShaderZTestFunction;
             }
-            if (copyMask?.ParticleShaderDestBlendMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderDestBlendMode) ?? true))
             {
                 item.ParticleShaderDestBlendMode = rhs.ParticleShaderDestBlendMode;
             }
-            if (copyMask?.ParticleShaderParticleBirthRampUpTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampUpTime) ?? true))
             {
                 item.ParticleShaderParticleBirthRampUpTime = rhs.ParticleShaderParticleBirthRampUpTime;
             }
-            if (copyMask?.ParticleShaderFullParticleBirthTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthTime) ?? true))
             {
                 item.ParticleShaderFullParticleBirthTime = rhs.ParticleShaderFullParticleBirthTime;
             }
-            if (copyMask?.ParticleShaderParticleBirthRampDownTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleBirthRampDownTime) ?? true))
             {
                 item.ParticleShaderParticleBirthRampDownTime = rhs.ParticleShaderParticleBirthRampDownTime;
             }
-            if (copyMask?.ParticleShaderFullParticleBirthRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderFullParticleBirthRatio) ?? true))
             {
                 item.ParticleShaderFullParticleBirthRatio = rhs.ParticleShaderFullParticleBirthRatio;
             }
-            if (copyMask?.ParticleShaderPersistentParticleBirthRatio ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderPersistentParticleBirthRatio) ?? true))
             {
                 item.ParticleShaderPersistentParticleBirthRatio = rhs.ParticleShaderPersistentParticleBirthRatio;
             }
-            if (copyMask?.ParticleShaderParticleLifetime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetime) ?? true))
             {
                 item.ParticleShaderParticleLifetime = rhs.ParticleShaderParticleLifetime;
             }
-            if (copyMask?.ParticleShaderParticleLifetimePlusMinus ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderParticleLifetimePlusMinus) ?? true))
             {
                 item.ParticleShaderParticleLifetimePlusMinus = rhs.ParticleShaderParticleLifetimePlusMinus;
             }
-            if (copyMask?.ParticleShaderInitialSpeedAlongNormal ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialSpeedAlongNormal) ?? true))
             {
                 item.ParticleShaderInitialSpeedAlongNormal = rhs.ParticleShaderInitialSpeedAlongNormal;
             }
-            if (copyMask?.ParticleShaderAccelerationAlongNormal ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAccelerationAlongNormal) ?? true))
             {
                 item.ParticleShaderAccelerationAlongNormal = rhs.ParticleShaderAccelerationAlongNormal;
             }
-            if (copyMask?.ParticleShaderInitialVelocity1 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity1) ?? true))
             {
                 item.ParticleShaderInitialVelocity1 = rhs.ParticleShaderInitialVelocity1;
             }
-            if (copyMask?.ParticleShaderInitialVelocity2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity2) ?? true))
             {
                 item.ParticleShaderInitialVelocity2 = rhs.ParticleShaderInitialVelocity2;
             }
-            if (copyMask?.ParticleShaderInitialVelocity3 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderInitialVelocity3) ?? true))
             {
                 item.ParticleShaderInitialVelocity3 = rhs.ParticleShaderInitialVelocity3;
             }
-            if (copyMask?.ParticleShaderAcceleration1 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration1) ?? true))
             {
                 item.ParticleShaderAcceleration1 = rhs.ParticleShaderAcceleration1;
             }
-            if (copyMask?.ParticleShaderAcceleration2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration2) ?? true))
             {
                 item.ParticleShaderAcceleration2 = rhs.ParticleShaderAcceleration2;
             }
-            if (copyMask?.ParticleShaderAcceleration3 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderAcceleration3) ?? true))
             {
                 item.ParticleShaderAcceleration3 = rhs.ParticleShaderAcceleration3;
             }
-            if (copyMask?.ParticleShaderScaleKey1 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1) ?? true))
             {
                 item.ParticleShaderScaleKey1 = rhs.ParticleShaderScaleKey1;
             }
-            if (copyMask?.ParticleShaderScaleKey2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2) ?? true))
             {
                 item.ParticleShaderScaleKey2 = rhs.ParticleShaderScaleKey2;
             }
-            if (copyMask?.ParticleShaderScaleKey1Time ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey1Time) ?? true))
             {
                 item.ParticleShaderScaleKey1Time = rhs.ParticleShaderScaleKey1Time;
             }
-            if (copyMask?.ParticleShaderScaleKey2Time ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderScaleKey2Time) ?? true))
             {
                 item.ParticleShaderScaleKey2Time = rhs.ParticleShaderScaleKey2Time;
             }
-            if (copyMask?.ColorKey1Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Color) ?? true))
             {
                 item.ColorKey1Color = rhs.ColorKey1Color;
             }
-            if (copyMask?.ColorKey2Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Color) ?? true))
             {
                 item.ColorKey2Color = rhs.ColorKey2Color;
             }
-            if (copyMask?.ColorKey3Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Color) ?? true))
             {
                 item.ColorKey3Color = rhs.ColorKey3Color;
             }
-            if (copyMask?.ColorKey1ColorAlpha ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorAlpha) ?? true))
             {
                 item.ColorKey1ColorAlpha = rhs.ColorKey1ColorAlpha;
             }
-            if (copyMask?.ColorKey2ColorAlpha ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorAlpha) ?? true))
             {
                 item.ColorKey2ColorAlpha = rhs.ColorKey2ColorAlpha;
             }
-            if (copyMask?.ColorKey3ColorAlpha ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorAlpha) ?? true))
             {
                 item.ColorKey3ColorAlpha = rhs.ColorKey3ColorAlpha;
             }
-            if (copyMask?.ColorKey1ColorKeyTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1ColorKeyTime) ?? true))
             {
                 item.ColorKey1ColorKeyTime = rhs.ColorKey1ColorKeyTime;
             }
-            if (copyMask?.ColorKey2ColorKeyTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2ColorKeyTime) ?? true))
             {
                 item.ColorKey2ColorKeyTime = rhs.ColorKey2ColorKeyTime;
             }
-            if (copyMask?.ColorKey3ColorKeyTime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3ColorKeyTime) ?? true))
             {
                 item.ColorKey3ColorKeyTime = rhs.ColorKey3ColorKeyTime;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -4563,13 +4585,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new EffectShader DeepCopy(
+        public EffectShader DeepCopy(
             IEffectShaderGetter item,
             EffectShader_TranslationMask copyMask = null)
         {
             EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public EffectShader DeepCopy(
+            IEffectShaderGetter item,
+            out EffectShader_ErrorMask errorMask,
+            EffectShader_TranslationMask copyMask = null)
+        {
+            EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public EffectShader DeepCopy(
+            IEffectShaderGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IKeywordInternal lhs,
             IKeywordGetter rhs,
             ErrorMaskBuilder errorMask,
-            Keyword_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -529,6 +529,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Keyword DeepCopy(
+            this IKeywordGetter item,
+            out Keyword_ErrorMask errorMask,
+            Keyword_TranslationMask copyMask = null)
+        {
+            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Keyword DeepCopy(
+            this IKeywordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1303,14 +1325,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IKeyword item,
             IKeywordGetter rhs,
             ErrorMaskBuilder errorMask,
-            Keyword_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
             {
                 errorMask?.PushIndex((int)Keyword_FieldIndex.Color);
                 try
@@ -1338,13 +1360,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new Keyword DeepCopy(
+        public Keyword DeepCopy(
             IKeywordGetter item,
             Keyword_TranslationMask copyMask = null)
         {
             Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Keyword DeepCopy(
+            IKeywordGetter item,
+            out Keyword_ErrorMask errorMask,
+            Keyword_TranslationMask copyMask = null)
+        {
+            Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Keyword DeepCopy(
+            IKeywordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

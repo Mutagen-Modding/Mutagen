@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Target_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Tests
             this ITarget lhs,
             ITargetGetter rhs,
             ErrorMaskBuilder errorMask,
-            Target_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((TargetSetterTranslationCommon)((ITargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -505,6 +505,28 @@ namespace Mutagen.Bethesda.Tests
             return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Target DeepCopy(
+            this ITargetGetter item,
+            out Target_ErrorMask errorMask,
+            Target_TranslationMask copyMask = null)
+        {
+            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Target DeepCopy(
+            this ITargetGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((TargetSetterTranslationCommon)((ITargetGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1116,25 +1138,25 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITarget item,
             ITargetGetter rhs,
             ErrorMaskBuilder errorMask,
-            Target_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Do ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Do) ?? true))
             {
                 item.Do = rhs.Do;
             }
-            if (copyMask?.Path ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Path) ?? true))
             {
                 item.Path = rhs.Path;
             }
-            if (copyMask?.NumMasters ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
             {
                 item.NumMasters = rhs.NumMasters;
             }
-            if (copyMask?.GameMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.GameMode) ?? true))
             {
                 item.GameMode = rhs.GameMode;
             }
-            if (copyMask?.ExpectedBaseGroupCount ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
                 try
@@ -1158,12 +1180,12 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Interest.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
             {
                 errorMask?.PushIndex((int)Target_FieldIndex.Interest);
                 try
                 {
-                    if (copyMask?.Interest?.Overall ?? true)
+                    if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Interest) ?? true))
                     {
                         if (rhs.Interest == null)
                         {
@@ -1171,7 +1193,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                         else
                         {
-                            item.Interest = rhs.Interest.DeepCopy(copyMask?.Interest?.Specific);
+                            item.Interest = rhs.Interest.DeepCopy(
+                                copyMask: copyMask?.GetSubCrystal((int)Target_FieldIndex.Interest),
+                                errorMask: errorMask);
                         }
                     }
                 }
@@ -1196,6 +1220,32 @@ namespace Mutagen.Bethesda.Tests.Internals
             Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Target DeepCopy(
+            ITargetGetter item,
+            out Target_ErrorMask errorMask,
+            Target_TranslationMask copyMask = null)
+        {
+            Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Target DeepCopy(
+            ITargetGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SoundData_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternal lhs,
             ISoundDataInternalGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundData_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -536,6 +536,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SoundData DeepCopy(
+            this ISoundDataInternalGetter item,
+            out SoundData_ErrorMask errorMask,
+            SoundData_TranslationMask copyMask = null)
+        {
+            return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SoundData DeepCopy(
+            this ISoundDataInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1216,21 +1238,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundData item,
             ISoundDataGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoundData_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.MinimumAttenuationDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.MinimumAttenuationDistance) ?? true))
             {
                 item.MinimumAttenuationDistance = rhs.MinimumAttenuationDistance;
             }
-            if (copyMask?.MaximumAttenuationDistance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.MaximumAttenuationDistance) ?? true))
             {
                 item.MaximumAttenuationDistance = rhs.MaximumAttenuationDistance;
             }
-            if (copyMask?.FrequencyAdjustment ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.FrequencyAdjustment) ?? true))
             {
                 item.FrequencyAdjustment = rhs.FrequencyAdjustment;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
@@ -1245,6 +1267,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoundData DeepCopy(
+            ISoundDataInternalGetter item,
+            out SoundData_ErrorMask errorMask,
+            SoundData_TranslationMask copyMask = null)
+        {
+            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoundData DeepCopy(
+            ISoundDataInternalGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

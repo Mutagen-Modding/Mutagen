@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Eye_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IEyeInternal lhs,
             IEyeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Eye_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -604,6 +604,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Eye DeepCopy(
+            this IEyeGetter item,
+            out Eye_ErrorMask errorMask,
+            Eye_TranslationMask copyMask = null)
+        {
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Eye DeepCopy(
+            this IEyeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1463,14 +1485,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEye item,
             IEyeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Eye_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Eye_FieldIndex.Name);
                 try
@@ -1494,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Eye_FieldIndex.Icon);
                 try
@@ -1518,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)Eye_FieldIndex.Flags);
                 try
@@ -1546,13 +1568,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Eye DeepCopy(
+        public Eye DeepCopy(
             IEyeGetter item,
             Eye_TranslationMask copyMask = null)
         {
             Eye ret = (Eye)((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Eye DeepCopy(
+            IEyeGetter item,
+            out Eye_ErrorMask errorMask,
+            Eye_TranslationMask copyMask = null)
+        {
+            Eye ret = (Eye)((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Eye DeepCopy(
+            IEyeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Eye ret = (Eye)((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

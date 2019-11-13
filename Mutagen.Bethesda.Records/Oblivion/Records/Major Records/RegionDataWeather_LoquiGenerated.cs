@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataWeatherInternal lhs,
             IRegionDataWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataWeather_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -510,6 +510,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RegionDataWeather DeepCopy(
+            this IRegionDataWeatherGetter item,
+            out RegionDataWeather_ErrorMask errorMask,
+            RegionDataWeather_TranslationMask copyMask = null)
+        {
+            return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RegionDataWeather DeepCopy(
+            this IRegionDataWeatherGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RegionDataWeatherSetterTranslationCommon)((IRegionDataWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1244,14 +1266,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataWeather item,
             IRegionDataWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
-            RegionDataWeather_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((RegionDataSetterTranslationCommon)((IRegionDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Weathers.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RegionDataWeather_FieldIndex.Weathers) ?? true))
             {
                 errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                 try
@@ -1260,7 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Weathers,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Weathers?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1277,13 +1301,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new RegionDataWeather DeepCopy(
+        public RegionDataWeather DeepCopy(
             IRegionDataWeatherGetter item,
             RegionDataWeather_TranslationMask copyMask = null)
         {
             RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RegionDataWeather DeepCopy(
+            IRegionDataWeatherGetter item,
+            out RegionDataWeather_ErrorMask errorMask,
+            RegionDataWeather_TranslationMask copyMask = null)
+        {
+            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RegionDataWeather DeepCopy(
+            IRegionDataWeatherGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

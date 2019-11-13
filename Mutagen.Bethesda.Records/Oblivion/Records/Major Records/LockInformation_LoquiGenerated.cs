@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = LockInformation_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILockInformation lhs,
             ILockInformationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LockInformation_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((LockInformationSetterTranslationCommon)((ILockInformationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -555,6 +555,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static LockInformation DeepCopy(
+            this ILockInformationGetter item,
+            out LockInformation_ErrorMask errorMask,
+            LockInformation_TranslationMask copyMask = null)
+        {
+            return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static LockInformation DeepCopy(
+            this ILockInformationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((LockInformationSetterTranslationCommon)((ILockInformationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1226,21 +1248,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILockInformation item,
             ILockInformationGetter rhs,
             ErrorMaskBuilder errorMask,
-            LockInformation_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.LockLevel ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.LockLevel) ?? true))
             {
                 item.LockLevel = rhs.LockLevel;
             }
-            if (copyMask?.Fluff ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Fluff) ?? true))
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if (copyMask?.Key ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
                 item.Key_Property.FormKey = rhs.Key_Property.FormKey;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
@@ -1255,6 +1277,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LockInformation DeepCopy(
+            ILockInformationGetter item,
+            out LockInformation_ErrorMask errorMask,
+            LockInformation_TranslationMask copyMask = null)
+        {
+            LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LockInformation DeepCopy(
+            ILockInformationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

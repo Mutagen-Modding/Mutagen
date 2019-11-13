@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternal lhs,
             ILandscapeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Landscape_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -722,6 +722,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LandscapeSetterTranslationCommon)((ILandscapeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Landscape DeepCopy(
+            this ILandscapeGetter item,
+            out Landscape_ErrorMask errorMask,
+            Landscape_TranslationMask copyMask = null)
+        {
+            return ((LandscapeSetterTranslationCommon)((ILandscapeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Landscape DeepCopy(
+            this ILandscapeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((LandscapeSetterTranslationCommon)((ILandscapeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1763,14 +1785,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscape item,
             ILandscapeGetter rhs,
             ErrorMaskBuilder errorMask,
-            Landscape_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Unknown ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Unknown) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
                 try
@@ -1794,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.VertexNormals ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
                 try
@@ -1818,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.VertexHeightMap ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
                 try
@@ -1842,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.VertexColors ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
                 try
@@ -1866,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Layers.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                 try
@@ -1875,7 +1897,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Layers,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Layers?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1888,7 +1912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Textures ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                 try
@@ -1911,13 +1935,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Landscape DeepCopy(
+        public Landscape DeepCopy(
             ILandscapeGetter item,
             Landscape_TranslationMask copyMask = null)
         {
             Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Landscape DeepCopy(
+            ILandscapeGetter item,
+            out Landscape_ErrorMask errorMask,
+            Landscape_TranslationMask copyMask = null)
+        {
+            Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Landscape DeepCopy(
+            ILandscapeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

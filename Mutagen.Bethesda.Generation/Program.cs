@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ic static void WriteToBinaryParallel(";
+            string testString = "ocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMajorRecordInternal lhs,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMajorRecord_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -470,6 +470,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static OblivionMajorRecord DeepCopy(
+            this IOblivionMajorRecordGetter item,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask copyMask = null)
+        {
+            return ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static OblivionMajorRecord DeepCopy(
+            this IOblivionMajorRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1305,14 +1327,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecord item,
             IOblivionMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            OblivionMajorRecord_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.OblivionMajorRecordFlags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
             {
                 item.OblivionMajorRecordFlags = rhs.OblivionMajorRecordFlags;
             }
@@ -1320,13 +1342,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new OblivionMajorRecord DeepCopy(
+        public OblivionMajorRecord DeepCopy(
             IOblivionMajorRecordGetter item,
             OblivionMajorRecord_TranslationMask copyMask = null)
         {
             OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public OblivionMajorRecord DeepCopy(
+            IOblivionMajorRecordGetter item,
+            out OblivionMajorRecord_ErrorMask errorMask,
+            OblivionMajorRecord_TranslationMask copyMask = null)
+        {
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public OblivionMajorRecord DeepCopy(
+            IOblivionMajorRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

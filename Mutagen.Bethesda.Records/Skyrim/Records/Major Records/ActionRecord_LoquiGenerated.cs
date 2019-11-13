@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IActionRecordInternal lhs,
             IActionRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            ActionRecord_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -529,6 +529,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ActionRecord DeepCopy(
+            this IActionRecordGetter item,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask copyMask = null)
+        {
+            return ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ActionRecord DeepCopy(
+            this IActionRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ActionRecordSetterTranslationCommon)((IActionRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1303,14 +1325,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActionRecord item,
             IActionRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            ActionRecord_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Color) ?? true))
             {
                 errorMask?.PushIndex((int)ActionRecord_FieldIndex.Color);
                 try
@@ -1338,13 +1360,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new ActionRecord DeepCopy(
+        public ActionRecord DeepCopy(
             IActionRecordGetter item,
             ActionRecord_TranslationMask copyMask = null)
         {
             ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ActionRecord DeepCopy(
+            IActionRecordGetter item,
+            out ActionRecord_ErrorMask errorMask,
+            ActionRecord_TranslationMask copyMask = null)
+        {
+            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ActionRecord DeepCopy(
+            IActionRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

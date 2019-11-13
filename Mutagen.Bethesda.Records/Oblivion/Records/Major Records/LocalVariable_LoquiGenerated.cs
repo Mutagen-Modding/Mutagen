@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = LocalVariable_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ILocalVariable lhs,
             ILocalVariableGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocalVariable_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -613,6 +613,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static LocalVariable DeepCopy(
+            this ILocalVariableGetter item,
+            out LocalVariable_ErrorMask errorMask,
+            LocalVariable_TranslationMask copyMask = null)
+        {
+            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static LocalVariable DeepCopy(
+            this ILocalVariableGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1384,25 +1406,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariable item,
             ILocalVariableGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocalVariable_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Index ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Index) ?? true))
             {
                 item.Index = rhs.Index;
             }
-            if (copyMask?.Fluff ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff) ?? true))
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.Fluff2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Fluff2) ?? true))
             {
                 item.Fluff2 = rhs.Fluff2.ToArray();
             }
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
                 try
@@ -1426,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SLSDDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.SLSDDataTypeState) ?? true))
             {
                 item.SLSDDataTypeState = rhs.SLSDDataTypeState;
             }
@@ -1441,6 +1463,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LocalVariable DeepCopy(
+            ILocalVariableGetter item,
+            out LocalVariable_ErrorMask errorMask,
+            LocalVariable_TranslationMask copyMask = null)
+        {
+            LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LocalVariable DeepCopy(
+            ILocalVariableGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

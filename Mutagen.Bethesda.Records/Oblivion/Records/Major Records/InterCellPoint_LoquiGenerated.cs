@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = InterCellPoint_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IInterCellPoint lhs,
             IInterCellPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            InterCellPoint_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -505,6 +505,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static InterCellPoint DeepCopy(
+            this IInterCellPointGetter item,
+            out InterCellPoint_ErrorMask errorMask,
+            InterCellPoint_TranslationMask copyMask = null)
+        {
+            return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static InterCellPoint DeepCopy(
+            this IInterCellPointGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((InterCellPointSetterTranslationCommon)((IInterCellPointGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1115,13 +1137,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPoint item,
             IInterCellPointGetter rhs,
             ErrorMaskBuilder errorMask,
-            InterCellPoint_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.PointID ?? true)
+            if ((copyMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.PointID) ?? true))
             {
                 item.PointID = rhs.PointID;
             }
-            if (copyMask?.Point ?? true)
+            if ((copyMask?.GetShouldTranslate((int)InterCellPoint_FieldIndex.Point) ?? true))
             {
                 item.Point = rhs.Point;
             }
@@ -1136,6 +1158,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public InterCellPoint DeepCopy(
+            IInterCellPointGetter item,
+            out InterCellPoint_ErrorMask errorMask,
+            InterCellPoint_TranslationMask copyMask = null)
+        {
+            InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public InterCellPoint DeepCopy(
+            IInterCellPointGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

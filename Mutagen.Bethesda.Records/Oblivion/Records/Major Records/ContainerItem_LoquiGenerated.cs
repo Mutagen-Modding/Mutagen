@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = ContainerItem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerItem lhs,
             IContainerItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            ContainerItem_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -529,6 +529,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static ContainerItem DeepCopy(
+            this IContainerItemGetter item,
+            out ContainerItem_ErrorMask errorMask,
+            ContainerItem_TranslationMask copyMask = null)
+        {
+            return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static ContainerItem DeepCopy(
+            this IContainerItemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1138,13 +1160,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             IContainerItemGetter rhs,
             ErrorMaskBuilder errorMask,
-            ContainerItem_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Item ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
                 item.Item_Property.FormKey = rhs.Item_Property.FormKey;
             }
-            if (copyMask?.Count ?? true)
+            if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
                 item.Count = rhs.Count;
             }
@@ -1159,6 +1181,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ContainerItem ret = (ContainerItem)((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ContainerItem DeepCopy(
+            IContainerItemGetter item,
+            out ContainerItem_ErrorMask errorMask,
+            ContainerItem_TranslationMask copyMask = null)
+        {
+            ContainerItem ret = (ContainerItem)((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public ContainerItem DeepCopy(
+            IContainerItemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            ContainerItem ret = (ContainerItem)((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

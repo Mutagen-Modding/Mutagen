@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Weather_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternal lhs,
             IWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
-            Weather_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WeatherSetterTranslationCommon)((IWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1304,6 +1304,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherSetterTranslationCommon)((IWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Weather DeepCopy(
+            this IWeatherGetter item,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask copyMask = null)
+        {
+            return ((WeatherSetterTranslationCommon)((IWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Weather DeepCopy(
+            this IWeatherGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WeatherSetterTranslationCommon)((IWeatherGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -3277,14 +3299,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeather item,
             IWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
-            Weather_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.TextureLowerLayer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureLowerLayer) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.TextureLowerLayer);
                 try
@@ -3308,7 +3330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TextureUpperLayer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.TextureUpperLayer) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.TextureUpperLayer);
                 try
@@ -3332,14 +3354,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.Model));
                     }
                     else
                     {
@@ -3358,7 +3382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.WeatherTypes.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.WeatherTypes) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                 try
@@ -3367,7 +3391,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.WeatherTypes,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.WeatherTypes?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -3380,131 +3406,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FogDayNear ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
             {
                 item.FogDayNear = rhs.FogDayNear;
             }
-            if (copyMask?.FogDayFar ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
             {
                 item.FogDayFar = rhs.FogDayFar;
             }
-            if (copyMask?.FogNightNear ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
             {
                 item.FogNightNear = rhs.FogNightNear;
             }
-            if (copyMask?.FogNightFar ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
             {
                 item.FogNightFar = rhs.FogNightFar;
             }
-            if (copyMask?.HdrEyeAdaptSpeed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
             {
                 item.HdrEyeAdaptSpeed = rhs.HdrEyeAdaptSpeed;
             }
-            if (copyMask?.HdrBlurRadius ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
             {
                 item.HdrBlurRadius = rhs.HdrBlurRadius;
             }
-            if (copyMask?.HdrBlurPasses ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
             {
                 item.HdrBlurPasses = rhs.HdrBlurPasses;
             }
-            if (copyMask?.HdrEmissiveMult ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
             {
                 item.HdrEmissiveMult = rhs.HdrEmissiveMult;
             }
-            if (copyMask?.HdrTargetLum ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
             {
                 item.HdrTargetLum = rhs.HdrTargetLum;
             }
-            if (copyMask?.HdrUpperLumClamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
             {
                 item.HdrUpperLumClamp = rhs.HdrUpperLumClamp;
             }
-            if (copyMask?.HdrBrightScale ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
             {
                 item.HdrBrightScale = rhs.HdrBrightScale;
             }
-            if (copyMask?.HdrBrightClamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
             {
                 item.HdrBrightClamp = rhs.HdrBrightClamp;
             }
-            if (copyMask?.HdrLumRampNoTex ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
             {
                 item.HdrLumRampNoTex = rhs.HdrLumRampNoTex;
             }
-            if (copyMask?.HdrLumRampMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
             {
                 item.HdrLumRampMin = rhs.HdrLumRampMin;
             }
-            if (copyMask?.HdrLumRampMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
             {
                 item.HdrLumRampMax = rhs.HdrLumRampMax;
             }
-            if (copyMask?.HdrSunlightDimmer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
             {
                 item.HdrSunlightDimmer = rhs.HdrSunlightDimmer;
             }
-            if (copyMask?.HdrGrassDimmer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
             {
                 item.HdrGrassDimmer = rhs.HdrGrassDimmer;
             }
-            if (copyMask?.HdrTreeDimmer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
             {
                 item.HdrTreeDimmer = rhs.HdrTreeDimmer;
             }
-            if (copyMask?.WindSpeed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
             {
                 item.WindSpeed = rhs.WindSpeed;
             }
-            if (copyMask?.CloudSpeedLower ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
             {
                 item.CloudSpeedLower = rhs.CloudSpeedLower;
             }
-            if (copyMask?.CloudSpeedUpper ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
             {
                 item.CloudSpeedUpper = rhs.CloudSpeedUpper;
             }
-            if (copyMask?.TransDelta ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
             {
                 item.TransDelta = rhs.TransDelta;
             }
-            if (copyMask?.SunGlare ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
             {
                 item.SunGlare = rhs.SunGlare;
             }
-            if (copyMask?.SunDamage ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
             {
                 item.SunDamage = rhs.SunDamage;
             }
-            if (copyMask?.PrecipitationBeginFadeIn ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
             {
                 item.PrecipitationBeginFadeIn = rhs.PrecipitationBeginFadeIn;
             }
-            if (copyMask?.PrecipitationEndFadeOut ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
             {
                 item.PrecipitationEndFadeOut = rhs.PrecipitationEndFadeOut;
             }
-            if (copyMask?.ThunderLightningBeginFadeIn ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
             {
                 item.ThunderLightningBeginFadeIn = rhs.ThunderLightningBeginFadeIn;
             }
-            if (copyMask?.ThunderLightningEndFadeOut ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
             {
                 item.ThunderLightningEndFadeOut = rhs.ThunderLightningEndFadeOut;
             }
-            if (copyMask?.ThunderLightningFrequency ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
             {
                 item.ThunderLightningFrequency = rhs.ThunderLightningFrequency;
             }
-            if (copyMask?.Classification ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
             {
                 item.Classification = rhs.Classification;
             }
-            if (copyMask?.LightningColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
             {
                 item.LightningColor = rhs.LightningColor;
             }
-            if (copyMask?.Sounds.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
@@ -3513,7 +3539,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Sounds,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Sounds?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -3526,15 +3554,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FNAMDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
             {
                 item.FNAMDataTypeState = rhs.FNAMDataTypeState;
             }
-            if (copyMask?.HNAMDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HNAMDataTypeState) ?? true))
             {
                 item.HNAMDataTypeState = rhs.HNAMDataTypeState;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -3542,13 +3570,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Weather DeepCopy(
+        public Weather DeepCopy(
             IWeatherGetter item,
             Weather_TranslationMask copyMask = null)
         {
             Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Weather DeepCopy(
+            IWeatherGetter item,
+            out Weather_ErrorMask errorMask,
+            Weather_TranslationMask copyMask = null)
+        {
+            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Weather DeepCopy(
+            IWeatherGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

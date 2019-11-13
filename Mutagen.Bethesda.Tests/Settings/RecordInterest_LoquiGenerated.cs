@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RecordInterest_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterest lhs,
             IRecordInterestGetter rhs,
             ErrorMaskBuilder errorMask,
-            RecordInterest_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -437,6 +437,28 @@ namespace Mutagen.Bethesda.Tests
             return ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RecordInterest DeepCopy(
+            this IRecordInterestGetter item,
+            out RecordInterest_ErrorMask errorMask,
+            RecordInterest_TranslationMask copyMask = null)
+        {
+            return ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RecordInterest DeepCopy(
+            this IRecordInterestGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -989,9 +1011,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInterest item,
             IRecordInterestGetter rhs,
             ErrorMaskBuilder errorMask,
-            RecordInterest_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.InterestingTypes ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RecordInterest_FieldIndex.InterestingTypes) ?? true))
             {
                 errorMask?.PushIndex((int)RecordInterest_FieldIndex.InterestingTypes);
                 try
@@ -1008,7 +1030,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.UninterestingTypes ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RecordInterest_FieldIndex.UninterestingTypes) ?? true))
             {
                 errorMask?.PushIndex((int)RecordInterest_FieldIndex.UninterestingTypes);
                 try
@@ -1036,6 +1058,32 @@ namespace Mutagen.Bethesda.Tests.Internals
             RecordInterest ret = (RecordInterest)((RecordInterestSetterCommon)((IRecordInterestGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RecordInterest DeepCopy(
+            IRecordInterestGetter item,
+            out RecordInterest_ErrorMask errorMask,
+            RecordInterest_TranslationMask copyMask = null)
+        {
+            RecordInterest ret = (RecordInterest)((RecordInterestSetterCommon)((IRecordInterestGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RecordInterest DeepCopy(
+            IRecordInterestGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RecordInterest ret = (RecordInterest)((RecordInterestSetterCommon)((IRecordInterestGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

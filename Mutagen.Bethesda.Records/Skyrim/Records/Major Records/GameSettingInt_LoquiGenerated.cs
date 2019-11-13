@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = GameSettingInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingIntInternal lhs,
             IGameSettingIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingInt_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -527,6 +527,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static GameSettingInt DeepCopy(
+            this IGameSettingIntGetter item,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_TranslationMask copyMask = null)
+        {
+            return ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static GameSettingInt DeepCopy(
+            this IGameSettingIntGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GameSettingIntSetterTranslationCommon)((IGameSettingIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1333,14 +1355,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingInt item,
             IGameSettingIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingInt_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Data ?? true)
+            if ((copyMask?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)GameSettingInt_FieldIndex.Data);
                 try
@@ -1368,13 +1390,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new GameSettingInt DeepCopy(
+        public GameSettingInt DeepCopy(
             IGameSettingIntGetter item,
             GameSettingInt_TranslationMask copyMask = null)
         {
             GameSettingInt ret = (GameSettingInt)((GameSettingIntSetterCommon)((IGameSettingIntGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GameSettingInt DeepCopy(
+            IGameSettingIntGetter item,
+            out GameSettingInt_ErrorMask errorMask,
+            GameSettingInt_TranslationMask copyMask = null)
+        {
+            GameSettingInt ret = (GameSettingInt)((GameSettingIntSetterCommon)((IGameSettingIntGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GameSettingInt DeepCopy(
+            IGameSettingIntGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            GameSettingInt ret = (GameSettingInt)((GameSettingIntSetterCommon)((IGameSettingIntGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

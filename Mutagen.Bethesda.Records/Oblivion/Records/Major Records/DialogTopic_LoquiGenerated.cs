@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogTopicInternal lhs,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogTopic_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -658,6 +658,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static DialogTopic DeepCopy(
+            this IDialogTopicGetter item,
+            out DialogTopic_ErrorMask errorMask,
+            DialogTopic_TranslationMask copyMask = null)
+        {
+            return ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static DialogTopic DeepCopy(
+            this IDialogTopicGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((DialogTopicSetterTranslationCommon)((IDialogTopicGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1650,14 +1672,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopic item,
             IDialogTopicGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogTopic_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Quests ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quests) ?? true))
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
                 try
@@ -1676,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
                 try
@@ -1700,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DialogType ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.DialogType) ?? true))
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
                 try
@@ -1724,11 +1746,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Timestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
                 item.Timestamp = rhs.Timestamp.ToArray();
             }
-            if (copyMask?.Items.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Items) ?? true))
             {
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
                 try
@@ -1740,7 +1762,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             var copyRet = new DialogItem(r.FormKey);
                             copyRet.DeepCopyFieldsFrom(
                                 rhs: r,
-                                copyMask: copyMask?.Items?.Specific);
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
                             return copyRet;
                         });
                 }
@@ -1758,13 +1781,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new DialogTopic DeepCopy(
+        public DialogTopic DeepCopy(
             IDialogTopicGetter item,
             DialogTopic_TranslationMask copyMask = null)
         {
             DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DialogTopic DeepCopy(
+            IDialogTopicGetter item,
+            out DialogTopic_ErrorMask errorMask,
+            DialogTopic_TranslationMask copyMask = null)
+        {
+            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DialogTopic DeepCopy(
+            IDialogTopicGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

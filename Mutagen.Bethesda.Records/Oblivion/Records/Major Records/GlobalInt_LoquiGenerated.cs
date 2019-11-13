@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGlobalIntInternal lhs,
             IGlobalIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalInt_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -527,6 +527,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static GlobalInt DeepCopy(
+            this IGlobalIntGetter item,
+            out GlobalInt_ErrorMask errorMask,
+            GlobalInt_TranslationMask copyMask = null)
+        {
+            return ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static GlobalInt DeepCopy(
+            this IGlobalIntGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GlobalIntSetterTranslationCommon)((IGlobalIntGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1326,14 +1348,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalInt item,
             IGlobalIntGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalInt_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Data ?? true)
+            if ((copyMask?.GetShouldTranslate((int)GlobalInt_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)GlobalInt_FieldIndex.Data);
                 try
@@ -1361,13 +1383,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new GlobalInt DeepCopy(
+        public GlobalInt DeepCopy(
             IGlobalIntGetter item,
             GlobalInt_TranslationMask copyMask = null)
         {
             GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GlobalInt DeepCopy(
+            IGlobalIntGetter item,
+            out GlobalInt_ErrorMask errorMask,
+            GlobalInt_TranslationMask copyMask = null)
+        {
+            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GlobalInt DeepCopy(
+            IGlobalIntGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Textures_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextures lhs,
             ITexturesGetter rhs,
             ErrorMaskBuilder errorMask,
-            Textures_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((TexturesSetterTranslationCommon)((ITexturesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -789,6 +789,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Textures DeepCopy(
+            this ITexturesGetter item,
+            out Textures_ErrorMask errorMask,
+            Textures_TranslationMask copyMask = null)
+        {
+            return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Textures DeepCopy(
+            this ITexturesGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((TexturesSetterTranslationCommon)((ITexturesGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1759,9 +1781,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextures item,
             ITexturesGetter rhs,
             ErrorMaskBuilder errorMask,
-            Textures_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Diffuse ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.Diffuse) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.Diffuse);
                 try
@@ -1785,7 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.NormalOrGloss ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.NormalOrGloss) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.NormalOrGloss);
                 try
@@ -1809,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 try
@@ -1833,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.GlowOrDetailMap ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.GlowOrDetailMap) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.GlowOrDetailMap);
                 try
@@ -1857,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Height ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.Height) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.Height);
                 try
@@ -1881,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Environment ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.Environment) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.Environment);
                 try
@@ -1905,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Multilayer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.Multilayer) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.Multilayer);
                 try
@@ -1929,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.BacklightMaskOrSpecular ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Textures_FieldIndex.BacklightMaskOrSpecular) ?? true))
             {
                 errorMask?.PushIndex((int)Textures_FieldIndex.BacklightMaskOrSpecular);
                 try
@@ -1964,6 +1986,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Textures DeepCopy(
+            ITexturesGetter item,
+            out Textures_ErrorMask errorMask,
+            Textures_TranslationMask copyMask = null)
+        {
+            Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Textures DeepCopy(
+            ITexturesGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

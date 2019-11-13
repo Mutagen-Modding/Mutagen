@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternal lhs,
             INPCGetter rhs,
             ErrorMaskBuilder errorMask,
-            NPC_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1985,6 +1985,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static NPC DeepCopy(
+            this INPCGetter item,
+            out NPC_ErrorMask errorMask,
+            NPC_TranslationMask copyMask = null)
+        {
+            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static NPC DeepCopy(
+            this INPCGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((NPCSetterTranslationCommon)((INPCGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -4893,14 +4915,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPC item,
             INPCGetter rhs,
             ErrorMaskBuilder errorMask,
-            NPC_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Name);
                 try
@@ -4924,14 +4946,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NPC_FieldIndex.Model));
                     }
                     else
                     {
@@ -4950,35 +4974,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.BaseSpellPoints ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.BaseSpellPoints) ?? true))
             {
                 item.BaseSpellPoints = rhs.BaseSpellPoints;
             }
-            if (copyMask?.Fatigue ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Fatigue) ?? true))
             {
                 item.Fatigue = rhs.Fatigue;
             }
-            if (copyMask?.BarterGold ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.BarterGold) ?? true))
             {
                 item.BarterGold = rhs.BarterGold;
             }
-            if (copyMask?.LevelOffset ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.LevelOffset) ?? true))
             {
                 item.LevelOffset = rhs.LevelOffset;
             }
-            if (copyMask?.CalcMin ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.CalcMin) ?? true))
             {
                 item.CalcMin = rhs.CalcMin;
             }
-            if (copyMask?.CalcMax ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.CalcMax) ?? true))
             {
                 item.CalcMax = rhs.CalcMax;
             }
-            if (copyMask?.Factions.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Factions) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
@@ -4987,7 +5011,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Factions,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Factions?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -5000,7 +5026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DeathItem ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.DeathItem) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.DeathItem);
                 try
@@ -5017,7 +5043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Race ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Race) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Race);
                 try
@@ -5034,7 +5060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Spells ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Spells) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                 try
@@ -5053,7 +5079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Script);
                 try
@@ -5070,7 +5096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Items.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Items) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
@@ -5079,7 +5105,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Items,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Items?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -5092,39 +5120,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Aggression ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Aggression) ?? true))
             {
                 item.Aggression = rhs.Aggression;
             }
-            if (copyMask?.Confidence ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Confidence) ?? true))
             {
                 item.Confidence = rhs.Confidence;
             }
-            if (copyMask?.EnergyLevel ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.EnergyLevel) ?? true))
             {
                 item.EnergyLevel = rhs.EnergyLevel;
             }
-            if (copyMask?.Responsibility ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Responsibility) ?? true))
             {
                 item.Responsibility = rhs.Responsibility;
             }
-            if (copyMask?.BuySellServices ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.BuySellServices) ?? true))
             {
                 item.BuySellServices = rhs.BuySellServices;
             }
-            if (copyMask?.Teaches ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Teaches) ?? true))
             {
                 item.Teaches = rhs.Teaches;
             }
-            if (copyMask?.MaximumTrainingLevel ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.MaximumTrainingLevel) ?? true))
             {
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
             }
-            if (copyMask?.Fluff ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Fluff) ?? true))
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if (copyMask?.AIPackages ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.AIPackages) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
@@ -5143,7 +5171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Animations ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Animations) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Animations);
                 try
@@ -5160,7 +5188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Class ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Class) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Class);
                 try
@@ -5177,127 +5205,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Armorer ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Armorer) ?? true))
             {
                 item.Armorer = rhs.Armorer;
             }
-            if (copyMask?.Athletics ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Athletics) ?? true))
             {
                 item.Athletics = rhs.Athletics;
             }
-            if (copyMask?.Blade ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Blade) ?? true))
             {
                 item.Blade = rhs.Blade;
             }
-            if (copyMask?.Block ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Block) ?? true))
             {
                 item.Block = rhs.Block;
             }
-            if (copyMask?.Blunt ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Blunt) ?? true))
             {
                 item.Blunt = rhs.Blunt;
             }
-            if (copyMask?.HandToHand ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.HandToHand) ?? true))
             {
                 item.HandToHand = rhs.HandToHand;
             }
-            if (copyMask?.HeavyArmor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.HeavyArmor) ?? true))
             {
                 item.HeavyArmor = rhs.HeavyArmor;
             }
-            if (copyMask?.Alchemy ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Alchemy) ?? true))
             {
                 item.Alchemy = rhs.Alchemy;
             }
-            if (copyMask?.Alteration ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Alteration) ?? true))
             {
                 item.Alteration = rhs.Alteration;
             }
-            if (copyMask?.Conjuration ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Conjuration) ?? true))
             {
                 item.Conjuration = rhs.Conjuration;
             }
-            if (copyMask?.Destruction ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Destruction) ?? true))
             {
                 item.Destruction = rhs.Destruction;
             }
-            if (copyMask?.Illusion ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Illusion) ?? true))
             {
                 item.Illusion = rhs.Illusion;
             }
-            if (copyMask?.Mysticism ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Mysticism) ?? true))
             {
                 item.Mysticism = rhs.Mysticism;
             }
-            if (copyMask?.Restoration ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Restoration) ?? true))
             {
                 item.Restoration = rhs.Restoration;
             }
-            if (copyMask?.Acrobatics ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Acrobatics) ?? true))
             {
                 item.Acrobatics = rhs.Acrobatics;
             }
-            if (copyMask?.LightArmor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.LightArmor) ?? true))
             {
                 item.LightArmor = rhs.LightArmor;
             }
-            if (copyMask?.Marksman ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Marksman) ?? true))
             {
                 item.Marksman = rhs.Marksman;
             }
-            if (copyMask?.Mercantile ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Mercantile) ?? true))
             {
                 item.Mercantile = rhs.Mercantile;
             }
-            if (copyMask?.Security ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Security) ?? true))
             {
                 item.Security = rhs.Security;
             }
-            if (copyMask?.Sneak ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Sneak) ?? true))
             {
                 item.Sneak = rhs.Sneak;
             }
-            if (copyMask?.Speechcraft ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Speechcraft) ?? true))
             {
                 item.Speechcraft = rhs.Speechcraft;
             }
-            if (copyMask?.Health ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Health) ?? true))
             {
                 item.Health = rhs.Health;
             }
-            if (copyMask?.Strength ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Strength) ?? true))
             {
                 item.Strength = rhs.Strength;
             }
-            if (copyMask?.Intelligence ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Intelligence) ?? true))
             {
                 item.Intelligence = rhs.Intelligence;
             }
-            if (copyMask?.Willpower ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Willpower) ?? true))
             {
                 item.Willpower = rhs.Willpower;
             }
-            if (copyMask?.Agility ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Agility) ?? true))
             {
                 item.Agility = rhs.Agility;
             }
-            if (copyMask?.Speed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Speed) ?? true))
             {
                 item.Speed = rhs.Speed;
             }
-            if (copyMask?.Endurance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Endurance) ?? true))
             {
                 item.Endurance = rhs.Endurance;
             }
-            if (copyMask?.Personality ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Personality) ?? true))
             {
                 item.Personality = rhs.Personality;
             }
-            if (copyMask?.Luck ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Luck) ?? true))
             {
                 item.Luck = rhs.Luck;
             }
-            if (copyMask?.Hair ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Hair) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Hair);
                 try
@@ -5314,7 +5342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.HairLength ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.HairLength) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.HairLength);
                 try
@@ -5338,7 +5366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Eyes ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Eyes) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
@@ -5357,7 +5385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.HairColor ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.HairColor) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.HairColor);
                 try
@@ -5381,7 +5409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.CombatStyle ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.CombatStyle) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.CombatStyle);
                 try
@@ -5398,7 +5426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FaceGenGeometrySymmetric ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometrySymmetric);
                 try
@@ -5422,7 +5450,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FaceGenGeometryAsymmetric ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenGeometryAsymmetric) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenGeometryAsymmetric);
                 try
@@ -5446,7 +5474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FaceGenTextureSymmetric ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.FaceGenTextureSymmetric) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.FaceGenTextureSymmetric);
                 try
@@ -5470,7 +5498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Unknown ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.Unknown) ?? true))
             {
                 errorMask?.PushIndex((int)NPC_FieldIndex.Unknown);
                 try
@@ -5494,15 +5522,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ACBSDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.ACBSDataTypeState) ?? true))
             {
                 item.ACBSDataTypeState = rhs.ACBSDataTypeState;
             }
-            if (copyMask?.AIDTDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.AIDTDataTypeState) ?? true))
             {
                 item.AIDTDataTypeState = rhs.AIDTDataTypeState;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)NPC_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -5510,13 +5538,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new NPC DeepCopy(
+        public NPC DeepCopy(
             INPCGetter item,
             NPC_TranslationMask copyMask = null)
         {
             NPC ret = (NPC)((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public NPC DeepCopy(
+            INPCGetter item,
+            out NPC_ErrorMask errorMask,
+            NPC_TranslationMask copyMask = null)
+        {
+            NPC ret = (NPC)((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public NPC DeepCopy(
+            INPCGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            NPC ret = (NPC)((NPCSetterCommon)((INPCGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

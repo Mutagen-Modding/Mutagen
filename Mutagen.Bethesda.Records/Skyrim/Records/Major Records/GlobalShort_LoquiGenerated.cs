@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGlobalShortInternal lhs,
             IGlobalShortGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalShort_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -527,6 +527,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static GlobalShort DeepCopy(
+            this IGlobalShortGetter item,
+            out GlobalShort_ErrorMask errorMask,
+            GlobalShort_TranslationMask copyMask = null)
+        {
+            return ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static GlobalShort DeepCopy(
+            this IGlobalShortGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GlobalShortSetterTranslationCommon)((IGlobalShortGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1336,14 +1358,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalShort item,
             IGlobalShortGetter rhs,
             ErrorMaskBuilder errorMask,
-            GlobalShort_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Data ?? true)
+            if ((copyMask?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
                 try
@@ -1371,13 +1393,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new GlobalShort DeepCopy(
+        public GlobalShort DeepCopy(
             IGlobalShortGetter item,
             GlobalShort_TranslationMask copyMask = null)
         {
             GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GlobalShort DeepCopy(
+            IGlobalShortGetter item,
+            out GlobalShort_ErrorMask errorMask,
+            GlobalShort_TranslationMask copyMask = null)
+        {
+            GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GlobalShort DeepCopy(
+            IGlobalShortGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

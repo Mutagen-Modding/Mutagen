@@ -32,25 +32,37 @@ namespace Mutagen.Bethesda.Generation
             return this.TargetObjectGeneration?.GetObjectType();
         }
 
-        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, string copyMaskAccessor, bool deepCopy)
+        public override void GenerateTypicalMakeCopy(FileGeneration fg, string retAccessor, Accessor rhsAccessor, string copyMaskAccessor, bool deepCopy, bool doTranslationMask)
         {
             if (this.GetObjectType() != ObjectType.Record)
             {
-                base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, copyMaskAccessor, deepCopy);
+                base.GenerateTypicalMakeCopy(fg, retAccessor, rhsAccessor, copyMaskAccessor, deepCopy, doTranslationMask: doTranslationMask);
                 return;
             }
             switch (this.RefType)
             {
                 case LoquiRefType.Direct:
                     fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
-                    using (var args2 = new ArgsWrapper(fg,
+                    using (var args = new ArgsWrapper(fg,
                         $"copyRet.{(deepCopy ? "Deep" : null)}CopyFieldsFrom"))
                     {
-                        args2.Add($"rhs: {rhsAccessor}");
+                        args.Add($"rhs: {rhsAccessor}");
                         if (this.RefType == LoquiRefType.Direct)
                         {
-                            args2.Add($"copyMask: {copyMaskAccessor}?.Specific");
+                            if (!doTranslationMask)
+                            {
+                                args.Add($"copyMask: default(TranslationCrystal)");
+                            }
+                            else if (deepCopy)
+                            {
+                                args.Add($"copyMask: {copyMaskAccessor}?.GetSubCrystal({this.IndexEnumInt})");
+                            }
+                            else
+                            {
+                                args.Add($"copyMask: {copyMaskAccessor}.Specific");
+                            }
                         }
+                        args.AddPassArg($"errorMask");
                     }
                     fg.AppendLine($"{retAccessor}copyRet;");
                     break;

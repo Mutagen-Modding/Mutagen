@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = WeatherChance_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherChance_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -528,6 +528,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static WeatherChance DeepCopy(
+            this IWeatherChanceGetter item,
+            out WeatherChance_ErrorMask errorMask,
+            WeatherChance_TranslationMask copyMask = null)
+        {
+            return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static WeatherChance DeepCopy(
+            this IWeatherChanceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1132,13 +1154,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChance item,
             IWeatherChanceGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherChance_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Weather ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Weather) ?? true))
             {
                 item.Weather_Property.FormKey = rhs.Weather_Property.FormKey;
             }
-            if (copyMask?.Chance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Chance) ?? true))
             {
                 item.Chance = rhs.Chance;
             }
@@ -1153,6 +1175,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WeatherChance DeepCopy(
+            IWeatherChanceGetter item,
+            out WeatherChance_ErrorMask errorMask,
+            WeatherChance_TranslationMask copyMask = null)
+        {
+            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WeatherChance DeepCopy(
+            IWeatherChanceGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

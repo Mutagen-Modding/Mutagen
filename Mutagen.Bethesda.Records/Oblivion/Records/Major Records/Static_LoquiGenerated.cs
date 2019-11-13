@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Static_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IStaticInternal lhs,
             IStaticGetter rhs,
             ErrorMaskBuilder errorMask,
-            Static_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((StaticSetterTranslationCommon)((IStaticGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -528,6 +528,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((StaticSetterTranslationCommon)((IStaticGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Static DeepCopy(
+            this IStaticGetter item,
+            out Static_ErrorMask errorMask,
+            Static_TranslationMask copyMask = null)
+        {
+            return ((StaticSetterTranslationCommon)((IStaticGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Static DeepCopy(
+            this IStaticGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((StaticSetterTranslationCommon)((IStaticGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1309,21 +1331,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IStatic item,
             IStaticGetter rhs,
             ErrorMaskBuilder errorMask,
-            Static_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Static_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.Model));
                     }
                     else
                     {
@@ -1346,13 +1370,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Static DeepCopy(
+        public Static DeepCopy(
             IStaticGetter item,
             Static_TranslationMask copyMask = null)
         {
             Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Static DeepCopy(
+            IStaticGetter item,
+            out Static_ErrorMask errorMask,
+            Static_TranslationMask copyMask = null)
+        {
+            Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Static DeepCopy(
+            IStaticGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

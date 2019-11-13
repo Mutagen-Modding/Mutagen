@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal lhs,
             IGrassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Grass_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -772,6 +772,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Grass DeepCopy(
+            this IGrassGetter item,
+            out Grass_ErrorMask errorMask,
+            Grass_TranslationMask copyMask = null)
+        {
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Grass DeepCopy(
+            this IGrassGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GrassSetterTranslationCommon)((IGrassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1907,21 +1929,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGrass item,
             IGrassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Grass_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
                     }
                     else
                     {
@@ -1940,55 +1964,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Density ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
             {
                 item.Density = rhs.Density;
             }
-            if (copyMask?.MinSlope ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
             {
                 item.MinSlope = rhs.MinSlope;
             }
-            if (copyMask?.MaxSlope ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
             {
                 item.MaxSlope = rhs.MaxSlope;
             }
-            if (copyMask?.Fluff1 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff1) ?? true))
             {
                 item.Fluff1 = rhs.Fluff1;
             }
-            if (copyMask?.UnitFromWaterAmount ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
             {
                 item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
             }
-            if (copyMask?.Fluff2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Fluff2) ?? true))
             {
                 item.Fluff2 = rhs.Fluff2;
             }
-            if (copyMask?.UnitFromWaterMode ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
             {
                 item.UnitFromWaterMode = rhs.UnitFromWaterMode;
             }
-            if (copyMask?.PositionRange ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
             {
                 item.PositionRange = rhs.PositionRange;
             }
-            if (copyMask?.HeightRange ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
             {
                 item.HeightRange = rhs.HeightRange;
             }
-            if (copyMask?.ColorRange ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
             {
                 item.ColorRange = rhs.ColorRange;
             }
-            if (copyMask?.WavePeriod ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
             {
                 item.WavePeriod = rhs.WavePeriod;
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -1996,13 +2020,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Grass DeepCopy(
+        public Grass DeepCopy(
             IGrassGetter item,
             Grass_TranslationMask copyMask = null)
         {
             Grass ret = (Grass)((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Grass DeepCopy(
+            IGrassGetter item,
+            out Grass_ErrorMask errorMask,
+            Grass_TranslationMask copyMask = null)
+        {
+            Grass ret = (Grass)((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Grass DeepCopy(
+            IGrassGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Grass ret = (Grass)((GrassSetterCommon)((IGrassGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

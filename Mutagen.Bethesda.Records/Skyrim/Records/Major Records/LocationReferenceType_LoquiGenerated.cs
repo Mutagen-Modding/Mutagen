@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
             this ILocationReferenceTypeInternal lhs,
             ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -529,6 +529,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static LocationReferenceType DeepCopy(
+            this ILocationReferenceTypeGetter item,
+            out LocationReferenceType_ErrorMask errorMask,
+            LocationReferenceType_TranslationMask copyMask = null)
+        {
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static LocationReferenceType DeepCopy(
+            this ILocationReferenceTypeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1303,14 +1325,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReferenceType item,
             ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder errorMask,
-            LocationReferenceType_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Color ?? true)
+            if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
                 errorMask?.PushIndex((int)LocationReferenceType_FieldIndex.Color);
                 try
@@ -1338,13 +1360,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new LocationReferenceType DeepCopy(
+        public LocationReferenceType DeepCopy(
             ILocationReferenceTypeGetter item,
             LocationReferenceType_TranslationMask copyMask = null)
         {
             LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LocationReferenceType DeepCopy(
+            ILocationReferenceTypeGetter item,
+            out LocationReferenceType_ErrorMask errorMask,
+            LocationReferenceType_TranslationMask copyMask = null)
+        {
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public LocationReferenceType DeepCopy(
+            ILocationReferenceTypeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RaceStats_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats lhs,
             IRaceStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceStats_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -565,6 +565,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RaceStats DeepCopy(
+            this IRaceStatsGetter item,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_TranslationMask copyMask = null)
+        {
+            return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RaceStats DeepCopy(
+            this IRaceStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1298,37 +1320,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStats item,
             IRaceStatsGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceStats_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Strength ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
             {
                 item.Strength = rhs.Strength;
             }
-            if (copyMask?.Intelligence ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Intelligence) ?? true))
             {
                 item.Intelligence = rhs.Intelligence;
             }
-            if (copyMask?.Willpower ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Willpower) ?? true))
             {
                 item.Willpower = rhs.Willpower;
             }
-            if (copyMask?.Agility ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Agility) ?? true))
             {
                 item.Agility = rhs.Agility;
             }
-            if (copyMask?.Speed ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Speed) ?? true))
             {
                 item.Speed = rhs.Speed;
             }
-            if (copyMask?.Endurance ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Endurance) ?? true))
             {
                 item.Endurance = rhs.Endurance;
             }
-            if (copyMask?.Personality ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Personality) ?? true))
             {
                 item.Personality = rhs.Personality;
             }
-            if (copyMask?.Luck ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceStats_FieldIndex.Luck) ?? true))
             {
                 item.Luck = rhs.Luck;
             }
@@ -1343,6 +1365,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceStats DeepCopy(
+            IRaceStatsGetter item,
+            out RaceStats_ErrorMask errorMask,
+            RaceStats_TranslationMask copyMask = null)
+        {
+            RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceStats DeepCopy(
+            IRaceStatsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

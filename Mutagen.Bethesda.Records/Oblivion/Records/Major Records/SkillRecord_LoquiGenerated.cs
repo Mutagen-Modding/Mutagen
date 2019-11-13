@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SkillRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkillRecord_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -866,6 +866,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SkillRecord DeepCopy(
+            this ISkillRecordGetter item,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask copyMask = null)
+        {
+            return ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SkillRecord DeepCopy(
+            this ISkillRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2099,14 +2121,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecord item,
             ISkillRecordGetter rhs,
             ErrorMaskBuilder errorMask,
-            SkillRecord_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Skill ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Skill);
                 try
@@ -2130,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Description ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Description);
                 try
@@ -2154,7 +2176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.Icon);
                 try
@@ -2178,27 +2200,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Action ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
             {
                 item.Action = rhs.Action;
             }
-            if (copyMask?.Attribute ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
             {
                 item.Attribute = rhs.Attribute;
             }
-            if (copyMask?.Specialization ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
             {
                 item.Specialization = rhs.Specialization;
             }
-            if (copyMask?.UseValueFirst ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
             {
                 item.UseValueFirst = rhs.UseValueFirst;
             }
-            if (copyMask?.UseValueSecond ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
             {
                 item.UseValueSecond = rhs.UseValueSecond;
             }
-            if (copyMask?.ApprenticeText ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.ApprenticeText);
                 try
@@ -2222,7 +2244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.JourneymanText ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.JourneymanText);
                 try
@@ -2246,7 +2268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ExpertText ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.ExpertText);
                 try
@@ -2270,7 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MasterText ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
             {
                 errorMask?.PushIndex((int)SkillRecord_FieldIndex.MasterText);
                 try
@@ -2294,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2302,13 +2324,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new SkillRecord DeepCopy(
+        public SkillRecord DeepCopy(
             ISkillRecordGetter item,
             SkillRecord_TranslationMask copyMask = null)
         {
             SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SkillRecord DeepCopy(
+            ISkillRecordGetter item,
+            out SkillRecord_ErrorMask errorMask,
+            SkillRecord_TranslationMask copyMask = null)
+        {
+            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SkillRecord DeepCopy(
+            ISkillRecordGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

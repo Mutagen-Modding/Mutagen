@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = WeatherType_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -527,6 +527,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static WeatherType DeepCopy(
+            this IWeatherTypeGetter item,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask copyMask = null)
+        {
+            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static WeatherType DeepCopy(
+            this IWeatherTypeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1212,21 +1234,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             IWeatherTypeGetter rhs,
             ErrorMaskBuilder errorMask,
-            WeatherType_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Sunrise ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunrise) ?? true))
             {
                 item.Sunrise = rhs.Sunrise;
             }
-            if (copyMask?.Day ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Day) ?? true))
             {
                 item.Day = rhs.Day;
             }
-            if (copyMask?.Sunset ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Sunset) ?? true))
             {
                 item.Sunset = rhs.Sunset;
             }
-            if (copyMask?.Night ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WeatherType_FieldIndex.Night) ?? true))
             {
                 item.Night = rhs.Night;
             }
@@ -1241,6 +1263,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherType ret = (WeatherType)((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WeatherType DeepCopy(
+            IWeatherTypeGetter item,
+            out WeatherType_ErrorMask errorMask,
+            WeatherType_TranslationMask copyMask = null)
+        {
+            WeatherType ret = (WeatherType)((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WeatherType DeepCopy(
+            IWeatherTypeGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            WeatherType ret = (WeatherType)((WeatherTypeSetterCommon)((IWeatherTypeGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

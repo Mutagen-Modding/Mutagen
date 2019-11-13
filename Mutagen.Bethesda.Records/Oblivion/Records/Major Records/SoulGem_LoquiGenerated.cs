@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemInternal lhs,
             ISoulGemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoulGem_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SoulGemSetterTranslationCommon)((ISoulGemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -771,6 +771,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SoulGemSetterTranslationCommon)((ISoulGemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SoulGem DeepCopy(
+            this ISoulGemGetter item,
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_TranslationMask copyMask = null)
+        {
+            return ((SoulGemSetterTranslationCommon)((ISoulGemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SoulGem DeepCopy(
+            this ISoulGemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SoulGemSetterTranslationCommon)((ISoulGemGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1900,14 +1922,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGem item,
             ISoulGemGetter rhs,
             ErrorMaskBuilder errorMask,
-            SoulGem_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
                 try
@@ -1931,14 +1953,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
                     }
                     else
                     {
@@ -1957,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Icon);
                 try
@@ -1981,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.Script);
                 try
@@ -1998,15 +2022,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.ContainedSoul ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
                 try
@@ -2030,7 +2054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MaximumCapacity ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
             {
                 errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
                 try
@@ -2054,7 +2078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2062,13 +2086,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new SoulGem DeepCopy(
+        public SoulGem DeepCopy(
             ISoulGemGetter item,
             SoulGem_TranslationMask copyMask = null)
         {
             SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoulGem DeepCopy(
+            ISoulGemGetter item,
+            out SoulGem_ErrorMask errorMask,
+            SoulGem_TranslationMask copyMask = null)
+        {
+            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SoulGem DeepCopy(
+            ISoulGemGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

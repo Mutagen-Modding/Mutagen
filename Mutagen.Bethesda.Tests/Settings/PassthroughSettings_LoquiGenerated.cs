@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = PassthroughSettings_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Tests
             this IPassthroughSettings lhs,
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -496,6 +496,28 @@ namespace Mutagen.Bethesda.Tests
             return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static PassthroughSettings DeepCopy(
+            this IPassthroughSettingsGetter item,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask copyMask = null)
+        {
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static PassthroughSettings DeepCopy(
+            this IPassthroughSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((PassthroughSettingsSetterTranslationCommon)((IPassthroughSettingsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1140,37 +1162,37 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettings item,
             IPassthroughSettingsGetter rhs,
             ErrorMaskBuilder errorMask,
-            PassthroughSettings_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.ReuseCaches ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
             {
                 item.ReuseCaches = rhs.ReuseCaches;
             }
-            if (copyMask?.ReorderRecords ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
             {
                 item.ReorderRecords = rhs.ReorderRecords;
             }
-            if (copyMask?.DeleteCachesAfter ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.DeleteCachesAfter) ?? true))
             {
                 item.DeleteCachesAfter = rhs.DeleteCachesAfter;
             }
-            if (copyMask?.TestNormal ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestNormal) ?? true))
             {
                 item.TestNormal = rhs.TestNormal;
             }
-            if (copyMask?.TestBinaryWrapper ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryWrapper) ?? true))
             {
                 item.TestBinaryWrapper = rhs.TestBinaryWrapper;
             }
-            if (copyMask?.TestImport ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
             {
                 item.TestImport = rhs.TestImport;
             }
-            if (copyMask?.TestFolder ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestFolder) ?? true))
             {
                 item.TestFolder = rhs.TestFolder;
             }
-            if (copyMask?.TestCopyIn ?? true)
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestCopyIn) ?? true))
             {
                 item.TestCopyIn = rhs.TestCopyIn;
             }
@@ -1185,6 +1207,32 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public PassthroughSettings DeepCopy(
+            IPassthroughSettingsGetter item,
+            out PassthroughSettings_ErrorMask errorMask,
+            PassthroughSettings_TranslationMask copyMask = null)
+        {
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public PassthroughSettings DeepCopy(
+            IPassthroughSettingsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RaceRelation_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceRelation lhs,
             IRaceRelationGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceRelation_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -529,6 +529,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RaceRelation DeepCopy(
+            this IRaceRelationGetter item,
+            out RaceRelation_ErrorMask errorMask,
+            RaceRelation_TranslationMask copyMask = null)
+        {
+            return ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RaceRelation DeepCopy(
+            this IRaceRelationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1138,13 +1160,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceRelation item,
             IRaceRelationGetter rhs,
             ErrorMaskBuilder errorMask,
-            RaceRelation_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Race ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
                 item.Race_Property.FormKey = rhs.Race_Property.FormKey;
             }
-            if (copyMask?.Modifier ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {
                 item.Modifier = rhs.Modifier;
             }
@@ -1159,6 +1181,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceRelation DeepCopy(
+            IRaceRelationGetter item,
+            out RaceRelation_ErrorMask errorMask,
+            RaceRelation_TranslationMask copyMask = null)
+        {
+            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RaceRelation DeepCopy(
+            IRaceRelationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

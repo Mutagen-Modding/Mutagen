@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = DataFolderLocations_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -435,6 +435,28 @@ namespace Mutagen.Bethesda.Tests
             return ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static DataFolderLocations DeepCopy(
+            this IDataFolderLocationsGetter item,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask copyMask = null)
+        {
+            return ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static DataFolderLocations DeepCopy(
+            this IDataFolderLocationsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -953,13 +975,13 @@ namespace Mutagen.Bethesda.Tests.Internals
             IDataFolderLocations item,
             IDataFolderLocationsGetter rhs,
             ErrorMaskBuilder errorMask,
-            DataFolderLocations_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Oblivion ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Oblivion) ?? true))
             {
                 item.Oblivion = rhs.Oblivion;
             }
-            if (copyMask?.Skyrim ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
             {
                 item.Skyrim = rhs.Skyrim;
             }
@@ -974,6 +996,32 @@ namespace Mutagen.Bethesda.Tests.Internals
             DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DataFolderLocations DeepCopy(
+            IDataFolderLocationsGetter item,
+            out DataFolderLocations_ErrorMask errorMask,
+            DataFolderLocations_TranslationMask copyMask = null)
+        {
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DataFolderLocations DeepCopy(
+            IDataFolderLocationsGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal lhs,
             IClassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Class_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1133,6 +1133,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Class DeepCopy(
+            this IClassGetter item,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask copyMask = null)
+        {
+            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Class DeepCopy(
+            this IClassGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ClassSetterTranslationCommon)((IClassGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2646,14 +2668,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClass item,
             IClassGetter rhs,
             ErrorMaskBuilder errorMask,
-            Class_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Name);
                 try
@@ -2677,7 +2699,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Description ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Description);
                 try
@@ -2701,7 +2723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Icon);
                 try
@@ -2725,115 +2747,115 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Unknown ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if (copyMask?.Teaches ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Teaches) ?? true))
             {
                 item.Teaches = rhs.Teaches;
             }
-            if (copyMask?.MaxTrainingLevel ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.MaxTrainingLevel) ?? true))
             {
                 item.MaxTrainingLevel = rhs.MaxTrainingLevel;
             }
-            if (copyMask?.OneHandedWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.OneHandedWeight) ?? true))
             {
                 item.OneHandedWeight = rhs.OneHandedWeight;
             }
-            if (copyMask?.TwoHandedWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.TwoHandedWeight) ?? true))
             {
                 item.TwoHandedWeight = rhs.TwoHandedWeight;
             }
-            if (copyMask?.MarksmanWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.MarksmanWeight) ?? true))
             {
                 item.MarksmanWeight = rhs.MarksmanWeight;
             }
-            if (copyMask?.BlockWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.BlockWeight) ?? true))
             {
                 item.BlockWeight = rhs.BlockWeight;
             }
-            if (copyMask?.SmithingWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.SmithingWeight) ?? true))
             {
                 item.SmithingWeight = rhs.SmithingWeight;
             }
-            if (copyMask?.HeavyArmorWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.HeavyArmorWeight) ?? true))
             {
                 item.HeavyArmorWeight = rhs.HeavyArmorWeight;
             }
-            if (copyMask?.LightArmorWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.LightArmorWeight) ?? true))
             {
                 item.LightArmorWeight = rhs.LightArmorWeight;
             }
-            if (copyMask?.PickpocketWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.PickpocketWeight) ?? true))
             {
                 item.PickpocketWeight = rhs.PickpocketWeight;
             }
-            if (copyMask?.LockpickingWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.LockpickingWeight) ?? true))
             {
                 item.LockpickingWeight = rhs.LockpickingWeight;
             }
-            if (copyMask?.SneakWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.SneakWeight) ?? true))
             {
                 item.SneakWeight = rhs.SneakWeight;
             }
-            if (copyMask?.AlchemyWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.AlchemyWeight) ?? true))
             {
                 item.AlchemyWeight = rhs.AlchemyWeight;
             }
-            if (copyMask?.SpeechcraftWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.SpeechcraftWeight) ?? true))
             {
                 item.SpeechcraftWeight = rhs.SpeechcraftWeight;
             }
-            if (copyMask?.AlterationWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.AlterationWeight) ?? true))
             {
                 item.AlterationWeight = rhs.AlterationWeight;
             }
-            if (copyMask?.ConjurationWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.ConjurationWeight) ?? true))
             {
                 item.ConjurationWeight = rhs.ConjurationWeight;
             }
-            if (copyMask?.DestructionWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DestructionWeight) ?? true))
             {
                 item.DestructionWeight = rhs.DestructionWeight;
             }
-            if (copyMask?.IllusionWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.IllusionWeight) ?? true))
             {
                 item.IllusionWeight = rhs.IllusionWeight;
             }
-            if (copyMask?.RestorationWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.RestorationWeight) ?? true))
             {
                 item.RestorationWeight = rhs.RestorationWeight;
             }
-            if (copyMask?.EnchantingWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.EnchantingWeight) ?? true))
             {
                 item.EnchantingWeight = rhs.EnchantingWeight;
             }
-            if (copyMask?.BleedoutDefault ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
             {
                 item.BleedoutDefault = rhs.BleedoutDefault;
             }
-            if (copyMask?.VoicePoints ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.VoicePoints) ?? true))
             {
                 item.VoicePoints = rhs.VoicePoints;
             }
-            if (copyMask?.HealthWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.HealthWeight) ?? true))
             {
                 item.HealthWeight = rhs.HealthWeight;
             }
-            if (copyMask?.MagickaWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.MagickaWeight) ?? true))
             {
                 item.MagickaWeight = rhs.MagickaWeight;
             }
-            if (copyMask?.StaminaWeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.StaminaWeight) ?? true))
             {
                 item.StaminaWeight = rhs.StaminaWeight;
             }
-            if (copyMask?.Unknown2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2841,13 +2863,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new Class DeepCopy(
+        public Class DeepCopy(
             IClassGetter item,
             Class_TranslationMask copyMask = null)
         {
             Class ret = (Class)((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Class DeepCopy(
+            IClassGetter item,
+            out Class_ErrorMask errorMask,
+            Class_TranslationMask copyMask = null)
+        {
+            Class ret = (Class)((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Class DeepCopy(
+            IClassGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Class ret = (Class)((ClassSetterCommon)((IClassGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = WorldspaceSubBlock_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IWorldspaceSubBlock lhs,
             IWorldspaceSubBlockGetter rhs,
             ErrorMaskBuilder errorMask,
-            WorldspaceSubBlock_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((WorldspaceSubBlockSetterTranslationCommon)((IWorldspaceSubBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -577,6 +577,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceSubBlockSetterTranslationCommon)((IWorldspaceSubBlockGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static WorldspaceSubBlock DeepCopy(
+            this IWorldspaceSubBlockGetter item,
+            out WorldspaceSubBlock_ErrorMask errorMask,
+            WorldspaceSubBlock_TranslationMask copyMask = null)
+        {
+            return ((WorldspaceSubBlockSetterTranslationCommon)((IWorldspaceSubBlockGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static WorldspaceSubBlock DeepCopy(
+            this IWorldspaceSubBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((WorldspaceSubBlockSetterTranslationCommon)((IWorldspaceSubBlockGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1368,25 +1390,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlock item,
             IWorldspaceSubBlockGetter rhs,
             ErrorMaskBuilder errorMask,
-            WorldspaceSubBlock_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.BlockNumberY ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberY) ?? true))
             {
                 item.BlockNumberY = rhs.BlockNumberY;
             }
-            if (copyMask?.BlockNumberX ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberX) ?? true))
             {
                 item.BlockNumberX = rhs.BlockNumberX;
             }
-            if (copyMask?.GroupType ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.GroupType) ?? true))
             {
                 item.GroupType = rhs.GroupType;
             }
-            if (copyMask?.LastModified ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified.ToArray();
             }
-            if (copyMask?.Items.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.Items) ?? true))
             {
                 errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.Items);
                 try
@@ -1398,7 +1420,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             var copyRet = new Cell(r.FormKey);
                             copyRet.DeepCopyFieldsFrom(
                                 rhs: r,
-                                copyMask: copyMask?.Items?.Specific);
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
                             return copyRet;
                         });
                 }
@@ -1423,6 +1446,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WorldspaceSubBlock DeepCopy(
+            IWorldspaceSubBlockGetter item,
+            out WorldspaceSubBlock_ErrorMask errorMask,
+            WorldspaceSubBlock_TranslationMask copyMask = null)
+        {
+            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public WorldspaceSubBlock DeepCopy(
+            IWorldspaceSubBlockGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

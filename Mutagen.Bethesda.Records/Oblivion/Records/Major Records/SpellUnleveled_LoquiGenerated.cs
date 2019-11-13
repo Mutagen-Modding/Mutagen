@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellUnleveledInternal lhs,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -625,6 +625,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static SpellUnleveled DeepCopy(
+            this ISpellUnleveledGetter item,
+            out SpellUnleveled_ErrorMask errorMask,
+            SpellUnleveled_TranslationMask copyMask = null)
+        {
+            return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static SpellUnleveled DeepCopy(
+            this ISpellUnleveledGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((SpellUnleveledSetterTranslationCommon)((ISpellUnleveledGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1644,30 +1666,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveled item,
             ISpellUnleveledGetter rhs,
             ErrorMaskBuilder errorMask,
-            SpellUnleveled_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Type ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
             }
-            if (copyMask?.Cost ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Cost) ?? true))
             {
                 item.Cost = rhs.Cost;
             }
-            if (copyMask?.Level ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Level) ?? true))
             {
                 item.Level = rhs.Level;
             }
-            if (copyMask?.Flag ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Flag) ?? true))
             {
                 item.Flag = rhs.Flag;
             }
-            if (copyMask?.Effects.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))
             {
                 errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Effects);
                 try
@@ -1676,7 +1698,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Effects,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Effects?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1689,7 +1713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.SPITDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.SPITDataTypeState) ?? true))
             {
                 item.SPITDataTypeState = rhs.SPITDataTypeState;
             }
@@ -1697,13 +1721,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new SpellUnleveled DeepCopy(
+        public SpellUnleveled DeepCopy(
             ISpellUnleveledGetter item,
             SpellUnleveled_TranslationMask copyMask = null)
         {
             SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SpellUnleveled DeepCopy(
+            ISpellUnleveledGetter item,
+            out SpellUnleveled_ErrorMask errorMask,
+            SpellUnleveled_TranslationMask copyMask = null)
+        {
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public SpellUnleveled DeepCopy(
+            ISpellUnleveledGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

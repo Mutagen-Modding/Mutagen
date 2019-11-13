@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternal lhs,
             ICellGetter rhs,
             ErrorMaskBuilder errorMask,
-            Cell_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -1127,6 +1127,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            out Cell_ErrorMask errorMask,
+            Cell_TranslationMask copyMask = null)
+        {
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -2812,14 +2834,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICell item,
             ICellGetter rhs,
             ErrorMaskBuilder errorMask,
-            Cell_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((PlaceSetterTranslationCommon)((IPlaceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Name);
                 try
@@ -2843,7 +2865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
                 try
@@ -2867,7 +2889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Grid ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
                 try
@@ -2891,14 +2913,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Lighting.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
                 try
                 {
                     if(rhs.Lighting_IsSet)
                     {
-                        item.Lighting = rhs.Lighting.DeepCopy(copyMask?.Lighting?.Specific);
+                        item.Lighting = rhs.Lighting.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
                     }
                     else
                     {
@@ -2917,7 +2941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Regions ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                 try
@@ -2936,7 +2960,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.MusicType ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
                 try
@@ -2960,7 +2984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.WaterHeight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
                 try
@@ -2984,7 +3008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Climate ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                 try
@@ -3001,7 +3025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Water ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                 try
@@ -3018,7 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Owner ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                 try
@@ -3035,7 +3059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.FactionRank ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
                 try
@@ -3059,7 +3083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.GlobalVariable ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                 try
@@ -3076,7 +3100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.PathGrid.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
                 try
@@ -3086,7 +3110,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var copyRet = new PathGrid(rhs.PathGrid.FormKey);
                         copyRet.DeepCopyFieldsFrom(
                             rhs: rhs.PathGrid,
-                            copyMask: copyMask?.PathGrid?.Specific);
+                            copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid),
+                            errorMask: errorMask);
                         item.PathGrid = copyRet;
                     }
                     else
@@ -3106,7 +3131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Landscape.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
                 try
@@ -3116,7 +3141,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         var copyRet = new Landscape(rhs.Landscape.FormKey);
                         copyRet.DeepCopyFieldsFrom(
                             rhs: rhs.Landscape,
-                            copyMask: copyMask?.Landscape?.Specific);
+                            copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),
+                            errorMask: errorMask);
                         item.Landscape = copyRet;
                     }
                     else
@@ -3136,15 +3162,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Timestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
                 item.Timestamp = rhs.Timestamp.ToArray();
             }
-            if (copyMask?.PersistentTimestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
             {
                 item.PersistentTimestamp = rhs.PersistentTimestamp.ToArray();
             }
-            if (copyMask?.Persistent ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                 try
@@ -3166,11 +3192,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TemporaryTimestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
             {
                 item.TemporaryTimestamp = rhs.TemporaryTimestamp.ToArray();
             }
-            if (copyMask?.Temporary ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                 try
@@ -3192,11 +3218,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.VisibleWhenDistantTimestamp ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
             {
                 item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp.ToArray();
             }
-            if (copyMask?.VisibleWhenDistant ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                 try
@@ -3222,13 +3248,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Cell DeepCopy(
+        public Cell DeepCopy(
             ICellGetter item,
             Cell_TranslationMask copyMask = null)
         {
             Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Cell DeepCopy(
+            ICellGetter item,
+            out Cell_ErrorMask errorMask,
+            Cell_TranslationMask copyMask = null)
+        {
+            Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Cell DeepCopy(
+            ICellGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

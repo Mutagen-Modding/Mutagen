@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Clothing_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IClothingInternal lhs,
             IClothingGetter rhs,
             ErrorMaskBuilder errorMask,
-            Clothing_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ClothingSetterTranslationCommon)((IClothingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -542,6 +542,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ClothingSetterTranslationCommon)((IClothingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Clothing DeepCopy(
+            this IClothingGetter item,
+            out Clothing_ErrorMask errorMask,
+            Clothing_TranslationMask copyMask = null)
+        {
+            return ((ClothingSetterTranslationCommon)((IClothingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Clothing DeepCopy(
+            this IClothingGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ClothingSetterTranslationCommon)((IClothingGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1467,22 +1489,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothing item,
             IClothingGetter rhs,
             ErrorMaskBuilder errorMask,
-            Clothing_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Clothing_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -1490,13 +1512,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Clothing DeepCopy(
+        public Clothing DeepCopy(
             IClothingGetter item,
             Clothing_TranslationMask copyMask = null)
         {
             Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Clothing DeepCopy(
+            IClothingGetter item,
+            out Clothing_ErrorMask errorMask,
+            Clothing_TranslationMask copyMask = null)
+        {
+            Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Clothing DeepCopy(
+            IClothingGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

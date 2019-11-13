@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IQuestInternal lhs,
             IQuestGetter rhs,
             ErrorMaskBuilder errorMask,
-            Quest_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((QuestSetterTranslationCommon)((IQuestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -729,6 +729,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestSetterTranslationCommon)((IQuestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Quest DeepCopy(
+            this IQuestGetter item,
+            out Quest_ErrorMask errorMask,
+            Quest_TranslationMask copyMask = null)
+        {
+            return ((QuestSetterTranslationCommon)((IQuestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Quest DeepCopy(
+            this IQuestGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((QuestSetterTranslationCommon)((IQuestGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1872,14 +1894,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuest item,
             IQuestGetter rhs,
             ErrorMaskBuilder errorMask,
-            Quest_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Script ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Script);
                 try
@@ -1896,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Name ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Name);
                 try
@@ -1920,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Icon ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Icon) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Icon);
                 try
@@ -1944,15 +1966,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if (copyMask?.Priority ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Priority) ?? true))
             {
                 item.Priority = rhs.Priority;
             }
-            if (copyMask?.Conditions.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
@@ -1961,7 +1983,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Conditions,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Conditions?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1974,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Stages.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
@@ -1983,7 +2007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Stages,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Stages?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1996,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Targets.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
@@ -2005,7 +2031,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Targets,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Targets?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -2018,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -2026,13 +2054,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Quest DeepCopy(
+        public Quest DeepCopy(
             IQuestGetter item,
             Quest_TranslationMask copyMask = null)
         {
             Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Quest DeepCopy(
+            IQuestGetter item,
+            out Quest_ErrorMask errorMask,
+            Quest_TranslationMask copyMask = null)
+        {
+            Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Quest DeepCopy(
+            IQuestGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

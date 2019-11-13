@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = DialogResponse_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -670,6 +670,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static DialogResponse DeepCopy(
+            this IDialogResponseGetter item,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_TranslationMask copyMask = null)
+        {
+            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static DialogResponse DeepCopy(
+            this IDialogResponseGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1509,29 +1531,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponse item,
             IDialogResponseGetter rhs,
             ErrorMaskBuilder errorMask,
-            DialogResponse_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.Emotion ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 item.Emotion = rhs.Emotion;
             }
-            if (copyMask?.EmotionValue ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
             {
                 item.EmotionValue = rhs.EmotionValue;
             }
-            if (copyMask?.Fluff1 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff1) ?? true))
             {
                 item.Fluff1 = rhs.Fluff1.ToArray();
             }
-            if (copyMask?.ResponseNumber ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
             {
                 item.ResponseNumber = rhs.ResponseNumber;
             }
-            if (copyMask?.Fluff2 ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Fluff2) ?? true))
             {
                 item.Fluff2 = rhs.Fluff2.ToArray();
             }
-            if (copyMask?.ResponseText ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
                 try
@@ -1555,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.ActorNotes ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
             {
                 errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
                 try
@@ -1579,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.TRDTDataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
             {
                 item.TRDTDataTypeState = rhs.TRDTDataTypeState;
             }
@@ -1594,6 +1616,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DialogResponse DeepCopy(
+            IDialogResponseGetter item,
+            out DialogResponse_ErrorMask errorMask,
+            DialogResponse_TranslationMask copyMask = null)
+        {
+            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public DialogResponse DeepCopy(
+            IDialogResponseGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

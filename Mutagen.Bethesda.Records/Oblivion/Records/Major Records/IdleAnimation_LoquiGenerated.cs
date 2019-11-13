@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationInternal lhs,
             IIdleAnimationGetter rhs,
             ErrorMaskBuilder errorMask,
-            IdleAnimation_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -629,6 +629,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static IdleAnimation DeepCopy(
+            this IIdleAnimationGetter item,
+            out IdleAnimation_ErrorMask errorMask,
+            IdleAnimation_TranslationMask copyMask = null)
+        {
+            return ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static IdleAnimation DeepCopy(
+            this IIdleAnimationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1582,21 +1604,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIdleAnimation item,
             IIdleAnimationGetter rhs,
             ErrorMaskBuilder errorMask,
-            IdleAnimation_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Model.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model_IsSet)
                     {
-                        item.Model = rhs.Model.DeepCopy(copyMask?.Model?.Specific);
+                        item.Model = rhs.Model.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model));
                     }
                     else
                     {
@@ -1615,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.Conditions.Overall ?? true)
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
                 try
@@ -1624,7 +1648,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Conditions,
                         converter: (r) =>
                         {
-                            return r.DeepCopy(copyMask?.Conditions?.Specific);
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
                         });
                 }
                 catch (Exception ex)
@@ -1637,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.AnimationGroupSection ?? true)
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 try
@@ -1661,7 +1687,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if (copyMask?.RelatedIdleAnimations ?? true)
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
             {
                 errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
                 try
@@ -1684,13 +1710,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new IdleAnimation DeepCopy(
+        public IdleAnimation DeepCopy(
             IIdleAnimationGetter item,
             IdleAnimation_TranslationMask copyMask = null)
         {
             IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public IdleAnimation DeepCopy(
+            IIdleAnimationGetter item,
+            out IdleAnimation_ErrorMask errorMask,
+            IdleAnimation_TranslationMask copyMask = null)
+        {
+            IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public IdleAnimation DeepCopy(
+            IIdleAnimationGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

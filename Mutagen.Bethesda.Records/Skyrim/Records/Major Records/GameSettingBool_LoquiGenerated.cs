@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingBoolInternal lhs,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingBool_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -527,6 +527,28 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static GameSettingBool DeepCopy(
+            this IGameSettingBoolGetter item,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask copyMask = null)
+        {
+            return ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static GameSettingBool DeepCopy(
+            this IGameSettingBoolGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((GameSettingBoolSetterTranslationCommon)((IGameSettingBoolGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1336,14 +1358,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingBool item,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder errorMask,
-            GameSettingBool_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.Data ?? true)
+            if ((copyMask?.GetShouldTranslate((int)GameSettingBool_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)GameSettingBool_FieldIndex.Data);
                 try
@@ -1371,13 +1393,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public new GameSettingBool DeepCopy(
+        public GameSettingBool DeepCopy(
             IGameSettingBoolGetter item,
             GameSettingBool_TranslationMask copyMask = null)
         {
             GameSettingBool ret = (GameSettingBool)((GameSettingBoolSetterCommon)((IGameSettingBoolGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GameSettingBool DeepCopy(
+            IGameSettingBoolGetter item,
+            out GameSettingBool_ErrorMask errorMask,
+            GameSettingBool_TranslationMask copyMask = null)
+        {
+            GameSettingBool ret = (GameSettingBool)((GameSettingBoolSetterCommon)((IGameSettingBoolGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public GameSettingBool DeepCopy(
+            IGameSettingBoolGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            GameSettingBool ret = (GameSettingBool)((GameSettingBoolSetterCommon)((IGameSettingBoolGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

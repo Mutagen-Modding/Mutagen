@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = RelatedWaters_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IRelatedWaters lhs,
             IRelatedWatersGetter rhs,
             ErrorMaskBuilder errorMask,
-            RelatedWaters_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -540,6 +540,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static RelatedWaters DeepCopy(
+            this IRelatedWatersGetter item,
+            out RelatedWaters_ErrorMask errorMask,
+            RelatedWaters_TranslationMask copyMask = null)
+        {
+            return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static RelatedWaters DeepCopy(
+            this IRelatedWatersGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((RelatedWatersSetterTranslationCommon)((IRelatedWatersGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1177,17 +1199,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             IRelatedWatersGetter rhs,
             ErrorMaskBuilder errorMask,
-            RelatedWaters_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
-            if (copyMask?.RelatedWaterDaytime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
                 item.RelatedWaterDaytime_Property.FormKey = rhs.RelatedWaterDaytime_Property.FormKey;
             }
-            if (copyMask?.RelatedWaterNighttime ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
                 item.RelatedWaterNighttime_Property.FormKey = rhs.RelatedWaterNighttime_Property.FormKey;
             }
-            if (copyMask?.RelatedWaterUnderwater ?? true)
+            if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
                 item.RelatedWaterUnderwater_Property.FormKey = rhs.RelatedWaterUnderwater_Property.FormKey;
             }
@@ -1202,6 +1224,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RelatedWaters DeepCopy(
+            IRelatedWatersGetter item,
+            out RelatedWaters_ErrorMask errorMask,
+            RelatedWaters_TranslationMask copyMask = null)
+        {
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public RelatedWaters DeepCopy(
+            IRelatedWatersGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }

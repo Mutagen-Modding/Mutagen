@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask);
+                copyMask: copyMask.GetCrystal());
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IArmorInternal lhs,
             IArmorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Armor_TranslationMask copyMask = null)
+            TranslationCrystal copyMask)
         {
             ((ArmorSetterTranslationCommon)((IArmorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
@@ -580,6 +580,28 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
                 item: item,
                 copyMask: copyMask);
+        }
+
+        public static Armor DeepCopy(
+            this IArmorGetter item,
+            out Armor_ErrorMask errorMask,
+            Armor_TranslationMask copyMask = null)
+        {
+            return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: out errorMask);
+        }
+
+        public static Armor DeepCopy(
+            this IArmorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            return ((ArmorSetterTranslationCommon)((IArmorGetter)item).CommonSetterTranslationInstance()).DeepCopy(
+                item: item,
+                copyMask: copyMask,
+                errorMask: errorMask);
         }
 
         #region Xml Translation
@@ -1553,30 +1575,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmor item,
             IArmorGetter rhs,
             ErrorMaskBuilder errorMask,
-            Armor_TranslationMask copyMask)
+            TranslationCrystal copyMask)
         {
             ((ClothingAbstractSetterTranslationCommon)((IClothingAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
                 copyMask);
-            if (copyMask?.ArmorValue ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorValue) ?? true))
             {
                 item.ArmorValue = rhs.ArmorValue;
             }
-            if (copyMask?.Value ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if (copyMask?.Health ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
             {
                 item.Health = rhs.Health;
             }
-            if (copyMask?.Weight ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
-            if (copyMask?.DATADataTypeState ?? true)
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
@@ -1584,13 +1606,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #endregion
         
-        public new Armor DeepCopy(
+        public Armor DeepCopy(
             IArmorGetter item,
             Armor_TranslationMask copyMask = null)
         {
             Armor ret = (Armor)((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Armor DeepCopy(
+            IArmorGetter item,
+            out Armor_ErrorMask errorMask,
+            Armor_TranslationMask copyMask = null)
+        {
+            Armor ret = (Armor)((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: out errorMask,
+                copyMask: copyMask);
+            return ret;
+        }
+        
+        public Armor DeepCopy(
+            IArmorGetter item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask = null)
+        {
+            Armor ret = (Armor)((ArmorSetterCommon)((IArmorGetter)item).CommonSetterInstance()).GetNew();
+            ret.DeepCopyFieldsFrom(
+                item,
+                errorMask: errorMask,
                 copyMask: copyMask);
             return ret;
         }
