@@ -18,7 +18,9 @@
     </Fields>
   </Object>
   <Object name="ListGroup" objType="Group" recordType="GRUP" GUID="d6349d4b-0de2-4c44-bd06-d005ee62aa00" ID="171">
-    <Generic name="T" isLoqui="true" getterVariance="Out" />
+    <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
+      <Where>CellBlock</Where>
+    </Generic>
     <Fields>
       <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />

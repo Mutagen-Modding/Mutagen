@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public static class ListGroupExt
     {
-        public static readonly ListGroup_TranslationMask<TranslationMaskStub> XmlFolderTranslationMask = new ListGroup_TranslationMask<TranslationMaskStub>(true)
+        public static readonly ListGroup_TranslationMask<CellBlock_TranslationMask> XmlFolderTranslationMask = new ListGroup_TranslationMask<CellBlock_TranslationMask>(true)
         {
-            Items = new MaskItem<bool, TranslationMaskStub>(false, default)
+            Items = new MaskItem<bool, CellBlock_TranslationMask>(false, default)
         };
 
         public static async Task CreateFromXmlFolder<T>(
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, ILoquiObjectSetter<T>
         {
             using (errorMask?.PushIndex(index))
             {
@@ -92,12 +92,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static async Task WriteToXmlFolder<T>(
-            this ListGroup<T> list,
+            this IListGroupGetter
+            <T> list,
             DirectoryPath dir,
             string name,
             ErrorMaskBuilder errorMask,
             int index)
-            where T : IXmlItem, IBinaryItem, ILoquiObjectSetter<T>, IXmlFolderItem
+            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem, IXmlFolderItem
         {
             using (errorMask?.PushIndex(index))
             {
@@ -162,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
                 IListGroupGetter<T> item,
                 MasterReferences masterReferences,
                 ErrorMaskBuilder errorMask)
-                where T : IXmlItem, IBinaryItem, ILoquiObject<T>
+                where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,
