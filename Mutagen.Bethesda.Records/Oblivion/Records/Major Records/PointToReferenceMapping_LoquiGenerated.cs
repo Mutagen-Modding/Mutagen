@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class PointToReferenceMapping :
         IPointToReferenceMapping,
         ILoquiObjectSetter<PointToReferenceMapping>,
-        ILinkSubContainer,
         IEquatable<PointToReferenceMapping>,
         IEqualsMask
     {
@@ -361,7 +360,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPointToReferenceMapping :
         IPointToReferenceMappingGetter,
-        ILoquiObjectSetter<IPointToReferenceMapping>
+        ILoquiObjectSetter<IPointToReferenceMapping>,
+        ILinkSubContainer
     {
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }

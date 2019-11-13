@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IDoorInternal,
         ILoquiObjectSetter<Door>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Door>,
         IEqualsMask
     {
@@ -523,7 +522,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDoor :
         IDoorGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IDoorInternal>
+        ILoquiObjectSetter<IDoorInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

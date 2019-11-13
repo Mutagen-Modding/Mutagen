@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IActivatorInternal,
         ILoquiObjectSetter<Activator>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Activator>,
         IEqualsMask
     {
@@ -447,7 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IActivator :
         IActivatorGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IActivatorInternal>
+        ILoquiObjectSetter<IActivatorInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

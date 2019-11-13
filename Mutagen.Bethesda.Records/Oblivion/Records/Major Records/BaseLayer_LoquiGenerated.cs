@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class BaseLayer :
         IBaseLayerInternal,
         ILoquiObjectSetter<BaseLayer>,
-        ILinkSubContainer,
         IEquatable<BaseLayer>,
         IEqualsMask
     {
@@ -399,7 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IBaseLayer :
         IBaseLayerGetter,
-        ILoquiObjectSetter<IBaseLayerInternal>
+        ILoquiObjectSetter<IBaseLayerInternal>,
+        ILinkSubContainer
     {
         new LandTexture Texture { get; set; }
         new IFormIDLink<LandTexture> Texture_Property { get; }

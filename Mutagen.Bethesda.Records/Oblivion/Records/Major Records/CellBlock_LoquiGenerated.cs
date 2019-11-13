@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CellBlock :
         ICellBlock,
         ILoquiObjectSetter<CellBlock>,
-        ILinkSubContainer,
         IEquatable<CellBlock>,
         IEqualsMask
     {
@@ -392,7 +391,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICellBlock :
         ICellBlockGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellBlock>
+        ILoquiObjectSetter<ICellBlock>,
+        ILinkSubContainer
     {
         new Int32 BlockNumber { get; set; }
 

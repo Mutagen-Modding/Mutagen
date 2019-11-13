@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPlacedCreatureInternal,
         ILoquiObjectSetter<PlacedCreature>,
-        ILinkSubContainer,
         IEquatable<PlacedCreature>,
         IEqualsMask
     {
@@ -564,7 +563,8 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedCreatureGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedCreatureInternal>
+        ILoquiObjectSetter<IPlacedCreatureInternal>,
+        ILinkSubContainer
     {
         new Creature Base { get; set; }
         new IFormIDSetLink<Creature> Base_Property { get; }

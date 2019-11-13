@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFloraInternal,
         ILoquiObjectSetter<Flora>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Flora>,
         IEqualsMask
     {
@@ -509,7 +508,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFlora :
         IFloraGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IFloraInternal>
+        ILoquiObjectSetter<IFloraInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

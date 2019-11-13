@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellInternal,
         ILoquiObjectSetter<Spell>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Spell>,
         IEqualsMask
     {
@@ -348,7 +347,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpell :
         ISpellGetter,
         ISpellAbstract,
-        ILoquiObjectSetter<ISpellInternal>
+        ILoquiObjectSetter<ISpellInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

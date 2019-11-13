@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IBirthsignInternal,
         ILoquiObjectSetter<Birthsign>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Birthsign>,
         IEqualsMask
     {
@@ -474,7 +473,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBirthsign :
         IBirthsignGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IBirthsignInternal>
+        ILoquiObjectSetter<IBirthsignInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

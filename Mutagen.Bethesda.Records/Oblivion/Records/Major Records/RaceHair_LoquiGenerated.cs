@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceHair :
         IRaceHair,
         ILoquiObjectSetter<RaceHair>,
-        ILinkSubContainer,
         IEquatable<RaceHair>,
         IEqualsMask
     {
@@ -357,7 +356,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRaceHair :
         IRaceHairGetter,
-        ILoquiObjectSetter<IRaceHair>
+        ILoquiObjectSetter<IRaceHair>,
+        ILinkSubContainer
     {
         new Hair Male { get; set; }
         new IFormIDLink<Hair> Male_Property { get; }

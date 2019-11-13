@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Group<T> :
         IGroup<T>,
         ILoquiObjectSetter<Group<T>>,
-        ILinkSubContainer,
         IEquatable<Group<T>>,
         IEqualsMask
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
@@ -399,7 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGroup<T> :
         IGroupGetter<T>,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IGroup<T>>
+        ILoquiObjectSetter<IGroup<T>>,
+        ILinkSubContainer
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new GroupTypeEnum GroupType { get; set; }

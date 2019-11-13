@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class SoundItem :
         ISoundItem,
         ILoquiObjectSetter<SoundItem>,
-        ILinkSubContainer,
         IEquatable<SoundItem>,
         IEqualsMask
     {
@@ -388,7 +387,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundItem :
         ISoundItemGetter,
-        ILoquiObjectSetter<ISoundItem>
+        ILoquiObjectSetter<ISoundItem>,
+        ILinkSubContainer
     {
         new Sound Sound { get; set; }
         new IFormIDSetLink<Sound> Sound_Property { get; }

@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogTopicInternal,
         ILoquiObjectSetter<DialogTopic>,
         INamed,
-        ILinkSubContainer,
         IEquatable<DialogTopic>,
         IEqualsMask
     {
@@ -482,7 +481,8 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogTopicGetter,
         IOblivionMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IDialogTopicInternal>
+        ILoquiObjectSetter<IDialogTopicInternal>,
+        ILinkSubContainer
     {
         new ISetList<IFormIDLink<Quest>> Quests { get; }
         new String Name { get; set; }

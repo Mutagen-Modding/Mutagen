@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILandTextureInternal,
         ILoquiObjectSetter<LandTexture>,
-        ILinkSubContainer,
         IEquatable<LandTexture>,
         IEqualsMask
     {
@@ -474,7 +473,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandTexture :
         ILandTextureGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ILandTextureInternal>
+        ILoquiObjectSetter<ILandTextureInternal>,
+        ILinkSubContainer
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }

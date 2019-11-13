@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWaterInternal,
         ILoquiObjectSetter<Water>,
-        ILinkSubContainer,
         IEquatable<Water>,
         IEqualsMask
     {
@@ -941,7 +940,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWater :
         IWaterGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IWaterInternal>
+        ILoquiObjectSetter<IWaterInternal>,
+        ILinkSubContainer
     {
         new String Texture { get; set; }
         new bool Texture_IsSet { get; set; }

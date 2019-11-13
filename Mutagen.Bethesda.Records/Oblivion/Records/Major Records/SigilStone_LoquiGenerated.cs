@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISigilStoneInternal,
         ILoquiObjectSetter<SigilStone>,
         INamed,
-        ILinkSubContainer,
         IEquatable<SigilStone>,
         IEqualsMask
     {
@@ -536,7 +535,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISigilStone :
         ISigilStoneGetter,
         IItemAbstract,
-        ILoquiObjectSetter<ISigilStoneInternal>
+        ILoquiObjectSetter<ISigilStoneInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

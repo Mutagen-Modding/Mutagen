@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         ScriptReference,
         IScriptObjectReference,
         ILoquiObjectSetter<ScriptObjectReference>,
-        ILinkSubContainer,
         IEquatable<ScriptObjectReference>,
         IEqualsMask
     {
@@ -353,7 +352,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptObjectReference :
         IScriptObjectReferenceGetter,
         IScriptReference,
-        ILoquiObjectSetter<IScriptObjectReference>
+        ILoquiObjectSetter<IScriptObjectReference>,
+        ILinkSubContainer
     {
         new OblivionMajorRecord Reference { get; set; }
         new IFormIDLink<OblivionMajorRecord> Reference_Property { get; }

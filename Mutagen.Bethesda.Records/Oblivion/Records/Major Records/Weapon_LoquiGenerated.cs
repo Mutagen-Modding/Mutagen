@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IWeaponInternal,
         ILoquiObjectSetter<Weapon>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Weapon>,
         IEqualsMask
     {
@@ -617,7 +616,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeapon :
         IWeaponGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IWeaponInternal>
+        ILoquiObjectSetter<IWeaponInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

@@ -46,7 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<NPC>,
         INamed,
         IOwner,
-        ILinkSubContainer,
         IEquatable<NPC>,
         IEqualsMask
     {
@@ -1410,7 +1409,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface INPC :
         INPCGetter,
         INPCAbstract,
-        ILoquiObjectSetter<INPCInternal>
+        ILoquiObjectSetter<INPCInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

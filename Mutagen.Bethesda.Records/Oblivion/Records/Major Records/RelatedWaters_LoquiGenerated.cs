@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RelatedWaters :
         IRelatedWaters,
         ILoquiObjectSetter<RelatedWaters>,
-        ILinkSubContainer,
         IEquatable<RelatedWaters>,
         IEqualsMask
     {
@@ -367,7 +366,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRelatedWaters :
         IRelatedWatersGetter,
-        ILoquiObjectSetter<IRelatedWaters>
+        ILoquiObjectSetter<IRelatedWaters>,
+        ILinkSubContainer
     {
         new Water RelatedWaterDaytime { get; set; }
         new IFormIDLink<Water> RelatedWaterDaytime_Property { get; }

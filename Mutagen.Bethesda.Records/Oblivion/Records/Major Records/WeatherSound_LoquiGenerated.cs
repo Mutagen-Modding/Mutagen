@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeatherSound :
         IWeatherSound,
         ILoquiObjectSetter<WeatherSound>,
-        ILinkSubContainer,
         IEquatable<WeatherSound>,
         IEqualsMask
     {
@@ -364,7 +363,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeatherSound :
         IWeatherSoundGetter,
-        ILoquiObjectSetter<IWeatherSound>
+        ILoquiObjectSetter<IWeatherSound>,
+        ILinkSubContainer
     {
         new Sound Sound { get; set; }
         new IFormIDLink<Sound> Sound_Property { get; }

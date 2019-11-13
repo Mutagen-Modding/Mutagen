@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class CreatureSound :
         ICreatureSound,
         ILoquiObjectSetter<CreatureSound>,
-        ILinkSubContainer,
         IEquatable<CreatureSound>,
         IEqualsMask
     {
@@ -400,7 +399,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICreatureSound :
         ICreatureSoundGetter,
-        ILoquiObjectSetter<ICreatureSound>
+        ILoquiObjectSetter<ICreatureSound>,
+        ILinkSubContainer
     {
         new CreatureSound.CreatureSoundType SoundType { get; set; }
         new bool SoundType_IsSet { get; set; }

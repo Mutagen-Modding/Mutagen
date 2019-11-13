@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class TeleportDestination :
         ITeleportDestination,
         ILoquiObjectSetter<TeleportDestination>,
-        ILinkSubContainer,
         IEquatable<TeleportDestination>,
         IEqualsMask
     {
@@ -368,7 +367,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ITeleportDestination :
         ITeleportDestinationGetter,
-        ILoquiObjectSetter<ITeleportDestination>
+        ILoquiObjectSetter<ITeleportDestination>,
+        ILinkSubContainer
     {
         new IPlaced Destination { get; set; }
         new IFormIDLink<IPlaced> Destination_Property { get; }

@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionDataSoundsInternal,
         ILoquiObjectSetter<RegionDataSounds>,
-        ILinkSubContainer,
         IEquatable<RegionDataSounds>,
         IEqualsMask
     {
@@ -405,7 +404,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataSounds :
         IRegionDataSoundsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataSoundsInternal>
+        ILoquiObjectSetter<IRegionDataSoundsInternal>,
+        ILinkSubContainer
     {
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }

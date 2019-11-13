@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IAIPackageInternal,
         ILoquiObjectSetter<AIPackage>,
-        ILinkSubContainer,
         IEquatable<AIPackage>,
         IEqualsMask
     {
@@ -515,7 +514,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackage :
         IAIPackageGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IAIPackageInternal>
+        ILoquiObjectSetter<IAIPackageInternal>,
+        ILinkSubContainer
     {
         new AIPackage.Flag Flags { get; set; }
 

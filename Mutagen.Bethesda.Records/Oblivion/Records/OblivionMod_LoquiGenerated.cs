@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class OblivionMod :
         IOblivionMod,
         ILoquiObjectSetter<OblivionMod>,
-        ILinkContainer,
         IEquatable<OblivionMod>,
         IEqualsMask
     {
@@ -2835,7 +2834,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IOblivionMod :
         IOblivionModGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMod>
+        ILoquiObjectSetter<IOblivionMod>,
+        ILinkContainer
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }

@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda
     public abstract partial class MajorRecord :
         IMajorRecordInternal,
         ILoquiObjectSetter<MajorRecord>,
-        ILinkSubContainer,
         IEquatable<MajorRecord>,
         IEqualsMask
     {
@@ -374,7 +373,8 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord :
         IMajorRecordGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IMajorRecordInternal>
+        ILoquiObjectSetter<IMajorRecordInternal>,
+        ILinkSubContainer
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
 

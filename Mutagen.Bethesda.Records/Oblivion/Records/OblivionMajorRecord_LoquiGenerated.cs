@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         MajorRecord,
         IOblivionMajorRecordInternal,
         ILoquiObjectSetter<OblivionMajorRecord>,
-        ILinkSubContainer,
         IEquatable<OblivionMajorRecord>,
         IEqualsMask
     {
@@ -322,7 +321,8 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMajorRecordInternal>
+        ILoquiObjectSetter<IOblivionMajorRecordInternal>,
+        ILinkSubContainer
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
 

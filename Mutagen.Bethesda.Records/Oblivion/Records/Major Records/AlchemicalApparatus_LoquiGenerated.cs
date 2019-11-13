@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IAlchemicalApparatusInternal,
         ILoquiObjectSetter<AlchemicalApparatus>,
         INamed,
-        ILinkSubContainer,
         IEquatable<AlchemicalApparatus>,
         IEqualsMask
     {
@@ -526,7 +525,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAlchemicalApparatus :
         IAlchemicalApparatusGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IAlchemicalApparatusInternal>
+        ILoquiObjectSetter<IAlchemicalApparatusInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

@@ -19,11 +19,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    return (LoquiInterfaceType.Direct, $"{nameof(ILinkContainer)}").Single();
+                    return (LoquiInterfaceType.ISetter, $"{nameof(ILinkContainer)}").Single();
                 }
                 else
                 {
-                    return (LoquiInterfaceType.Direct, $"{nameof(ILinkSubContainer)}").Single();
+                    return (LoquiInterfaceType.ISetter, $"{nameof(ILinkSubContainer)}").Single();
                 }
             }
             return Enumerable.Empty<(LoquiInterfaceType Location, string Interface)>();

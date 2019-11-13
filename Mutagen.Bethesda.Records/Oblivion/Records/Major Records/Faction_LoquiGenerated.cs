@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<Faction>,
         INamed,
         IOwner,
-        ILinkSubContainer,
         IEquatable<Faction>,
         IEqualsMask
     {
@@ -489,7 +488,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFaction :
         IFactionGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IFactionInternal>
+        ILoquiObjectSetter<IFactionInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

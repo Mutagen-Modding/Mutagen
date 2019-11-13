@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IAnimatedObjectInternal,
         ILoquiObjectSetter<AnimatedObject>,
-        ILinkSubContainer,
         IEquatable<AnimatedObject>,
         IEqualsMask
     {
@@ -406,7 +405,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAnimatedObject :
         IAnimatedObjectGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IAnimatedObjectInternal>
+        ILoquiObjectSetter<IAnimatedObjectInternal>,
+        ILinkSubContainer
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }

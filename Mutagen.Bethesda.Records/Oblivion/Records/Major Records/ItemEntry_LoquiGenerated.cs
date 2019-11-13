@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ItemEntry :
         IItemEntry,
         ILoquiObjectSetter<ItemEntry>,
-        ILinkSubContainer,
         IEquatable<ItemEntry>,
         IEqualsMask
     {
@@ -389,7 +388,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IItemEntry :
         IItemEntryGetter,
-        ILoquiObjectSetter<IItemEntry>
+        ILoquiObjectSetter<IItemEntry>,
+        ILinkSubContainer
     {
         new ItemAbstract Item { get; set; }
         new IFormIDLink<ItemAbstract> Item_Property { get; }

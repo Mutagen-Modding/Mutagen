@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionDataObjectsInternal,
         ILoquiObjectSetter<RegionDataObjects>,
-        ILinkSubContainer,
         IEquatable<RegionDataObjects>,
         IEqualsMask
     {
@@ -365,7 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataObjects :
         IRegionDataObjectsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataObjectsInternal>
+        ILoquiObjectSetter<IRegionDataObjectsInternal>,
+        ILinkSubContainer
     {
         new ISetList<RegionDataObject> Objects { get; }
     }

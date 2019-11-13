@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMiscellaneousInternal,
         ILoquiObjectSetter<Miscellaneous>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Miscellaneous>,
         IEqualsMask
     {
@@ -499,7 +498,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMiscellaneous :
         IMiscellaneousGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IMiscellaneousInternal>
+        ILoquiObjectSetter<IMiscellaneousInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

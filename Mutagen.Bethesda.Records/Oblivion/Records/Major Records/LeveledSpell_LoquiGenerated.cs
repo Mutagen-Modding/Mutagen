@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         SpellAbstract,
         ILeveledSpellInternal,
         ILoquiObjectSetter<LeveledSpell>,
-        ILinkSubContainer,
         IEquatable<LeveledSpell>,
         IEqualsMask
     {
@@ -445,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledSpell :
         ILeveledSpellGetter,
         ISpellAbstract,
-        ILoquiObjectSetter<ILeveledSpellInternal>
+        ILoquiObjectSetter<ILeveledSpellInternal>,
+        ILinkSubContainer
     {
         new Byte ChanceNone { get; set; }
         new bool ChanceNone_IsSet { get; set; }

@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RaceVoices :
         IRaceVoices,
         ILoquiObjectSetter<RaceVoices>,
-        ILinkSubContainer,
         IEquatable<RaceVoices>,
         IEqualsMask
     {
@@ -357,7 +356,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRaceVoices :
         IRaceVoicesGetter,
-        ILoquiObjectSetter<IRaceVoices>
+        ILoquiObjectSetter<IRaceVoices>,
+        ILinkSubContainer
     {
         new Race Male { get; set; }
         new IFormIDLink<Race> Male_Property { get; }

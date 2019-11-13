@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IClothingAbstractInternal,
         ILoquiObjectSetter<ClothingAbstract>,
         INamed,
-        ILinkSubContainer,
         IEquatable<ClothingAbstract>,
         IEqualsMask
     {
@@ -608,7 +607,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClothingAbstract :
         IClothingAbstractGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IClothingAbstractInternal>
+        ILoquiObjectSetter<IClothingAbstractInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

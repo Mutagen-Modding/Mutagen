@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<Cell>,
         INamed,
         IPlace,
-        ILinkSubContainer,
         IEquatable<Cell>,
         IEqualsMask
     {
@@ -827,7 +826,8 @@ namespace Mutagen.Bethesda.Oblivion
         ICellGetter,
         IPlace,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ICellInternal>
+        ILoquiObjectSetter<ICellInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

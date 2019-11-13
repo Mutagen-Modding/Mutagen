@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         NPCSpawn,
         ILeveledCreatureInternal,
         ILoquiObjectSetter<LeveledCreature>,
-        ILinkSubContainer,
         IEquatable<LeveledCreature>,
         IEqualsMask
     {
@@ -469,7 +468,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledCreature :
         ILeveledCreatureGetter,
         INPCSpawn,
-        ILoquiObjectSetter<ILeveledCreatureInternal>
+        ILoquiObjectSetter<ILeveledCreatureInternal>,
+        ILinkSubContainer
     {
         new Byte ChanceNone { get; set; }
         new bool ChanceNone_IsSet { get; set; }

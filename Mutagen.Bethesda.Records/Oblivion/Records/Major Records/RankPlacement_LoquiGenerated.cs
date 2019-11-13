@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class RankPlacement :
         IRankPlacement,
         ILoquiObjectSetter<RankPlacement>,
-        ILinkSubContainer,
         IEquatable<RankPlacement>,
         IEqualsMask
     {
@@ -374,7 +373,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRankPlacement :
         IRankPlacementGetter,
-        ILoquiObjectSetter<IRankPlacement>
+        ILoquiObjectSetter<IRankPlacement>,
+        ILinkSubContainer
     {
         new Faction Faction { get; set; }
         new IFormIDLink<Faction> Faction_Property { get; }

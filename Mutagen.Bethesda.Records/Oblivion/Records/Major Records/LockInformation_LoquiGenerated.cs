@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LockInformation :
         ILockInformation,
         ILoquiObjectSetter<LockInformation>,
-        ILinkSubContainer,
         IEquatable<LockInformation>,
         IEqualsMask
     {
@@ -378,7 +377,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILockInformation :
         ILockInformationGetter,
-        ILoquiObjectSetter<ILockInformation>
+        ILoquiObjectSetter<ILockInformation>,
+        ILinkSubContainer
     {
         new Byte LockLevel { get; set; }
 

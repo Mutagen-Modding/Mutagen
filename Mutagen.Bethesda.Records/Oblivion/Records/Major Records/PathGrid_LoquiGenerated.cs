@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IPathGridInternal,
         ILoquiObjectSetter<PathGrid>,
-        ILinkSubContainer,
         IEquatable<PathGrid>,
         IEqualsMask
     {
@@ -447,7 +446,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGrid :
         IPathGridGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IPathGridInternal>
+        ILoquiObjectSetter<IPathGridInternal>,
+        ILinkSubContainer
     {
         new ISetList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }

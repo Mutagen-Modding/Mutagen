@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestStage :
         IQuestStage,
         ILoquiObjectSetter<QuestStage>,
-        ILinkSubContainer,
         IEquatable<QuestStage>,
         IEqualsMask
     {
@@ -378,7 +377,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IQuestStage :
         IQuestStageGetter,
-        ILoquiObjectSetter<IQuestStage>
+        ILoquiObjectSetter<IQuestStage>,
+        ILinkSubContainer
     {
         new UInt16 Stage { get; set; }
 

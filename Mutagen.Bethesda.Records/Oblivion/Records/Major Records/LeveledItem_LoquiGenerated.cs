@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         ItemAbstract,
         ILeveledItemInternal,
         ILoquiObjectSetter<LeveledItem>,
-        ILinkSubContainer,
         IEquatable<LeveledItem>,
         IEqualsMask
     {
@@ -445,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledItem :
         ILeveledItemGetter,
         IItemAbstract,
-        ILoquiObjectSetter<ILeveledItemInternal>
+        ILoquiObjectSetter<ILeveledItemInternal>,
+        ILinkSubContainer
     {
         new Byte ChanceNone { get; set; }
         new bool ChanceNone_IsSet { get; set; }

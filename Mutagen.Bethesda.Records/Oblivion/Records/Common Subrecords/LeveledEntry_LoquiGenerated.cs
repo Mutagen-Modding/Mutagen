@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LeveledEntry<T> :
         ILeveledEntry<T>,
         ILoquiObjectSetter<LeveledEntry<T>>,
-        ILinkSubContainer,
         IEquatable<LeveledEntry<T>>,
         IEqualsMask
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
@@ -448,7 +447,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILeveledEntry<T> :
         ILeveledEntryGetter<T>,
-        ILoquiObjectSetter<ILeveledEntry<T>>
+        ILoquiObjectSetter<ILeveledEntry<T>>,
+        ILinkSubContainer
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new Int16 Level { get; set; }

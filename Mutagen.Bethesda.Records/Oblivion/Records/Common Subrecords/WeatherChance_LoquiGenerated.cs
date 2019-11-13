@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WeatherChance :
         IWeatherChance,
         ILoquiObjectSetter<WeatherChance>,
-        ILinkSubContainer,
         IEquatable<WeatherChance>,
         IEqualsMask
     {
@@ -363,7 +362,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeatherChance :
         IWeatherChanceGetter,
-        ILoquiObjectSetter<IWeatherChance>
+        ILoquiObjectSetter<IWeatherChance>,
+        ILinkSubContainer
     {
         new Weather Weather { get; set; }
         new IFormIDLink<Weather> Weather_Property { get; }

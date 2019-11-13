@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ISpellAbstractInternal,
         ILoquiObjectSetter<SpellAbstract>,
-        ILinkSubContainer,
         IEquatable<SpellAbstract>,
         IEqualsMask
     {
@@ -309,7 +308,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellAbstract :
         ISpellAbstractGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ISpellAbstractInternal>
+        ILoquiObjectSetter<ISpellAbstractInternal>,
+        ILinkSubContainer
     {
     }
 

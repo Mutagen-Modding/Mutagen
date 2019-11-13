@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
         INamed,
-        ILinkSubContainer,
         IEquatable<MagicEffect>,
         IEqualsMask
     {
@@ -640,7 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffect :
         IMagicEffectGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IMagicEffectInternal>
+        ILoquiObjectSetter<IMagicEffectInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class ModHeader :
         IModHeader,
         ILoquiObjectSetter<ModHeader>,
-        ILinkSubContainer,
         IEquatable<ModHeader>,
         IEqualsMask
     {
@@ -603,7 +602,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IModHeader :
         IModHeaderGetter,
-        ILoquiObjectSetter<IModHeader>
+        ILoquiObjectSetter<IModHeader>,
+        ILinkSubContainer
     {
         new ModHeader.HeaderFlag Flags { get; set; }
 

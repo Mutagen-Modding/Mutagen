@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IWeatherInternal,
         ILoquiObjectSetter<Weather>,
-        ILinkSubContainer,
         IEquatable<Weather>,
         IEqualsMask
     {
@@ -921,7 +920,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeather :
         IWeatherGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IWeatherInternal>
+        ILoquiObjectSetter<IWeatherInternal>,
+        ILinkSubContainer
     {
         new String TextureLowerLayer { get; set; }
         new bool TextureLowerLayer_IsSet { get; set; }

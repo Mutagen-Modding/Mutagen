@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MagicEffectSubData :
         IMagicEffectSubData,
         ILoquiObjectSetter<MagicEffectSubData>,
-        ILinkSubContainer,
         IEquatable<MagicEffectSubData>,
         IEqualsMask
     {
@@ -411,7 +410,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IMagicEffectSubData :
         IMagicEffectSubDataGetter,
-        ILoquiObjectSetter<IMagicEffectSubData>
+        ILoquiObjectSetter<IMagicEffectSubData>,
+        ILinkSubContainer
     {
         new EffectShader EnchantEffect { get; set; }
         new IFormIDLink<EffectShader> EnchantEffect_Property { get; }

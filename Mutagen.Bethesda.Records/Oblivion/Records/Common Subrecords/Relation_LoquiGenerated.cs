@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Relation :
         IRelation,
         ILoquiObjectSetter<Relation>,
-        ILinkSubContainer,
         IEquatable<Relation>,
         IEqualsMask
     {
@@ -364,7 +363,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRelation :
         IRelationGetter,
-        ILoquiObjectSetter<IRelation>
+        ILoquiObjectSetter<IRelation>,
+        ILinkSubContainer
     {
         new Faction Faction { get; set; }
         new IFormIDLink<Faction> Faction_Property { get; }

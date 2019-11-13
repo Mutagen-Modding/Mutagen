@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IIngredientInternal,
         ILoquiObjectSetter<Ingredient>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Ingredient>,
         IEqualsMask
     {
@@ -551,7 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIngredient :
         IIngredientGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IIngredientInternal>
+        ILoquiObjectSetter<IIngredientInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

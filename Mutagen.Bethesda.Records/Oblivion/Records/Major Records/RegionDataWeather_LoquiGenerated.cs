@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionDataWeatherInternal,
         ILoquiObjectSetter<RegionDataWeather>,
-        ILinkSubContainer,
         IEquatable<RegionDataWeather>,
         IEqualsMask
     {
@@ -365,7 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataWeather :
         IRegionDataWeatherGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataWeatherInternal>
+        ILoquiObjectSetter<IRegionDataWeatherInternal>,
+        ILinkSubContainer
     {
         new ISetList<WeatherChance> Weathers { get; }
     }

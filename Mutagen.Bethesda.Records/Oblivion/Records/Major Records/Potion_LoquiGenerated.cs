@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         IPotionInternal,
         ILoquiObjectSetter<Potion>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Potion>,
         IEqualsMask
     {
@@ -551,7 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPotion :
         IPotionGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IPotionInternal>
+        ILoquiObjectSetter<IPotionInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

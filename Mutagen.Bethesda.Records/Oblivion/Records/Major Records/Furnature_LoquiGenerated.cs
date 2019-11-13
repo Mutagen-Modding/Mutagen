@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IFurnatureInternal,
         ILoquiObjectSetter<Furnature>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Furnature>,
         IEqualsMask
     {
@@ -465,7 +464,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFurnature :
         IFurnatureGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IFurnatureInternal>
+        ILoquiObjectSetter<IFurnatureInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

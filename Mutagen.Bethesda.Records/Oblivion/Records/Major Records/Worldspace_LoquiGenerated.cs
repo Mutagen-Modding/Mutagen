@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<Worldspace>,
         INamed,
         IPlace,
-        ILinkSubContainer,
         IEquatable<Worldspace>,
         IEqualsMask
     {
@@ -739,7 +738,8 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceGetter,
         IPlace,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IWorldspaceInternal>
+        ILoquiObjectSetter<IWorldspaceInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

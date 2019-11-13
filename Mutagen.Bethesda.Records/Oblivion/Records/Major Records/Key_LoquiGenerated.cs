@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         IKeyInternal,
         ILoquiObjectSetter<Key>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Key>,
         IEqualsMask
     {
@@ -499,7 +498,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IKey :
         IKeyGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IKeyInternal>
+        ILoquiObjectSetter<IKeyInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

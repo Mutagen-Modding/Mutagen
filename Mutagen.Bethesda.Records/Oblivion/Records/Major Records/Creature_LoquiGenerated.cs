@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Creature>,
         IEqualsMask
     {
@@ -1214,7 +1213,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreature :
         ICreatureGetter,
         INPCAbstract,
-        ILoquiObjectSetter<ICreatureInternal>
+        ILoquiObjectSetter<ICreatureInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class WorldspaceBlock :
         IWorldspaceBlock,
         ILoquiObjectSetter<WorldspaceBlock>,
-        ILinkSubContainer,
         IEquatable<WorldspaceBlock>,
         IEqualsMask
     {
@@ -396,7 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspaceBlock :
         IWorldspaceBlockGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IWorldspaceBlock>
+        ILoquiObjectSetter<IWorldspaceBlock>,
+        ILinkSubContainer
     {
         new Int16 BlockNumberY { get; set; }
 

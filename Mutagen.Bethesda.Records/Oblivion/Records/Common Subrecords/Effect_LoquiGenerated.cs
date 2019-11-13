@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class Effect :
         IEffect,
         ILoquiObjectSetter<Effect>,
-        ILinkSubContainer,
         IEquatable<Effect>,
         IEqualsMask
     {
@@ -476,7 +475,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEffect :
         IEffectGetter,
-        ILoquiObjectSetter<IEffect>
+        ILoquiObjectSetter<IEffect>,
+        ILinkSubContainer
     {
         new MagicEffect MagicEffect { get; set; }
         new IEDIDLink<MagicEffect> MagicEffect_Property { get; }

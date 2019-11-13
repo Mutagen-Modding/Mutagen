@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class QuestTarget :
         IQuestTarget,
         ILoquiObjectSetter<QuestTarget>,
-        ILinkSubContainer,
         IEquatable<QuestTarget>,
         IEqualsMask
     {
@@ -398,7 +397,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IQuestTarget :
         IQuestTargetGetter,
-        ILoquiObjectSetter<IQuestTarget>
+        ILoquiObjectSetter<IQuestTarget>,
+        ILinkSubContainer
     {
         new IPlaced Target { get; set; }
         new IFormIDLink<IPlaced> Target_Property { get; }

@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LogEntry :
         ILogEntry,
         ILoquiObjectSetter<LogEntry>,
-        ILinkSubContainer,
         IEquatable<LogEntry>,
         IEqualsMask
     {
@@ -461,7 +460,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILogEntry :
         ILogEntryGetter,
-        ILoquiObjectSetter<ILogEntry>
+        ILoquiObjectSetter<ILogEntry>,
+        ILinkSubContainer
     {
         new LogEntry.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }

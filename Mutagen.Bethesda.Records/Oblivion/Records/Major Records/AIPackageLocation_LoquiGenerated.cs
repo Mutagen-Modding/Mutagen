@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class AIPackageLocation :
         IAIPackageLocation,
         ILoquiObjectSetter<AIPackageLocation>,
-        ILinkSubContainer,
         IEquatable<AIPackageLocation>,
         IEqualsMask
     {
@@ -368,7 +367,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackageLocation :
         IAIPackageLocationGetter,
-        ILoquiObjectSetter<IAIPackageLocation>
+        ILoquiObjectSetter<IAIPackageLocation>,
+        ILinkSubContainer
     {
         new AIPackageLocation.LocationType Type { get; set; }
 

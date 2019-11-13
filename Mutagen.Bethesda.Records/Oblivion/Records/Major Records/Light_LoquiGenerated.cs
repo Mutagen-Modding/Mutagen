@@ -43,7 +43,6 @@ namespace Mutagen.Bethesda.Oblivion
         ILightInternal,
         ILoquiObjectSetter<Light>,
         INamed,
-        ILinkSubContainer,
         IEquatable<Light>,
         IEqualsMask
     {
@@ -625,7 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILight :
         ILightGetter,
         IItemAbstract,
-        ILoquiObjectSetter<ILightInternal>
+        ILoquiObjectSetter<ILightInternal>,
+        ILinkSubContainer
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }

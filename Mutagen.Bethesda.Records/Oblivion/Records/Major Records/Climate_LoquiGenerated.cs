@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IClimateInternal,
         ILoquiObjectSetter<Climate>,
-        ILinkSubContainer,
         IEquatable<Climate>,
         IEqualsMask
     {
@@ -576,7 +575,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IClimate :
         IClimateGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IClimateInternal>
+        ILoquiObjectSetter<IClimateInternal>,
+        ILinkSubContainer
     {
         new ISetList<WeatherChance> Weathers { get; }
         new String SunTexture { get; set; }

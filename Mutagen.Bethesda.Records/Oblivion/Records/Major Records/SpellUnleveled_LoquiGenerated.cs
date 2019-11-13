@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         Spell,
         ISpellUnleveledInternal,
         ILoquiObjectSetter<SpellUnleveled>,
-        ILinkSubContainer,
         IEquatable<SpellUnleveled>,
         IEqualsMask
     {
@@ -450,7 +449,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpellUnleveled :
         ISpellUnleveledGetter,
         ISpell,
-        ILoquiObjectSetter<ISpellUnleveledInternal>
+        ILoquiObjectSetter<ISpellUnleveledInternal>,
+        ILinkSubContainer
     {
         new Spell.SpellType Type { get; set; }
 

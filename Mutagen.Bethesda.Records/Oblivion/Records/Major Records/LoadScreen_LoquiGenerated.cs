@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILoadScreenInternal,
         ILoquiObjectSetter<LoadScreen>,
-        ILinkSubContainer,
         IEquatable<LoadScreen>,
         IEqualsMask
     {
@@ -445,7 +444,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreen :
         ILoadScreenGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ILoadScreenInternal>
+        ILoquiObjectSetter<ILoadScreenInternal>,
+        ILinkSubContainer
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }

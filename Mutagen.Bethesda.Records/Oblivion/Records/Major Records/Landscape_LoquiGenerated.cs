@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         ILandscapeInternal,
         ILoquiObjectSetter<Landscape>,
-        ILinkSubContainer,
         IEquatable<Landscape>,
         IEqualsMask
     {
@@ -532,7 +531,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscapeGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<ILandscapeInternal>
+        ILoquiObjectSetter<ILandscapeInternal>,
+        ILinkSubContainer
     {
         new Byte[] Unknown { get; set; }
         new bool Unknown_IsSet { get; set; }

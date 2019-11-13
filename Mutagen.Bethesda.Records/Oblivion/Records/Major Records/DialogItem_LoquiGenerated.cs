@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IDialogItemInternal,
         ILoquiObjectSetter<DialogItem>,
-        ILinkSubContainer,
         IEquatable<DialogItem>,
         IEqualsMask
     {
@@ -540,7 +539,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogItem :
         IDialogItemGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IDialogItemInternal>
+        ILoquiObjectSetter<IDialogItemInternal>,
+        ILinkSubContainer
     {
         new DialogType DialogType { get; set; }
 

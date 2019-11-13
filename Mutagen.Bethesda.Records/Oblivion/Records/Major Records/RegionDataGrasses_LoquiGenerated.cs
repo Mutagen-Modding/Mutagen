@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         RegionData,
         IRegionDataGrassesInternal,
         ILoquiObjectSetter<RegionDataGrasses>,
-        ILinkSubContainer,
         IEquatable<RegionDataGrasses>,
         IEqualsMask
     {
@@ -365,7 +364,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataGrasses :
         IRegionDataGrassesGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataGrassesInternal>
+        ILoquiObjectSetter<IRegionDataGrassesInternal>,
+        ILinkSubContainer
     {
         new ISetList<IFormIDLink<Grass>> Grasses { get; }
     }

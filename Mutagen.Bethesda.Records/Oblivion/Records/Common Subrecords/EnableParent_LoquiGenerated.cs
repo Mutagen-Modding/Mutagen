@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class EnableParent :
         IEnableParent,
         ILoquiObjectSetter<EnableParent>,
-        ILinkSubContainer,
         IEquatable<EnableParent>,
         IEqualsMask
     {
@@ -364,7 +363,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IEnableParent :
         IEnableParentGetter,
-        ILoquiObjectSetter<IEnableParent>
+        ILoquiObjectSetter<IEnableParent>,
+        ILinkSubContainer
     {
         new IPlaced Reference { get; set; }
         new IFormIDLink<IPlaced> Reference_Property { get; }

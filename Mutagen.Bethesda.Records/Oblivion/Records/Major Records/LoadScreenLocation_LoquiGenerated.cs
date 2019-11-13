@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LoadScreenLocation :
         ILoadScreenLocation,
         ILoquiObjectSetter<LoadScreenLocation>,
-        ILinkSubContainer,
         IEquatable<LoadScreenLocation>,
         IEqualsMask
     {
@@ -375,7 +374,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILoadScreenLocation :
         ILoadScreenLocationGetter,
-        ILoquiObjectSetter<ILoadScreenLocation>
+        ILoquiObjectSetter<ILoadScreenLocation>,
+        ILinkSubContainer
     {
         new Place Direct { get; set; }
         new IFormIDLink<Place> Direct_Property { get; }

@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         NPCSpawn,
         INPCAbstractInternal,
         ILoquiObjectSetter<NPCAbstract>,
-        ILinkSubContainer,
         IEquatable<NPCAbstract>,
         IEqualsMask
     {
@@ -309,7 +308,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface INPCAbstract :
         INPCAbstractGetter,
         INPCSpawn,
-        ILoquiObjectSetter<INPCAbstractInternal>
+        ILoquiObjectSetter<INPCAbstractInternal>,
+        ILinkSubContainer
     {
     }
 

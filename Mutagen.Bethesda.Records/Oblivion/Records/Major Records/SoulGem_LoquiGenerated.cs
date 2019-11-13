@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         ISoulGemInternal,
         ILoquiObjectSetter<SoulGem>,
         INamed,
-        ILinkSubContainer,
         IEquatable<SoulGem>,
         IEqualsMask
     {
@@ -555,7 +554,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoulGem :
         ISoulGemGetter,
         IItemAbstract,
-        ILoquiObjectSetter<ISoulGemInternal>
+        ILoquiObjectSetter<ISoulGemInternal>,
+        ILinkSubContainer
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }

@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptFields :
         IScriptFields,
         ILoquiObjectSetter<ScriptFields>,
-        ILinkSubContainer,
         IEquatable<ScriptFields>,
         IEqualsMask
     {
@@ -425,7 +424,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptFields :
         IScriptFieldsGetter,
-        ILoquiObjectSetter<IScriptFields>
+        ILoquiObjectSetter<IScriptFields>,
+        ILinkSubContainer
     {
         new ScriptMetaSummary MetadataSummary { get; }
         new Byte[] CompiledScript { get; set; }

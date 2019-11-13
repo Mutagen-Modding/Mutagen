@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRegionInternal,
         ILoquiObjectSetter<Region>,
-        ILinkSubContainer,
         IEquatable<Region>,
         IEqualsMask
     {
@@ -640,7 +639,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegion :
         IRegionGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IRegionInternal>
+        ILoquiObjectSetter<IRegionInternal>,
+        ILinkSubContainer
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }

@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial class SkyrimMod :
         ISkyrimMod,
         ILoquiObjectSetter<SkyrimMod>,
-        ILinkContainer,
         IEquatable<SkyrimMod>,
         IEqualsMask
     {
@@ -834,7 +833,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMod :
         ISkyrimModGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ISkyrimMod>
+        ILoquiObjectSetter<ISkyrimMod>,
+        ILinkContainer
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }

@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IScriptInternal,
         ILoquiObjectSetter<Script>,
-        ILinkSubContainer,
         IEquatable<Script>,
         IEqualsMask
     {
@@ -383,7 +382,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScript :
         IScriptGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IScriptInternal>
+        ILoquiObjectSetter<IScriptInternal>,
+        ILinkSubContainer
     {
         new ScriptFields Fields { get; }
     }

@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IIdleAnimationInternal,
         ILoquiObjectSetter<IdleAnimation>,
-        ILinkSubContainer,
         IEquatable<IdleAnimation>,
         IEqualsMask
     {
@@ -460,7 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimation :
         IIdleAnimationGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IIdleAnimationInternal>
+        ILoquiObjectSetter<IIdleAnimationInternal>,
+        ILinkSubContainer
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
