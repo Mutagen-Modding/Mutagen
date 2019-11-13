@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Examples
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask.GetCrystal());
+                copyMask: copyMask?.GetCrystal());
             errorMask = MainVM_ErrorMask.Factory(errorMaskBuilder);
         }
 

@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>27ec46bb07117ec5654cefe9d469c881bd1beba6</Sha>
+         <Sha>29b0f8e43dd05bda61cb77e93b344a1b94b22068</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-12-2019 19:01:23</CommitDate>
-         <Description>DeepCopy takes TranslationCrystal common-side</Description>
+         <CommitDate>11-13-2019 19:15:10</CommitDate>
+         <Description>Null fix</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

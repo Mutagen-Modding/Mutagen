@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask.GetCrystal());
+                copyMask: copyMask?.GetCrystal());
             errorMask = EnableParent_ErrorMask.Factory(errorMaskBuilder);
         }
 

@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
-                copyMask: copyMask.GetCrystal());
+                copyMask: copyMask?.GetCrystal());
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
