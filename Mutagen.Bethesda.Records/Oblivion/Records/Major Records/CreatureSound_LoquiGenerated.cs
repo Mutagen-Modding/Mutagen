@@ -1398,30 +1398,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
         public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CreatureSoundCommon.Instance;
-        }
+        protected object CommonInstance() => CreatureSoundCommon.Instance;
         protected object CommonSetterInstance()
         {
             return CreatureSoundSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CreatureSoundSetterTranslationCommon.Instance;
-        }
-        object ICreatureSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICreatureSoundGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICreatureSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => CreatureSoundSetterTranslationCommon.Instance;
+        object ICreatureSoundGetter.CommonInstance() => this.CommonInstance();
+        object ICreatureSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ICreatureSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2315,26 +2300,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
         public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CreatureSoundCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CreatureSoundSetterTranslationCommon.Instance;
-        }
-        object ICreatureSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICreatureSoundGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ICreatureSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => CreatureSoundCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CreatureSoundSetterTranslationCommon.Instance;
+        object ICreatureSoundGetter.CommonInstance() => this.CommonInstance();
+        object ICreatureSoundGetter.CommonSetterInstance() => null;
+        object ICreatureSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

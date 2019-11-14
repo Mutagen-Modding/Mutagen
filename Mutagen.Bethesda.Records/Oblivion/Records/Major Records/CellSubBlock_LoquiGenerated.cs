@@ -1453,30 +1453,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
         public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CellSubBlockCommon.Instance;
-        }
+        protected object CommonInstance() => CellSubBlockCommon.Instance;
         protected object CommonSetterInstance()
         {
             return CellSubBlockSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CellSubBlockSetterTranslationCommon.Instance;
-        }
-        object ICellSubBlockGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICellSubBlockGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICellSubBlockGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => CellSubBlockSetterTranslationCommon.Instance;
+        object ICellSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object ICellSubBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ICellSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2507,26 +2492,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
         public static CellSubBlock_Registration Registration => CellSubBlock_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CellSubBlockCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CellSubBlockSetterTranslationCommon.Instance;
-        }
-        object ICellSubBlockGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICellSubBlockGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ICellSubBlockGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => CellSubBlockCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CellSubBlockSetterTranslationCommon.Instance;
+        object ICellSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object ICellSubBlockGetter.CommonSetterInstance() => null;
+        object ICellSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

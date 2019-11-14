@@ -1201,30 +1201,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return SkillBoostCommon.Instance;
-        }
+        protected object CommonInstance() => SkillBoostCommon.Instance;
         protected object CommonSetterInstance()
         {
             return SkillBoostSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return SkillBoostSetterTranslationCommon.Instance;
-        }
-        object ISkillBoostGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISkillBoostGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ISkillBoostGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => SkillBoostSetterTranslationCommon.Instance;
+        object ISkillBoostGetter.CommonInstance() => this.CommonInstance();
+        object ISkillBoostGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISkillBoostGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2001,26 +1986,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return SkillBoostCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return SkillBoostSetterTranslationCommon.Instance;
-        }
-        object ISkillBoostGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISkillBoostGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ISkillBoostGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => SkillBoostCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkillBoostSetterTranslationCommon.Instance;
+        object ISkillBoostGetter.CommonInstance() => this.CommonInstance();
+        object ISkillBoostGetter.CommonSetterInstance() => null;
+        object ISkillBoostGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

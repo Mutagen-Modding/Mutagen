@@ -1250,30 +1250,15 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PassthroughSettings_Registration.Instance;
         public static PassthroughSettings_Registration Registration => PassthroughSettings_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PassthroughSettingsCommon.Instance;
-        }
+        protected object CommonInstance() => PassthroughSettingsCommon.Instance;
         protected object CommonSetterInstance()
         {
             return PassthroughSettingsSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return PassthroughSettingsSetterTranslationCommon.Instance;
-        }
-        object IPassthroughSettingsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPassthroughSettingsGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IPassthroughSettingsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => PassthroughSettingsSetterTranslationCommon.Instance;
+        object IPassthroughSettingsGetter.CommonInstance() => this.CommonInstance();
+        object IPassthroughSettingsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPassthroughSettingsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

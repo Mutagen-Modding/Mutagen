@@ -1327,30 +1327,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PathGridPointCommon.Instance;
-        }
+        protected object CommonInstance() => PathGridPointCommon.Instance;
         protected object CommonSetterInstance()
         {
             return PathGridPointSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return PathGridPointSetterTranslationCommon.Instance;
-        }
-        object IPathGridPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPathGridPointGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IPathGridPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => PathGridPointSetterTranslationCommon.Instance;
+        object IPathGridPointGetter.CommonInstance() => this.CommonInstance();
+        object IPathGridPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPathGridPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2329,26 +2314,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PathGridPointCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return PathGridPointSetterTranslationCommon.Instance;
-        }
-        object IPathGridPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPathGridPointGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IPathGridPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => PathGridPointCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PathGridPointSetterTranslationCommon.Instance;
+        object IPathGridPointGetter.CommonInstance() => this.CommonInstance();
+        object IPathGridPointGetter.CommonSetterInstance() => null;
+        object IPathGridPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

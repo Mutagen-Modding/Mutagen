@@ -1726,30 +1726,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
         public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ScriptFieldsCommon.Instance;
-        }
+        protected object CommonInstance() => ScriptFieldsCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ScriptFieldsSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ScriptFieldsSetterTranslationCommon.Instance;
-        }
-        object IScriptFieldsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptFieldsGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IScriptFieldsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ScriptFieldsSetterTranslationCommon.Instance;
+        object IScriptFieldsGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFieldsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IScriptFieldsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2982,26 +2967,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
         public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ScriptFieldsCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ScriptFieldsSetterTranslationCommon.Instance;
-        }
-        object IScriptFieldsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptFieldsGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IScriptFieldsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ScriptFieldsCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ScriptFieldsSetterTranslationCommon.Instance;
+        object IScriptFieldsGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFieldsGetter.CommonSetterInstance() => null;
+        object IScriptFieldsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

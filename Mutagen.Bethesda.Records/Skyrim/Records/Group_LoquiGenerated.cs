@@ -1505,30 +1505,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return GroupCommon<T>.Instance;
-        }
+        protected object CommonInstance() => GroupCommon<T>.Instance;
         protected object CommonSetterInstance()
         {
             return GroupSetterCommon<T>.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return GroupSetterTranslationCommon.Instance;
-        }
-        object IGroupGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IGroupGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IGroupGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2606,26 +2591,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return GroupCommon<T>.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return GroupSetterTranslationCommon.Instance;
-        }
-        object IGroupGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IGroupGetter<T>.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IGroupGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => GroupCommon<T>.Instance;
+        protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IGroupGetter<T>.CommonSetterInstance() => null;
+        object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1246,30 +1246,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return HavokDataCommon.Instance;
-        }
+        protected object CommonInstance() => HavokDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return HavokDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return HavokDataSetterTranslationCommon.Instance;
-        }
-        object IHavokDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IHavokDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IHavokDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => HavokDataSetterTranslationCommon.Instance;
+        object IHavokDataGetter.CommonInstance() => this.CommonInstance();
+        object IHavokDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IHavokDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2113,26 +2098,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return HavokDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return HavokDataSetterTranslationCommon.Instance;
-        }
-        object IHavokDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IHavokDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IHavokDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => HavokDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => HavokDataSetterTranslationCommon.Instance;
+        object IHavokDataGetter.CommonInstance() => this.CommonInstance();
+        object IHavokDataGetter.CommonSetterInstance() => null;
+        object IHavokDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

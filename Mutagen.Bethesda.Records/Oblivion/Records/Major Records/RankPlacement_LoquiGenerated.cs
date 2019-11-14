@@ -1275,30 +1275,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
         public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RankPlacementCommon.Instance;
-        }
+        protected object CommonInstance() => RankPlacementCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RankPlacementSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RankPlacementSetterTranslationCommon.Instance;
-        }
-        object IRankPlacementGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRankPlacementGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRankPlacementGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RankPlacementSetterTranslationCommon.Instance;
+        object IRankPlacementGetter.CommonInstance() => this.CommonInstance();
+        object IRankPlacementGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRankPlacementGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2125,26 +2110,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
         public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RankPlacementCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RankPlacementSetterTranslationCommon.Instance;
-        }
-        object IRankPlacementGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRankPlacementGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRankPlacementGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RankPlacementCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RankPlacementSetterTranslationCommon.Instance;
+        object IRankPlacementGetter.CommonInstance() => this.CommonInstance();
+        object IRankPlacementGetter.CommonSetterInstance() => null;
+        object IRankPlacementGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

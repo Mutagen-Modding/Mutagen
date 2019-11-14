@@ -1408,30 +1408,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
         public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return GenderedBodyDataCommon.Instance;
-        }
+        protected object CommonInstance() => GenderedBodyDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return GenderedBodyDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return GenderedBodyDataSetterTranslationCommon.Instance;
-        }
-        object IGenderedBodyDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IGenderedBodyDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IGenderedBodyDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => GenderedBodyDataSetterTranslationCommon.Instance;
+        object IGenderedBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IGenderedBodyDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IGenderedBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2259,26 +2244,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
         public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return GenderedBodyDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return GenderedBodyDataSetterTranslationCommon.Instance;
-        }
-        object IGenderedBodyDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IGenderedBodyDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IGenderedBodyDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => GenderedBodyDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => GenderedBodyDataSetterTranslationCommon.Instance;
+        object IGenderedBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IGenderedBodyDataGetter.CommonSetterInstance() => null;
+        object IGenderedBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

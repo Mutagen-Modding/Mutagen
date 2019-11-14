@@ -1219,30 +1219,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
         public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ObjectBoundsCommon.Instance;
-        }
+        protected object CommonInstance() => ObjectBoundsCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ObjectBoundsSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ObjectBoundsSetterTranslationCommon.Instance;
-        }
-        object IObjectBoundsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IObjectBoundsGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IObjectBoundsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ObjectBoundsSetterTranslationCommon.Instance;
+        object IObjectBoundsGetter.CommonInstance() => this.CommonInstance();
+        object IObjectBoundsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IObjectBoundsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2026,26 +2011,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
         public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ObjectBoundsCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ObjectBoundsSetterTranslationCommon.Instance;
-        }
-        object IObjectBoundsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IObjectBoundsGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IObjectBoundsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ObjectBoundsCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ObjectBoundsSetterTranslationCommon.Instance;
+        object IObjectBoundsGetter.CommonInstance() => this.CommonInstance();
+        object IObjectBoundsGetter.CommonSetterInstance() => null;
+        object IObjectBoundsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

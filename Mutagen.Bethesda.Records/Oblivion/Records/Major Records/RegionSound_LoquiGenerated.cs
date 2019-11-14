@@ -1273,30 +1273,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
         public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RegionSoundCommon.Instance;
-        }
+        protected object CommonInstance() => RegionSoundCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RegionSoundSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RegionSoundSetterTranslationCommon.Instance;
-        }
-        object IRegionSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionSoundGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRegionSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RegionSoundSetterTranslationCommon.Instance;
+        object IRegionSoundGetter.CommonInstance() => this.CommonInstance();
+        object IRegionSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRegionSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2120,26 +2105,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
         public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RegionSoundCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RegionSoundSetterTranslationCommon.Instance;
-        }
-        object IRegionSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionSoundGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRegionSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RegionSoundCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RegionSoundSetterTranslationCommon.Instance;
+        object IRegionSoundGetter.CommonInstance() => this.CommonInstance();
+        object IRegionSoundGetter.CommonSetterInstance() => null;
+        object IRegionSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

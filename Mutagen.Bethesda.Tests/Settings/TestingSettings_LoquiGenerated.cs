@@ -1348,30 +1348,15 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TestingSettings_Registration.Instance;
         public static TestingSettings_Registration Registration => TestingSettings_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TestingSettingsCommon.Instance;
-        }
+        protected object CommonInstance() => TestingSettingsCommon.Instance;
         protected object CommonSetterInstance()
         {
             return TestingSettingsSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return TestingSettingsSetterTranslationCommon.Instance;
-        }
-        object ITestingSettingsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITestingSettingsGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ITestingSettingsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => TestingSettingsSetterTranslationCommon.Instance;
+        object ITestingSettingsGetter.CommonInstance() => this.CommonInstance();
+        object ITestingSettingsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ITestingSettingsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

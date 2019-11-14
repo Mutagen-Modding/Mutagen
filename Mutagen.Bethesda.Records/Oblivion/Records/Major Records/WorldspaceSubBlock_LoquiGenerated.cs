@@ -1489,30 +1489,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
         public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WorldspaceSubBlockCommon.Instance;
-        }
+        protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
         protected object CommonSetterInstance()
         {
             return WorldspaceSubBlockSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WorldspaceSubBlockSetterTranslationCommon.Instance;
-        }
-        object IWorldspaceSubBlockGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWorldspaceSubBlockGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => WorldspaceSubBlockSetterTranslationCommon.Instance;
+        object IWorldspaceSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceSubBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2604,26 +2589,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
         public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WorldspaceSubBlockCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WorldspaceSubBlockSetterTranslationCommon.Instance;
-        }
-        object IWorldspaceSubBlockGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWorldspaceSubBlockGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WorldspaceSubBlockSetterTranslationCommon.Instance;
+        object IWorldspaceSubBlockGetter.CommonInstance() => this.CommonInstance();
+        object IWorldspaceSubBlockGetter.CommonSetterInstance() => null;
+        object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

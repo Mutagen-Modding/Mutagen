@@ -2070,18 +2070,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return GrassCommon.Instance;
-        }
+        protected override object CommonInstance() => GrassCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return GrassSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return GrassSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => GrassSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3576,14 +3570,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return GrassCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return GrassSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => GrassCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => GrassSetterTranslationCommon.Instance;
 
         #endregion
 

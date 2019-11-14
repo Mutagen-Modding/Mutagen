@@ -1643,30 +1643,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LogEntryCommon.Instance;
-        }
+        protected object CommonInstance() => LogEntryCommon.Instance;
         protected object CommonSetterInstance()
         {
             return LogEntrySetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LogEntrySetterTranslationCommon.Instance;
-        }
-        object ILogEntryGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILogEntryGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILogEntryGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => LogEntrySetterTranslationCommon.Instance;
+        object ILogEntryGetter.CommonInstance() => this.CommonInstance();
+        object ILogEntryGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILogEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2715,26 +2700,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LogEntryCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LogEntrySetterTranslationCommon.Instance;
-        }
-        object ILogEntryGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILogEntryGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ILogEntryGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => LogEntryCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LogEntrySetterTranslationCommon.Instance;
+        object ILogEntryGetter.CommonInstance() => this.CommonInstance();
+        object ILogEntryGetter.CommonSetterInstance() => null;
+        object ILogEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

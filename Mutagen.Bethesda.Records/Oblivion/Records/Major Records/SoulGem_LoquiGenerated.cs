@@ -2136,18 +2136,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoulGemCommon.Instance;
-        }
+        protected override object CommonInstance() => SoulGemCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return SoulGemSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SoulGemSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => SoulGemSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3379,14 +3373,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoulGemCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SoulGemSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => SoulGemCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SoulGemSetterTranslationCommon.Instance;
 
         #endregion
 

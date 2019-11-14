@@ -1421,30 +1421,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return BaseLayerCommon.Instance;
-        }
+        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
         protected virtual object CommonSetterInstance()
         {
             return BaseLayerSetterCommon.Instance;
         }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return BaseLayerSetterTranslationCommon.Instance;
-        }
-        object IBaseLayerGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBaseLayerGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IBaseLayerGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object IBaseLayerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2325,26 +2310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return BaseLayerCommon.Instance;
-        }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return BaseLayerSetterTranslationCommon.Instance;
-        }
-        object IBaseLayerGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBaseLayerGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IBaseLayerGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object IBaseLayerGetter.CommonSetterInstance() => null;
+        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

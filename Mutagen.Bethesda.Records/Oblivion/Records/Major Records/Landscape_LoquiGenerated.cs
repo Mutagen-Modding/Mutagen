@@ -1985,18 +1985,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LandscapeCommon.Instance;
-        }
+        protected override object CommonInstance() => LandscapeCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return LandscapeSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LandscapeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => LandscapeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3177,14 +3171,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
         public new static Landscape_Registration Registration => Landscape_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LandscapeCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LandscapeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => LandscapeCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LandscapeSetterTranslationCommon.Instance;
 
         #endregion
 

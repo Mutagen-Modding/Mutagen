@@ -2944,18 +2944,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WorldspaceCommon.Instance;
-        }
+        protected override object CommonInstance() => WorldspaceCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return WorldspaceSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WorldspaceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => WorldspaceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -4826,14 +4820,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WorldspaceCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WorldspaceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => WorldspaceCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WorldspaceSetterTranslationCommon.Instance;
 
         #endregion
 

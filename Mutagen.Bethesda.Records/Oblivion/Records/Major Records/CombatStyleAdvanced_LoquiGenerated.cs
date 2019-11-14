@@ -2074,30 +2074,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
         public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CombatStyleAdvancedCommon.Instance;
-        }
+        protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         protected object CommonSetterInstance()
         {
             return CombatStyleAdvancedSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CombatStyleAdvancedSetterTranslationCommon.Instance;
-        }
-        object ICombatStyleAdvancedGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICombatStyleAdvancedGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => CombatStyleAdvancedSetterTranslationCommon.Instance;
+        object ICombatStyleAdvancedGetter.CommonInstance() => this.CommonInstance();
+        object ICombatStyleAdvancedGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -4078,26 +4063,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
         public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CombatStyleAdvancedCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CombatStyleAdvancedSetterTranslationCommon.Instance;
-        }
-        object ICombatStyleAdvancedGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICombatStyleAdvancedGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CombatStyleAdvancedSetterTranslationCommon.Instance;
+        object ICombatStyleAdvancedGetter.CommonInstance() => this.CommonInstance();
+        object ICombatStyleAdvancedGetter.CommonSetterInstance() => null;
+        object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

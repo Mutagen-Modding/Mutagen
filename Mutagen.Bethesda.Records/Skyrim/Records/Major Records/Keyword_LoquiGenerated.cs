@@ -1410,18 +1410,12 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
         public new static Keyword_Registration Registration => Keyword_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return KeywordCommon.Instance;
-        }
+        protected override object CommonInstance() => KeywordCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return KeywordSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return KeywordSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => KeywordSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2071,14 +2065,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
         public new static Keyword_Registration Registration => Keyword_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return KeywordCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return KeywordSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => KeywordCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => KeywordSetterTranslationCommon.Instance;
 
         #endregion
 

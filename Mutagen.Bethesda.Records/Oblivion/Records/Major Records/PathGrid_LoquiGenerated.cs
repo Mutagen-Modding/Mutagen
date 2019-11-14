@@ -1734,18 +1734,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
         public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return PathGridCommon.Instance;
-        }
+        protected override object CommonInstance() => PathGridCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return PathGridSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return PathGridSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => PathGridSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2924,14 +2918,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
         public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return PathGridCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return PathGridSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => PathGridCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PathGridSetterTranslationCommon.Instance;
 
         #endregion
 

@@ -1216,18 +1216,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
         public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ScriptVariableReferenceCommon.Instance;
-        }
+        protected override object CommonInstance() => ScriptVariableReferenceCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return ScriptVariableReferenceSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return ScriptVariableReferenceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => ScriptVariableReferenceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1825,14 +1819,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
         public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ScriptVariableReferenceCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return ScriptVariableReferenceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => ScriptVariableReferenceCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ScriptVariableReferenceSetterTranslationCommon.Instance;
 
         #endregion
 

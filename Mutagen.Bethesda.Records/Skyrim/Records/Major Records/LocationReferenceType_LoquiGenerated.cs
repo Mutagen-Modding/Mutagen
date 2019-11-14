@@ -1410,18 +1410,12 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
         public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LocationReferenceTypeCommon.Instance;
-        }
+        protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return LocationReferenceTypeSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LocationReferenceTypeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2071,14 +2065,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
         public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LocationReferenceTypeCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LocationReferenceTypeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion
 

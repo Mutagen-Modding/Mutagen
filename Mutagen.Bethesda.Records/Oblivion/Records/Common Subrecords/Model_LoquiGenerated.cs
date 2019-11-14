@@ -1358,30 +1358,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModelCommon.Instance;
-        }
+        protected object CommonInstance() => ModelCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ModelSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ModelSetterTranslationCommon.Instance;
-        }
-        object IModelGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModelGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IModelGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
+        object IModelGetter.CommonInstance() => this.CommonInstance();
+        object IModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2234,26 +2219,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModelCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ModelSetterTranslationCommon.Instance;
-        }
-        object IModelGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModelGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IModelGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ModelCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
+        object IModelGetter.CommonInstance() => this.CommonInstance();
+        object IModelGetter.CommonSetterInstance() => null;
+        object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

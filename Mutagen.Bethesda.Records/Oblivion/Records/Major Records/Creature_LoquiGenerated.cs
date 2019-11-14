@@ -4936,18 +4936,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
         public new static Creature_Registration Registration => Creature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return CreatureCommon.Instance;
-        }
+        protected override object CommonInstance() => CreatureCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return CreatureSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return CreatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => CreatureSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -9557,14 +9551,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
         public new static Creature_Registration Registration => Creature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return CreatureCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return CreatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => CreatureCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CreatureSetterTranslationCommon.Instance;
 
         #endregion
 

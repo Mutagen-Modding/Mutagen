@@ -1253,30 +1253,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ClassTrainingCommon.Instance;
-        }
+        protected object CommonInstance() => ClassTrainingCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ClassTrainingSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ClassTrainingSetterTranslationCommon.Instance;
-        }
-        object IClassTrainingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IClassTrainingGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IClassTrainingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ClassTrainingSetterTranslationCommon.Instance;
+        object IClassTrainingGetter.CommonInstance() => this.CommonInstance();
+        object IClassTrainingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IClassTrainingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2116,26 +2101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ClassTrainingCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ClassTrainingSetterTranslationCommon.Instance;
-        }
-        object IClassTrainingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IClassTrainingGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IClassTrainingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ClassTrainingCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ClassTrainingSetterTranslationCommon.Instance;
+        object IClassTrainingGetter.CommonInstance() => this.CommonInstance();
+        object IClassTrainingGetter.CommonSetterInstance() => null;
+        object IClassTrainingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

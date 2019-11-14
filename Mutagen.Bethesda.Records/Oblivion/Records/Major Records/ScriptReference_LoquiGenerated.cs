@@ -1071,30 +1071,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
         public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return ScriptReferenceCommon.Instance;
-        }
+        protected virtual object CommonInstance() => ScriptReferenceCommon.Instance;
         protected virtual object CommonSetterInstance()
         {
             return ScriptReferenceSetterCommon.Instance;
         }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return ScriptReferenceSetterTranslationCommon.Instance;
-        }
-        object IScriptReferenceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptReferenceGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IScriptReferenceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonSetterTranslationInstance() => ScriptReferenceSetterTranslationCommon.Instance;
+        object IScriptReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IScriptReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IScriptReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1730,26 +1715,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
         public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return ScriptReferenceCommon.Instance;
-        }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return ScriptReferenceSetterTranslationCommon.Instance;
-        }
-        object IScriptReferenceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptReferenceGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IScriptReferenceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonInstance() => ScriptReferenceCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptReferenceSetterTranslationCommon.Instance;
+        object IScriptReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IScriptReferenceGetter.CommonSetterInstance() => null;
+        object IScriptReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1521,30 +1521,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
         public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CellLightingCommon.Instance;
-        }
+        protected object CommonInstance() => CellLightingCommon.Instance;
         protected object CommonSetterInstance()
         {
             return CellLightingSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CellLightingSetterTranslationCommon.Instance;
-        }
-        object ICellLightingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICellLightingGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ICellLightingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => CellLightingSetterTranslationCommon.Instance;
+        object ICellLightingGetter.CommonInstance() => this.CommonInstance();
+        object ICellLightingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ICellLightingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2768,26 +2753,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
         public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return CellLightingCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return CellLightingSetterTranslationCommon.Instance;
-        }
-        object ICellLightingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ICellLightingGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ICellLightingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => CellLightingCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CellLightingSetterTranslationCommon.Instance;
+        object ICellLightingGetter.CommonInstance() => this.CommonInstance();
+        object ICellLightingGetter.CommonSetterInstance() => null;
+        object ICellLightingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

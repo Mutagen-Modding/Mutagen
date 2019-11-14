@@ -1320,30 +1320,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LockInformationCommon.Instance;
-        }
+        protected object CommonInstance() => LockInformationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return LockInformationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LockInformationSetterTranslationCommon.Instance;
-        }
-        object ILockInformationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILockInformationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILockInformationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => LockInformationSetterTranslationCommon.Instance;
+        object ILockInformationGetter.CommonInstance() => this.CommonInstance();
+        object ILockInformationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILockInformationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2234,26 +2219,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LockInformationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LockInformationSetterTranslationCommon.Instance;
-        }
-        object ILockInformationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILockInformationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ILockInformationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => LockInformationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LockInformationSetterTranslationCommon.Instance;
+        object ILockInformationGetter.CommonInstance() => this.CommonInstance();
+        object ILockInformationGetter.CommonSetterInstance() => null;
+        object ILockInformationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

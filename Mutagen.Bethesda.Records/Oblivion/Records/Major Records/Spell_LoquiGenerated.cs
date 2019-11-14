@@ -1399,18 +1399,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
         public new static Spell_Registration Registration => Spell_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SpellCommon.Instance;
-        }
+        protected override object CommonInstance() => SpellCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return SpellSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SpellSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2083,14 +2077,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
         public new static Spell_Registration Registration => Spell_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SpellCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SpellSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
 
         #endregion
 

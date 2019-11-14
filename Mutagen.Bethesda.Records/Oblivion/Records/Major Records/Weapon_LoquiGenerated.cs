@@ -2401,18 +2401,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WeaponCommon.Instance;
-        }
+        protected override object CommonInstance() => WeaponCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return WeaponSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WeaponSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => WeaponSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -4000,14 +3994,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WeaponCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WeaponSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => WeaponCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WeaponSetterTranslationCommon.Instance;
 
         #endregion
 

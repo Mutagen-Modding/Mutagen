@@ -1482,30 +1482,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return FaceGenDataCommon.Instance;
-        }
+        protected object CommonInstance() => FaceGenDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return FaceGenDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return FaceGenDataSetterTranslationCommon.Instance;
-        }
-        object IFaceGenDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IFaceGenDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IFaceGenDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => FaceGenDataSetterTranslationCommon.Instance;
+        object IFaceGenDataGetter.CommonInstance() => this.CommonInstance();
+        object IFaceGenDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFaceGenDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2366,26 +2351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return FaceGenDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return FaceGenDataSetterTranslationCommon.Instance;
-        }
-        object IFaceGenDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IFaceGenDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IFaceGenDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => FaceGenDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FaceGenDataSetterTranslationCommon.Instance;
+        object IFaceGenDataGetter.CommonInstance() => this.CommonInstance();
+        object IFaceGenDataGetter.CommonSetterInstance() => null;
+        object IFaceGenDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

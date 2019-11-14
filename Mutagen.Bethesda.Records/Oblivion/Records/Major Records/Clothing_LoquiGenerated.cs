@@ -1562,18 +1562,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
         public new static Clothing_Registration Registration => Clothing_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ClothingCommon.Instance;
-        }
+        protected override object CommonInstance() => ClothingCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return ClothingSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return ClothingSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => ClothingSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2420,14 +2414,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Clothing_Registration.Instance;
         public new static Clothing_Registration Registration => Clothing_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return ClothingCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return ClothingSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => ClothingCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ClothingSetterTranslationCommon.Instance;
 
         #endregion
 

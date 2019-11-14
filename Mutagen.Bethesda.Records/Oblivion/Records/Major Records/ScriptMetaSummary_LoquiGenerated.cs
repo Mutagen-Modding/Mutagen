@@ -1352,30 +1352,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
         public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ScriptMetaSummaryCommon.Instance;
-        }
+        protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ScriptMetaSummarySetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ScriptMetaSummarySetterTranslationCommon.Instance;
-        }
-        object IScriptMetaSummaryGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptMetaSummaryGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ScriptMetaSummarySetterTranslationCommon.Instance;
+        object IScriptMetaSummaryGetter.CommonInstance() => this.CommonInstance();
+        object IScriptMetaSummaryGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2350,26 +2335,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
         public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ScriptMetaSummaryCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ScriptMetaSummarySetterTranslationCommon.Instance;
-        }
-        object IScriptMetaSummaryGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IScriptMetaSummaryGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ScriptMetaSummarySetterTranslationCommon.Instance;
+        object IScriptMetaSummaryGetter.CommonInstance() => this.CommonInstance();
+        object IScriptMetaSummaryGetter.CommonSetterInstance() => null;
+        object IScriptMetaSummaryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

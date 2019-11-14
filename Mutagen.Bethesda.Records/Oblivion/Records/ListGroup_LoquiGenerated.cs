@@ -1492,30 +1492,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ListGroupCommon<T>.Instance;
-        }
+        protected object CommonInstance() => ListGroupCommon<T>.Instance;
         protected object CommonSetterInstance()
         {
             return ListGroupSetterCommon<T>.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ListGroupSetterTranslationCommon.Instance;
-        }
-        object IListGroupGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IListGroupGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IListGroupGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IListGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2549,26 +2534,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ListGroupCommon<T>.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ListGroupSetterTranslationCommon.Instance;
-        }
-        object IListGroupGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IListGroupGetter<T>.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IListGroupGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ListGroupCommon<T>.Instance;
+        protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        object IListGroupGetter<T>.CommonSetterInstance() => null;
+        object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

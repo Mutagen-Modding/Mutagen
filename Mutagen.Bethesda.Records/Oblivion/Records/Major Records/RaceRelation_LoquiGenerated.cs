@@ -1224,30 +1224,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
         public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceRelationCommon.Instance;
-        }
+        protected object CommonInstance() => RaceRelationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RaceRelationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceRelationSetterTranslationCommon.Instance;
-        }
-        object IRaceRelationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceRelationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceRelationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RaceRelationSetterTranslationCommon.Instance;
+        object IRaceRelationGetter.CommonInstance() => this.CommonInstance();
+        object IRaceRelationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRaceRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2011,26 +1996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
         public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceRelationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceRelationSetterTranslationCommon.Instance;
-        }
-        object IRaceRelationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceRelationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRaceRelationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RaceRelationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceRelationSetterTranslationCommon.Instance;
+        object IRaceRelationGetter.CommonInstance() => this.CommonInstance();
+        object IRaceRelationGetter.CommonSetterInstance() => null;
+        object IRaceRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

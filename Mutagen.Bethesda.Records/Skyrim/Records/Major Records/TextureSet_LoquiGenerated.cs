@@ -1800,18 +1800,12 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
         public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return TextureSetCommon.Instance;
-        }
+        protected override object CommonInstance() => TextureSetCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return TextureSetSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return TextureSetSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => TextureSetSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2719,14 +2713,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
         public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return TextureSetCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return TextureSetSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => TextureSetCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => TextureSetSetterTranslationCommon.Instance;
 
         #endregion
 

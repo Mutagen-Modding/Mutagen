@@ -1214,18 +1214,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
         public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return NPCSpawnCommon.Instance;
-        }
+        protected override object CommonInstance() => NPCSpawnCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return NPCSpawnSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return NPCSpawnSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => NPCSpawnSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1771,14 +1765,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCSpawn_Registration.Instance;
         public new static NPCSpawn_Registration Registration => NPCSpawn_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return NPCSpawnCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return NPCSpawnSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => NPCSpawnCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NPCSpawnSetterTranslationCommon.Instance;
 
         #endregion
 

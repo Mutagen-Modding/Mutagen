@@ -1869,18 +1869,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
         public new static Faction_Registration Registration => Faction_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return FactionCommon.Instance;
-        }
+        protected override object CommonInstance() => FactionCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return FactionSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return FactionSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => FactionSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3008,14 +3002,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
         public new static Faction_Registration Registration => Faction_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return FactionCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return FactionSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => FactionCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => FactionSetterTranslationCommon.Instance;
 
         #endregion
 

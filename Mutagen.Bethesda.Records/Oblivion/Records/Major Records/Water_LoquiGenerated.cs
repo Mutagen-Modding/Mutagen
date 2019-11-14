@@ -3498,18 +3498,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
         public new static Water_Registration Registration => Water_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WaterCommon.Instance;
-        }
+        protected override object CommonInstance() => WaterCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return WaterSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WaterSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -6427,14 +6421,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
         public new static Water_Registration Registration => Water_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return WaterCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return WaterSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => WaterCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 

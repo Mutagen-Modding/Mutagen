@@ -1310,18 +1310,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
         public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoundDataExtendedCommon.Instance;
-        }
+        protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return SoundDataExtendedSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SoundDataExtendedSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => SoundDataExtendedSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2172,14 +2166,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
         public new static SoundDataExtended_Registration Registration => SoundDataExtended_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SoundDataExtendedCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SoundDataExtendedSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SoundDataExtendedSetterTranslationCommon.Instance;
 
         #endregion
 

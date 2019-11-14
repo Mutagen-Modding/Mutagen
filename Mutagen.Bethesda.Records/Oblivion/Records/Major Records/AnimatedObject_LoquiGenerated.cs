@@ -1513,18 +1513,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
         public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AnimatedObjectCommon.Instance;
-        }
+        protected override object CommonInstance() => AnimatedObjectCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return AnimatedObjectSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AnimatedObjectSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => AnimatedObjectSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2241,14 +2235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimatedObject_Registration.Instance;
         public new static AnimatedObject_Registration Registration => AnimatedObject_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AnimatedObjectCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AnimatedObjectSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => AnimatedObjectCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AnimatedObjectSetterTranslationCommon.Instance;
 
         #endregion
 

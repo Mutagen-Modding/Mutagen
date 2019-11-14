@@ -1278,30 +1278,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return AIPackageLocationCommon.Instance;
-        }
+        protected object CommonInstance() => AIPackageLocationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return AIPackageLocationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return AIPackageLocationSetterTranslationCommon.Instance;
-        }
-        object IAIPackageLocationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IAIPackageLocationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IAIPackageLocationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => AIPackageLocationSetterTranslationCommon.Instance;
+        object IAIPackageLocationGetter.CommonInstance() => this.CommonInstance();
+        object IAIPackageLocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IAIPackageLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2131,26 +2116,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return AIPackageLocationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return AIPackageLocationSetterTranslationCommon.Instance;
-        }
-        object IAIPackageLocationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IAIPackageLocationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IAIPackageLocationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => AIPackageLocationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AIPackageLocationSetterTranslationCommon.Instance;
+        object IAIPackageLocationGetter.CommonInstance() => this.CommonInstance();
+        object IAIPackageLocationGetter.CommonSetterInstance() => null;
+        object IAIPackageLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

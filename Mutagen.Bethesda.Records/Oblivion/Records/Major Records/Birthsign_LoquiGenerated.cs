@@ -1742,18 +1742,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
         public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return BirthsignCommon.Instance;
-        }
+        protected override object CommonInstance() => BirthsignCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return BirthsignSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return BirthsignSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => BirthsignSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2696,14 +2690,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
         public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return BirthsignCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return BirthsignSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => BirthsignCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => BirthsignSetterTranslationCommon.Instance;
 
         #endregion
 

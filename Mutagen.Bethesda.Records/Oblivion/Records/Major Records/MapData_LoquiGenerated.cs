@@ -1264,30 +1264,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
         public static MapData_Registration Registration => MapData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapDataCommon.Instance;
-        }
+        protected object CommonInstance() => MapDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return MapDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MapDataSetterTranslationCommon.Instance;
-        }
-        object IMapDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMapDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => MapDataSetterTranslationCommon.Instance;
+        object IMapDataGetter.CommonInstance() => this.CommonInstance();
+        object IMapDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMapDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2134,26 +2119,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapData_Registration.Instance;
         public static MapData_Registration Registration => MapData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MapDataSetterTranslationCommon.Instance;
-        }
-        object IMapDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IMapDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => MapDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MapDataSetterTranslationCommon.Instance;
+        object IMapDataGetter.CommonInstance() => this.CommonInstance();
+        object IMapDataGetter.CommonSetterInstance() => null;
+        object IMapDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

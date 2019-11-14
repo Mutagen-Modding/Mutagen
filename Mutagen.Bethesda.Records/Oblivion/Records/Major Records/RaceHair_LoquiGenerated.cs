@@ -1221,30 +1221,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceHairCommon.Instance;
-        }
+        protected object CommonInstance() => RaceHairCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RaceHairSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceHairSetterTranslationCommon.Instance;
-        }
-        object IRaceHairGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceHairGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceHairGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RaceHairSetterTranslationCommon.Instance;
+        object IRaceHairGetter.CommonInstance() => this.CommonInstance();
+        object IRaceHairGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRaceHairGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1992,26 +1977,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceHairCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceHairSetterTranslationCommon.Instance;
-        }
-        object IRaceHairGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceHairGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRaceHairGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RaceHairCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceHairSetterTranslationCommon.Instance;
+        object IRaceHairGetter.CommonInstance() => this.CommonInstance();
+        object IRaceHairGetter.CommonSetterInstance() => null;
+        object IRaceHairGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

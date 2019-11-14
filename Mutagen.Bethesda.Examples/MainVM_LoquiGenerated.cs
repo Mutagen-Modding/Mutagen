@@ -1025,30 +1025,15 @@ namespace Mutagen.Bethesda.Examples
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MainVM_Registration.Instance;
         public static MainVM_Registration Registration => MainVM_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MainVMCommon.Instance;
-        }
+        protected object CommonInstance() => MainVMCommon.Instance;
         protected object CommonSetterInstance()
         {
             return MainVMSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MainVMSetterTranslationCommon.Instance;
-        }
-        object IMainVMGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMainVMGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMainVMGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => MainVMSetterTranslationCommon.Instance;
+        object IMainVMGetter.CommonInstance() => this.CommonInstance();
+        object IMainVMGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMainVMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

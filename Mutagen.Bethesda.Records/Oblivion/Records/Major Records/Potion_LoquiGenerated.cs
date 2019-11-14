@@ -2148,18 +2148,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
         public new static Potion_Registration Registration => Potion_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return PotionCommon.Instance;
-        }
+        protected override object CommonInstance() => PotionCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return PotionSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return PotionSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => PotionSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3491,14 +3485,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
         public new static Potion_Registration Registration => Potion_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return PotionCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return PotionSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => PotionCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PotionSetterTranslationCommon.Instance;
 
         #endregion
 

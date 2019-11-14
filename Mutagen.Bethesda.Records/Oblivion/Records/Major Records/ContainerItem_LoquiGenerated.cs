@@ -1224,30 +1224,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ContainerItemCommon.Instance;
-        }
+        protected object CommonInstance() => ContainerItemCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ContainerItemSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ContainerItemSetterTranslationCommon.Instance;
-        }
-        object IContainerItemGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IContainerItemGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IContainerItemGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
+        object IContainerItemGetter.CommonInstance() => this.CommonInstance();
+        object IContainerItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2011,26 +1996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ContainerItemCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ContainerItemSetterTranslationCommon.Instance;
-        }
-        object IContainerItemGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IContainerItemGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IContainerItemGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ContainerItemCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
+        object IContainerItemGetter.CommonInstance() => this.CommonInstance();
+        object IContainerItemGetter.CommonSetterInstance() => null;
+        object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

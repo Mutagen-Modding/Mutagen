@@ -1294,30 +1294,15 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MasterReferenceCommon.Instance;
-        }
+        protected object CommonInstance() => MasterReferenceCommon.Instance;
         protected object CommonSetterInstance()
         {
             return MasterReferenceSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MasterReferenceSetterTranslationCommon.Instance;
-        }
-        object IMasterReferenceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMasterReferenceGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMasterReferenceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => MasterReferenceSetterTranslationCommon.Instance;
+        object IMasterReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IMasterReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMasterReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2105,26 +2090,11 @@ namespace Mutagen.Bethesda.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MasterReferenceCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MasterReferenceSetterTranslationCommon.Instance;
-        }
-        object IMasterReferenceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMasterReferenceGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IMasterReferenceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => MasterReferenceCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MasterReferenceSetterTranslationCommon.Instance;
+        object IMasterReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IMasterReferenceGetter.CommonSetterInstance() => null;
+        object IMasterReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

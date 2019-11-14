@@ -1506,30 +1506,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
         public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LocalVariableCommon.Instance;
-        }
+        protected object CommonInstance() => LocalVariableCommon.Instance;
         protected object CommonSetterInstance()
         {
             return LocalVariableSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LocalVariableSetterTranslationCommon.Instance;
-        }
-        object ILocalVariableGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILocalVariableGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILocalVariableGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ILocalVariableGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2586,26 +2571,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
         public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LocalVariableCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LocalVariableSetterTranslationCommon.Instance;
-        }
-        object ILocalVariableGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILocalVariableGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ILocalVariableGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ILocalVariableGetter.CommonSetterInstance() => null;
+        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

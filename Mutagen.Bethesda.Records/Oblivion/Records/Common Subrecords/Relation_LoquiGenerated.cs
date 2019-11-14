@@ -1224,30 +1224,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
         public static Relation_Registration Registration => Relation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RelationCommon.Instance;
-        }
+        protected object CommonInstance() => RelationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RelationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RelationSetterTranslationCommon.Instance;
-        }
-        object IRelationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRelationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRelationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RelationSetterTranslationCommon.Instance;
+        object IRelationGetter.CommonInstance() => this.CommonInstance();
+        object IRelationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2011,26 +1996,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
         public static Relation_Registration Registration => Relation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RelationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RelationSetterTranslationCommon.Instance;
-        }
-        object IRelationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRelationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRelationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RelationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RelationSetterTranslationCommon.Instance;
+        object IRelationGetter.CommonInstance() => this.CommonInstance();
+        object IRelationGetter.CommonSetterInstance() => null;
+        object IRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

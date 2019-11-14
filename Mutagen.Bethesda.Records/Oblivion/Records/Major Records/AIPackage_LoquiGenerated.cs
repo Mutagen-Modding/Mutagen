@@ -1967,18 +1967,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AIPackageCommon.Instance;
-        }
+        protected override object CommonInstance() => AIPackageCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return AIPackageSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AIPackageSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => AIPackageSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3275,14 +3269,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AIPackageCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AIPackageSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => AIPackageCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AIPackageSetterTranslationCommon.Instance;
 
         #endregion
 

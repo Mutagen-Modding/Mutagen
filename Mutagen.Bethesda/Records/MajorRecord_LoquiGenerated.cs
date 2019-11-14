@@ -1606,30 +1606,15 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return MajorRecordCommon.Instance;
-        }
+        protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         protected virtual object CommonSetterInstance()
         {
             return MajorRecordSetterCommon.Instance;
         }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return MajorRecordSetterTranslationCommon.Instance;
-        }
-        object IMajorRecordGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMajorRecordGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMajorRecordGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        object IMajorRecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2525,26 +2510,11 @@ namespace Mutagen.Bethesda.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return MajorRecordCommon.Instance;
-        }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return MajorRecordSetterTranslationCommon.Instance;
-        }
-        object IMajorRecordGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMajorRecordGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IMajorRecordGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonInstance() => MajorRecordCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        object IMajorRecordGetter.CommonSetterInstance() => null;
+        object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

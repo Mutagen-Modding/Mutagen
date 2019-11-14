@@ -1201,30 +1201,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
         public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return InterCellPointCommon.Instance;
-        }
+        protected object CommonInstance() => InterCellPointCommon.Instance;
         protected object CommonSetterInstance()
         {
             return InterCellPointSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return InterCellPointSetterTranslationCommon.Instance;
-        }
-        object IInterCellPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IInterCellPointGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IInterCellPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => InterCellPointSetterTranslationCommon.Instance;
+        object IInterCellPointGetter.CommonInstance() => this.CommonInstance();
+        object IInterCellPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IInterCellPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2000,26 +1985,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
         public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return InterCellPointCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return InterCellPointSetterTranslationCommon.Instance;
-        }
-        object IInterCellPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IInterCellPointGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IInterCellPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => InterCellPointCommon.Instance;
+        protected object CommonSetterTranslationInstance() => InterCellPointSetterTranslationCommon.Instance;
+        object IInterCellPointGetter.CommonInstance() => this.CommonInstance();
+        object IInterCellPointGetter.CommonSetterInstance() => null;
+        object IInterCellPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

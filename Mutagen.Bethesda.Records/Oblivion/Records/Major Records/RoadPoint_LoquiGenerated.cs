@@ -1295,30 +1295,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
         public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RoadPointCommon.Instance;
-        }
+        protected object CommonInstance() => RoadPointCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RoadPointSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RoadPointSetterTranslationCommon.Instance;
-        }
-        object IRoadPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRoadPointGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRoadPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RoadPointSetterTranslationCommon.Instance;
+        object IRoadPointGetter.CommonInstance() => this.CommonInstance();
+        object IRoadPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRoadPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2240,26 +2225,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
         public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RoadPointCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RoadPointSetterTranslationCommon.Instance;
-        }
-        object IRoadPointGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRoadPointGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRoadPointGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RoadPointCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RoadPointSetterTranslationCommon.Instance;
+        object IRoadPointGetter.CommonInstance() => this.CommonInstance();
+        object IRoadPointGetter.CommonSetterInstance() => null;
+        object IRoadPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

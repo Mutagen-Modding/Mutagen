@@ -3392,18 +3392,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return CombatStyleCommon.Instance;
-        }
+        protected override object CommonInstance() => CombatStyleCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return CombatStyleSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return CombatStyleSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => CombatStyleSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -6481,14 +6475,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return CombatStyleCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return CombatStyleSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => CombatStyleCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CombatStyleSetterTranslationCommon.Instance;
 
         #endregion
 

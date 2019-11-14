@@ -1310,30 +1310,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return SoundDataCommon.Instance;
-        }
+        protected virtual object CommonInstance() => SoundDataCommon.Instance;
         protected virtual object CommonSetterInstance()
         {
             return SoundDataSetterCommon.Instance;
         }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return SoundDataSetterTranslationCommon.Instance;
-        }
-        object ISoundDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISoundDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ISoundDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonSetterTranslationInstance() => SoundDataSetterTranslationCommon.Instance;
+        object ISoundDataGetter.CommonInstance() => this.CommonInstance();
+        object ISoundDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISoundDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2325,26 +2310,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return SoundDataCommon.Instance;
-        }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return SoundDataSetterTranslationCommon.Instance;
-        }
-        object ISoundDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISoundDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ISoundDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonInstance() => SoundDataCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => SoundDataSetterTranslationCommon.Instance;
+        object ISoundDataGetter.CommonInstance() => this.CommonInstance();
+        object ISoundDataGetter.CommonSetterInstance() => null;
+        object ISoundDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

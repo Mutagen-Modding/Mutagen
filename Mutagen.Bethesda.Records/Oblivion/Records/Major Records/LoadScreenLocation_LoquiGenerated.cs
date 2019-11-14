@@ -1280,30 +1280,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
         public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LoadScreenLocationCommon.Instance;
-        }
+        protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return LoadScreenLocationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LoadScreenLocationSetterTranslationCommon.Instance;
-        }
-        object ILoadScreenLocationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILoadScreenLocationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILoadScreenLocationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => LoadScreenLocationSetterTranslationCommon.Instance;
+        object ILoadScreenLocationGetter.CommonInstance() => this.CommonInstance();
+        object ILoadScreenLocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILoadScreenLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2114,26 +2099,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
         public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LoadScreenLocationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LoadScreenLocationSetterTranslationCommon.Instance;
-        }
-        object ILoadScreenLocationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILoadScreenLocationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ILoadScreenLocationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => LoadScreenLocationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LoadScreenLocationSetterTranslationCommon.Instance;
+        object ILoadScreenLocationGetter.CommonInstance() => this.CommonInstance();
+        object ILoadScreenLocationGetter.CommonSetterInstance() => null;
+        object ILoadScreenLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

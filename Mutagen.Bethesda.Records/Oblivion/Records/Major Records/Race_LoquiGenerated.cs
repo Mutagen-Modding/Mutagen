@@ -3583,18 +3583,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
         public new static Race_Registration Registration => Race_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RaceCommon.Instance;
-        }
+        protected override object CommonInstance() => RaceCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return RaceSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RaceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -6456,14 +6450,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
         public new static Race_Registration Registration => Race_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RaceCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RaceSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
 
         #endregion
 

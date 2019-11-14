@@ -2320,18 +2320,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return BookCommon.Instance;
-        }
+        protected override object CommonInstance() => BookCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return BookSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return BookSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3742,14 +3736,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return BookCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return BookSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => BookCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
 
         #endregion
 

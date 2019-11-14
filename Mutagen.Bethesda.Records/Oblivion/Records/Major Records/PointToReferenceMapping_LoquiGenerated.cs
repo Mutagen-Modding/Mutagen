@@ -1253,30 +1253,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PointToReferenceMappingCommon.Instance;
-        }
+        protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         protected object CommonSetterInstance()
         {
             return PointToReferenceMappingSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return PointToReferenceMappingSetterTranslationCommon.Instance;
-        }
-        object IPointToReferenceMappingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPointToReferenceMappingGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => PointToReferenceMappingSetterTranslationCommon.Instance;
+        object IPointToReferenceMappingGetter.CommonInstance() => this.CommonInstance();
+        object IPointToReferenceMappingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2123,26 +2108,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return PointToReferenceMappingCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return PointToReferenceMappingSetterTranslationCommon.Instance;
-        }
-        object IPointToReferenceMappingGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IPointToReferenceMappingGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PointToReferenceMappingSetterTranslationCommon.Instance;
+        object IPointToReferenceMappingGetter.CommonInstance() => this.CommonInstance();
+        object IPointToReferenceMappingGetter.CommonSetterInstance() => null;
+        object IPointToReferenceMappingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1345,30 +1345,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
         public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RegionAreaCommon.Instance;
-        }
+        protected object CommonInstance() => RegionAreaCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RegionAreaSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RegionAreaSetterTranslationCommon.Instance;
-        }
-        object IRegionAreaGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionAreaGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRegionAreaGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RegionAreaSetterTranslationCommon.Instance;
+        object IRegionAreaGetter.CommonInstance() => this.CommonInstance();
+        object IRegionAreaGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRegionAreaGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2240,26 +2225,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionArea_Registration.Instance;
         public static RegionArea_Registration Registration => RegionArea_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RegionAreaCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RegionAreaSetterTranslationCommon.Instance;
-        }
-        object IRegionAreaGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionAreaGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRegionAreaGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RegionAreaCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RegionAreaSetterTranslationCommon.Instance;
+        object IRegionAreaGetter.CommonInstance() => this.CommonInstance();
+        object IRegionAreaGetter.CommonSetterInstance() => null;
+        object IRegionAreaGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

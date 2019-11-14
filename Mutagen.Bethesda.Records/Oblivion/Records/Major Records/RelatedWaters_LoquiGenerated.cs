@@ -1267,30 +1267,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
         public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RelatedWatersCommon.Instance;
-        }
+        protected object CommonInstance() => RelatedWatersCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RelatedWatersSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RelatedWatersSetterTranslationCommon.Instance;
-        }
-        object IRelatedWatersGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRelatedWatersGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRelatedWatersGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RelatedWatersSetterTranslationCommon.Instance;
+        object IRelatedWatersGetter.CommonInstance() => this.CommonInstance();
+        object IRelatedWatersGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRelatedWatersGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2083,26 +2068,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
         public static RelatedWaters_Registration Registration => RelatedWaters_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RelatedWatersCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RelatedWatersSetterTranslationCommon.Instance;
-        }
-        object IRelatedWatersGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRelatedWatersGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRelatedWatersGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RelatedWatersCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RelatedWatersSetterTranslationCommon.Instance;
+        object IRelatedWatersGetter.CommonInstance() => this.CommonInstance();
+        object IRelatedWatersGetter.CommonSetterInstance() => null;
+        object IRelatedWatersGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

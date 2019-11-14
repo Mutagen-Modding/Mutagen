@@ -1286,30 +1286,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
         public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceStatsGenderedCommon.Instance;
-        }
+        protected object CommonInstance() => RaceStatsGenderedCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RaceStatsGenderedSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceStatsGenderedSetterTranslationCommon.Instance;
-        }
-        object IRaceStatsGenderedGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceStatsGenderedGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceStatsGenderedGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RaceStatsGenderedSetterTranslationCommon.Instance;
+        object IRaceStatsGenderedGetter.CommonInstance() => this.CommonInstance();
+        object IRaceStatsGenderedGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRaceStatsGenderedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2135,26 +2120,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
         public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceStatsGenderedCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceStatsGenderedSetterTranslationCommon.Instance;
-        }
-        object IRaceStatsGenderedGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceStatsGenderedGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRaceStatsGenderedGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RaceStatsGenderedCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceStatsGenderedSetterTranslationCommon.Instance;
+        object IRaceStatsGenderedGetter.CommonInstance() => this.CommonInstance();
+        object IRaceStatsGenderedGetter.CommonSetterInstance() => null;
+        object IRaceStatsGenderedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

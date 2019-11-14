@@ -1477,30 +1477,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ConditionCommon.Instance;
-        }
+        protected object CommonInstance() => ConditionCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ConditionSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ConditionSetterTranslationCommon.Instance;
-        }
-        object IConditionGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IConditionGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IConditionGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ConditionSetterTranslationCommon.Instance;
+        object IConditionGetter.CommonInstance() => this.CommonInstance();
+        object IConditionGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2694,26 +2679,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ConditionCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ConditionSetterTranslationCommon.Instance;
-        }
-        object IConditionGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IConditionGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IConditionGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ConditionCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ConditionSetterTranslationCommon.Instance;
+        object IConditionGetter.CommonInstance() => this.CommonInstance();
+        object IConditionGetter.CommonSetterInstance() => null;
+        object IConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

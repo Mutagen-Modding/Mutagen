@@ -1363,30 +1363,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
         public static RegionData_Registration Registration => RegionData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return RegionDataCommon.Instance;
-        }
+        protected virtual object CommonInstance() => RegionDataCommon.Instance;
         protected virtual object CommonSetterInstance()
         {
             return RegionDataSetterCommon.Instance;
         }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return RegionDataSetterTranslationCommon.Instance;
-        }
-        object IRegionDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRegionDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonSetterTranslationInstance() => RegionDataSetterTranslationCommon.Instance;
+        object IRegionDataGetter.CommonInstance() => this.CommonInstance();
+        object IRegionDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRegionDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2292,26 +2277,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionData_Registration.Instance;
         public static RegionData_Registration Registration => RegionData_Registration.Instance;
-        protected virtual object CommonInstance()
-        {
-            return RegionDataCommon.Instance;
-        }
-        protected virtual object CommonSetterTranslationInstance()
-        {
-            return RegionDataSetterTranslationCommon.Instance;
-        }
-        object IRegionDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRegionDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRegionDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected virtual object CommonInstance() => RegionDataCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => RegionDataSetterTranslationCommon.Instance;
+        object IRegionDataGetter.CommonInstance() => this.CommonInstance();
+        object IRegionDataGetter.CommonSetterInstance() => null;
+        object IRegionDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1831,18 +1831,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return DialogTopicCommon.Instance;
-        }
+        protected override object CommonInstance() => DialogTopicCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return DialogTopicSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return DialogTopicSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => DialogTopicSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2981,14 +2975,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return DialogTopicCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return DialogTopicSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => DialogTopicCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => DialogTopicSetterTranslationCommon.Instance;
 
         #endregion
 

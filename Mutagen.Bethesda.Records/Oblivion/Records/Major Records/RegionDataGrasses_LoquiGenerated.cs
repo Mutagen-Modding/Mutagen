@@ -1338,18 +1338,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
         public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RegionDataGrassesCommon.Instance;
-        }
+        protected override object CommonInstance() => RegionDataGrassesCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return RegionDataGrassesSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RegionDataGrassesSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => RegionDataGrassesSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2048,14 +2042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataGrasses_Registration.Instance;
         public new static RegionDataGrasses_Registration Registration => RegionDataGrasses_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RegionDataGrassesCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RegionDataGrassesSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => RegionDataGrassesCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RegionDataGrassesSetterTranslationCommon.Instance;
 
         #endregion
 

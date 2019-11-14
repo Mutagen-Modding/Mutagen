@@ -1609,30 +1609,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
         public static Decal_Registration Registration => Decal_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DecalCommon.Instance;
-        }
+        protected object CommonInstance() => DecalCommon.Instance;
         protected object CommonSetterInstance()
         {
             return DecalSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DecalSetterTranslationCommon.Instance;
-        }
-        object IDecalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDecalGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDecalGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => DecalSetterTranslationCommon.Instance;
+        object IDecalGetter.CommonInstance() => this.CommonInstance();
+        object IDecalGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDecalGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2981,26 +2966,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
         public static Decal_Registration Registration => Decal_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DecalCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DecalSetterTranslationCommon.Instance;
-        }
-        object IDecalGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDecalGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IDecalGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => DecalCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DecalSetterTranslationCommon.Instance;
+        object IDecalGetter.CommonInstance() => this.CommonInstance();
+        object IDecalGetter.CommonSetterInstance() => null;
+        object IDecalGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

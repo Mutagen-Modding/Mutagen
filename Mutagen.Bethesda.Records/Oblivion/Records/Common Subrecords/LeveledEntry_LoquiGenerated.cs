@@ -1567,30 +1567,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LeveledEntryCommon<T>.Instance;
-        }
+        protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
         protected object CommonSetterInstance()
         {
             return LeveledEntrySetterCommon<T>.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LeveledEntrySetterTranslationCommon.Instance;
-        }
-        object ILeveledEntryGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILeveledEntryGetter<T>.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ILeveledEntryGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
+        object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        object ILeveledEntryGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2573,26 +2558,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return LeveledEntryCommon<T>.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return LeveledEntrySetterTranslationCommon.Instance;
-        }
-        object ILeveledEntryGetter<T>.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ILeveledEntryGetter<T>.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ILeveledEntryGetter<T>.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
+        protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
+        object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        object ILeveledEntryGetter<T>.CommonSetterInstance() => null;
+        object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

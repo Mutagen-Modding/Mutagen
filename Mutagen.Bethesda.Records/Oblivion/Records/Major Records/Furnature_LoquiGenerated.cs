@@ -1731,18 +1731,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
         public new static Furnature_Registration Registration => Furnature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return FurnatureCommon.Instance;
-        }
+        protected override object CommonInstance() => FurnatureCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return FurnatureSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return FurnatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => FurnatureSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2597,14 +2591,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
         public new static Furnature_Registration Registration => Furnature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return FurnatureCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return FurnatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => FurnatureCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => FurnatureSetterTranslationCommon.Instance;
 
         #endregion
 

@@ -1618,18 +1618,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
         public new static Eye_Registration Registration => Eye_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return EyeCommon.Instance;
-        }
+        protected override object CommonInstance() => EyeCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return EyeSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return EyeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => EyeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2417,14 +2411,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
         public new static Eye_Registration Registration => Eye_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return EyeCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return EyeSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => EyeCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => EyeSetterTranslationCommon.Instance;
 
         #endregion
 

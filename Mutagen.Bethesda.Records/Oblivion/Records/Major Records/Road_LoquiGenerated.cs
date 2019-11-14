@@ -1382,18 +1382,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
         public new static Road_Registration Registration => Road_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RoadCommon.Instance;
-        }
+        protected override object CommonInstance() => RoadCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return RoadSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RoadSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => RoadSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2168,14 +2162,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Road_Registration.Instance;
         public new static Road_Registration Registration => Road_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return RoadCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return RoadSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => RoadCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RoadSetterTranslationCommon.Instance;
 
         #endregion
 

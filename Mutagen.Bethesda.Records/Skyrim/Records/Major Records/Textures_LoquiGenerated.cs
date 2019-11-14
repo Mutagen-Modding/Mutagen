@@ -2029,30 +2029,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Textures_Registration.Instance;
         public static Textures_Registration Registration => Textures_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TexturesCommon.Instance;
-        }
+        protected object CommonInstance() => TexturesCommon.Instance;
         protected object CommonSetterInstance()
         {
             return TexturesSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return TexturesSetterTranslationCommon.Instance;
-        }
-        object ITexturesGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITexturesGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ITexturesGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => TexturesSetterTranslationCommon.Instance;
+        object ITexturesGetter.CommonInstance() => this.CommonInstance();
+        object ITexturesGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ITexturesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -3258,26 +3243,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Textures_Registration.Instance;
         public static Textures_Registration Registration => Textures_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TexturesCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return TexturesSetterTranslationCommon.Instance;
-        }
-        object ITexturesGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITexturesGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ITexturesGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => TexturesCommon.Instance;
+        protected object CommonSetterTranslationInstance() => TexturesSetterTranslationCommon.Instance;
+        object ITexturesGetter.CommonInstance() => this.CommonInstance();
+        object ITexturesGetter.CommonSetterInstance() => null;
+        object ITexturesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

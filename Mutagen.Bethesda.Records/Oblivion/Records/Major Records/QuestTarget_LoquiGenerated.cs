@@ -1423,30 +1423,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
         public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return QuestTargetCommon.Instance;
-        }
+        protected object CommonInstance() => QuestTargetCommon.Instance;
         protected object CommonSetterInstance()
         {
             return QuestTargetSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return QuestTargetSetterTranslationCommon.Instance;
-        }
-        object IQuestTargetGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IQuestTargetGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IQuestTargetGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        object IQuestTargetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2462,26 +2447,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
         public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return QuestTargetCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return QuestTargetSetterTranslationCommon.Instance;
-        }
-        object IQuestTargetGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IQuestTargetGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IQuestTargetGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => QuestTargetCommon.Instance;
+        protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        object IQuestTargetGetter.CommonSetterInstance() => null;
+        object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

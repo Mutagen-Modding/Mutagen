@@ -1470,30 +1470,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
         public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapMarkerCommon.Instance;
-        }
+        protected object CommonInstance() => MapMarkerCommon.Instance;
         protected object CommonSetterInstance()
         {
             return MapMarkerSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MapMarkerSetterTranslationCommon.Instance;
-        }
-        object IMapMarkerGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapMarkerGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMapMarkerGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => MapMarkerSetterTranslationCommon.Instance;
+        object IMapMarkerGetter.CommonInstance() => this.CommonInstance();
+        object IMapMarkerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMapMarkerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2441,26 +2426,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
         public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MapMarkerCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MapMarkerSetterTranslationCommon.Instance;
-        }
-        object IMapMarkerGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMapMarkerGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IMapMarkerGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => MapMarkerCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MapMarkerSetterTranslationCommon.Instance;
+        object IMapMarkerGetter.CommonInstance() => this.CommonInstance();
+        object IMapMarkerGetter.CommonSetterInstance() => null;
+        object IMapMarkerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

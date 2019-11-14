@@ -1278,30 +1278,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TeleportDestinationCommon.Instance;
-        }
+        protected object CommonInstance() => TeleportDestinationCommon.Instance;
         protected object CommonSetterInstance()
         {
             return TeleportDestinationSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return TeleportDestinationSetterTranslationCommon.Instance;
-        }
-        object ITeleportDestinationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITeleportDestinationGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ITeleportDestinationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => TeleportDestinationSetterTranslationCommon.Instance;
+        object ITeleportDestinationGetter.CommonInstance() => this.CommonInstance();
+        object ITeleportDestinationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ITeleportDestinationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2130,26 +2115,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return TeleportDestinationCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return TeleportDestinationSetterTranslationCommon.Instance;
-        }
-        object ITeleportDestinationGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ITeleportDestinationGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ITeleportDestinationGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => TeleportDestinationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => TeleportDestinationSetterTranslationCommon.Instance;
+        object ITeleportDestinationGetter.CommonInstance() => this.CommonInstance();
+        object ITeleportDestinationGetter.CommonSetterInstance() => null;
+        object ITeleportDestinationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1233,30 +1233,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
         public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EnableParentCommon.Instance;
-        }
+        protected object CommonInstance() => EnableParentCommon.Instance;
         protected object CommonSetterInstance()
         {
             return EnableParentSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return EnableParentSetterTranslationCommon.Instance;
-        }
-        object IEnableParentGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEnableParentGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IEnableParentGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => EnableParentSetterTranslationCommon.Instance;
+        object IEnableParentGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IEnableParentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2023,26 +2008,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnableParent_Registration.Instance;
         public static EnableParent_Registration Registration => EnableParent_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EnableParentCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return EnableParentSetterTranslationCommon.Instance;
-        }
-        object IEnableParentGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEnableParentGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IEnableParentGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => EnableParentCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EnableParentSetterTranslationCommon.Instance;
+        object IEnableParentGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentGetter.CommonSetterInstance() => null;
+        object IEnableParentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

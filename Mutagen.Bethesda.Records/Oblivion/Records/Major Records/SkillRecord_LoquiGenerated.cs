@@ -2374,18 +2374,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SkillRecordCommon.Instance;
-        }
+        protected override object CommonInstance() => SkillRecordCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return SkillRecordSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SkillRecordSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => SkillRecordSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -3850,14 +3844,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return SkillRecordCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return SkillRecordSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => SkillRecordCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SkillRecordSetterTranslationCommon.Instance;
 
         #endregion
 

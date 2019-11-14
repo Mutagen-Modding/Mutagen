@@ -1233,30 +1233,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
         public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherSoundCommon.Instance;
-        }
+        protected object CommonInstance() => WeatherSoundCommon.Instance;
         protected object CommonSetterInstance()
         {
             return WeatherSoundSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WeatherSoundSetterTranslationCommon.Instance;
-        }
-        object IWeatherSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherSoundGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWeatherSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => WeatherSoundSetterTranslationCommon.Instance;
+        object IWeatherSoundGetter.CommonInstance() => this.CommonInstance();
+        object IWeatherSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWeatherSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2023,26 +2008,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
         public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherSoundCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WeatherSoundSetterTranslationCommon.Instance;
-        }
-        object IWeatherSoundGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherSoundGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IWeatherSoundGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => WeatherSoundCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeatherSoundSetterTranslationCommon.Instance;
+        object IWeatherSoundGetter.CommonInstance() => this.CommonInstance();
+        object IWeatherSoundGetter.CommonSetterInstance() => null;
+        object IWeatherSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -1659,30 +1659,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
         public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DialogResponseCommon.Instance;
-        }
+        protected object CommonInstance() => DialogResponseCommon.Instance;
         protected object CommonSetterInstance()
         {
             return DialogResponseSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DialogResponseSetterTranslationCommon.Instance;
-        }
-        object IDialogResponseGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDialogResponseGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDialogResponseGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => DialogResponseSetterTranslationCommon.Instance;
+        object IDialogResponseGetter.CommonInstance() => this.CommonInstance();
+        object IDialogResponseGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDialogResponseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2869,26 +2854,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
         public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DialogResponseCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DialogResponseSetterTranslationCommon.Instance;
-        }
-        object IDialogResponseGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDialogResponseGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IDialogResponseGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => DialogResponseCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DialogResponseSetterTranslationCommon.Instance;
+        object IDialogResponseGetter.CommonInstance() => this.CommonInstance();
+        object IDialogResponseGetter.CommonSetterInstance() => null;
+        object IDialogResponseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

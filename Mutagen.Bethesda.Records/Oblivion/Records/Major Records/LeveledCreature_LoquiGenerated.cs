@@ -1824,18 +1824,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LeveledCreatureCommon.Instance;
-        }
+        protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return LeveledCreatureSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LeveledCreatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => LeveledCreatureSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2856,14 +2850,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LeveledCreatureCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LeveledCreatureSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => LeveledCreatureCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LeveledCreatureSetterTranslationCommon.Instance;
 
         #endregion
 

@@ -1264,30 +1264,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DistantLODDataCommon.Instance;
-        }
+        protected object CommonInstance() => DistantLODDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return DistantLODDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DistantLODDataSetterTranslationCommon.Instance;
-        }
-        object IDistantLODDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDistantLODDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IDistantLODDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => DistantLODDataSetterTranslationCommon.Instance;
+        object IDistantLODDataGetter.CommonInstance() => this.CommonInstance();
+        object IDistantLODDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IDistantLODDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2134,26 +2119,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return DistantLODDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return DistantLODDataSetterTranslationCommon.Instance;
-        }
-        object IDistantLODDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IDistantLODDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IDistantLODDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => DistantLODDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => DistantLODDataSetterTranslationCommon.Instance;
+        object IDistantLODDataGetter.CommonInstance() => this.CommonInstance();
+        object IDistantLODDataGetter.CommonSetterInstance() => null;
+        object IDistantLODDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

@@ -2425,18 +2425,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LightCommon.Instance;
-        }
+        protected override object CommonInstance() => LightCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return LightSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LightSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -4035,14 +4029,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LightCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LightSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => LightCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
 
         #endregion
 

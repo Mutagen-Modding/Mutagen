@@ -1101,30 +1101,15 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RecordInterest_Registration.Instance;
         public static RecordInterest_Registration Registration => RecordInterest_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RecordInterestCommon.Instance;
-        }
+        protected object CommonInstance() => RecordInterestCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RecordInterestSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RecordInterestSetterTranslationCommon.Instance;
-        }
-        object IRecordInterestGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRecordInterestGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRecordInterestGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RecordInterestSetterTranslationCommon.Instance;
+        object IRecordInterestGetter.CommonInstance() => this.CommonInstance();
+        object IRecordInterestGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRecordInterestGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

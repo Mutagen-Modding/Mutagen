@@ -2718,30 +2718,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return SkyrimModCommon.Instance;
-        }
+        protected object CommonInstance() => SkyrimModCommon.Instance;
         protected object CommonSetterInstance()
         {
             return SkyrimModSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return SkyrimModSetterTranslationCommon.Instance;
-        }
-        object ISkyrimModGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISkyrimModGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object ISkyrimModGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        object ISkyrimModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -4192,26 +4177,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return SkyrimModCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return SkyrimModSetterTranslationCommon.Instance;
-        }
-        object ISkyrimModGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object ISkyrimModGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object ISkyrimModGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => SkyrimModCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        object ISkyrimModGetter.CommonSetterInstance() => null;
+        object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

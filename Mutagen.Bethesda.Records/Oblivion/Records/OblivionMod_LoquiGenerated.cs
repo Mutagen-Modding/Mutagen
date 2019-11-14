@@ -9147,30 +9147,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return OblivionModCommon.Instance;
-        }
+        protected object CommonInstance() => OblivionModCommon.Instance;
         protected object CommonSetterInstance()
         {
             return OblivionModSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return OblivionModSetterTranslationCommon.Instance;
-        }
-        object IOblivionModGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IOblivionModGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IOblivionModGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        object IOblivionModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -14620,26 +14605,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return OblivionModCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return OblivionModSetterTranslationCommon.Instance;
-        }
-        object IOblivionModGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IOblivionModGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IOblivionModGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => OblivionModCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        object IOblivionModGetter.CommonSetterInstance() => null;
+        object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

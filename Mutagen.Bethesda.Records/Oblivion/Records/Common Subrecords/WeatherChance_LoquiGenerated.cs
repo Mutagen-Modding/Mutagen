@@ -1218,30 +1218,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherChanceCommon.Instance;
-        }
+        protected object CommonInstance() => WeatherChanceCommon.Instance;
         protected object CommonSetterInstance()
         {
             return WeatherChanceSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WeatherChanceSetterTranslationCommon.Instance;
-        }
-        object IWeatherChanceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherChanceGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IWeatherChanceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => WeatherChanceSetterTranslationCommon.Instance;
+        object IWeatherChanceGetter.CommonInstance() => this.CommonInstance();
+        object IWeatherChanceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWeatherChanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1999,26 +1984,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return WeatherChanceCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return WeatherChanceSetterTranslationCommon.Instance;
-        }
-        object IWeatherChanceGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IWeatherChanceGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IWeatherChanceGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => WeatherChanceCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeatherChanceSetterTranslationCommon.Instance;
+        object IWeatherChanceGetter.CommonInstance() => this.CommonInstance();
+        object IWeatherChanceGetter.CommonSetterInstance() => null;
+        object IWeatherChanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

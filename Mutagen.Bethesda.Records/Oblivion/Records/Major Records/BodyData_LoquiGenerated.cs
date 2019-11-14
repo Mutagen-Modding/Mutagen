@@ -1394,30 +1394,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return BodyDataCommon.Instance;
-        }
+        protected object CommonInstance() => BodyDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return BodyDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return BodyDataSetterTranslationCommon.Instance;
-        }
-        object IBodyDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBodyDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IBodyDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IBodyDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2327,26 +2312,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return BodyDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return BodyDataSetterTranslationCommon.Instance;
-        }
-        object IBodyDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IBodyDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IBodyDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => BodyDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IBodyDataGetter.CommonSetterInstance() => null;
+        object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

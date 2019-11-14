@@ -1221,30 +1221,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceVoicesCommon.Instance;
-        }
+        protected object CommonInstance() => RaceVoicesCommon.Instance;
         protected object CommonSetterInstance()
         {
             return RaceVoicesSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceVoicesSetterTranslationCommon.Instance;
-        }
-        object IRaceVoicesGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceVoicesGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IRaceVoicesGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => RaceVoicesSetterTranslationCommon.Instance;
+        object IRaceVoicesGetter.CommonInstance() => this.CommonInstance();
+        object IRaceVoicesGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IRaceVoicesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1992,26 +1977,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return RaceVoicesCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return RaceVoicesSetterTranslationCommon.Instance;
-        }
-        object IRaceVoicesGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IRaceVoicesGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IRaceVoicesGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => RaceVoicesCommon.Instance;
+        protected object CommonSetterTranslationInstance() => RaceVoicesSetterTranslationCommon.Instance;
+        object IRaceVoicesGetter.CommonInstance() => this.CommonInstance();
+        object IRaceVoicesGetter.CommonSetterInstance() => null;
+        object IRaceVoicesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

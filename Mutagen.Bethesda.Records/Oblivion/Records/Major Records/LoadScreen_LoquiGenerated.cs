@@ -1647,18 +1647,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
         public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LoadScreenCommon.Instance;
-        }
+        protected override object CommonInstance() => LoadScreenCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return LoadScreenSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LoadScreenSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => LoadScreenSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2546,14 +2540,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
         public new static LoadScreen_Registration Registration => LoadScreen_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return LoadScreenCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return LoadScreenSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => LoadScreenCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LoadScreenSetterTranslationCommon.Instance;
 
         #endregion
 

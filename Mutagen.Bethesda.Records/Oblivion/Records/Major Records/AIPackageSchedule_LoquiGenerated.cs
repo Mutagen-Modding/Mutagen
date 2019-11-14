@@ -1327,30 +1327,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
         public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return AIPackageScheduleCommon.Instance;
-        }
+        protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         protected object CommonSetterInstance()
         {
             return AIPackageScheduleSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return AIPackageScheduleSetterTranslationCommon.Instance;
-        }
-        object IAIPackageScheduleGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IAIPackageScheduleGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IAIPackageScheduleGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => AIPackageScheduleSetterTranslationCommon.Instance;
+        object IAIPackageScheduleGetter.CommonInstance() => this.CommonInstance();
+        object IAIPackageScheduleGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IAIPackageScheduleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2319,26 +2304,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
         public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return AIPackageScheduleCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return AIPackageScheduleSetterTranslationCommon.Instance;
-        }
-        object IAIPackageScheduleGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IAIPackageScheduleGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IAIPackageScheduleGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => AIPackageScheduleCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AIPackageScheduleSetterTranslationCommon.Instance;
+        object IAIPackageScheduleGetter.CommonInstance() => this.CommonInstance();
+        object IAIPackageScheduleGetter.CommonSetterInstance() => null;
+        object IAIPackageScheduleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

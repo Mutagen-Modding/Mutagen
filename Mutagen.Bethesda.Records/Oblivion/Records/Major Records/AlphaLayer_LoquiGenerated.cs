@@ -1330,18 +1330,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
         public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AlphaLayerCommon.Instance;
-        }
+        protected override object CommonInstance() => AlphaLayerCommon.Instance;
         protected override object CommonSetterInstance()
         {
             return AlphaLayerSetterCommon.Instance;
         }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AlphaLayerSetterTranslationCommon.Instance;
-        }
+        protected override object CommonSetterTranslationInstance() => AlphaLayerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1954,14 +1948,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
         public new static AlphaLayer_Registration Registration => AlphaLayer_Registration.Instance;
-        protected override object CommonInstance()
-        {
-            return AlphaLayerCommon.Instance;
-        }
-        protected override object CommonSetterTranslationInstance()
-        {
-            return AlphaLayerSetterTranslationCommon.Instance;
-        }
+        protected override object CommonInstance() => AlphaLayerCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AlphaLayerSetterTranslationCommon.Instance;
 
         #endregion
 

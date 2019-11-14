@@ -1246,30 +1246,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
         public static ModStats_Registration Registration => ModStats_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModStatsCommon.Instance;
-        }
+        protected object CommonInstance() => ModStatsCommon.Instance;
         protected object CommonSetterInstance()
         {
             return ModStatsSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ModStatsSetterTranslationCommon.Instance;
-        }
-        object IModStatsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModStatsGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IModStatsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => ModStatsSetterTranslationCommon.Instance;
+        object IModStatsGetter.CommonInstance() => this.CommonInstance();
+        object IModStatsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IModStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2112,26 +2097,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
         public static ModStats_Registration Registration => ModStats_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return ModStatsCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return ModStatsSetterTranslationCommon.Instance;
-        }
-        object IModStatsGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IModStatsGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IModStatsGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => ModStatsCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ModStatsSetterTranslationCommon.Instance;
+        object IModStatsGetter.CommonInstance() => this.CommonInstance();
+        object IModStatsGetter.CommonSetterInstance() => null;
+        object IModStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

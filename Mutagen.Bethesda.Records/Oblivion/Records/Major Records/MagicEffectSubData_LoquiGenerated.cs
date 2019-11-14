@@ -1460,30 +1460,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
         public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MagicEffectSubDataCommon.Instance;
-        }
+        protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
         protected object CommonSetterInstance()
         {
             return MagicEffectSubDataSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MagicEffectSubDataSetterTranslationCommon.Instance;
-        }
-        object IMagicEffectSubDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMagicEffectSubDataGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => MagicEffectSubDataSetterTranslationCommon.Instance;
+        object IMagicEffectSubDataGetter.CommonInstance() => this.CommonInstance();
+        object IMagicEffectSubDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2486,26 +2471,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
         public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return MagicEffectSubDataCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return MagicEffectSubDataSetterTranslationCommon.Instance;
-        }
-        object IMagicEffectSubDataGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IMagicEffectSubDataGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MagicEffectSubDataSetterTranslationCommon.Instance;
+        object IMagicEffectSubDataGetter.CommonInstance() => this.CommonInstance();
+        object IMagicEffectSubDataGetter.CommonSetterInstance() => null;
+        object IMagicEffectSubDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 

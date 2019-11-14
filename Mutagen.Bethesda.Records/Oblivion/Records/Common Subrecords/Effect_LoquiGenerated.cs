@@ -1647,30 +1647,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
         public static Effect_Registration Registration => Effect_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EffectCommon.Instance;
-        }
+        protected object CommonInstance() => EffectCommon.Instance;
         protected object CommonSetterInstance()
         {
             return EffectSetterCommon.Instance;
         }
-        protected object CommonSetterTranslationInstance()
-        {
-            return EffectSetterTranslationCommon.Instance;
-        }
-        object IEffectGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEffectGetter.CommonSetterInstance()
-        {
-            return this.CommonSetterInstance();
-        }
-        object IEffectGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonSetterTranslationInstance() => EffectSetterTranslationCommon.Instance;
+        object IEffectGetter.CommonInstance() => this.CommonInstance();
+        object IEffectGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IEffectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2891,26 +2876,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
         public static Effect_Registration Registration => Effect_Registration.Instance;
-        protected object CommonInstance()
-        {
-            return EffectCommon.Instance;
-        }
-        protected object CommonSetterTranslationInstance()
-        {
-            return EffectSetterTranslationCommon.Instance;
-        }
-        object IEffectGetter.CommonInstance()
-        {
-            return this.CommonInstance();
-        }
-        object IEffectGetter.CommonSetterInstance()
-        {
-            return null;
-        }
-        object IEffectGetter.CommonSetterTranslationInstance()
-        {
-            return this.CommonSetterTranslationInstance();
-        }
+        protected object CommonInstance() => EffectCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EffectSetterTranslationCommon.Instance;
+        object IEffectGetter.CommonInstance() => this.CommonInstance();
+        object IEffectGetter.CommonSetterInstance() => null;
+        object IEffectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
