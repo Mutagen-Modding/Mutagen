@@ -881,8 +881,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellAbstractInternal)item);
         }
         
-        public override object GetNew() => SpellAbstract.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISpellAbstractInternal item,
@@ -1133,6 +1131,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SpellAbstract.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SpellAbstract obj, SpellAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1168,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellAbstractGetter item,
             SpellAbstract_TranslationMask copyMask = null)
         {
-            SpellAbstract ret = (SpellAbstract)((SpellAbstractSetterCommon)((ISpellAbstractGetter)item).CommonSetterInstance()).GetNew();
+            SpellAbstract ret = (SpellAbstract)((SpellAbstractCommon)((ISpellAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1180,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SpellAbstract_ErrorMask errorMask,
             SpellAbstract_TranslationMask copyMask = null)
         {
-            SpellAbstract ret = (SpellAbstract)((SpellAbstractSetterCommon)((ISpellAbstractGetter)item).CommonSetterInstance()).GetNew();
+            SpellAbstract ret = (SpellAbstract)((SpellAbstractCommon)((ISpellAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1193,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SpellAbstract ret = (SpellAbstract)((SpellAbstractSetterCommon)((ISpellAbstractGetter)item).CommonSetterInstance()).GetNew();
+            SpellAbstract ret = (SpellAbstract)((SpellAbstractCommon)((ISpellAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

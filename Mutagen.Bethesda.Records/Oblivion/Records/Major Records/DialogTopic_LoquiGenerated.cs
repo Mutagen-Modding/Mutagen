@@ -1164,8 +1164,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IDialogTopicInternal)item);
         }
         
-        public override object GetNew() => DialogTopic.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IDialogTopicInternal item,
@@ -1637,6 +1635,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return DialogTopic.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1785,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogTopicGetter item,
             DialogTopic_TranslationMask copyMask = null)
         {
-            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
+            DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1797,7 +1800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogTopic_ErrorMask errorMask,
             DialogTopic_TranslationMask copyMask = null)
         {
-            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
+            DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1810,7 +1813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            DialogTopic ret = (DialogTopic)((DialogTopicSetterCommon)((IDialogTopicGetter)item).CommonSetterInstance()).GetNew();
+            DialogTopic ret = (DialogTopic)((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

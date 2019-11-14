@@ -940,8 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataWeatherInternal)item);
         }
         
-        public override object GetNew() => RegionDataWeather.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataWeatherInternal item,
@@ -1256,6 +1254,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return RegionDataWeather.GetNew();
+        }
+        
     }
     public partial class RegionDataWeatherSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -1305,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataWeatherGetter item,
             RegionDataWeather_TranslationMask copyMask = null)
         {
-            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1317,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataWeather_ErrorMask errorMask,
             RegionDataWeather_TranslationMask copyMask = null)
         {
-            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1330,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataWeather ret = (RegionDataWeather)((RegionDataWeatherCommon)((IRegionDataWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -1195,8 +1195,6 @@ namespace Mutagen.Bethesda.Internals
             item.EditorID_Unset();
         }
         
-        public virtual object GetNew() => MajorRecord.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IMajorRecordInternal item,
@@ -1494,6 +1492,11 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         
+        public virtual object GetNew()
+        {
+            return MajorRecord.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1560,7 +1563,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter item,
             MajorRecord_TranslationMask copyMask = null)
         {
-            MajorRecord ret = (MajorRecord)((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1572,7 +1575,7 @@ namespace Mutagen.Bethesda.Internals
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask copyMask = null)
         {
-            MajorRecord ret = (MajorRecord)((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1585,7 +1588,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            MajorRecord ret = (MajorRecord)((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            MajorRecord ret = (MajorRecord)((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

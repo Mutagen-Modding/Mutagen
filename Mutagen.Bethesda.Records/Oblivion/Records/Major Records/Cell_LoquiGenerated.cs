@@ -1858,8 +1858,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICellInternal)item);
         }
         
-        public override object GetNew() => Cell.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ICellInternal item,
@@ -2779,6 +2777,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Cell.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Cell obj, Cell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -3252,7 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellGetter item,
             Cell_TranslationMask copyMask = null)
         {
-            Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3264,7 +3267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Cell_ErrorMask errorMask,
             Cell_TranslationMask copyMask = null)
         {
-            Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3277,7 +3280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Cell ret = (Cell)((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()).GetNew();
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

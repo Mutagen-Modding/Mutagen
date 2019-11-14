@@ -884,8 +884,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INPCAbstractInternal)item);
         }
         
-        public override object GetNew() => NPCAbstract.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             INPCAbstractInternal item,
@@ -1169,6 +1167,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return NPCAbstract.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(NPCAbstract obj, NPCAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1204,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INPCAbstractGetter item,
             NPCAbstract_TranslationMask copyMask = null)
         {
-            NPCAbstract ret = (NPCAbstract)((NPCAbstractSetterCommon)((INPCAbstractGetter)item).CommonSetterInstance()).GetNew();
+            NPCAbstract ret = (NPCAbstract)((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1216,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out NPCAbstract_ErrorMask errorMask,
             NPCAbstract_TranslationMask copyMask = null)
         {
-            NPCAbstract ret = (NPCAbstract)((NPCAbstractSetterCommon)((INPCAbstractGetter)item).CommonSetterInstance()).GetNew();
+            NPCAbstract ret = (NPCAbstract)((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1229,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            NPCAbstract ret = (NPCAbstract)((NPCAbstractSetterCommon)((INPCAbstractGetter)item).CommonSetterInstance()).GetNew();
+            NPCAbstract ret = (NPCAbstract)((NPCAbstractCommon)((INPCAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

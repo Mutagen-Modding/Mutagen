@@ -945,8 +945,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataMapNameInternal)item);
         }
         
-        public override object GetNew() => RegionDataMapName.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataMapNameInternal item,
@@ -1242,6 +1240,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return RegionDataMapName.GetNew();
+        }
+        
     }
     public partial class RegionDataMapNameSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -1291,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataMapNameGetter item,
             RegionDataMapName_TranslationMask copyMask = null)
         {
-            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameSetterCommon)((IRegionDataMapNameGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameCommon)((IRegionDataMapNameGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1303,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataMapName_ErrorMask errorMask,
             RegionDataMapName_TranslationMask copyMask = null)
         {
-            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameSetterCommon)((IRegionDataMapNameGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameCommon)((IRegionDataMapNameGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1316,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameSetterCommon)((IRegionDataMapNameGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataMapName ret = (RegionDataMapName)((RegionDataMapNameCommon)((IRegionDataMapNameGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

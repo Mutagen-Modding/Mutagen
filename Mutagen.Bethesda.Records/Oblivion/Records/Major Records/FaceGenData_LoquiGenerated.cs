@@ -1064,8 +1064,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SymmetricTexture_Unset();
         }
         
-        public object GetNew() => FaceGenData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IFaceGenData item,
@@ -1344,6 +1342,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return FaceGenData.GetNew();
+        }
+        
     }
     public partial class FaceGenDataSetterTranslationCommon
     {
@@ -1436,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFaceGenDataGetter item,
             FaceGenData_TranslationMask copyMask = null)
         {
-            FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
+            FaceGenData ret = (FaceGenData)((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1448,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out FaceGenData_ErrorMask errorMask,
             FaceGenData_TranslationMask copyMask = null)
         {
-            FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
+            FaceGenData ret = (FaceGenData)((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1461,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            FaceGenData ret = (FaceGenData)((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()).GetNew();
+            FaceGenData ret = (FaceGenData)((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

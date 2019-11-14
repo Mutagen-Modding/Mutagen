@@ -2186,8 +2186,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICombatStyleInternal)item);
         }
         
-        public override object GetNew() => CombatStyle.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ICombatStyleInternal item,
@@ -3131,6 +3129,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return CombatStyle.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -3346,7 +3349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter item,
             CombatStyle_TranslationMask copyMask = null)
         {
-            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3358,7 +3361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask copyMask = null)
         {
-            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3371,7 +3374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            CombatStyle ret = (CombatStyle)((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyle ret = (CombatStyle)((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

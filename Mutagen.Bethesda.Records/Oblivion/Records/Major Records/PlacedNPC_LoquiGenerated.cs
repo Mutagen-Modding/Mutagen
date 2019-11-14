@@ -1455,8 +1455,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedNPCInternal)item);
         }
         
-        public override object GetNew() => PlacedNPC.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IPlacedNPCInternal item,
@@ -2099,6 +2097,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return PlacedNPC.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2353,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCGetter item,
             PlacedNPC_TranslationMask copyMask = null)
         {
-            PlacedNPC ret = (PlacedNPC)((PlacedNPCSetterCommon)((IPlacedNPCGetter)item).CommonSetterInstance()).GetNew();
+            PlacedNPC ret = (PlacedNPC)((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2365,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PlacedNPC_ErrorMask errorMask,
             PlacedNPC_TranslationMask copyMask = null)
         {
-            PlacedNPC ret = (PlacedNPC)((PlacedNPCSetterCommon)((IPlacedNPCGetter)item).CommonSetterInstance()).GetNew();
+            PlacedNPC ret = (PlacedNPC)((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2378,7 +2381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            PlacedNPC ret = (PlacedNPC)((PlacedNPCSetterCommon)((IPlacedNPCGetter)item).CommonSetterInstance()).GetNew();
+            PlacedNPC ret = (PlacedNPC)((PlacedNPCCommon)((IPlacedNPCGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

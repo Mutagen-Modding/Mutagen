@@ -797,8 +797,6 @@ namespace Mutagen.Bethesda.Examples.Internals
             item.ModFilePath = default(String);
         }
         
-        public object GetNew() => MainVM.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMainVM item,
@@ -942,6 +940,11 @@ namespace Mutagen.Bethesda.Examples.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return MainVM.GetNew();
+        }
+        
     }
     public partial class MainVMSetterTranslationCommon
     {
@@ -979,7 +982,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             IMainVMGetter item,
             MainVM_TranslationMask copyMask = null)
         {
-            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
+            MainVM ret = (MainVM)((MainVMCommon)((IMainVMGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -991,7 +994,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             out MainVM_ErrorMask errorMask,
             MainVM_TranslationMask copyMask = null)
         {
-            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
+            MainVM ret = (MainVM)((MainVMCommon)((IMainVMGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1004,7 +1007,7 @@ namespace Mutagen.Bethesda.Examples.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            MainVM ret = (MainVM)((MainVMSetterCommon)((IMainVMGetter)item).CommonSetterInstance()).GetNew();
+            MainVM ret = (MainVM)((MainVMCommon)((IMainVMGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

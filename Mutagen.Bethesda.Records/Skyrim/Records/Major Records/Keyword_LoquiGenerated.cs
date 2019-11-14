@@ -967,8 +967,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IKeywordInternal)item);
         }
         
-        public override object GetNew() => Keyword.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IKeywordInternal item,
@@ -1301,6 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Keyword.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Keyword obj, Keyword rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1364,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IKeywordGetter item,
             Keyword_TranslationMask copyMask = null)
         {
-            Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
+            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1376,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Keyword_ErrorMask errorMask,
             Keyword_TranslationMask copyMask = null)
         {
-            Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
+            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1389,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Keyword ret = (Keyword)((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()).GetNew();
+            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

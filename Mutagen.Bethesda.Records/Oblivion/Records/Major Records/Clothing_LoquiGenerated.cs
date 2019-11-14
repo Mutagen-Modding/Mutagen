@@ -1027,8 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClothingInternal)item);
         }
         
-        public override object GetNew() => Clothing.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IClothingInternal item,
@@ -1465,6 +1463,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Clothing.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Clothing obj, Clothing rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1516,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingGetter item,
             Clothing_TranslationMask copyMask = null)
         {
-            Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
+            Clothing ret = (Clothing)((ClothingCommon)((IClothingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1528,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Clothing_ErrorMask errorMask,
             Clothing_TranslationMask copyMask = null)
         {
-            Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
+            Clothing ret = (Clothing)((ClothingCommon)((IClothingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1541,7 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Clothing ret = (Clothing)((ClothingSetterCommon)((IClothingGetter)item).CommonSetterInstance()).GetNew();
+            Clothing ret = (Clothing)((ClothingCommon)((IClothingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

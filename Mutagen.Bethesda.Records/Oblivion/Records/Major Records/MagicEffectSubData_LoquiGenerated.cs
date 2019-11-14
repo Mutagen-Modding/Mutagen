@@ -1105,8 +1105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ConstantEffectBarterFactor = default(Single);
         }
         
-        public object GetNew() => MagicEffectSubData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMagicEffectSubData item,
@@ -1366,6 +1364,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return MagicEffectSubData.GetNew();
+        }
+        
     }
     public partial class MagicEffectSubDataSetterTranslationCommon
     {
@@ -1414,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubDataGetter item,
             MagicEffectSubData_TranslationMask copyMask = null)
         {
-            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()).GetNew();
+            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1426,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_TranslationMask copyMask = null)
         {
-            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()).GetNew();
+            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1439,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()).GetNew();
+            MagicEffectSubData ret = (MagicEffectSubData)((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -2123,8 +2123,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPlacedObjectInternal)item);
         }
         
-        public override object GetNew() => PlacedObject.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IPlacedObjectInternal item,
@@ -3167,6 +3165,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return PlacedObject.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -3728,7 +3731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectGetter item,
             PlacedObject_TranslationMask copyMask = null)
         {
-            PlacedObject ret = (PlacedObject)((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()).GetNew();
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3740,7 +3743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PlacedObject_ErrorMask errorMask,
             PlacedObject_TranslationMask copyMask = null)
         {
-            PlacedObject ret = (PlacedObject)((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()).GetNew();
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3753,7 +3756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            PlacedObject ret = (PlacedObject)((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()).GetNew();
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

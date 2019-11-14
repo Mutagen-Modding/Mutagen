@@ -1061,8 +1061,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Unset();
         }
         
-        public object GetNew() => FacePart.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IFacePart item,
@@ -1356,6 +1354,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return FacePart.GetNew();
+        }
+        
     }
     public partial class FacePartSetterTranslationCommon
     {
@@ -1452,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFacePartGetter item,
             FacePart_TranslationMask copyMask = null)
         {
-            FacePart ret = (FacePart)((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()).GetNew();
+            FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1464,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask copyMask = null)
         {
-            FacePart ret = (FacePart)((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()).GetNew();
+            FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1477,7 +1480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            FacePart ret = (FacePart)((FacePartSetterCommon)((IFacePartGetter)item).CommonSetterInstance()).GetNew();
+            FacePart ret = (FacePart)((FacePartCommon)((IFacePartGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

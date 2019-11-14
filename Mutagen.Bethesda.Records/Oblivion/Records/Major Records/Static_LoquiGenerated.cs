@@ -964,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IStaticInternal)item);
         }
         
-        public override object GetNew() => Static.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IStaticInternal item,
@@ -1307,6 +1305,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Static.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Static obj, Static rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1374,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IStaticGetter item,
             Static_TranslationMask copyMask = null)
         {
-            Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
+            Static ret = (Static)((StaticCommon)((IStaticGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1386,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Static_ErrorMask errorMask,
             Static_TranslationMask copyMask = null)
         {
-            Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
+            Static ret = (Static)((StaticCommon)((IStaticGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1399,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Static ret = (Static)((StaticSetterCommon)((IStaticGetter)item).CommonSetterInstance()).GetNew();
+            Static ret = (Static)((StaticCommon)((IStaticGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

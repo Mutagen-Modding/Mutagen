@@ -951,8 +951,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TestCopyIn = default(Boolean);
         }
         
-        public object GetNew() => PassthroughSettings.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IPassthroughSettings item,
@@ -1152,6 +1150,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return PassthroughSettings.GetNew();
+        }
+        
     }
     public partial class PassthroughSettingsSetterTranslationCommon
     {
@@ -1204,7 +1207,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettingsGetter item,
             PassthroughSettings_TranslationMask copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1216,7 +1219,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out PassthroughSettings_ErrorMask errorMask,
             PassthroughSettings_TranslationMask copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1229,7 +1232,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsSetterCommon)((IPassthroughSettingsGetter)item).CommonSetterInstance()).GetNew();
+            PassthroughSettings ret = (PassthroughSettings)((PassthroughSettingsCommon)((IPassthroughSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

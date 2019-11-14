@@ -970,8 +970,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalFloatInternal)item);
         }
         
-        public override object GetNew() => GlobalFloat.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalFloatInternal item,
@@ -1340,6 +1338,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GlobalFloat.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GlobalFloat obj, GlobalFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1403,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalFloatGetter item,
             GlobalFloat_TranslationMask copyMask = null)
         {
-            GlobalFloat ret = (GlobalFloat)((GlobalFloatSetterCommon)((IGlobalFloatGetter)item).CommonSetterInstance()).GetNew();
+            GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1415,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out GlobalFloat_ErrorMask errorMask,
             GlobalFloat_TranslationMask copyMask = null)
         {
-            GlobalFloat ret = (GlobalFloat)((GlobalFloatSetterCommon)((IGlobalFloatGetter)item).CommonSetterInstance()).GetNew();
+            GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1428,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GlobalFloat ret = (GlobalFloat)((GlobalFloatSetterCommon)((IGlobalFloatGetter)item).CommonSetterInstance()).GetNew();
+            GlobalFloat ret = (GlobalFloat)((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

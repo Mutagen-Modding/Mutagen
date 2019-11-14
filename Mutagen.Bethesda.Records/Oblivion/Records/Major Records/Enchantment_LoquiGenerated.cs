@@ -1183,8 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEnchantmentInternal)item);
         }
         
-        public override object GetNew() => Enchantment.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IEnchantmentInternal item,
@@ -1640,6 +1638,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Enchantment.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Enchantment obj, Enchantment rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1747,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentGetter item,
             Enchantment_TranslationMask copyMask = null)
         {
-            Enchantment ret = (Enchantment)((EnchantmentSetterCommon)((IEnchantmentGetter)item).CommonSetterInstance()).GetNew();
+            Enchantment ret = (Enchantment)((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1759,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Enchantment_ErrorMask errorMask,
             Enchantment_TranslationMask copyMask = null)
         {
-            Enchantment ret = (Enchantment)((EnchantmentSetterCommon)((IEnchantmentGetter)item).CommonSetterInstance()).GetNew();
+            Enchantment ret = (Enchantment)((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1772,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Enchantment ret = (Enchantment)((EnchantmentSetterCommon)((IEnchantmentGetter)item).CommonSetterInstance()).GetNew();
+            Enchantment ret = (Enchantment)((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

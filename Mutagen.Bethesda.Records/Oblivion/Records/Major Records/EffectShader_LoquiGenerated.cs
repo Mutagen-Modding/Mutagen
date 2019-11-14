@@ -2872,8 +2872,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IEffectShaderInternal)item);
         }
         
-        public override object GetNew() => EffectShader.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IEffectShaderInternal item,
@@ -4274,6 +4272,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return EffectShader.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(EffectShader obj, EffectShader rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -4589,7 +4592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderGetter item,
             EffectShader_TranslationMask copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -4601,7 +4604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -4614,7 +4617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            EffectShader ret = (EffectShader)((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()).GetNew();
+            EffectShader ret = (EffectShader)((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

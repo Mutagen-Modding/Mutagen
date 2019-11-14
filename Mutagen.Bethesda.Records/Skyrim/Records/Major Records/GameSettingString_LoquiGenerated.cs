@@ -970,8 +970,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGameSettingStringInternal)item);
         }
         
-        public override object GetNew() => GameSettingString.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGameSettingStringInternal item,
@@ -1341,6 +1339,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GameSettingString.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GameSettingString obj, GameSettingString rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1404,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingStringGetter item,
             GameSettingString_TranslationMask copyMask = null)
         {
-            GameSettingString ret = (GameSettingString)((GameSettingStringSetterCommon)((IGameSettingStringGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingString ret = (GameSettingString)((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1416,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out GameSettingString_ErrorMask errorMask,
             GameSettingString_TranslationMask copyMask = null)
         {
-            GameSettingString ret = (GameSettingString)((GameSettingStringSetterCommon)((IGameSettingStringGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingString ret = (GameSettingString)((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1429,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GameSettingString ret = (GameSettingString)((GameSettingStringSetterCommon)((IGameSettingStringGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingString ret = (GameSettingString)((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

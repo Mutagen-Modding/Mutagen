@@ -961,8 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public object GetNew() => Relation.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRelation item,
@@ -1150,6 +1148,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Relation.GetNew();
+        }
+        
     }
     public partial class RelationSetterTranslationCommon
     {
@@ -1178,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelationGetter item,
             Relation_TranslationMask copyMask = null)
         {
-            Relation ret = (Relation)((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1190,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Relation_ErrorMask errorMask,
             Relation_TranslationMask copyMask = null)
         {
-            Relation ret = (Relation)((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1203,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Relation ret = (Relation)((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()).GetNew();
+            Relation ret = (Relation)((RelationCommon)((IRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

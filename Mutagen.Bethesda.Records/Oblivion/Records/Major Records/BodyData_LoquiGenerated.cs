@@ -992,8 +992,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BodyParts.Unset();
         }
         
-        public object GetNew() => BodyData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IBodyData item,
@@ -1276,6 +1274,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return BodyData.GetNew();
+        }
+        
     }
     public partial class BodyDataSetterTranslationCommon
     {
@@ -1348,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyDataGetter item,
             BodyData_TranslationMask copyMask = null)
         {
-            BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1360,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out BodyData_ErrorMask errorMask,
             BodyData_TranslationMask copyMask = null)
         {
-            BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1373,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            BodyData ret = (BodyData)((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

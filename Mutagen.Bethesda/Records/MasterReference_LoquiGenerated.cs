@@ -970,8 +970,6 @@ namespace Mutagen.Bethesda.Internals
             item.FileSize_Unset();
         }
         
-        public object GetNew() => MasterReference.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMasterReference item,
@@ -1200,6 +1198,11 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return MasterReference.GetNew();
+        }
+        
     }
     public partial class MasterReferenceSetterTranslationCommon
     {
@@ -1248,7 +1251,7 @@ namespace Mutagen.Bethesda.Internals
             IMasterReferenceGetter item,
             MasterReference_TranslationMask copyMask = null)
         {
-            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
+            MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1260,7 +1263,7 @@ namespace Mutagen.Bethesda.Internals
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask copyMask = null)
         {
-            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
+            MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1273,7 +1276,7 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            MasterReference ret = (MasterReference)((MasterReferenceSetterCommon)((IMasterReferenceGetter)item).CommonSetterInstance()).GetNew();
+            MasterReference ret = (MasterReference)((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

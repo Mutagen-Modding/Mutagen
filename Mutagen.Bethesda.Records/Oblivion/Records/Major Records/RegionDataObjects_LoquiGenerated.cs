@@ -940,8 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataObjectsInternal)item);
         }
         
-        public override object GetNew() => RegionDataObjects.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataObjectsInternal item,
@@ -1256,6 +1254,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return RegionDataObjects.GetNew();
+        }
+        
     }
     public partial class RegionDataObjectsSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -1305,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectsGetter item,
             RegionDataObjects_TranslationMask copyMask = null)
         {
-            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsSetterCommon)((IRegionDataObjectsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsCommon)((IRegionDataObjectsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1317,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataObjects_ErrorMask errorMask,
             RegionDataObjects_TranslationMask copyMask = null)
         {
-            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsSetterCommon)((IRegionDataObjectsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsCommon)((IRegionDataObjectsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1330,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsSetterCommon)((IRegionDataObjectsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataObjects ret = (RegionDataObjects)((RegionDataObjectsCommon)((IRegionDataObjectsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

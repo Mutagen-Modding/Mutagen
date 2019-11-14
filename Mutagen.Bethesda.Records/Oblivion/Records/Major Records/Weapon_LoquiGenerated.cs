@@ -1496,8 +1496,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeaponInternal)item);
         }
         
-        public override object GetNew() => Weapon.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IWeaponInternal item,
@@ -2146,6 +2144,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Weapon.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Weapon obj, Weapon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2355,7 +2358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponGetter item,
             Weapon_TranslationMask copyMask = null)
         {
-            Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
+            Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2367,7 +2370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Weapon_ErrorMask errorMask,
             Weapon_TranslationMask copyMask = null)
         {
-            Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
+            Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2380,7 +2383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Weapon ret = (Weapon)((WeaponSetterCommon)((IWeaponGetter)item).CommonSetterInstance()).GetNew();
+            Weapon ret = (Weapon)((WeaponCommon)((IWeaponGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

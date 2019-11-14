@@ -1194,8 +1194,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EFITDataTypeState = default(Effect.EFITDataType);
         }
         
-        public object GetNew() => Effect.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IEffect item,
@@ -1525,6 +1523,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Effect.GetNew();
+        }
+        
     }
     public partial class EffectSetterTranslationCommon
     {
@@ -1601,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectGetter item,
             Effect_TranslationMask copyMask = null)
         {
-            Effect ret = (Effect)((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()).GetNew();
+            Effect ret = (Effect)((EffectCommon)((IEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1613,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Effect_ErrorMask errorMask,
             Effect_TranslationMask copyMask = null)
         {
-            Effect ret = (Effect)((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()).GetNew();
+            Effect ret = (Effect)((EffectCommon)((IEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1626,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Effect ret = (Effect)((EffectSetterCommon)((IEffectGetter)item).CommonSetterInstance()).GetNew();
+            Effect ret = (Effect)((EffectCommon)((IEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

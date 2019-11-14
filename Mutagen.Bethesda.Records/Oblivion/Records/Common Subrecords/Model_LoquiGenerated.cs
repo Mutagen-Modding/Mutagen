@@ -997,8 +997,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Hashes_Unset();
         }
         
-        public object GetNew() => Model.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IModel item,
@@ -1260,6 +1258,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Model.GetNew();
+        }
+        
     }
     public partial class ModelSetterTranslationCommon
     {
@@ -1312,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModelGetter item,
             Model_TranslationMask copyMask = null)
         {
-            Model ret = (Model)((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()).GetNew();
+            Model ret = (Model)((ModelCommon)((IModelGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1324,7 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Model_ErrorMask errorMask,
             Model_TranslationMask copyMask = null)
         {
-            Model ret = (Model)((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()).GetNew();
+            Model ret = (Model)((ModelCommon)((IModelGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1337,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Model ret = (Model)((ModelSetterCommon)((IModelGetter)item).CommonSetterInstance()).GetNew();
+            Model ret = (Model)((ModelCommon)((IModelGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

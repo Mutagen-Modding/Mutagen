@@ -1006,8 +1006,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(SoundData.Flag);
         }
         
-        public virtual object GetNew() => SoundData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ISoundDataInternal item,
@@ -1228,6 +1226,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public virtual object GetNew()
+        {
+            return SoundData.GetNew();
+        }
+        
     }
     public partial class SoundDataSetterTranslationCommon
     {
@@ -1264,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataInternalGetter item,
             SoundData_TranslationMask copyMask = null)
         {
-            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
+            SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1276,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SoundData_ErrorMask errorMask,
             SoundData_TranslationMask copyMask = null)
         {
-            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
+            SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1289,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SoundData ret = (SoundData)((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()).GetNew();
+            SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

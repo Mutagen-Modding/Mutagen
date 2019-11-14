@@ -1098,8 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SLSDDataTypeState = default(LocalVariable.SLSDDataType);
         }
         
-        public object GetNew() => LocalVariable.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ILocalVariable item,
@@ -1396,6 +1394,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return LocalVariable.GetNew();
+        }
+        
     }
     public partial class LocalVariableSetterTranslationCommon
     {
@@ -1460,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariableGetter item,
             LocalVariable_TranslationMask copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
+            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1472,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LocalVariable_ErrorMask errorMask,
             LocalVariable_TranslationMask copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
+            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1485,7 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()).GetNew();
+            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -940,8 +940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataGrassesInternal)item);
         }
         
-        public override object GetNew() => RegionDataGrasses.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataGrassesInternal item,
@@ -1248,6 +1246,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return RegionDataGrasses.GetNew();
+        }
+        
     }
     public partial class RegionDataGrassesSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -1292,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGrassesGetter item,
             RegionDataGrasses_TranslationMask copyMask = null)
         {
-            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1304,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask copyMask = null)
         {
-            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1317,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesSetterCommon)((IRegionDataGrassesGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataGrasses ret = (RegionDataGrasses)((RegionDataGrassesCommon)((IRegionDataGrassesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

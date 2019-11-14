@@ -1090,8 +1090,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPathGridInternal)item);
         }
         
-        public override object GetNew() => PathGrid.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IPathGridInternal item,
@@ -1553,6 +1551,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return PathGrid.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1688,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridGetter item,
             PathGrid_TranslationMask copyMask = null)
         {
-            PathGrid ret = (PathGrid)((PathGridSetterCommon)((IPathGridGetter)item).CommonSetterInstance()).GetNew();
+            PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1700,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PathGrid_ErrorMask errorMask,
             PathGrid_TranslationMask copyMask = null)
         {
-            PathGrid ret = (PathGrid)((PathGridSetterCommon)((IPathGridGetter)item).CommonSetterInstance()).GetNew();
+            PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1713,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            PathGrid ret = (PathGrid)((PathGridSetterCommon)((IPathGridGetter)item).CommonSetterInstance()).GetNew();
+            PathGrid ret = (PathGrid)((PathGridCommon)((IPathGridGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -1147,8 +1147,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledCreatureInternal)item);
         }
         
-        public override object GetNew() => LeveledCreature.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILeveledCreatureInternal item,
@@ -1633,6 +1631,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return LeveledCreature.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(LeveledCreature obj, LeveledCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1778,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureGetter item,
             LeveledCreature_TranslationMask copyMask = null)
         {
-            LeveledCreature ret = (LeveledCreature)((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()).GetNew();
+            LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1790,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LeveledCreature_ErrorMask errorMask,
             LeveledCreature_TranslationMask copyMask = null)
         {
-            LeveledCreature ret = (LeveledCreature)((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()).GetNew();
+            LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1803,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LeveledCreature ret = (LeveledCreature)((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()).GetNew();
+            LeveledCreature ret = (LeveledCreature)((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

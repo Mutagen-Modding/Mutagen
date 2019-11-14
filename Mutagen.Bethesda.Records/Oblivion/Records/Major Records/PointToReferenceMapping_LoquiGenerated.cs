@@ -957,8 +957,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.Clear();
         }
         
-        public object GetNew() => PointToReferenceMapping.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IPointToReferenceMapping item,
@@ -1166,6 +1164,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return PointToReferenceMapping.GetNew();
+        }
+        
     }
     public partial class PointToReferenceMappingSetterTranslationCommon
     {
@@ -1207,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMappingGetter item,
             PointToReferenceMapping_TranslationMask copyMask = null)
         {
-            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()).GetNew();
+            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1219,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out PointToReferenceMapping_ErrorMask errorMask,
             PointToReferenceMapping_TranslationMask copyMask = null)
         {
-            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()).GetNew();
+            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1232,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()).GetNew();
+            PointToReferenceMapping ret = (PointToReferenceMapping)((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -1109,8 +1109,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThirdParameter = default(Int32);
         }
         
-        public object GetNew() => Condition.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ICondition item,
@@ -1379,6 +1377,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Condition.GetNew();
+        }
+        
     }
     public partial class ConditionSetterTranslationCommon
     {
@@ -1431,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IConditionGetter item,
             Condition_TranslationMask copyMask = null)
         {
-            Condition ret = (Condition)((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1443,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask copyMask = null)
         {
-            Condition ret = (Condition)((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1456,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Condition ret = (Condition)((ConditionSetterCommon)((IConditionGetter)item).CommonSetterInstance()).GetNew();
+            Condition ret = (Condition)((ConditionCommon)((IConditionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

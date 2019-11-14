@@ -812,8 +812,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Skyrim = default(String);
         }
         
-        public object GetNew() => DataFolderLocations.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDataFolderLocations item,
@@ -965,6 +963,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return DataFolderLocations.GetNew();
+        }
+        
     }
     public partial class DataFolderLocationsSetterTranslationCommon
     {
@@ -993,7 +996,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IDataFolderLocationsGetter item,
             DataFolderLocations_TranslationMask copyMask = null)
         {
-            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1005,7 +1008,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask copyMask = null)
         {
-            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1018,7 +1021,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsSetterCommon)((IDataFolderLocationsGetter)item).CommonSetterInstance()).GetNew();
+            DataFolderLocations ret = (DataFolderLocations)((DataFolderLocationsCommon)((IDataFolderLocationsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

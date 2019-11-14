@@ -1132,8 +1132,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ITextureSetInternal)item);
         }
         
-        public override object GetNew() => TextureSet.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ITextureSetInternal item,
@@ -1607,6 +1605,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return TextureSet.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(TextureSet obj, TextureSet rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1754,7 +1757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITextureSetGetter item,
             TextureSet_TranslationMask copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1766,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out TextureSet_ErrorMask errorMask,
             TextureSet_TranslationMask copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1779,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()).GetNew();
+            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

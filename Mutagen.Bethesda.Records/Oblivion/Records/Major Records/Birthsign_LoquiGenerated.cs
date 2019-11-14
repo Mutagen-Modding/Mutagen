@@ -1128,8 +1128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IBirthsignInternal)item);
         }
         
-        public override object GetNew() => Birthsign.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IBirthsignInternal item,
@@ -1566,6 +1564,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Birthsign.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Birthsign obj, Birthsign rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1696,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter item,
             Birthsign_TranslationMask copyMask = null)
         {
-            Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
+            Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1708,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Birthsign_ErrorMask errorMask,
             Birthsign_TranslationMask copyMask = null)
         {
-            Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
+            Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1721,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Birthsign ret = (Birthsign)((BirthsignSetterCommon)((IBirthsignGetter)item).CommonSetterInstance()).GetNew();
+            Birthsign ret = (Birthsign)((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

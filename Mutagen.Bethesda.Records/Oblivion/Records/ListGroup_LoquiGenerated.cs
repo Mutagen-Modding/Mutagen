@@ -1098,8 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Clear();
         }
         
-        public object GetNew() => ListGroup<T>.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IListGroup<T> item,
@@ -1372,6 +1370,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew<T_Setter>()
+            where T_Setter : class, ICellBlock, IXmlItem, IBinaryItem
+        {
+            return ListGroup<T_Setter>.GetNew();
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IListGroupGetter<T> obj)
         {
@@ -1440,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
@@ -1456,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
@@ -1471,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupSetterCommon<T>)((IListGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter>(
                 item,
                 errorMask: errorMask,

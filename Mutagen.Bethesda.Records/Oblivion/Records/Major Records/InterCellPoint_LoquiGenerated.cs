@@ -935,8 +935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Point = default(P3Float);
         }
         
-        public object GetNew() => InterCellPoint.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IInterCellPoint item,
@@ -1127,6 +1125,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return InterCellPoint.GetNew();
+        }
+        
     }
     public partial class InterCellPointSetterTranslationCommon
     {
@@ -1155,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPointGetter item,
             InterCellPoint_TranslationMask copyMask = null)
         {
-            InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
+            InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1167,7 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out InterCellPoint_ErrorMask errorMask,
             InterCellPoint_TranslationMask copyMask = null)
         {
-            InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
+            InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1180,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            InterCellPoint ret = (InterCellPoint)((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()).GetNew();
+            InterCellPoint ret = (InterCellPoint)((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

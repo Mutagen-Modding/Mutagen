@@ -907,8 +907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellLeveledInternal)item);
         }
         
-        public override object GetNew() => SpellLeveled.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISpellLeveledInternal item,
@@ -1249,6 +1247,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SpellLeveled.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SpellLeveled obj, SpellLeveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1288,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellLeveledGetter item,
             SpellLeveled_TranslationMask copyMask = null)
         {
-            SpellLeveled ret = (SpellLeveled)((SpellLeveledSetterCommon)((ISpellLeveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellLeveled ret = (SpellLeveled)((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1300,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SpellLeveled_ErrorMask errorMask,
             SpellLeveled_TranslationMask copyMask = null)
         {
-            SpellLeveled ret = (SpellLeveled)((SpellLeveledSetterCommon)((ISpellLeveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellLeveled ret = (SpellLeveled)((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1313,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SpellLeveled ret = (SpellLeveled)((SpellLeveledSetterCommon)((ISpellLeveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellLeveled ret = (SpellLeveled)((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

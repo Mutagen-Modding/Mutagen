@@ -1056,8 +1056,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IOblivionMajorRecordInternal)item);
         }
         
-        public override object GetNew() => OblivionMajorRecord.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IOblivionMajorRecordInternal item,
@@ -1303,6 +1301,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return OblivionMajorRecord.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(OblivionMajorRecord obj, OblivionMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1346,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecordGetter item,
             OblivionMajorRecord_TranslationMask copyMask = null)
         {
-            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1358,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out OblivionMajorRecord_ErrorMask errorMask,
             OblivionMajorRecord_TranslationMask copyMask = null)
         {
-            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1371,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMajorRecord ret = (OblivionMajorRecord)((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

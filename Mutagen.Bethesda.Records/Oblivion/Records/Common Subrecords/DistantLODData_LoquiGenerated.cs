@@ -964,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Unknown2 = default(Single);
         }
         
-        public object GetNew() => DistantLODData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDistantLODData item,
@@ -1186,6 +1184,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return DistantLODData.GetNew();
+        }
+        
     }
     public partial class DistantLODDataSetterTranslationCommon
     {
@@ -1218,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter item,
             DistantLODData_TranslationMask copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1230,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DistantLODData_ErrorMask errorMask,
             DistantLODData_TranslationMask copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1243,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            DistantLODData ret = (DistantLODData)((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()).GetNew();
+            DistantLODData ret = (DistantLODData)((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

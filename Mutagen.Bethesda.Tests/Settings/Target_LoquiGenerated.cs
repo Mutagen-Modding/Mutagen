@@ -935,8 +935,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.Interest = default(RecordInterest);
         }
         
-        public object GetNew() => Target.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ITarget item,
@@ -1128,6 +1126,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Target.GetNew();
+        }
+        
     }
     public partial class TargetSetterTranslationCommon
     {
@@ -1217,7 +1220,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITargetGetter item,
             Target_TranslationMask copyMask = null)
         {
-            Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1229,7 +1232,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out Target_ErrorMask errorMask,
             Target_TranslationMask copyMask = null)
         {
-            Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1242,7 +1245,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Target ret = (Target)((TargetSetterCommon)((ITargetGetter)item).CommonSetterInstance()).GetNew();
+            Target ret = (Target)((TargetCommon)((ITargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

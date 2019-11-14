@@ -984,8 +984,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Rotation = default(P3Float);
         }
         
-        public object GetNew() => TeleportDestination.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ITeleportDestination item,
@@ -1200,6 +1198,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return TeleportDestination.GetNew();
+        }
+        
     }
     public partial class TeleportDestinationSetterTranslationCommon
     {
@@ -1232,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             TeleportDestination_TranslationMask copyMask = null)
         {
-            TeleportDestination ret = (TeleportDestination)((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()).GetNew();
+            TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1244,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out TeleportDestination_ErrorMask errorMask,
             TeleportDestination_TranslationMask copyMask = null)
         {
-            TeleportDestination ret = (TeleportDestination)((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()).GetNew();
+            TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1257,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            TeleportDestination ret = (TeleportDestination)((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()).GetNew();
+            TeleportDestination ret = (TeleportDestination)((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

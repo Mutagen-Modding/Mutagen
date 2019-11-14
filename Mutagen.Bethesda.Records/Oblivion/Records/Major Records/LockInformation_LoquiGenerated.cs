@@ -1013,8 +1013,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(LockInformation.Flag);
         }
         
-        public object GetNew() => LockInformation.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ILockInformation item,
@@ -1238,6 +1236,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return LockInformation.GetNew();
+        }
+        
     }
     public partial class LockInformationSetterTranslationCommon
     {
@@ -1274,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILockInformationGetter item,
             LockInformation_TranslationMask copyMask = null)
         {
-            LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
+            LockInformation ret = (LockInformation)((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1286,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LockInformation_ErrorMask errorMask,
             LockInformation_TranslationMask copyMask = null)
         {
-            LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
+            LockInformation ret = (LockInformation)((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1299,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LockInformation ret = (LockInformation)((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()).GetNew();
+            LockInformation ret = (LockInformation)((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

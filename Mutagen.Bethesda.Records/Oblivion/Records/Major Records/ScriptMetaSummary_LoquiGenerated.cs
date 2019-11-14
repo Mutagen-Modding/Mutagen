@@ -1015,8 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(ScriptFields.ScriptType);
         }
         
-        public object GetNew() => ScriptMetaSummary.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IScriptMetaSummary item,
@@ -1270,6 +1268,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return ScriptMetaSummary.GetNew();
+        }
+        
     }
     public partial class ScriptMetaSummarySetterTranslationCommon
     {
@@ -1306,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummaryGetter item,
             ScriptMetaSummary_TranslationMask copyMask = null)
         {
-            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()).GetNew();
+            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1318,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptMetaSummary_ErrorMask errorMask,
             ScriptMetaSummary_TranslationMask copyMask = null)
         {
-            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()).GetNew();
+            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1331,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()).GetNew();
+            ScriptMetaSummary ret = (ScriptMetaSummary)((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -851,8 +851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingInternal)item);
         }
         
-        public override object GetNew() => GameSetting.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGameSettingInternal item,
@@ -1103,6 +1101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GameSetting.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GameSetting obj, GameSetting rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1138,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingGetter item,
             GameSetting_TranslationMask copyMask = null)
         {
-            GameSetting ret = (GameSetting)((GameSettingSetterCommon)((IGameSettingGetter)item).CommonSetterInstance()).GetNew();
+            GameSetting ret = (GameSetting)((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1150,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GameSetting_ErrorMask errorMask,
             GameSetting_TranslationMask copyMask = null)
         {
-            GameSetting ret = (GameSetting)((GameSettingSetterCommon)((IGameSettingGetter)item).CommonSetterInstance()).GetNew();
+            GameSetting ret = (GameSetting)((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1163,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GameSetting ret = (GameSetting)((GameSettingSetterCommon)((IGameSettingGetter)item).CommonSetterInstance()).GetNew();
+            GameSetting ret = (GameSetting)((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

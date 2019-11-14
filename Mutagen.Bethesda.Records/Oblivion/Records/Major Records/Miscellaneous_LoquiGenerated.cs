@@ -1219,8 +1219,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IMiscellaneousInternal)item);
         }
         
-        public override object GetNew() => Miscellaneous.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IMiscellaneousInternal item,
@@ -1732,6 +1730,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Miscellaneous.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Miscellaneous obj, Miscellaneous rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1876,7 +1879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMiscellaneousGetter item,
             Miscellaneous_TranslationMask copyMask = null)
         {
-            Miscellaneous ret = (Miscellaneous)((MiscellaneousSetterCommon)((IMiscellaneousGetter)item).CommonSetterInstance()).GetNew();
+            Miscellaneous ret = (Miscellaneous)((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1888,7 +1891,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Miscellaneous_ErrorMask errorMask,
             Miscellaneous_TranslationMask copyMask = null)
         {
-            Miscellaneous ret = (Miscellaneous)((MiscellaneousSetterCommon)((IMiscellaneousGetter)item).CommonSetterInstance()).GetNew();
+            Miscellaneous ret = (Miscellaneous)((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1901,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Miscellaneous ret = (Miscellaneous)((MiscellaneousSetterCommon)((IMiscellaneousGetter)item).CommonSetterInstance()).GetNew();
+            Miscellaneous ret = (Miscellaneous)((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

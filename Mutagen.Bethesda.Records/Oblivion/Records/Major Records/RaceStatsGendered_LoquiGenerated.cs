@@ -942,8 +942,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female = default(RaceStats);
         }
         
-        public object GetNew() => RaceStatsGendered.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRaceStatsGendered item,
@@ -1162,6 +1160,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RaceStatsGendered.GetNew();
+        }
+        
     }
     public partial class RaceStatsGenderedSetterTranslationCommon
     {
@@ -1240,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGenderedGetter item,
             RaceStatsGendered_TranslationMask copyMask = null)
         {
-            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1252,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RaceStatsGendered_ErrorMask errorMask,
             RaceStatsGendered_TranslationMask copyMask = null)
         {
-            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1265,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedSetterCommon)((IRaceStatsGenderedGetter)item).CommonSetterInstance()).GetNew();
+            RaceStatsGendered ret = (RaceStatsGendered)((RaceStatsGenderedCommon)((IRaceStatsGenderedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

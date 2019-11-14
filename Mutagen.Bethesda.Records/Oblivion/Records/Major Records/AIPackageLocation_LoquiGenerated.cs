@@ -984,8 +984,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = default(Single);
         }
         
-        public object GetNew() => AIPackageLocation.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageLocation item,
@@ -1200,6 +1198,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return AIPackageLocation.GetNew();
+        }
+        
     }
     public partial class AIPackageLocationSetterTranslationCommon
     {
@@ -1232,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageLocationGetter item,
             AIPackageLocation_TranslationMask copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1244,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AIPackageLocation_ErrorMask errorMask,
             AIPackageLocation_TranslationMask copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1257,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationSetterCommon)((IAIPackageLocationGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageLocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

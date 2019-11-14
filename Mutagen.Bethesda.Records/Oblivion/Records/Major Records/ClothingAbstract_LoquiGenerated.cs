@@ -1516,8 +1516,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IClothingAbstractInternal)item);
         }
         
-        public override object GetNew() => ClothingAbstract.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IClothingAbstractInternal item,
@@ -2243,6 +2241,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return ClothingAbstract.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(ClothingAbstract obj, ClothingAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2532,7 +2535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstractGetter item,
             ClothingAbstract_TranslationMask copyMask = null)
         {
-            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractCommon)((IClothingAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2544,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ClothingAbstract_ErrorMask errorMask,
             ClothingAbstract_TranslationMask copyMask = null)
         {
-            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractCommon)((IClothingAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2557,7 +2560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ClothingAbstract ret = (ClothingAbstract)((ClothingAbstractCommon)((IClothingAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

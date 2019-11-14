@@ -1096,8 +1096,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items.Clear();
         }
         
-        public object GetNew() => Group<T>.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IGroup<T> item,
@@ -1380,6 +1378,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public object GetNew<T_Setter>()
+            where T_Setter : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            return Group<T_Setter>.GetNew();
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
         {
@@ -1453,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            Group<T> ret = (Group<T>)((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
@@ -1469,7 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            Group<T> ret = (Group<T>)((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
@@ -1484,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).GetNew();
+            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter>(
                 item,
                 errorMask: errorMask,

@@ -1314,8 +1314,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIngredientInternal)item);
         }
         
-        public override object GetNew() => Ingredient.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IIngredientInternal item,
@@ -1910,6 +1908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Ingredient.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Ingredient obj, Ingredient rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2102,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIngredientGetter item,
             Ingredient_TranslationMask copyMask = null)
         {
-            Ingredient ret = (Ingredient)((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()).GetNew();
+            Ingredient ret = (Ingredient)((IngredientCommon)((IIngredientGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2114,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Ingredient_ErrorMask errorMask,
             Ingredient_TranslationMask copyMask = null)
         {
-            Ingredient ret = (Ingredient)((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()).GetNew();
+            Ingredient ret = (Ingredient)((IngredientCommon)((IIngredientGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2127,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Ingredient ret = (Ingredient)((IngredientSetterCommon)((IIngredientGetter)item).CommonSetterInstance()).GetNew();
+            Ingredient ret = (Ingredient)((IngredientCommon)((IIngredientGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

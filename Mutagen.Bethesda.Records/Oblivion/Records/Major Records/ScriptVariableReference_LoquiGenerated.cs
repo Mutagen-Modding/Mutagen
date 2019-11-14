@@ -907,8 +907,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptVariableReference)item);
         }
         
-        public override object GetNew() => ScriptVariableReference.GetNew();
-        
         #region Xml Translation
         public new void CopyInFromXml(
             IScriptVariableReference item,
@@ -1141,6 +1139,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return ScriptVariableReference.GetNew();
+        }
+        
     }
     public partial class ScriptVariableReferenceSetterTranslationCommon : ScriptReferenceSetterTranslationCommon
     {
@@ -1170,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptVariableReferenceGetter item,
             ScriptVariableReference_TranslationMask copyMask = null)
         {
-            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1182,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptVariableReference_ErrorMask errorMask,
             ScriptVariableReference_TranslationMask copyMask = null)
         {
-            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1195,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceSetterCommon)((IScriptVariableReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptVariableReference ret = (ScriptVariableReference)((ScriptVariableReferenceCommon)((IScriptVariableReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

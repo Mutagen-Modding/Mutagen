@@ -1140,8 +1140,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellUnleveledInternal)item);
         }
         
-        public override object GetNew() => SpellUnleveled.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISpellUnleveledInternal item,
@@ -1642,6 +1640,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SpellUnleveled.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SpellUnleveled obj, SpellUnleveled rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1725,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter item,
             SpellUnleveled_TranslationMask copyMask = null)
         {
-            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1737,7 +1740,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_TranslationMask copyMask = null)
         {
-            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1750,7 +1753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)item).CommonSetterInstance()).GetNew();
+            SpellUnleveled ret = (SpellUnleveled)((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

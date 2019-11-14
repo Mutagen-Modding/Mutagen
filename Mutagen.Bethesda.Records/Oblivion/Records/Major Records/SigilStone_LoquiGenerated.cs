@@ -1294,8 +1294,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISigilStoneInternal)item);
         }
         
-        public override object GetNew() => SigilStone.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISigilStoneInternal item,
@@ -1868,6 +1866,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SigilStone.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SigilStone obj, SigilStone rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2040,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneGetter item,
             SigilStone_TranslationMask copyMask = null)
         {
-            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
+            SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2052,7 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SigilStone_ErrorMask errorMask,
             SigilStone_TranslationMask copyMask = null)
         {
-            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
+            SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2065,7 +2068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SigilStone ret = (SigilStone)((SigilStoneSetterCommon)((ISigilStoneGetter)item).CommonSetterInstance()).GetNew();
+            SigilStone ret = (SigilStone)((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

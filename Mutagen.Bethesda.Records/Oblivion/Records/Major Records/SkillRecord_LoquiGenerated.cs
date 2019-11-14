@@ -1465,8 +1465,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISkillRecordInternal)item);
         }
         
-        public override object GetNew() => SkillRecord.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISkillRecordInternal item,
@@ -2097,6 +2095,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SkillRecord.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SkillRecord obj, SkillRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2328,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecordGetter item,
             SkillRecord_TranslationMask copyMask = null)
         {
-            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2340,7 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_TranslationMask copyMask = null)
         {
-            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2353,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SkillRecord ret = (SkillRecord)((SkillRecordSetterCommon)((ISkillRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkillRecord ret = (SkillRecord)((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

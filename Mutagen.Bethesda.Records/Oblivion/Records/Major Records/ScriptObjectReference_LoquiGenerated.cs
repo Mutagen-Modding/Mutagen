@@ -919,8 +919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptObjectReference)item);
         }
         
-        public override object GetNew() => ScriptObjectReference.GetNew();
-        
         #region Xml Translation
         public new void CopyInFromXml(
             IScriptObjectReference item,
@@ -1156,6 +1154,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return ScriptObjectReference.GetNew();
+        }
+        
     }
     public partial class ScriptObjectReferenceSetterTranslationCommon : ScriptReferenceSetterTranslationCommon
     {
@@ -1185,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReferenceGetter item,
             ScriptObjectReference_TranslationMask copyMask = null)
         {
-            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1197,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptObjectReference_ErrorMask errorMask,
             ScriptObjectReference_TranslationMask copyMask = null)
         {
-            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1210,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)item).CommonSetterInstance()).GetNew();
+            ScriptObjectReference ret = (ScriptObjectReference)((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

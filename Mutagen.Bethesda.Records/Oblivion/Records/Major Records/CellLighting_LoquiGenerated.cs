@@ -1104,8 +1104,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FogClipDistance = default(Single);
         }
         
-        public object GetNew() => CellLighting.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ICellLighting item,
@@ -1419,6 +1417,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return CellLighting.GetNew();
+        }
+        
     }
     public partial class CellLightingSetterTranslationCommon
     {
@@ -1475,7 +1478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLightingGetter item,
             CellLighting_TranslationMask copyMask = null)
         {
-            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
+            CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1487,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CellLighting_ErrorMask errorMask,
             CellLighting_TranslationMask copyMask = null)
         {
-            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
+            CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1500,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            CellLighting ret = (CellLighting)((CellLightingSetterCommon)((ICellLightingGetter)item).CommonSetterInstance()).GetNew();
+            CellLighting ret = (CellLighting)((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

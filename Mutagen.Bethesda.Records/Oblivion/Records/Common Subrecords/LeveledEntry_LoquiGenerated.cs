@@ -1177,8 +1177,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff2_Unset();
         }
         
-        public object GetNew() => LeveledEntry<T>.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ILeveledEntry<T> item,
@@ -1430,6 +1428,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew<T_Setter>()
+            where T_Setter : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            return LeveledEntry<T_Setter>.GetNew();
+        }
+        
     }
     public partial class LeveledEntrySetterTranslationCommon
     {
@@ -1515,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()).GetNew();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
@@ -1531,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()).GetNew();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
@@ -1546,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()).GetNew();
+            LeveledEntry<T> ret = (LeveledEntry<T>)((LeveledEntryCommon<T>)((ILeveledEntryGetter<T>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter>(
                 item,
                 errorMask: errorMask,

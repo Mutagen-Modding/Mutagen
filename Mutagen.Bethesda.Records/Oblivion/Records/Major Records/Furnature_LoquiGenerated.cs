@@ -1122,8 +1122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFurnatureInternal)item);
         }
         
-        public override object GetNew() => Furnature.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IFurnatureInternal item,
@@ -1553,6 +1551,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Furnature.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Furnature obj, Furnature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1685,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFurnatureGetter item,
             Furnature_TranslationMask copyMask = null)
         {
-            Furnature ret = (Furnature)((FurnatureSetterCommon)((IFurnatureGetter)item).CommonSetterInstance()).GetNew();
+            Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1697,7 +1700,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Furnature_ErrorMask errorMask,
             Furnature_TranslationMask copyMask = null)
         {
-            Furnature ret = (Furnature)((FurnatureSetterCommon)((IFurnatureGetter)item).CommonSetterInstance()).GetNew();
+            Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1710,7 +1713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Furnature ret = (Furnature)((FurnatureSetterCommon)((IFurnatureGetter)item).CommonSetterInstance()).GetNew();
+            Furnature ret = (Furnature)((FurnatureCommon)((IFurnatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

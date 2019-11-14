@@ -1073,8 +1073,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Luck = default(Byte);
         }
         
-        public object GetNew() => RaceStats.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRaceStats item,
@@ -1310,6 +1308,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RaceStats.GetNew();
+        }
+        
     }
     public partial class RaceStatsSetterTranslationCommon
     {
@@ -1362,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGetter item,
             RaceStats_TranslationMask copyMask = null)
         {
-            RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
+            RaceStats ret = (RaceStats)((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1374,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RaceStats_ErrorMask errorMask,
             RaceStats_TranslationMask copyMask = null)
         {
-            RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
+            RaceStats ret = (RaceStats)((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1387,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RaceStats ret = (RaceStats)((RaceStatsSetterCommon)((IRaceStatsGetter)item).CommonSetterInstance()).GetNew();
+            RaceStats ret = (RaceStats)((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

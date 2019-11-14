@@ -962,8 +962,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.TargetGroups.Clear();
         }
         
-        public object GetNew() => TestingSettings.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ITestingSettings item,
@@ -1180,6 +1178,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return TestingSettings.GetNew();
+        }
+        
     }
     public partial class TestingSettingsSetterTranslationCommon
     {
@@ -1302,7 +1305,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITestingSettingsGetter item,
             TestingSettings_TranslationMask copyMask = null)
         {
-            TestingSettings ret = (TestingSettings)((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).GetNew();
+            TestingSettings ret = (TestingSettings)((TestingSettingsCommon)((ITestingSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1314,7 +1317,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out TestingSettings_ErrorMask errorMask,
             TestingSettings_TranslationMask copyMask = null)
         {
-            TestingSettings ret = (TestingSettings)((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).GetNew();
+            TestingSettings ret = (TestingSettings)((TestingSettingsCommon)((ITestingSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1327,7 +1330,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            TestingSettings ret = (TestingSettings)((TestingSettingsSetterCommon)((ITestingSettingsGetter)item).CommonSetterInstance()).GetNew();
+            TestingSettings ret = (TestingSettings)((TestingSettingsCommon)((ITestingSettingsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

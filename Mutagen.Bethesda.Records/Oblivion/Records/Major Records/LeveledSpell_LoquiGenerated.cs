@@ -1081,8 +1081,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledSpellInternal)item);
         }
         
-        public override object GetNew() => LeveledSpell.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILeveledSpellInternal item,
@@ -1517,6 +1515,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return LeveledSpell.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(LeveledSpell obj, LeveledSpell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1628,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledSpellGetter item,
             LeveledSpell_TranslationMask copyMask = null)
         {
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()).GetNew();
+            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1640,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LeveledSpell_ErrorMask errorMask,
             LeveledSpell_TranslationMask copyMask = null)
         {
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()).GetNew();
+            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1653,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LeveledSpell ret = (LeveledSpell)((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()).GetNew();
+            LeveledSpell ret = (LeveledSpell)((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

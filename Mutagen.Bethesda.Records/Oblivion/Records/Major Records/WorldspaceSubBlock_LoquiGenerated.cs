@@ -1063,8 +1063,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset();
         }
         
-        public object GetNew() => WorldspaceSubBlock.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IWorldspaceSubBlock item,
@@ -1366,6 +1364,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return WorldspaceSubBlock.GetNew();
+        }
+        
         #region Mutagen
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceSubBlockGetter obj)
         {
@@ -1443,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceSubBlockGetter item,
             WorldspaceSubBlock_TranslationMask copyMask = null)
         {
-            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
+            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1455,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out WorldspaceSubBlock_ErrorMask errorMask,
             WorldspaceSubBlock_TranslationMask copyMask = null)
         {
-            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
+            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1468,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)item).CommonSetterInstance()).GetNew();
+            WorldspaceSubBlock ret = (WorldspaceSubBlock)((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

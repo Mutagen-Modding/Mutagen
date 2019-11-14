@@ -941,8 +941,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Second = default(P3Int16);
         }
         
-        public object GetNew() => ObjectBounds.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IObjectBounds item,
@@ -1145,6 +1143,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return ObjectBounds.GetNew();
+        }
+        
     }
     public partial class ObjectBoundsSetterTranslationCommon
     {
@@ -1173,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBoundsGetter item,
             ObjectBounds_TranslationMask copyMask = null)
         {
-            ObjectBounds ret = (ObjectBounds)((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).GetNew();
+            ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1185,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ObjectBounds_ErrorMask errorMask,
             ObjectBounds_TranslationMask copyMask = null)
         {
-            ObjectBounds ret = (ObjectBounds)((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).GetNew();
+            ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1198,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ObjectBounds ret = (ObjectBounds)((ObjectBoundsSetterCommon)((IObjectBoundsGetter)item).CommonSetterInstance()).GetNew();
+            ObjectBounds ret = (ObjectBounds)((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

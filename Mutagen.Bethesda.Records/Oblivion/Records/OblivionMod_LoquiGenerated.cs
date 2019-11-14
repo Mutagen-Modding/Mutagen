@@ -4618,8 +4618,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
         }
         
-        public object GetNew() => OblivionMod.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IOblivionMod item,
@@ -7208,6 +7206,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return OblivionMod.GetNew();
+        }
+        
         #region Mutagen
         public object GetGroup<T>(IOblivionModGetter obj)
             where T : IMajorRecordCommonGetter
@@ -9101,7 +9104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             OblivionMod_TranslationMask copyMask = null)
         {
-            OblivionMod ret = (OblivionMod)((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -9113,7 +9116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask copyMask = null)
         {
-            OblivionMod ret = (OblivionMod)((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -9126,7 +9129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            OblivionMod ret = (OblivionMod)((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()).GetNew();
+            OblivionMod ret = (OblivionMod)((OblivionModCommon)((IOblivionModGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

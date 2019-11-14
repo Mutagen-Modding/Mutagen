@@ -1278,8 +1278,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IQuestInternal)item);
         }
         
-        public override object GetNew() => Quest.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IQuestInternal item,
@@ -1870,6 +1868,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Quest.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Quest obj, Quest rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2058,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestGetter item,
             Quest_TranslationMask copyMask = null)
         {
-            Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
+            Quest ret = (Quest)((QuestCommon)((IQuestGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2070,7 +2073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Quest_ErrorMask errorMask,
             Quest_TranslationMask copyMask = null)
         {
-            Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
+            Quest ret = (Quest)((QuestCommon)((IQuestGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2083,7 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Quest ret = (Quest)((QuestSetterCommon)((IQuestGetter)item).CommonSetterInstance()).GetNew();
+            Quest ret = (Quest)((QuestCommon)((IQuestGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

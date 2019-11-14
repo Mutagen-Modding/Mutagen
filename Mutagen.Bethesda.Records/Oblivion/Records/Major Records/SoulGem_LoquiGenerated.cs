@@ -1323,8 +1323,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoulGemInternal)item);
         }
         
-        public override object GetNew() => SoulGem.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISoulGemInternal item,
@@ -1898,6 +1896,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SoulGem.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SoulGem obj, SoulGem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2090,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemGetter item,
             SoulGem_TranslationMask copyMask = null)
         {
-            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
+            SoulGem ret = (SoulGem)((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2102,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SoulGem_ErrorMask errorMask,
             SoulGem_TranslationMask copyMask = null)
         {
-            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
+            SoulGem ret = (SoulGem)((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2115,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SoulGem ret = (SoulGem)((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()).GetNew();
+            SoulGem ret = (SoulGem)((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

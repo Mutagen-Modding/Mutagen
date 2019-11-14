@@ -1314,8 +1314,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IPotionInternal)item);
         }
         
-        public override object GetNew() => Potion.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IPotionInternal item,
@@ -1910,6 +1908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Potion.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Potion obj, Potion rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -2102,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPotionGetter item,
             Potion_TranslationMask copyMask = null)
         {
-            Potion ret = (Potion)((PotionSetterCommon)((IPotionGetter)item).CommonSetterInstance()).GetNew();
+            Potion ret = (Potion)((PotionCommon)((IPotionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2114,7 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Potion_ErrorMask errorMask,
             Potion_TranslationMask copyMask = null)
         {
-            Potion ret = (Potion)((PotionSetterCommon)((IPotionGetter)item).CommonSetterInstance()).GetNew();
+            Potion ret = (Potion)((PotionCommon)((IPotionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2127,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Potion ret = (Potion)((PotionSetterCommon)((IPotionGetter)item).CommonSetterInstance()).GetNew();
+            Potion ret = (Potion)((PotionCommon)((IPotionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -946,8 +946,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (ISkyrimMajorRecordInternal)item);
         }
         
-        public override object GetNew() => SkyrimMajorRecord.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISkyrimMajorRecordInternal item,
@@ -1204,6 +1202,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SkyrimMajorRecord.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(SkyrimMajorRecord obj, SkyrimMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1251,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord_TranslationMask copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1263,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_TranslationMask copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1276,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()).GetNew();
+            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -964,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Count = default(Int32);
         }
         
-        public object GetNew() => AIPackageTarget.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageTarget item,
@@ -1168,6 +1166,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return AIPackageTarget.GetNew();
+        }
+        
     }
     public partial class AIPackageTargetSetterTranslationCommon
     {
@@ -1200,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter item,
             AIPackageTarget_TranslationMask copyMask = null)
         {
-            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1212,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask copyMask = null)
         {
-            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1225,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageTarget ret = (AIPackageTarget)((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

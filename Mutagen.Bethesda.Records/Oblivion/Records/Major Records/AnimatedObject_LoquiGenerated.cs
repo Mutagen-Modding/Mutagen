@@ -1015,8 +1015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAnimatedObjectInternal)item);
         }
         
-        public override object GetNew() => AnimatedObject.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IAnimatedObjectInternal item,
@@ -1383,6 +1381,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return AnimatedObject.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(AnimatedObject obj, AnimatedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1467,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAnimatedObjectGetter item,
             AnimatedObject_TranslationMask copyMask = null)
         {
-            AnimatedObject ret = (AnimatedObject)((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()).GetNew();
+            AnimatedObject ret = (AnimatedObject)((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1479,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_TranslationMask copyMask = null)
         {
-            AnimatedObject ret = (AnimatedObject)((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()).GetNew();
+            AnimatedObject ret = (AnimatedObject)((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1492,7 +1495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AnimatedObject ret = (AnimatedObject)((AnimatedObjectSetterCommon)((IAnimatedObjectGetter)item).CommonSetterInstance()).GetNew();
+            AnimatedObject ret = (AnimatedObject)((AnimatedObjectCommon)((IAnimatedObjectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

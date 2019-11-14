@@ -972,8 +972,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISoundDataExtendedInternal)item);
         }
         
-        public override object GetNew() => SoundDataExtended.GetNew();
-        
         #region Xml Translation
         public new void CopyInFromXml(
             ISoundDataExtendedInternal item,
@@ -1227,6 +1225,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return SoundDataExtended.GetNew();
+        }
+        
     }
     public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
     {
@@ -1264,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter item,
             SoundDataExtended_TranslationMask copyMask = null)
         {
-            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).GetNew();
+            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1276,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SoundDataExtended_ErrorMask errorMask,
             SoundDataExtended_TranslationMask copyMask = null)
         {
-            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).GetNew();
+            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1289,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()).GetNew();
+            SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

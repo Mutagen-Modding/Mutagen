@@ -1101,8 +1101,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IActivatorInternal)item);
         }
         
-        public override object GetNew() => Activator.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IActivatorInternal item,
@@ -1526,6 +1524,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Activator.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1651,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IActivatorGetter item,
             Activator_TranslationMask copyMask = null)
         {
-            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1663,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Activator_ErrorMask errorMask,
             Activator_TranslationMask copyMask = null)
         {
-            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1676,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Activator ret = (Activator)((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

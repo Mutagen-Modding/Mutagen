@@ -1010,8 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration = default(Int32);
         }
         
-        public object GetNew() => AIPackageSchedule.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IAIPackageSchedule item,
@@ -1241,6 +1239,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return AIPackageSchedule.GetNew();
+        }
+        
     }
     public partial class AIPackageScheduleSetterTranslationCommon
     {
@@ -1281,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             AIPackageSchedule_TranslationMask copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1293,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AIPackageSchedule_ErrorMask errorMask,
             AIPackageSchedule_TranslationMask copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1306,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()).GetNew();
+            AIPackageSchedule ret = (AIPackageSchedule)((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

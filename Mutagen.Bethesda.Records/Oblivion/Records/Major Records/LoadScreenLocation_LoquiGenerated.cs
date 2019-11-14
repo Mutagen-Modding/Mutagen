@@ -992,8 +992,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GridPoint = default(P2Int16);
         }
         
-        public object GetNew() => LoadScreenLocation.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ILoadScreenLocation item,
@@ -1202,6 +1200,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return LoadScreenLocation.GetNew();
+        }
+        
     }
     public partial class LoadScreenLocationSetterTranslationCommon
     {
@@ -1234,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter item,
             LoadScreenLocation_TranslationMask copyMask = null)
         {
-            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1246,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask copyMask = null)
         {
-            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1259,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreenLocation ret = (LoadScreenLocation)((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

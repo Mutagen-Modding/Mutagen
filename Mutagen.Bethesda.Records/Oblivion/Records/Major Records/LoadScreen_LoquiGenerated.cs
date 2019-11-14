@@ -1076,8 +1076,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILoadScreenInternal)item);
         }
         
-        public override object GetNew() => LoadScreen.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILoadScreenInternal item,
@@ -1490,6 +1488,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return LoadScreen.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1601,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenGetter item,
             LoadScreen_TranslationMask copyMask = null)
         {
-            LoadScreen ret = (LoadScreen)((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1613,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LoadScreen_ErrorMask errorMask,
             LoadScreen_TranslationMask copyMask = null)
         {
-            LoadScreen ret = (LoadScreen)((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1626,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LoadScreen ret = (LoadScreen)((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()).GetNew();
+            LoadScreen ret = (LoadScreen)((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

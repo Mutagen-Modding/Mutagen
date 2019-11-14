@@ -1006,8 +1006,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRegionDataSoundsInternal)item);
         }
         
-        public override object GetNew() => RegionDataSounds.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataSoundsInternal item,
@@ -1353,6 +1351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return RegionDataSounds.GetNew();
+        }
+        
     }
     public partial class RegionDataSoundsSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -1426,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataSoundsGetter item,
             RegionDataSounds_TranslationMask copyMask = null)
         {
-            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsCommon)((IRegionDataSoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1438,7 +1441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionDataSounds_ErrorMask errorMask,
             RegionDataSounds_TranslationMask copyMask = null)
         {
-            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsCommon)((IRegionDataSoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1451,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)item).CommonSetterInstance()).GetNew();
+            RegionDataSounds ret = (RegionDataSounds)((RegionDataSoundsCommon)((IRegionDataSoundsGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

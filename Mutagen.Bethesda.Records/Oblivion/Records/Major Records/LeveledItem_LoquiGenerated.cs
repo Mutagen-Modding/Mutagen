@@ -1082,8 +1082,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILeveledItemInternal)item);
         }
         
-        public override object GetNew() => LeveledItem.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILeveledItemInternal item,
@@ -1547,6 +1545,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return LeveledItem.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1658,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledItemGetter item,
             LeveledItem_TranslationMask copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()).GetNew();
+            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1670,7 +1673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LeveledItem_ErrorMask errorMask,
             LeveledItem_TranslationMask copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()).GetNew();
+            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1683,7 +1686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()).GetNew();
+            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

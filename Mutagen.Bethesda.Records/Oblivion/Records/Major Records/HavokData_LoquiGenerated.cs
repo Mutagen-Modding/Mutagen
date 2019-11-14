@@ -964,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Restitution = default(Byte);
         }
         
-        public object GetNew() => HavokData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IHavokData item,
@@ -1168,6 +1166,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return HavokData.GetNew();
+        }
+        
     }
     public partial class HavokDataSetterTranslationCommon
     {
@@ -1200,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             HavokData_TranslationMask copyMask = null)
         {
-            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
+            HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1212,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask copyMask = null)
         {
-            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
+            HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1225,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            HavokData ret = (HavokData)((HavokDataSetterCommon)((IHavokDataGetter)item).CommonSetterInstance()).GetNew();
+            HavokData ret = (HavokData)((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

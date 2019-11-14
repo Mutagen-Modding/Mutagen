@@ -1323,8 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BacklightMaskOrSpecular_Unset();
         }
         
-        public object GetNew() => Textures.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ITextures item,
@@ -1771,6 +1769,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Textures.GetNew();
+        }
+        
     }
     public partial class TexturesSetterTranslationCommon
     {
@@ -1983,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITexturesGetter item,
             Textures_TranslationMask copyMask = null)
         {
-            Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
+            Textures ret = (Textures)((TexturesCommon)((ITexturesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1995,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Textures_ErrorMask errorMask,
             Textures_TranslationMask copyMask = null)
         {
-            Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
+            Textures ret = (Textures)((TexturesCommon)((ITexturesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2008,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Textures ret = (Textures)((TexturesSetterCommon)((ITexturesGetter)item).CommonSetterInstance()).GetNew();
+            Textures ret = (Textures)((TexturesCommon)((ITexturesGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -974,8 +974,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Connections.Clear();
         }
         
-        public object GetNew() => RoadPoint.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRoadPoint item,
@@ -1204,6 +1202,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RoadPoint.GetNew();
+        }
+        
     }
     public partial class RoadPointSetterTranslationCommon
     {
@@ -1249,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPointGetter item,
             RoadPoint_TranslationMask copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1261,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RoadPoint_ErrorMask errorMask,
             RoadPoint_TranslationMask copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1274,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RoadPoint ret = (RoadPoint)((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()).GetNew();
+            RoadPoint ret = (RoadPoint)((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

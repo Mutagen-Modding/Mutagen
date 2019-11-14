@@ -1150,8 +1150,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Color = default(Color);
         }
         
-        public object GetNew() => Decal.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDecal item,
@@ -1499,6 +1497,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Decal.GetNew();
+        }
+        
     }
     public partial class DecalSetterTranslationCommon
     {
@@ -1563,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecalGetter item,
             Decal_TranslationMask copyMask = null)
         {
-            Decal ret = (Decal)((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1575,7 +1578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out Decal_ErrorMask errorMask,
             Decal_TranslationMask copyMask = null)
         {
-            Decal ret = (Decal)((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1588,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Decal ret = (Decal)((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).GetNew();
+            Decal ret = (Decal)((DecalCommon)((IDecalGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

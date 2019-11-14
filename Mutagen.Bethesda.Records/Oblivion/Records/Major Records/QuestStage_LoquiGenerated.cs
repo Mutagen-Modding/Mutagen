@@ -980,8 +980,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LogEntries.Unset();
         }
         
-        public object GetNew() => QuestStage.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IQuestStage item,
@@ -1236,6 +1234,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return QuestStage.GetNew();
+        }
+        
     }
     public partial class QuestStageSetterTranslationCommon
     {
@@ -1284,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestStageGetter item,
             QuestStage_TranslationMask copyMask = null)
         {
-            QuestStage ret = (QuestStage)((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()).GetNew();
+            QuestStage ret = (QuestStage)((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1296,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out QuestStage_ErrorMask errorMask,
             QuestStage_TranslationMask copyMask = null)
         {
-            QuestStage ret = (QuestStage)((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()).GetNew();
+            QuestStage ret = (QuestStage)((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1309,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            QuestStage ret = (QuestStage)((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()).GetNew();
+            QuestStage ret = (QuestStage)((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

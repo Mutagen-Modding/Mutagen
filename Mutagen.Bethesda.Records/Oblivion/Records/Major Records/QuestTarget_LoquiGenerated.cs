@@ -1035,8 +1035,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.QSTADataTypeState = default(QuestTarget.QSTADataType);
         }
         
-        public object GetNew() => QuestTarget.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IQuestTarget item,
@@ -1321,6 +1319,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return QuestTarget.GetNew();
+        }
+        
     }
     public partial class QuestTargetSetterTranslationCommon
     {
@@ -1377,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetGetter item,
             QuestTarget_TranslationMask copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).GetNew();
+            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1389,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out QuestTarget_ErrorMask errorMask,
             QuestTarget_TranslationMask copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).GetNew();
+            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1402,7 +1405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            QuestTarget ret = (QuestTarget)((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()).GetNew();
+            QuestTarget ret = (QuestTarget)((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

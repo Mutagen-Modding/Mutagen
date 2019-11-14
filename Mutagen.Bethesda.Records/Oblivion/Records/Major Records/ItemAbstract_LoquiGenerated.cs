@@ -913,8 +913,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IItemAbstractInternal)item);
         }
         
-        public override object GetNew() => ItemAbstract.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IItemAbstractInternal item,
@@ -1165,6 +1163,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return ItemAbstract.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(ItemAbstract obj, ItemAbstract rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1200,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemAbstractGetter item,
             ItemAbstract_TranslationMask copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1212,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ItemAbstract_ErrorMask errorMask,
             ItemAbstract_TranslationMask copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1225,7 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ItemAbstract ret = (ItemAbstract)((ItemAbstractSetterCommon)((IItemAbstractGetter)item).CommonSetterInstance()).GetNew();
+            ItemAbstract ret = (ItemAbstract)((ItemAbstractCommon)((IItemAbstractGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -968,8 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGameSettingFloatInternal)item);
         }
         
-        public override object GetNew() => GameSettingFloat.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGameSettingFloatInternal item,
@@ -1330,6 +1328,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GameSettingFloat.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GameSettingFloat obj, GameSettingFloat rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1393,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingFloatGetter item,
             GameSettingFloat_TranslationMask copyMask = null)
         {
-            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1405,7 +1408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GameSettingFloat_ErrorMask errorMask,
             GameSettingFloat_TranslationMask copyMask = null)
         {
-            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1418,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()).GetNew();
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

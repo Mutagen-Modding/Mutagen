@@ -2828,8 +2828,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ICreatureInternal)item);
         }
         
-        public override object GetNew() => Creature.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ICreatureInternal item,
@@ -4291,6 +4289,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Creature.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -4890,7 +4893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureGetter item,
             Creature_TranslationMask copyMask = null)
         {
-            Creature ret = (Creature)((CreatureSetterCommon)((ICreatureGetter)item).CommonSetterInstance()).GetNew();
+            Creature ret = (Creature)((CreatureCommon)((ICreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -4902,7 +4905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Creature_ErrorMask errorMask,
             Creature_TranslationMask copyMask = null)
         {
-            Creature ret = (Creature)((CreatureSetterCommon)((ICreatureGetter)item).CommonSetterInstance()).GetNew();
+            Creature ret = (Creature)((CreatureCommon)((ICreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -4915,7 +4918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Creature ret = (Creature)((CreatureSetterCommon)((ICreatureGetter)item).CommonSetterInstance()).GetNew();
+            Creature ret = (Creature)((CreatureCommon)((ICreatureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

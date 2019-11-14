@@ -1008,8 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Female_Unset();
         }
         
-        public object GetNew() => GenderedBodyData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IGenderedBodyData item,
@@ -1286,6 +1284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return GenderedBodyData.GetNew();
+        }
+        
     }
     public partial class GenderedBodyDataSetterTranslationCommon
     {
@@ -1362,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyDataGetter item,
             GenderedBodyData_TranslationMask copyMask = null)
         {
-            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataSetterCommon)((IGenderedBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1374,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask copyMask = null)
         {
-            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataSetterCommon)((IGenderedBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1387,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataSetterCommon)((IGenderedBodyDataGetter)item).CommonSetterInstance()).GetNew();
+            GenderedBodyData ret = (GenderedBodyData)((GenderedBodyDataCommon)((IGenderedBodyDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

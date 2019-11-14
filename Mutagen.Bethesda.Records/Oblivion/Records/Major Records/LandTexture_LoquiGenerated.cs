@@ -1129,8 +1129,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandTextureInternal)item);
         }
         
-        public override object GetNew() => LandTexture.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILandTextureInternal item,
@@ -1570,6 +1568,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return LandTexture.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1704,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter item,
             LandTexture_TranslationMask copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1716,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LandTexture_ErrorMask errorMask,
             LandTexture_TranslationMask copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1729,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            LandTexture ret = (LandTexture)((LandTextureSetterCommon)((ILandTextureGetter)item).CommonSetterInstance()).GetNew();
+            LandTexture ret = (LandTexture)((LandTextureCommon)((ILandTextureGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

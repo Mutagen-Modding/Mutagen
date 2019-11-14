@@ -1036,8 +1036,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISubspaceInternal)item);
         }
         
-        public override object GetNew() => Subspace.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ISubspaceInternal item,
@@ -1409,6 +1407,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Subspace.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Subspace obj, Subspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1464,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISubspaceGetter item,
             Subspace_TranslationMask copyMask = null)
         {
-            Subspace ret = (Subspace)((SubspaceSetterCommon)((ISubspaceGetter)item).CommonSetterInstance()).GetNew();
+            Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1476,7 +1479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Subspace_ErrorMask errorMask,
             Subspace_TranslationMask copyMask = null)
         {
-            Subspace ret = (Subspace)((SubspaceSetterCommon)((ISubspaceGetter)item).CommonSetterInstance()).GetNew();
+            Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1489,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Subspace ret = (Subspace)((SubspaceSetterCommon)((ISubspaceGetter)item).CommonSetterInstance()).GetNew();
+            Subspace ret = (Subspace)((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

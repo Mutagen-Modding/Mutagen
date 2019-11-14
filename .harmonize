@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a69cf67d1da85dfde39d0aa18cbf5e1ba6e1db1e</Sha>
+         <Sha>ed65eea97045d046da4cbf7030e0d23f7c3e6a23</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-13-2019 19:21:06</CommitDate>
-         <Description>Some simplifications</Description>
+         <CommitDate>11-13-2019 20:09:27</CommitDate>
+         <Description>GetNew in common getter /w custom generic to specify</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

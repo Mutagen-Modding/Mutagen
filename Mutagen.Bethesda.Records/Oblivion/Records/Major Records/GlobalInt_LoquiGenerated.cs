@@ -968,8 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IGlobalIntInternal)item);
         }
         
-        public override object GetNew() => GlobalInt.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalIntInternal item,
@@ -1324,6 +1322,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GlobalInt.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GlobalInt obj, GlobalInt rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1387,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobalIntGetter item,
             GlobalInt_TranslationMask copyMask = null)
         {
-            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
+            GlobalInt ret = (GlobalInt)((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1399,7 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GlobalInt_ErrorMask errorMask,
             GlobalInt_TranslationMask copyMask = null)
         {
-            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
+            GlobalInt ret = (GlobalInt)((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1412,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GlobalInt ret = (GlobalInt)((GlobalIntSetterCommon)((IGlobalIntGetter)item).CommonSetterInstance()).GetNew();
+            GlobalInt ret = (GlobalInt)((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -961,8 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Type = default(WeatherSound.SoundType);
         }
         
-        public object GetNew() => WeatherSound.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IWeatherSound item,
@@ -1159,6 +1157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return WeatherSound.GetNew();
+        }
+        
     }
     public partial class WeatherSoundSetterTranslationCommon
     {
@@ -1187,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherSoundGetter item,
             WeatherSound_TranslationMask copyMask = null)
         {
-            WeatherSound ret = (WeatherSound)((WeatherSoundSetterCommon)((IWeatherSoundGetter)item).CommonSetterInstance()).GetNew();
+            WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1199,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out WeatherSound_ErrorMask errorMask,
             WeatherSound_TranslationMask copyMask = null)
         {
-            WeatherSound ret = (WeatherSound)((WeatherSoundSetterCommon)((IWeatherSoundGetter)item).CommonSetterInstance()).GetNew();
+            WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1212,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            WeatherSound ret = (WeatherSound)((WeatherSoundSetterCommon)((IWeatherSoundGetter)item).CommonSetterInstance()).GetNew();
+            WeatherSound ret = (WeatherSound)((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

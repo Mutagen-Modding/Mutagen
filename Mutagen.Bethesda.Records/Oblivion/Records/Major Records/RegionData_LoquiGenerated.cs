@@ -997,8 +997,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RDATDataTypeState = default(RegionData.RDATDataType);
         }
         
-        public virtual object GetNew() => RegionData.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRegionDataInternal item,
@@ -1285,6 +1283,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public virtual object GetNew()
+        {
+            return RegionData.GetNew();
+        }
+        
     }
     public partial class RegionDataSetterTranslationCommon
     {
@@ -1317,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             RegionData_TranslationMask copyMask = null)
         {
-            RegionData ret = (RegionData)((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()).GetNew();
+            RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1329,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RegionData_ErrorMask errorMask,
             RegionData_TranslationMask copyMask = null)
         {
-            RegionData ret = (RegionData)((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()).GetNew();
+            RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1342,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RegionData ret = (RegionData)((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()).GetNew();
+            RegionData ret = (RegionData)((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

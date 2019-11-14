@@ -1284,8 +1284,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlchemicalApparatusInternal)item);
         }
         
-        public override object GetNew() => AlchemicalApparatus.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IAlchemicalApparatusInternal item,
@@ -1833,6 +1831,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return AlchemicalApparatus.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(AlchemicalApparatus obj, AlchemicalApparatus rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1985,7 +1988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusGetter item,
             AlchemicalApparatus_TranslationMask copyMask = null)
         {
-            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1997,7 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AlchemicalApparatus_ErrorMask errorMask,
             AlchemicalApparatus_TranslationMask copyMask = null)
         {
-            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2010,7 +2013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)item).CommonSetterInstance()).GetNew();
+            AlchemicalApparatus ret = (AlchemicalApparatus)((AlchemicalApparatusCommon)((IAlchemicalApparatusGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

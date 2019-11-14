@@ -2243,8 +2243,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IWeatherInternal)item);
         }
         
-        public override object GetNew() => Weather.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IWeatherInternal item,
@@ -3275,6 +3273,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Weather.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -3574,7 +3577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherGetter item,
             Weather_TranslationMask copyMask = null)
         {
-            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
+            Weather ret = (Weather)((WeatherCommon)((IWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -3586,7 +3589,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Weather_ErrorMask errorMask,
             Weather_TranslationMask copyMask = null)
         {
-            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
+            Weather ret = (Weather)((WeatherCommon)((IWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -3599,7 +3602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Weather ret = (Weather)((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()).GetNew();
+            Weather ret = (Weather)((WeatherCommon)((IWeatherGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

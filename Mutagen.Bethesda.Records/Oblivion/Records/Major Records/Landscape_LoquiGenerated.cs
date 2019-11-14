@@ -1231,8 +1231,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ILandscapeInternal)item);
         }
         
-        public override object GetNew() => Landscape.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             ILandscapeInternal item,
@@ -1761,6 +1759,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Landscape.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1939,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandscapeGetter item,
             Landscape_TranslationMask copyMask = null)
         {
-            Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
+            Landscape ret = (Landscape)((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1951,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Landscape_ErrorMask errorMask,
             Landscape_TranslationMask copyMask = null)
         {
-            Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
+            Landscape ret = (Landscape)((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1964,7 +1967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Landscape ret = (Landscape)((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()).GetNew();
+            Landscape ret = (Landscape)((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

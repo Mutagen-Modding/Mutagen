@@ -1165,8 +1165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IFactionInternal)item);
         }
         
-        public override object GetNew() => Faction.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IFactionInternal item,
@@ -1664,6 +1662,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Faction.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1823,7 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFactionGetter item,
             Faction_TranslationMask copyMask = null)
         {
-            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1835,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask copyMask = null)
         {
-            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1848,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Faction ret = (Faction)((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).GetNew();
+            Faction ret = (Faction)((FactionCommon)((IFactionGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

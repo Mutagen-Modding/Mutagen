@@ -961,8 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default(EnableParent.Flag);
         }
         
-        public object GetNew() => EnableParent.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IEnableParent item,
@@ -1159,6 +1157,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return EnableParent.GetNew();
+        }
+        
     }
     public partial class EnableParentSetterTranslationCommon
     {
@@ -1187,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParentGetter item,
             EnableParent_TranslationMask copyMask = null)
         {
-            EnableParent ret = (EnableParent)((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()).GetNew();
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1199,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out EnableParent_ErrorMask errorMask,
             EnableParent_TranslationMask copyMask = null)
         {
-            EnableParent ret = (EnableParent)((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()).GetNew();
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1212,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            EnableParent ret = (EnableParent)((EnableParentSetterCommon)((IEnableParentGetter)item).CommonSetterInstance()).GetNew();
+            EnableParent ret = (EnableParent)((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

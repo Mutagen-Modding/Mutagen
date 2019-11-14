@@ -951,8 +951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IAlphaLayerInternal)item);
         }
         
-        public override object GetNew() => AlphaLayer.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IAlphaLayerInternal item,
@@ -1235,6 +1233,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return AlphaLayer.GetNew();
+        }
+        
     }
     public partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
     {
@@ -1284,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter item,
             AlphaLayer_TranslationMask copyMask = null)
         {
-            AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
+            AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1296,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask copyMask = null)
         {
-            AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
+            AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1309,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            AlphaLayer ret = (AlphaLayer)((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()).GetNew();
+            AlphaLayer ret = (AlphaLayer)((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

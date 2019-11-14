@@ -985,8 +985,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.RelatedWaterUnderwater = default(Water);
         }
         
-        public object GetNew() => RelatedWaters.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRelatedWaters item,
@@ -1189,6 +1187,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RelatedWaters.GetNew();
+        }
+        
     }
     public partial class RelatedWatersSetterTranslationCommon
     {
@@ -1221,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWatersGetter item,
             RelatedWaters_TranslationMask copyMask = null)
         {
-            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1233,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RelatedWaters_ErrorMask errorMask,
             RelatedWaters_TranslationMask copyMask = null)
         {
-            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1246,7 +1249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RelatedWaters ret = (RelatedWaters)((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()).GetNew();
+            RelatedWaters ret = (RelatedWaters)((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

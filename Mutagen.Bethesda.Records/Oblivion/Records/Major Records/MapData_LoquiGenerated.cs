@@ -964,8 +964,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CellCoordinatesSECell = default(P2Int16);
         }
         
-        public object GetNew() => MapData.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IMapData item,
@@ -1186,6 +1184,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return MapData.GetNew();
+        }
+        
     }
     public partial class MapDataSetterTranslationCommon
     {
@@ -1218,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter item,
             MapData_TranslationMask copyMask = null)
         {
-            MapData ret = (MapData)((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()).GetNew();
+            MapData ret = (MapData)((MapDataCommon)((IMapDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1230,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out MapData_ErrorMask errorMask,
             MapData_TranslationMask copyMask = null)
         {
-            MapData ret = (MapData)((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()).GetNew();
+            MapData ret = (MapData)((MapDataCommon)((IMapDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1243,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            MapData ret = (MapData)((MapDataSetterCommon)((IMapDataGetter)item).CommonSetterInstance()).GetNew();
+            MapData ret = (MapData)((MapDataCommon)((IMapDataGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

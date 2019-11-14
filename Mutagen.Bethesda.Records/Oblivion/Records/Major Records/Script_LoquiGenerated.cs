@@ -965,8 +965,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IScriptInternal)item);
         }
         
-        public override object GetNew() => Script.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IScriptInternal item,
@@ -1313,6 +1311,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Script.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Script obj, Script rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1372,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter item,
             Script_TranslationMask copyMask = null)
         {
-            Script ret = (Script)((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1384,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Script_ErrorMask errorMask,
             Script_TranslationMask copyMask = null)
         {
-            Script ret = (Script)((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1397,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Script ret = (Script)((ScriptSetterCommon)((IScriptGetter)item).CommonSetterInstance()).GetNew();
+            Script ret = (Script)((ScriptCommon)((IScriptGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

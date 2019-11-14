@@ -933,8 +933,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IRoadInternal)item);
         }
         
-        public override object GetNew() => Road.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IRoadInternal item,
@@ -1273,6 +1271,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return Road.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(Road obj, Road rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1336,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadGetter item,
             Road_TranslationMask copyMask = null)
         {
-            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
+            Road ret = (Road)((RoadCommon)((IRoadGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1348,7 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Road_ErrorMask errorMask,
             Road_TranslationMask copyMask = null)
         {
-            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
+            Road ret = (Road)((RoadCommon)((IRoadGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1361,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Road ret = (Road)((RoadSetterCommon)((IRoadGetter)item).CommonSetterInstance()).GetNew();
+            Road ret = (Road)((RoadCommon)((IRoadGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -961,8 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Modifier = default(Int32);
         }
         
-        public object GetNew() => RaceRelation.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRaceRelation item,
@@ -1150,6 +1148,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RaceRelation.GetNew();
+        }
+        
     }
     public partial class RaceRelationSetterTranslationCommon
     {
@@ -1178,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceRelationGetter item,
             RaceRelation_TranslationMask copyMask = null)
         {
-            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
+            RaceRelation ret = (RaceRelation)((RaceRelationCommon)((IRaceRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1190,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RaceRelation_ErrorMask errorMask,
             RaceRelation_TranslationMask copyMask = null)
         {
-            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
+            RaceRelation ret = (RaceRelation)((RaceRelationCommon)((IRaceRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1203,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RaceRelation ret = (RaceRelation)((RaceRelationSetterCommon)((IRaceRelationGetter)item).CommonSetterInstance()).GetNew();
+            RaceRelation ret = (RaceRelation)((RaceRelationCommon)((IRaceRelationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

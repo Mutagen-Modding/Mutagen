@@ -990,8 +990,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff = default(Byte[]);
         }
         
-        public object GetNew() => RankPlacement.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRankPlacement item,
@@ -1197,6 +1195,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return RankPlacement.GetNew();
+        }
+        
     }
     public partial class RankPlacementSetterTranslationCommon
     {
@@ -1229,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacementGetter item,
             RankPlacement_TranslationMask copyMask = null)
         {
-            RankPlacement ret = (RankPlacement)((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()).GetNew();
+            RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1241,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask copyMask = null)
         {
-            RankPlacement ret = (RankPlacement)((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()).GetNew();
+            RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1254,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            RankPlacement ret = (RankPlacement)((RankPlacementSetterCommon)((IRankPlacementGetter)item).CommonSetterInstance()).GetNew();
+            RankPlacement ret = (RankPlacement)((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

@@ -1110,8 +1110,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (IIdleAnimationInternal)item);
         }
         
-        public override object GetNew() => IdleAnimation.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IIdleAnimationInternal item,
@@ -1580,6 +1578,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return IdleAnimation.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1714,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IIdleAnimationGetter item,
             IdleAnimation_TranslationMask copyMask = null)
         {
-            IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
+            IdleAnimation ret = (IdleAnimation)((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1726,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out IdleAnimation_ErrorMask errorMask,
             IdleAnimation_TranslationMask copyMask = null)
         {
-            IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
+            IdleAnimation ret = (IdleAnimation)((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1739,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            IdleAnimation ret = (IdleAnimation)((IdleAnimationSetterCommon)((IIdleAnimationGetter)item).CommonSetterInstance()).GetNew();
+            IdleAnimation ret = (IdleAnimation)((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

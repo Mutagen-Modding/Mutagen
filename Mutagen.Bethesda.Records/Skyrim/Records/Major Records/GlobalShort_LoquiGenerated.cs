@@ -970,8 +970,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IGlobalShortInternal)item);
         }
         
-        public override object GetNew() => GlobalShort.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IGlobalShortInternal item,
@@ -1334,6 +1332,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return GlobalShort.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(GlobalShort obj, GlobalShort rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1397,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGlobalShortGetter item,
             GlobalShort_TranslationMask copyMask = null)
         {
-            GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
+            GlobalShort ret = (GlobalShort)((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1409,7 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out GlobalShort_ErrorMask errorMask,
             GlobalShort_TranslationMask copyMask = null)
         {
-            GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
+            GlobalShort ret = (GlobalShort)((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1422,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            GlobalShort ret = (GlobalShort)((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()).GetNew();
+            GlobalShort ret = (GlobalShort)((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

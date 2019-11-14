@@ -1378,8 +1378,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.PowerAttackFatigueModMult = default(Single);
         }
         
-        public object GetNew() => CombatStyleAdvanced.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             ICombatStyleAdvanced item,
@@ -1924,6 +1922,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return CombatStyleAdvanced.GetNew();
+        }
+        
     }
     public partial class CombatStyleAdvancedSetterTranslationCommon
     {
@@ -2028,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvancedGetter item,
             CombatStyleAdvanced_TranslationMask copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -2040,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out CombatStyleAdvanced_ErrorMask errorMask,
             CombatStyleAdvanced_TranslationMask copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -2053,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()).GetNew();
+            CombatStyleAdvanced ret = (CombatStyleAdvanced)((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

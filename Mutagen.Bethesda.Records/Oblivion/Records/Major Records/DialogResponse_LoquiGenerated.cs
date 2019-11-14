@@ -1182,8 +1182,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
         }
         
-        public object GetNew() => DialogResponse.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IDialogResponse item,
@@ -1521,6 +1519,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return DialogResponse.GetNew();
+        }
+        
     }
     public partial class DialogResponseSetterTranslationCommon
     {
@@ -1613,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseGetter item,
             DialogResponse_TranslationMask copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1625,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out DialogResponse_ErrorMask errorMask,
             DialogResponse_TranslationMask copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1638,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            DialogResponse ret = (DialogResponse)((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()).GetNew();
+            DialogResponse ret = (DialogResponse)((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

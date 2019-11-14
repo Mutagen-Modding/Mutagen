@@ -1120,8 +1120,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SCITDataTypeState = default(ScriptEffect.SCITDataType);
         }
         
-        public object GetNew() => ScriptEffect.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IScriptEffect item,
@@ -1426,6 +1424,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return ScriptEffect.GetNew();
+        }
+        
     }
     public partial class ScriptEffectSetterTranslationCommon
     {
@@ -1490,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter item,
             ScriptEffect_TranslationMask copyMask = null)
         {
-            ScriptEffect ret = (ScriptEffect)((ScriptEffectSetterCommon)((IScriptEffectGetter)item).CommonSetterInstance()).GetNew();
+            ScriptEffect ret = (ScriptEffect)((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1502,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptEffect_ErrorMask errorMask,
             ScriptEffect_TranslationMask copyMask = null)
         {
-            ScriptEffect ret = (ScriptEffect)((ScriptEffectSetterCommon)((IScriptEffectGetter)item).CommonSetterInstance()).GetNew();
+            ScriptEffect ret = (ScriptEffect)((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1515,7 +1518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ScriptEffect ret = (ScriptEffect)((ScriptEffectSetterCommon)((IScriptEffectGetter)item).CommonSetterInstance()).GetNew();
+            ScriptEffect ret = (ScriptEffect)((ScriptEffectCommon)((IScriptEffectGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

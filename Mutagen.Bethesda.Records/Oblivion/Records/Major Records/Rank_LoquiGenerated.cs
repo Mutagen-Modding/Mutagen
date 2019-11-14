@@ -1111,8 +1111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Insignia_Unset();
         }
         
-        public object GetNew() => Rank.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IRank item,
@@ -1417,6 +1415,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return Rank.GetNew();
+        }
+        
     }
     public partial class RankSetterTranslationCommon
     {
@@ -1533,7 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankGetter item,
             Rank_TranslationMask copyMask = null)
         {
-            Rank ret = (Rank)((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1545,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask copyMask = null)
         {
-            Rank ret = (Rank)((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1558,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            Rank ret = (Rank)((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()).GetNew();
+            Rank ret = (Rank)((RankCommon)((IRankGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

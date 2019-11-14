@@ -967,8 +967,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Clear(item: (IActionRecordInternal)item);
         }
         
-        public override object GetNew() => ActionRecord.GetNew();
-        
         #region Xml Translation
         protected static void FillPrivateElementXml(
             IActionRecordInternal item,
@@ -1301,6 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
+        public override object GetNew()
+        {
+            return ActionRecord.GetNew();
+        }
+        
         #region Mutagen
         partial void PostDuplicate(ActionRecord obj, ActionRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
@@ -1364,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActionRecordGetter item,
             ActionRecord_TranslationMask copyMask = null)
         {
-            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
+            ActionRecord ret = (ActionRecord)((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1376,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             out ActionRecord_ErrorMask errorMask,
             ActionRecord_TranslationMask copyMask = null)
         {
-            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
+            ActionRecord ret = (ActionRecord)((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1389,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            ActionRecord ret = (ActionRecord)((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()).GetNew();
+            ActionRecord ret = (ActionRecord)((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,

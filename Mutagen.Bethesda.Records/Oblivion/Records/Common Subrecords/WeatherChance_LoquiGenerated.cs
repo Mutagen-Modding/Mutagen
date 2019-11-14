@@ -958,8 +958,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Chance = default(Int32);
         }
         
-        public object GetNew() => WeatherChance.GetNew();
-        
         #region Xml Translation
         public void CopyInFromXml(
             IWeatherChance item,
@@ -1144,6 +1142,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         
+        public object GetNew()
+        {
+            return WeatherChance.GetNew();
+        }
+        
     }
     public partial class WeatherChanceSetterTranslationCommon
     {
@@ -1172,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherChanceGetter item,
             WeatherChance_TranslationMask copyMask = null)
         {
-            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
+            WeatherChance ret = (WeatherChance)((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 copyMask: copyMask);
@@ -1184,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask copyMask = null)
         {
-            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
+            WeatherChance ret = (WeatherChance)((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: out errorMask,
@@ -1197,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask = null)
         {
-            WeatherChance ret = (WeatherChance)((WeatherChanceSetterCommon)((IWeatherChanceGetter)item).CommonSetterInstance()).GetNew();
+            WeatherChance ret = (WeatherChance)((WeatherChanceCommon)((IWeatherChanceGetter)item).CommonInstance()).GetNew();
             ret.DeepCopyFieldsFrom(
                 item,
                 errorMask: errorMask,
