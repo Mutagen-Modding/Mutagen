@@ -3180,10 +3180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Persistent.SetTo(
                         items: rhs.Persistent,
-                        converter: (r) =>
-                        {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
-                        });
+                        converter: (r) => (IPlaced)r.DeepCopy());
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3206,10 +3203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Temporary.SetTo(
                         items: rhs.Temporary,
-                        converter: (r) =>
-                        {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
-                        });
+                        converter: (r) => (IPlaced)r.DeepCopy());
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3232,10 +3226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.VisibleWhenDistant.SetTo(
                         items: rhs.VisibleWhenDistant,
-                        converter: (r) =>
-                        {
-                            return LoquiRegistration.GetCopyFunc<IPlaced, IPlacedGetter>(r.GetType(), typeof(IPlacedGetter))(r, null);
-                        });
+                        converter: (r) => (IPlaced)r.DeepCopy());
                 }
                 catch (Exception ex)
                 when (errorMask != null)
