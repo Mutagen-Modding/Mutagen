@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         items: rhs.Items,
                         converter: (r) =>
                         {
-                            return LoquiRegistration.GetCopyFunc<T, TGetter>()(r, null);
+                            return r.DeepCopy() as T;
                         });
                 }
                 catch (Exception ex)
