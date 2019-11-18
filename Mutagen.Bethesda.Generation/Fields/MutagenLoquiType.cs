@@ -77,7 +77,14 @@ namespace Mutagen.Bethesda.Generation
                     }
                     break;
                 case LoquiRefType.Interface:
-                    fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor.DirectAccess}, null);");
+                    if (deepCopy)
+                    {
+                        fg.AppendLine($"{retAccessor}r.DeepCopy() as {this.TypeName(getter: false, internalInterface: true)};");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"{retAccessor}{nameof(LoquiRegistration)}.GetCopyFunc<{this.TypeName()}, {this.TypeName(getter: true)}>(r.GetType(), typeof({this.TypeName(getter: true)}))({rhsAccessor.DirectAccess}, null);");
+                    }
                     break;
                 default:
                     throw new NotImplementedException();

@@ -3180,7 +3180,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Persistent.SetTo(
                         items: rhs.Persistent,
-                        converter: (r) => (IPlaced)r.DeepCopy());
+                        converter: (r) =>
+                        {
+                            return r.DeepCopy() as IPlaced;
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3203,7 +3206,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Temporary.SetTo(
                         items: rhs.Temporary,
-                        converter: (r) => (IPlaced)r.DeepCopy());
+                        converter: (r) =>
+                        {
+                            return r.DeepCopy() as IPlaced;
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3226,7 +3232,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.VisibleWhenDistant.SetTo(
                         items: rhs.VisibleWhenDistant,
-                        converter: (r) => (IPlaced)r.DeepCopy());
+                        converter: (r) =>
+                        {
+                            return r.DeepCopy() as IPlaced;
+                        });
                 }
                 catch (Exception ex)
                 when (errorMask != null)

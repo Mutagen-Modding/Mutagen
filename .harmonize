@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>85b8156984b26c48c3aaab880927a22a71df3842</Sha>
+         <Sha>bb69f859e8cbdcaf6acd2be6417f70dfafe818f7</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-13-2019 20:13:37</CommitDate>
-         <Description>Generic make deepcopies now cast instead of making reflection call</Description>
+         <CommitDate>11-17-2019 20:50:56</CommitDate>
+         <Description>Loqui Deep copy with interface reftype</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
