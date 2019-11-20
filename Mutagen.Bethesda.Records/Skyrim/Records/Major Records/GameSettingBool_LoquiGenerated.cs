@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGameSettingBoolInternal item)
+        public void Clear(IGameSettingBoolInternal item)
         {
             ClearPartial();
             item.Data_Unset();
@@ -1358,12 +1358,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IGameSettingBoolInternal item,
+            IGameSettingBoolGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IGameSettingBool item,
             IGameSettingBoolGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -1392,6 +1405,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IGameSettingInternal item,
+            IGameSettingGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBoolInternal)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IGameSetting item,
+            IGameSettingGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBool)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISkyrimMajorRecordInternal item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBoolInternal)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISkyrimMajorRecord item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBool)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBoolInternal)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGameSettingBool)item,
+                rhs: (IGameSettingBoolGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion

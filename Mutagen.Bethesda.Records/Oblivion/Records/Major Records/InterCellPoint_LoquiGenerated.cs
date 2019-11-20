@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IInterCellPoint item)
+        public void Clear(IInterCellPoint item)
         {
             ClearPartial();
             item.PointID = default(Int32);

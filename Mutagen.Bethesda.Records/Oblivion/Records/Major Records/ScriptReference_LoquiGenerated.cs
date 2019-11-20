@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly ScriptReferenceSetterTranslationCommon Instance = new ScriptReferenceSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public virtual void DeepCopyFieldsFrom(
             IScriptReference item,
             IScriptReferenceGetter rhs,
             ErrorMaskBuilder errorMask,

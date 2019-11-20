@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "ocation ret = (AIPackageLocation)((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()).GetNew();";
+            string testString = "public virtual void DeepCopyFieldsFrom(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMapData item)
+        public void Clear(IMapData item)
         {
             ClearPartial();
             item.UsableDimensions = default(P2Int);

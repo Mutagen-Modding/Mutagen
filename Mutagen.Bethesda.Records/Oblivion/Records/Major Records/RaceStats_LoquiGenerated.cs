@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRaceStats item)
+        public void Clear(IRaceStats item)
         {
             ClearPartial();
             item.Strength = default(Byte);

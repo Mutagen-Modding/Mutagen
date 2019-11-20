@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISkyrimMod item)
+        public void Clear(ISkyrimMod item)
         {
             ClearPartial();
         }

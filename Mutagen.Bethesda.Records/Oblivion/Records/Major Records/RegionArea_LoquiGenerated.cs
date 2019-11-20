@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionArea item)
+        public void Clear(IRegionArea item)
         {
             ClearPartial();
             item.EdgeFallOff_Unset();

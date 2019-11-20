@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ITargetGroup item)
+        public void Clear(ITargetGroup item)
         {
             ClearPartial();
             item.Do = default(Boolean);

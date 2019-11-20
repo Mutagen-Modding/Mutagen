@@ -934,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IObjectBounds item)
+        public void Clear(IObjectBounds item)
         {
             ClearPartial();
             item.First = default(P3Int16);

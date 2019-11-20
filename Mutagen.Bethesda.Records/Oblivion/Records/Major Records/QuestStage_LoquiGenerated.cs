@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IQuestStage item)
+        public void Clear(IQuestStage item)
         {
             ClearPartial();
             item.Stage = default(UInt16);

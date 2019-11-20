@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IFaceGenData item)
+        public void Clear(IFaceGenData item)
         {
             ClearPartial();
             item.SymmetricGeometry_Unset();

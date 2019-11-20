@@ -1264,7 +1264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISigilStoneInternal item)
+        public void Clear(ISigilStoneInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1892,12 +1892,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            ISigilStoneInternal item,
+            ISigilStoneGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             ISigilStone item,
             ISigilStoneGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2035,6 +2048,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IItemAbstractInternal item,
+            IItemAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStoneInternal)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IItemAbstract item,
+            IItemAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStone)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStoneInternal)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStone)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStoneInternal)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISigilStone)item,
+                rhs: (ISigilStoneGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -3478,7 +3569,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
         private int? _DATALocation;
         public SigilStone.DATADataType DATADataTypeState { get; private set; }
-        public Byte Uses => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
+        #region Uses
+        private int _UsesLocation => _DATALocation.Value + 0x0;
+        private bool _Uses_IsSet => _DATALocation.HasValue;
+        public Byte Uses => _Uses_IsSet ? _data.Span[_UsesLocation] : default;
+        #endregion
         #region Value
         private int _ValueLocation => _DATALocation.Value + 0x1;
         private bool _Value_IsSet => _DATALocation.HasValue;

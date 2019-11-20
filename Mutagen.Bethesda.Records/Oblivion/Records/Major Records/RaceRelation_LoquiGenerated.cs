@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRaceRelation item)
+        public void Clear(IRaceRelation item)
         {
             ClearPartial();
             item.Race = default(Race);

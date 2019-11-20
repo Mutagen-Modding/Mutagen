@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IQuestTarget item)
+        public void Clear(IQuestTarget item)
         {
             ClearPartial();
             item.Target = default(IPlaced);

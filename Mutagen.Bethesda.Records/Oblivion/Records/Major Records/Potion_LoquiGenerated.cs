@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IPotionInternal item)
+        public void Clear(IPotionInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1934,12 +1934,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IPotionInternal item,
+            IPotionGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IPotion item,
             IPotionGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((ItemAbstractSetterTranslationCommon)((IItemAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2097,6 +2110,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.ENITDataTypeState = rhs.ENITDataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IItemAbstractInternal item,
+            IItemAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotionInternal)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IItemAbstract item,
+            IItemAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotion)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotionInternal)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotion)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotionInternal)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IPotion)item,
+                rhs: (IPotionGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion

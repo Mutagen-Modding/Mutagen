@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRaceStatsGendered item)
+        public void Clear(IRaceStatsGendered item)
         {
             ClearPartial();
             item.Male = default(RaceStats);

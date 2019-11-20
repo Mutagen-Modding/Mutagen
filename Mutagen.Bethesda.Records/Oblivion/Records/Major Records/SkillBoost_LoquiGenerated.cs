@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISkillBoost item)
+        public void Clear(ISkillBoost item)
         {
             ClearPartial();
             item.Skill = default(ActorValue);

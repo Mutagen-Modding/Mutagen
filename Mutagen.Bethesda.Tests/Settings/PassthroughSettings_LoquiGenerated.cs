@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IPassthroughSettings item)
+        public void Clear(IPassthroughSettings item)
         {
             ClearPartial();
             item.ReuseCaches = default(Boolean);

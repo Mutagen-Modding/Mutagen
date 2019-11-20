@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataObject item)
+        public void Clear(IRegionDataObject item)
         {
             ClearPartial();
             item.Object = default(OblivionMajorRecord);

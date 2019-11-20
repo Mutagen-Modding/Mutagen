@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ICondition item)
+        public void Clear(ICondition item)
         {
             ClearPartial();
             item.CompareOperator = default(CompareOperator);

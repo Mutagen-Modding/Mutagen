@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ILogEntry item)
+        public void Clear(ILogEntry item)
         {
             ClearPartial();
             item.Flags_Unset();

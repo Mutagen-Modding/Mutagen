@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ITestingSettings item)
+        public void Clear(ITestingSettings item)
         {
             ClearPartial();
             item.TestGroupMasks = default(Boolean);

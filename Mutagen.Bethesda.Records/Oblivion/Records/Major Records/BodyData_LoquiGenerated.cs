@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IBodyData item)
+        public void Clear(IBodyData item)
         {
             ClearPartial();
             item.Model_Unset();

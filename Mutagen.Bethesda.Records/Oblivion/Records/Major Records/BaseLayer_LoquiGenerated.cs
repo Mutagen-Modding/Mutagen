@@ -1352,7 +1352,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public virtual void DeepCopyFieldsFrom(
+            IBaseLayerInternal item,
+            IBaseLayerGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            DeepCopyFieldsFrom(
+                (IBaseLayer)item,
+                (IBaseLayerGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public virtual void DeepCopyFieldsFrom(
             IBaseLayer item,
             IBaseLayerGetter rhs,
             ErrorMaskBuilder errorMask,

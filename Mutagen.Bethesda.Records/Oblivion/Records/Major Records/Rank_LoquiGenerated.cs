@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRank item)
+        public void Clear(IRank item)
         {
             ClearPartial();
             item.RankNumber_Unset();

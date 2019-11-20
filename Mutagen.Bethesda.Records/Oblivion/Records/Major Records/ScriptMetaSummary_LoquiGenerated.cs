@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IScriptMetaSummary item)
+        public void Clear(IScriptMetaSummary item)
         {
             ClearPartial();
             item.Fluff = default(Byte[]);

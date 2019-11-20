@@ -1310,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ITextures item)
+        public void Clear(ITextures item)
         {
             ClearPartial();
             item.Diffuse_Unset();

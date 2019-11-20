@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IClassInternal item)
+        public void Clear(IClassInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -2668,12 +2668,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IClassInternal item,
+            IClassGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IClass item,
             IClassGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2862,6 +2875,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISkyrimMajorRecordInternal item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClassInternal)item,
+                rhs: (IClassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISkyrimMajorRecord item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClass)item,
+                rhs: (IClassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClassInternal)item,
+                rhs: (IClassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClass)item,
+                rhs: (IClassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -5508,25 +5573,101 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _Teaches_IsSet => _DATALocation.HasValue;
         public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
         #endregion
-        public Byte MaxTrainingLevel => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 5] : default;
-        public Byte OneHandedWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 6] : default;
-        public Byte TwoHandedWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 7] : default;
-        public Byte MarksmanWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 8] : default;
-        public Byte BlockWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 9] : default;
-        public Byte SmithingWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 10] : default;
-        public Byte HeavyArmorWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 11] : default;
-        public Byte LightArmorWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 12] : default;
-        public Byte PickpocketWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 13] : default;
-        public Byte LockpickingWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 14] : default;
-        public Byte SneakWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 15] : default;
-        public Byte AlchemyWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 16] : default;
-        public Byte SpeechcraftWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 17] : default;
-        public Byte AlterationWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 18] : default;
-        public Byte ConjurationWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 19] : default;
-        public Byte DestructionWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 20] : default;
-        public Byte IllusionWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 21] : default;
-        public Byte RestorationWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 22] : default;
-        public Byte EnchantingWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 23] : default;
+        #region MaxTrainingLevel
+        private int _MaxTrainingLevelLocation => _DATALocation.Value + 0x5;
+        private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
+        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
+        #endregion
+        #region OneHandedWeight
+        private int _OneHandedWeightLocation => _DATALocation.Value + 0x6;
+        private bool _OneHandedWeight_IsSet => _DATALocation.HasValue;
+        public Byte OneHandedWeight => _OneHandedWeight_IsSet ? _data.Span[_OneHandedWeightLocation] : default;
+        #endregion
+        #region TwoHandedWeight
+        private int _TwoHandedWeightLocation => _DATALocation.Value + 0x7;
+        private bool _TwoHandedWeight_IsSet => _DATALocation.HasValue;
+        public Byte TwoHandedWeight => _TwoHandedWeight_IsSet ? _data.Span[_TwoHandedWeightLocation] : default;
+        #endregion
+        #region MarksmanWeight
+        private int _MarksmanWeightLocation => _DATALocation.Value + 0x8;
+        private bool _MarksmanWeight_IsSet => _DATALocation.HasValue;
+        public Byte MarksmanWeight => _MarksmanWeight_IsSet ? _data.Span[_MarksmanWeightLocation] : default;
+        #endregion
+        #region BlockWeight
+        private int _BlockWeightLocation => _DATALocation.Value + 0x9;
+        private bool _BlockWeight_IsSet => _DATALocation.HasValue;
+        public Byte BlockWeight => _BlockWeight_IsSet ? _data.Span[_BlockWeightLocation] : default;
+        #endregion
+        #region SmithingWeight
+        private int _SmithingWeightLocation => _DATALocation.Value + 0xA;
+        private bool _SmithingWeight_IsSet => _DATALocation.HasValue;
+        public Byte SmithingWeight => _SmithingWeight_IsSet ? _data.Span[_SmithingWeightLocation] : default;
+        #endregion
+        #region HeavyArmorWeight
+        private int _HeavyArmorWeightLocation => _DATALocation.Value + 0xB;
+        private bool _HeavyArmorWeight_IsSet => _DATALocation.HasValue;
+        public Byte HeavyArmorWeight => _HeavyArmorWeight_IsSet ? _data.Span[_HeavyArmorWeightLocation] : default;
+        #endregion
+        #region LightArmorWeight
+        private int _LightArmorWeightLocation => _DATALocation.Value + 0xC;
+        private bool _LightArmorWeight_IsSet => _DATALocation.HasValue;
+        public Byte LightArmorWeight => _LightArmorWeight_IsSet ? _data.Span[_LightArmorWeightLocation] : default;
+        #endregion
+        #region PickpocketWeight
+        private int _PickpocketWeightLocation => _DATALocation.Value + 0xD;
+        private bool _PickpocketWeight_IsSet => _DATALocation.HasValue;
+        public Byte PickpocketWeight => _PickpocketWeight_IsSet ? _data.Span[_PickpocketWeightLocation] : default;
+        #endregion
+        #region LockpickingWeight
+        private int _LockpickingWeightLocation => _DATALocation.Value + 0xE;
+        private bool _LockpickingWeight_IsSet => _DATALocation.HasValue;
+        public Byte LockpickingWeight => _LockpickingWeight_IsSet ? _data.Span[_LockpickingWeightLocation] : default;
+        #endregion
+        #region SneakWeight
+        private int _SneakWeightLocation => _DATALocation.Value + 0xF;
+        private bool _SneakWeight_IsSet => _DATALocation.HasValue;
+        public Byte SneakWeight => _SneakWeight_IsSet ? _data.Span[_SneakWeightLocation] : default;
+        #endregion
+        #region AlchemyWeight
+        private int _AlchemyWeightLocation => _DATALocation.Value + 0x10;
+        private bool _AlchemyWeight_IsSet => _DATALocation.HasValue;
+        public Byte AlchemyWeight => _AlchemyWeight_IsSet ? _data.Span[_AlchemyWeightLocation] : default;
+        #endregion
+        #region SpeechcraftWeight
+        private int _SpeechcraftWeightLocation => _DATALocation.Value + 0x11;
+        private bool _SpeechcraftWeight_IsSet => _DATALocation.HasValue;
+        public Byte SpeechcraftWeight => _SpeechcraftWeight_IsSet ? _data.Span[_SpeechcraftWeightLocation] : default;
+        #endregion
+        #region AlterationWeight
+        private int _AlterationWeightLocation => _DATALocation.Value + 0x12;
+        private bool _AlterationWeight_IsSet => _DATALocation.HasValue;
+        public Byte AlterationWeight => _AlterationWeight_IsSet ? _data.Span[_AlterationWeightLocation] : default;
+        #endregion
+        #region ConjurationWeight
+        private int _ConjurationWeightLocation => _DATALocation.Value + 0x13;
+        private bool _ConjurationWeight_IsSet => _DATALocation.HasValue;
+        public Byte ConjurationWeight => _ConjurationWeight_IsSet ? _data.Span[_ConjurationWeightLocation] : default;
+        #endregion
+        #region DestructionWeight
+        private int _DestructionWeightLocation => _DATALocation.Value + 0x14;
+        private bool _DestructionWeight_IsSet => _DATALocation.HasValue;
+        public Byte DestructionWeight => _DestructionWeight_IsSet ? _data.Span[_DestructionWeightLocation] : default;
+        #endregion
+        #region IllusionWeight
+        private int _IllusionWeightLocation => _DATALocation.Value + 0x15;
+        private bool _IllusionWeight_IsSet => _DATALocation.HasValue;
+        public Byte IllusionWeight => _IllusionWeight_IsSet ? _data.Span[_IllusionWeightLocation] : default;
+        #endregion
+        #region RestorationWeight
+        private int _RestorationWeightLocation => _DATALocation.Value + 0x16;
+        private bool _RestorationWeight_IsSet => _DATALocation.HasValue;
+        public Byte RestorationWeight => _RestorationWeight_IsSet ? _data.Span[_RestorationWeightLocation] : default;
+        #endregion
+        #region EnchantingWeight
+        private int _EnchantingWeightLocation => _DATALocation.Value + 0x17;
+        private bool _EnchantingWeight_IsSet => _DATALocation.HasValue;
+        public Byte EnchantingWeight => _EnchantingWeight_IsSet ? _data.Span[_EnchantingWeightLocation] : default;
+        #endregion
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation.Value + 0x18;
         private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
@@ -5537,10 +5678,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _VoicePoints_IsSet => _DATALocation.HasValue;
         public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_VoicePointsLocation, 4)) : default;
         #endregion
-        public Byte HealthWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 32] : default;
-        public Byte MagickaWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 33] : default;
-        public Byte StaminaWeight => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 34] : default;
-        public Byte Unknown2 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 35] : default;
+        #region HealthWeight
+        private int _HealthWeightLocation => _DATALocation.Value + 0x20;
+        private bool _HealthWeight_IsSet => _DATALocation.HasValue;
+        public Byte HealthWeight => _HealthWeight_IsSet ? _data.Span[_HealthWeightLocation] : default;
+        #endregion
+        #region MagickaWeight
+        private int _MagickaWeightLocation => _DATALocation.Value + 0x21;
+        private bool _MagickaWeight_IsSet => _DATALocation.HasValue;
+        public Byte MagickaWeight => _MagickaWeight_IsSet ? _data.Span[_MagickaWeightLocation] : default;
+        #endregion
+        #region StaminaWeight
+        private int _StaminaWeightLocation => _DATALocation.Value + 0x22;
+        private bool _StaminaWeight_IsSet => _DATALocation.HasValue;
+        public Byte StaminaWeight => _StaminaWeight_IsSet ? _data.Span[_StaminaWeightLocation] : default;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DATALocation.Value + 0x23;
+        private bool _Unknown2_IsSet => _DATALocation.HasValue;
+        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

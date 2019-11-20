@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IQuestInternal item)
+        public void Clear(IQuestInternal item)
         {
             ClearPartial();
             item.Script_Property.Unset();
@@ -1894,12 +1894,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IQuestInternal item,
+            IQuestGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IQuest item,
             IQuestGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2053,6 +2066,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IQuestInternal)item,
+                rhs: (IQuestGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IQuest)item,
+                rhs: (IQuestGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IQuestInternal)item,
+                rhs: (IQuestGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IQuest)item,
+                rhs: (IQuestGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -3660,7 +3725,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _DATALocation.HasValue;
         public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
         #endregion
-        public Byte Priority => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
+        #region Priority
+        private int _PriorityLocation => _DATALocation.Value + 0x1;
+        private bool _Priority_IsSet => _DATALocation.HasValue;
+        public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
+        #endregion
         public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
         public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryWrapper>.Instance;
         public IReadOnlySetList<IQuestTargetGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryWrapper>.Instance;

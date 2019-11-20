@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAIPackageLocation item)
+        public void Clear(IAIPackageLocation item)
         {
             ClearPartial();
             item.Type = default(AIPackageLocation.LocationType);

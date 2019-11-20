@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ICombatStyleInternal item)
+        public void Clear(ICombatStyleInternal item)
         {
             ClearPartial();
             item.DodgePercentChance = default(Byte);
@@ -3155,12 +3155,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            ICombatStyleInternal item,
+            ICombatStyleGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             ICombatStyle item,
             ICombatStyleGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -3341,6 +3354,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.CSTDDataTypeState = rhs.CSTDDataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ICombatStyleInternal)item,
+                rhs: (ICombatStyleGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ICombatStyle)item,
+                rhs: (ICombatStyleGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ICombatStyleInternal)item,
+                rhs: (ICombatStyleGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ICombatStyle)item,
+                rhs: (ICombatStyleGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -6518,8 +6583,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private int? _CSTDLocation;
         public CombatStyle.CSTDDataType CSTDDataTypeState { get; private set; }
-        public Byte DodgePercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 0] : default;
-        public Byte LeftRightPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 1] : default;
+        #region DodgePercentChance
+        private int _DodgePercentChanceLocation => _CSTDLocation.Value + 0x0;
+        private bool _DodgePercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte DodgePercentChance => _DodgePercentChance_IsSet ? _data.Span[_DodgePercentChanceLocation] : default;
+        #endregion
+        #region LeftRightPercentChance
+        private int _LeftRightPercentChanceLocation => _CSTDLocation.Value + 0x1;
+        private bool _LeftRightPercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte LeftRightPercentChance => _LeftRightPercentChance_IsSet ? _data.Span[_LeftRightPercentChanceLocation] : default;
+        #endregion
         #region DodgeLeftRightTimerMin
         private int _DodgeLeftRightTimerMinLocation => _CSTDLocation.Value + 0x4;
         private bool _DodgeLeftRightTimerMin_IsSet => _CSTDLocation.HasValue;
@@ -6560,8 +6633,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _IdleTimerMax_IsSet => _CSTDLocation.HasValue;
         public Single IdleTimerMax => _IdleTimerMax_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_IdleTimerMaxLocation, 4)) : default;
         #endregion
-        public Byte BlockPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 36] : default;
-        public Byte AttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 37] : default;
+        #region BlockPercentChance
+        private int _BlockPercentChanceLocation => _CSTDLocation.Value + 0x24;
+        private bool _BlockPercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte BlockPercentChance => _BlockPercentChance_IsSet ? _data.Span[_BlockPercentChanceLocation] : default;
+        #endregion
+        #region AttackPercentChance
+        private int _AttackPercentChanceLocation => _CSTDLocation.Value + 0x25;
+        private bool _AttackPercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte AttackPercentChance => _AttackPercentChance_IsSet ? _data.Span[_AttackPercentChanceLocation] : default;
+        #endregion
         #region RecoilStaggerBonusToAttack
         private int _RecoilStaggerBonusToAttackLocation => _CSTDLocation.Value + 0x28;
         private bool _RecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
@@ -6577,7 +6658,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _HandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
         public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_HandToHandBonusToAttackLocation, 4)) : default;
         #endregion
-        public Byte PowerAttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 52] : default;
+        #region PowerAttackPercentChance
+        private int _PowerAttackPercentChanceLocation => _CSTDLocation.Value + 0x34;
+        private bool _PowerAttackPercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackPercentChance => _PowerAttackPercentChance_IsSet ? _data.Span[_PowerAttackPercentChanceLocation] : default;
+        #endregion
         #region RecoilStaggerBonusToPowerAttack
         private int _RecoilStaggerBonusToPowerAttackLocation => _CSTDLocation.Value + 0x38;
         private bool _RecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
@@ -6588,11 +6673,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _UnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
         public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_UnconsciousBonusToPowerAttackLocation, 4)) : default;
         #endregion
-        public Byte PowerAttackNormal => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 64] : default;
-        public Byte PowerAttackForward => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 65] : default;
-        public Byte PowerAttackBack => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 66] : default;
-        public Byte PowerAttackLeft => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 67] : default;
-        public Byte PowerAttackRight => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 68] : default;
+        #region PowerAttackNormal
+        private int _PowerAttackNormalLocation => _CSTDLocation.Value + 0x40;
+        private bool _PowerAttackNormal_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackNormal => _PowerAttackNormal_IsSet ? _data.Span[_PowerAttackNormalLocation] : default;
+        #endregion
+        #region PowerAttackForward
+        private int _PowerAttackForwardLocation => _CSTDLocation.Value + 0x41;
+        private bool _PowerAttackForward_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackForward => _PowerAttackForward_IsSet ? _data.Span[_PowerAttackForwardLocation] : default;
+        #endregion
+        #region PowerAttackBack
+        private int _PowerAttackBackLocation => _CSTDLocation.Value + 0x42;
+        private bool _PowerAttackBack_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackBack => _PowerAttackBack_IsSet ? _data.Span[_PowerAttackBackLocation] : default;
+        #endregion
+        #region PowerAttackLeft
+        private int _PowerAttackLeftLocation => _CSTDLocation.Value + 0x43;
+        private bool _PowerAttackLeft_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackLeft => _PowerAttackLeft_IsSet ? _data.Span[_PowerAttackLeftLocation] : default;
+        #endregion
+        #region PowerAttackRight
+        private int _PowerAttackRightLocation => _CSTDLocation.Value + 0x44;
+        private bool _PowerAttackRight_IsSet => _CSTDLocation.HasValue;
+        public Byte PowerAttackRight => _PowerAttackRight_IsSet ? _data.Span[_PowerAttackRightLocation] : default;
+        #endregion
         #region HoldTimerMin
         private int _HoldTimerMinLocation => _CSTDLocation.Value + 0x48;
         private bool _HoldTimerMin_IsSet => _CSTDLocation.HasValue;
@@ -6608,7 +6713,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => GetFlagsIsSetCustom();
         public CombatStyle.Flag Flags => GetFlagsCustom();
         #endregion
-        public Byte AcrobaticDodgePercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 81] : default;
+        #region AcrobaticDodgePercentChance
+        private int _AcrobaticDodgePercentChanceLocation => _CSTDLocation.Value + 0x51;
+        private bool _AcrobaticDodgePercentChance_IsSet => _CSTDLocation.HasValue;
+        public Byte AcrobaticDodgePercentChance => _AcrobaticDodgePercentChance_IsSet ? _data.Span[_AcrobaticDodgePercentChanceLocation] : default;
+        #endregion
         #region RangeMultOptimal
         private int _RangeMultOptimalLocation => _CSTDLocation.Value + 0x54;
         private bool _RangeMultOptimal_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break0);
@@ -6644,7 +6753,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _GroupStandoffDistance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break2);
         public Single GroupStandoffDistance => _GroupStandoffDistance_IsSet ? SpanExt.GetFloat(_data.Span.Slice(_GroupStandoffDistanceLocation, 4)) : default;
         #endregion
-        public Byte RushingAttackPercentChance => _CSTDLocation.HasValue ? _data.Span[_CSTDLocation.Value + 112] : default;
+        #region RushingAttackPercentChance
+        private int _RushingAttackPercentChanceLocation => _CSTDLocation.Value + 0x70;
+        private bool _RushingAttackPercentChance_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);
+        public Byte RushingAttackPercentChance => _RushingAttackPercentChance_IsSet ? _data.Span[_RushingAttackPercentChanceLocation] : default;
+        #endregion
         #region RushingAttackDistanceMult
         private int _RushingAttackDistanceMultLocation => _CSTDLocation.Value + 0x74;
         private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue && !CSTDDataTypeState.HasFlag(CombatStyle.CSTDDataType.Break3);

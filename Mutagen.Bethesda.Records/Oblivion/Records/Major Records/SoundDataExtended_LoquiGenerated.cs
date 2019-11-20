@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISoundDataExtendedInternal item)
+        public void Clear(ISoundDataExtendedInternal item)
         {
             ClearPartial();
             item.StaticAttenuation = default(Single);
@@ -1237,12 +1237,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            ISoundDataExtendedInternal item,
+            ISoundDataExtendedInternalGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             ISoundDataExtended item,
             ISoundDataExtendedGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -1259,6 +1272,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.StartTime = rhs.StartTime;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISoundDataInternal item,
+            ISoundDataInternalGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISoundDataExtendedInternal)item,
+                rhs: (ISoundDataExtendedInternalGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            ISoundData item,
+            ISoundDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (ISoundDataExtended)item,
+                rhs: (ISoundDataExtendedGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion

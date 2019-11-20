@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IDistantLODData item)
+        public void Clear(IDistantLODData item)
         {
             ClearPartial();
             item.Unknown0 = default(Single);

@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IModStats item)
+        public void Clear(IModStats item)
         {
             ClearPartial();
             item.Version = default(Single);

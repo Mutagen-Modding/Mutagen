@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IEnableParent item)
+        public void Clear(IEnableParent item)
         {
             ClearPartial();
             item.Reference = default(IPlaced);

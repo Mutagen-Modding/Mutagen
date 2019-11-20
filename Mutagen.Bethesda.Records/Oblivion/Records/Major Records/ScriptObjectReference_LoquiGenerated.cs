@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IScriptObjectReference item)
+        public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
             item.Reference = default(OblivionMajorRecord);
@@ -1171,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((ScriptReferenceSetterTranslationCommon)((IScriptReferenceGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -1180,6 +1180,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Reference_Property.FormKey = rhs.Reference_Property.FormKey;
             }
+        }
+        
+        
+        public override void DeepCopyFieldsFrom(
+            IScriptReference item,
+            IScriptReferenceGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IScriptObjectReference)item,
+                rhs: (IScriptObjectReferenceGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion

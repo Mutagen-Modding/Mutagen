@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IClimateInternal item)
+        public void Clear(IClimateInternal item)
         {
             ClearPartial();
             item.Weathers.Unset();
@@ -1974,12 +1974,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IClimateInternal item,
+            IClimateGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IClimate item,
             IClimateGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2116,6 +2129,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.TNAMDataTypeState = rhs.TNAMDataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClimateInternal)item,
+                rhs: (IClimateGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClimate)item,
+                rhs: (IClimateGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClimateInternal)item,
+                rhs: (IClimateGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IClimate)item,
+                rhs: (IClimateGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -3989,7 +4054,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _SunsetEnd_IsSet => GetSunsetEndIsSetCustom();
         public DateTime SunsetEnd => GetSunsetEndCustom();
         #endregion
-        public Byte Volatility => _TNAMLocation.HasValue ? _data.Span[_TNAMLocation.Value + 4] : default;
+        #region Volatility
+        private int _VolatilityLocation => _TNAMLocation.Value + 0x4;
+        private bool _Volatility_IsSet => _TNAMLocation.HasValue;
+        public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
+        #endregion
         #region Phase
         private int _PhaseLocation => _TNAMLocation.Value + 0x5;
         private bool _Phase_IsSet => GetPhaseIsSetCustom();

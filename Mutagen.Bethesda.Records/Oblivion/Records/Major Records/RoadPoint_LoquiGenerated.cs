@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRoadPoint item)
+        public void Clear(IRoadPoint item)
         {
             ClearPartial();
             item.Point = default(P3Float);

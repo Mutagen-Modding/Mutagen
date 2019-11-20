@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IFloraInternal item)
+        public void Clear(IFloraInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -1765,12 +1765,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IFloraInternal item,
+            IFloraGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IFlora item,
             IFloraGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -1881,6 +1894,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.PFPCDataTypeState = rhs.PFPCDataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IFloraInternal)item,
+                rhs: (IFloraGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IFlora)item,
+                rhs: (IFloraGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IFloraInternal)item,
+                rhs: (IFloraGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IFlora)item,
+                rhs: (IFloraGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -3165,10 +3230,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _PFPCLocation;
         public Flora.PFPCDataType PFPCDataTypeState { get; private set; }
-        public Byte Spring => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 0] : default;
-        public Byte Summer => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 1] : default;
-        public Byte Fall => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 2] : default;
-        public Byte Winter => _PFPCLocation.HasValue ? _data.Span[_PFPCLocation.Value + 3] : default;
+        #region Spring
+        private int _SpringLocation => _PFPCLocation.Value + 0x0;
+        private bool _Spring_IsSet => _PFPCLocation.HasValue;
+        public Byte Spring => _Spring_IsSet ? _data.Span[_SpringLocation] : default;
+        #endregion
+        #region Summer
+        private int _SummerLocation => _PFPCLocation.Value + 0x1;
+        private bool _Summer_IsSet => _PFPCLocation.HasValue;
+        public Byte Summer => _Summer_IsSet ? _data.Span[_SummerLocation] : default;
+        #endregion
+        #region Fall
+        private int _FallLocation => _PFPCLocation.Value + 0x2;
+        private bool _Fall_IsSet => _PFPCLocation.HasValue;
+        public Byte Fall => _Fall_IsSet ? _data.Span[_FallLocation] : default;
+        #endregion
+        #region Winter
+        private int _WinterLocation => _PFPCLocation.Value + 0x3;
+        private bool _Winter_IsSet => _PFPCLocation.HasValue;
+        public Byte Winter => _Winter_IsSet ? _data.Span[_WinterLocation] : default;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

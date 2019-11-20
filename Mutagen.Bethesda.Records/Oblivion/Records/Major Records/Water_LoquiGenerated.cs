@@ -2111,7 +2111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IWaterInternal item)
+        public void Clear(IWaterInternal item)
         {
             ClearPartial();
             item.Texture_Unset();
@@ -3188,12 +3188,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IWaterInternal item,
+            IWaterGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IWater item,
             IWaterGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -3447,6 +3460,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -6573,7 +6638,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _ReflectionColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
         public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Span.Slice(_ReflectionColorLocation, 4).ReadColor() : default;
         #endregion
-        public Byte TextureBlend => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 56] : default;
+        #region TextureBlend
+        private int _TextureBlendLocation => _DATALocation.Value + 0x38;
+        private bool _TextureBlend_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
+        public Byte TextureBlend => _TextureBlend_IsSet ? _data.Span[_TextureBlendLocation] : default;
+        #endregion
         #region OilCustomLogic
         partial void OilCustomLogicCustomParse(
             BinaryMemoryReadStream stream,

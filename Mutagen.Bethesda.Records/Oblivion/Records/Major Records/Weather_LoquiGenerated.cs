@@ -2188,7 +2188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IWeatherInternal item)
+        public void Clear(IWeatherInternal item)
         {
             ClearPartial();
             item.TextureLowerLayer_Unset();
@@ -3299,12 +3299,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IWeatherInternal item,
+            IWeatherGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IWeather item,
             IWeatherGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -3569,6 +3582,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWeatherInternal)item,
+                rhs: (IWeatherGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWeather)item,
+                rhs: (IWeatherGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWeatherInternal)item,
+                rhs: (IWeatherGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IWeather)item,
+                rhs: (IWeatherGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -7079,17 +7144,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
-        public Byte WindSpeed => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
-        public Byte CloudSpeedLower => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
-        public Byte CloudSpeedUpper => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
-        public Byte TransDelta => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
-        public Byte SunGlare => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 4] : default;
-        public Byte SunDamage => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 5] : default;
-        public Byte PrecipitationBeginFadeIn => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 6] : default;
-        public Byte PrecipitationEndFadeOut => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 7] : default;
-        public Byte ThunderLightningBeginFadeIn => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 8] : default;
-        public Byte ThunderLightningEndFadeOut => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 9] : default;
-        public Byte ThunderLightningFrequency => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 10] : default;
+        #region WindSpeed
+        private int _WindSpeedLocation => _DATALocation.Value + 0x0;
+        private bool _WindSpeed_IsSet => _DATALocation.HasValue;
+        public Byte WindSpeed => _WindSpeed_IsSet ? _data.Span[_WindSpeedLocation] : default;
+        #endregion
+        #region CloudSpeedLower
+        private int _CloudSpeedLowerLocation => _DATALocation.Value + 0x1;
+        private bool _CloudSpeedLower_IsSet => _DATALocation.HasValue;
+        public Byte CloudSpeedLower => _CloudSpeedLower_IsSet ? _data.Span[_CloudSpeedLowerLocation] : default;
+        #endregion
+        #region CloudSpeedUpper
+        private int _CloudSpeedUpperLocation => _DATALocation.Value + 0x2;
+        private bool _CloudSpeedUpper_IsSet => _DATALocation.HasValue;
+        public Byte CloudSpeedUpper => _CloudSpeedUpper_IsSet ? _data.Span[_CloudSpeedUpperLocation] : default;
+        #endregion
+        #region TransDelta
+        private int _TransDeltaLocation => _DATALocation.Value + 0x3;
+        private bool _TransDelta_IsSet => _DATALocation.HasValue;
+        public Byte TransDelta => _TransDelta_IsSet ? _data.Span[_TransDeltaLocation] : default;
+        #endregion
+        #region SunGlare
+        private int _SunGlareLocation => _DATALocation.Value + 0x4;
+        private bool _SunGlare_IsSet => _DATALocation.HasValue;
+        public Byte SunGlare => _SunGlare_IsSet ? _data.Span[_SunGlareLocation] : default;
+        #endregion
+        #region SunDamage
+        private int _SunDamageLocation => _DATALocation.Value + 0x5;
+        private bool _SunDamage_IsSet => _DATALocation.HasValue;
+        public Byte SunDamage => _SunDamage_IsSet ? _data.Span[_SunDamageLocation] : default;
+        #endregion
+        #region PrecipitationBeginFadeIn
+        private int _PrecipitationBeginFadeInLocation => _DATALocation.Value + 0x6;
+        private bool _PrecipitationBeginFadeIn_IsSet => _DATALocation.HasValue;
+        public Byte PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? _data.Span[_PrecipitationBeginFadeInLocation] : default;
+        #endregion
+        #region PrecipitationEndFadeOut
+        private int _PrecipitationEndFadeOutLocation => _DATALocation.Value + 0x7;
+        private bool _PrecipitationEndFadeOut_IsSet => _DATALocation.HasValue;
+        public Byte PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? _data.Span[_PrecipitationEndFadeOutLocation] : default;
+        #endregion
+        #region ThunderLightningBeginFadeIn
+        private int _ThunderLightningBeginFadeInLocation => _DATALocation.Value + 0x8;
+        private bool _ThunderLightningBeginFadeIn_IsSet => _DATALocation.HasValue;
+        public Byte ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? _data.Span[_ThunderLightningBeginFadeInLocation] : default;
+        #endregion
+        #region ThunderLightningEndFadeOut
+        private int _ThunderLightningEndFadeOutLocation => _DATALocation.Value + 0x9;
+        private bool _ThunderLightningEndFadeOut_IsSet => _DATALocation.HasValue;
+        public Byte ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? _data.Span[_ThunderLightningEndFadeOutLocation] : default;
+        #endregion
+        #region ThunderLightningFrequency
+        private int _ThunderLightningFrequencyLocation => _DATALocation.Value + 0xA;
+        private bool _ThunderLightningFrequency_IsSet => _DATALocation.HasValue;
+        public Byte ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? _data.Span[_ThunderLightningFrequencyLocation] : default;
+        #endregion
         #region Classification
         private int _ClassificationLocation => _DATALocation.Value + 0xB;
         private bool _Classification_IsSet => _DATALocation.HasValue;

@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IHavokData item)
+        public void Clear(IHavokData item)
         {
             ClearPartial();
             item.Material = default(HavokData.MaterialType);

@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ILoadScreenLocation item)
+        public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
             item.Direct = default(Place);

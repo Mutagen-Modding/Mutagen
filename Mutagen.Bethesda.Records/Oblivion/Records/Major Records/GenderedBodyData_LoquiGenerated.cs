@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGenderedBodyData item)
+        public void Clear(IGenderedBodyData item)
         {
             ClearPartial();
             item.Male_Unset();

@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAIPackageTarget item)
+        public void Clear(IAIPackageTarget item)
         {
             ClearPartial();
             item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);

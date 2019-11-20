@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMagicEffectSubData item)
+        public void Clear(IMagicEffectSubData item)
         {
             ClearPartial();
             item.EnchantEffect = default(EffectShader);

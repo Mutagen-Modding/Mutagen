@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IPointToReferenceMapping item)
+        public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
             item.Reference = default(IPlaced);

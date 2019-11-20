@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
         }
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter>(
+            return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IListGroup<T> item)
+        public void Clear(IListGroup<T> item)
         {
             ClearPartial();
             item.GroupType = default(GroupTypeEnum);
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T_ErrMask : CellBlock_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : CellBlock_TranslationMask, ITranslationMask, new()
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
-            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            ListGroup<T> ret = (ListGroup<T>)((ListGroupCommon<TGetter>)((IListGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter>(
                 item,
                 errorMask: errorMask,

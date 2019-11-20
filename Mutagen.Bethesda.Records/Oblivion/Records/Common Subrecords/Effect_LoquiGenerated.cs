@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IEffect item)
+        public void Clear(IEffect item)
         {
             ClearPartial();
             item.MagicEffect = default(MagicEffect);

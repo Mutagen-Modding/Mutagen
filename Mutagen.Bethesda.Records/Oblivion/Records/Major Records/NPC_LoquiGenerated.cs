@@ -3232,7 +3232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(INPCInternal item)
+        public void Clear(INPCInternal item)
         {
             ClearPartial();
             item.Name_Unset();
@@ -4915,12 +4915,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            INPCInternal item,
+            INPCGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             INPC item,
             INPCGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -5537,6 +5550,110 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            INPCAbstractInternal item,
+            INPCAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPCInternal)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            INPCAbstract item,
+            INPCAbstractGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPC)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            INPCSpawnInternal item,
+            INPCSpawnGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPCInternal)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            INPCSpawn item,
+            INPCSpawnGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPC)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPCInternal)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPC)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPCInternal)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (INPC)item,
+                rhs: (INPCGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -11154,10 +11271,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
         private int? _AIDTLocation;
         public NPC.AIDTDataType AIDTDataTypeState { get; private set; }
-        public Byte Aggression => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 0] : default;
-        public Byte Confidence => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 1] : default;
-        public Byte EnergyLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 2] : default;
-        public Byte Responsibility => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 3] : default;
+        #region Aggression
+        private int _AggressionLocation => _AIDTLocation.Value + 0x0;
+        private bool _Aggression_IsSet => _AIDTLocation.HasValue;
+        public Byte Aggression => _Aggression_IsSet ? _data.Span[_AggressionLocation] : default;
+        #endregion
+        #region Confidence
+        private int _ConfidenceLocation => _AIDTLocation.Value + 0x1;
+        private bool _Confidence_IsSet => _AIDTLocation.HasValue;
+        public Byte Confidence => _Confidence_IsSet ? _data.Span[_ConfidenceLocation] : default;
+        #endregion
+        #region EnergyLevel
+        private int _EnergyLevelLocation => _AIDTLocation.Value + 0x2;
+        private bool _EnergyLevel_IsSet => _AIDTLocation.HasValue;
+        public Byte EnergyLevel => _EnergyLevel_IsSet ? _data.Span[_EnergyLevelLocation] : default;
+        #endregion
+        #region Responsibility
+        private int _ResponsibilityLocation => _AIDTLocation.Value + 0x3;
+        private bool _Responsibility_IsSet => _AIDTLocation.HasValue;
+        public Byte Responsibility => _Responsibility_IsSet ? _data.Span[_ResponsibilityLocation] : default;
+        #endregion
         #region BuySellServices
         private int _BuySellServicesLocation => _AIDTLocation.Value + 0x4;
         private bool _BuySellServices_IsSet => _AIDTLocation.HasValue;
@@ -11168,7 +11301,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Teaches_IsSet => _AIDTLocation.HasValue;
         public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
         #endregion
-        public Byte MaximumTrainingLevel => _AIDTLocation.HasValue ? _data.Span[_AIDTLocation.Value + 9] : default;
+        #region MaximumTrainingLevel
+        private int _MaximumTrainingLevelLocation => _AIDTLocation.Value + 0x9;
+        private bool _MaximumTrainingLevel_IsSet => _AIDTLocation.HasValue;
+        public Byte MaximumTrainingLevel => _MaximumTrainingLevel_IsSet ? _data.Span[_MaximumTrainingLevelLocation] : default;
+        #endregion
         #region Fluff
         private int _FluffLocation => _AIDTLocation.Value + 0xA;
         private bool _Fluff_IsSet => _AIDTLocation.HasValue;
@@ -11184,40 +11321,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public NPC.DATADataType DATADataTypeState { get; private set; }
-        public Byte Armorer => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
-        public Byte Athletics => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
-        public Byte Blade => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
-        public Byte Block => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
-        public Byte Blunt => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 4] : default;
-        public Byte HandToHand => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 5] : default;
-        public Byte HeavyArmor => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 6] : default;
-        public Byte Alchemy => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 7] : default;
-        public Byte Alteration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 8] : default;
-        public Byte Conjuration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 9] : default;
-        public Byte Destruction => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 10] : default;
-        public Byte Illusion => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 11] : default;
-        public Byte Mysticism => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 12] : default;
-        public Byte Restoration => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 13] : default;
-        public Byte Acrobatics => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 14] : default;
-        public Byte LightArmor => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 15] : default;
-        public Byte Marksman => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 16] : default;
-        public Byte Mercantile => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 17] : default;
-        public Byte Security => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 18] : default;
-        public Byte Sneak => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 19] : default;
-        public Byte Speechcraft => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 20] : default;
+        #region Armorer
+        private int _ArmorerLocation => _DATALocation.Value + 0x0;
+        private bool _Armorer_IsSet => _DATALocation.HasValue;
+        public Byte Armorer => _Armorer_IsSet ? _data.Span[_ArmorerLocation] : default;
+        #endregion
+        #region Athletics
+        private int _AthleticsLocation => _DATALocation.Value + 0x1;
+        private bool _Athletics_IsSet => _DATALocation.HasValue;
+        public Byte Athletics => _Athletics_IsSet ? _data.Span[_AthleticsLocation] : default;
+        #endregion
+        #region Blade
+        private int _BladeLocation => _DATALocation.Value + 0x2;
+        private bool _Blade_IsSet => _DATALocation.HasValue;
+        public Byte Blade => _Blade_IsSet ? _data.Span[_BladeLocation] : default;
+        #endregion
+        #region Block
+        private int _BlockLocation => _DATALocation.Value + 0x3;
+        private bool _Block_IsSet => _DATALocation.HasValue;
+        public Byte Block => _Block_IsSet ? _data.Span[_BlockLocation] : default;
+        #endregion
+        #region Blunt
+        private int _BluntLocation => _DATALocation.Value + 0x4;
+        private bool _Blunt_IsSet => _DATALocation.HasValue;
+        public Byte Blunt => _Blunt_IsSet ? _data.Span[_BluntLocation] : default;
+        #endregion
+        #region HandToHand
+        private int _HandToHandLocation => _DATALocation.Value + 0x5;
+        private bool _HandToHand_IsSet => _DATALocation.HasValue;
+        public Byte HandToHand => _HandToHand_IsSet ? _data.Span[_HandToHandLocation] : default;
+        #endregion
+        #region HeavyArmor
+        private int _HeavyArmorLocation => _DATALocation.Value + 0x6;
+        private bool _HeavyArmor_IsSet => _DATALocation.HasValue;
+        public Byte HeavyArmor => _HeavyArmor_IsSet ? _data.Span[_HeavyArmorLocation] : default;
+        #endregion
+        #region Alchemy
+        private int _AlchemyLocation => _DATALocation.Value + 0x7;
+        private bool _Alchemy_IsSet => _DATALocation.HasValue;
+        public Byte Alchemy => _Alchemy_IsSet ? _data.Span[_AlchemyLocation] : default;
+        #endregion
+        #region Alteration
+        private int _AlterationLocation => _DATALocation.Value + 0x8;
+        private bool _Alteration_IsSet => _DATALocation.HasValue;
+        public Byte Alteration => _Alteration_IsSet ? _data.Span[_AlterationLocation] : default;
+        #endregion
+        #region Conjuration
+        private int _ConjurationLocation => _DATALocation.Value + 0x9;
+        private bool _Conjuration_IsSet => _DATALocation.HasValue;
+        public Byte Conjuration => _Conjuration_IsSet ? _data.Span[_ConjurationLocation] : default;
+        #endregion
+        #region Destruction
+        private int _DestructionLocation => _DATALocation.Value + 0xA;
+        private bool _Destruction_IsSet => _DATALocation.HasValue;
+        public Byte Destruction => _Destruction_IsSet ? _data.Span[_DestructionLocation] : default;
+        #endregion
+        #region Illusion
+        private int _IllusionLocation => _DATALocation.Value + 0xB;
+        private bool _Illusion_IsSet => _DATALocation.HasValue;
+        public Byte Illusion => _Illusion_IsSet ? _data.Span[_IllusionLocation] : default;
+        #endregion
+        #region Mysticism
+        private int _MysticismLocation => _DATALocation.Value + 0xC;
+        private bool _Mysticism_IsSet => _DATALocation.HasValue;
+        public Byte Mysticism => _Mysticism_IsSet ? _data.Span[_MysticismLocation] : default;
+        #endregion
+        #region Restoration
+        private int _RestorationLocation => _DATALocation.Value + 0xD;
+        private bool _Restoration_IsSet => _DATALocation.HasValue;
+        public Byte Restoration => _Restoration_IsSet ? _data.Span[_RestorationLocation] : default;
+        #endregion
+        #region Acrobatics
+        private int _AcrobaticsLocation => _DATALocation.Value + 0xE;
+        private bool _Acrobatics_IsSet => _DATALocation.HasValue;
+        public Byte Acrobatics => _Acrobatics_IsSet ? _data.Span[_AcrobaticsLocation] : default;
+        #endregion
+        #region LightArmor
+        private int _LightArmorLocation => _DATALocation.Value + 0xF;
+        private bool _LightArmor_IsSet => _DATALocation.HasValue;
+        public Byte LightArmor => _LightArmor_IsSet ? _data.Span[_LightArmorLocation] : default;
+        #endregion
+        #region Marksman
+        private int _MarksmanLocation => _DATALocation.Value + 0x10;
+        private bool _Marksman_IsSet => _DATALocation.HasValue;
+        public Byte Marksman => _Marksman_IsSet ? _data.Span[_MarksmanLocation] : default;
+        #endregion
+        #region Mercantile
+        private int _MercantileLocation => _DATALocation.Value + 0x11;
+        private bool _Mercantile_IsSet => _DATALocation.HasValue;
+        public Byte Mercantile => _Mercantile_IsSet ? _data.Span[_MercantileLocation] : default;
+        #endregion
+        #region Security
+        private int _SecurityLocation => _DATALocation.Value + 0x12;
+        private bool _Security_IsSet => _DATALocation.HasValue;
+        public Byte Security => _Security_IsSet ? _data.Span[_SecurityLocation] : default;
+        #endregion
+        #region Sneak
+        private int _SneakLocation => _DATALocation.Value + 0x13;
+        private bool _Sneak_IsSet => _DATALocation.HasValue;
+        public Byte Sneak => _Sneak_IsSet ? _data.Span[_SneakLocation] : default;
+        #endregion
+        #region Speechcraft
+        private int _SpeechcraftLocation => _DATALocation.Value + 0x14;
+        private bool _Speechcraft_IsSet => _DATALocation.HasValue;
+        public Byte Speechcraft => _Speechcraft_IsSet ? _data.Span[_SpeechcraftLocation] : default;
+        #endregion
         #region Health
         private int _HealthLocation => _DATALocation.Value + 0x15;
         private bool _Health_IsSet => _DATALocation.HasValue;
         public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HealthLocation, 4)) : default;
         #endregion
-        public Byte Strength => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 25] : default;
-        public Byte Intelligence => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 26] : default;
-        public Byte Willpower => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 27] : default;
-        public Byte Agility => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 28] : default;
-        public Byte Speed => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 29] : default;
-        public Byte Endurance => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 30] : default;
-        public Byte Personality => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 31] : default;
-        public Byte Luck => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 32] : default;
+        #region Strength
+        private int _StrengthLocation => _DATALocation.Value + 0x19;
+        private bool _Strength_IsSet => _DATALocation.HasValue;
+        public Byte Strength => _Strength_IsSet ? _data.Span[_StrengthLocation] : default;
+        #endregion
+        #region Intelligence
+        private int _IntelligenceLocation => _DATALocation.Value + 0x1A;
+        private bool _Intelligence_IsSet => _DATALocation.HasValue;
+        public Byte Intelligence => _Intelligence_IsSet ? _data.Span[_IntelligenceLocation] : default;
+        #endregion
+        #region Willpower
+        private int _WillpowerLocation => _DATALocation.Value + 0x1B;
+        private bool _Willpower_IsSet => _DATALocation.HasValue;
+        public Byte Willpower => _Willpower_IsSet ? _data.Span[_WillpowerLocation] : default;
+        #endregion
+        #region Agility
+        private int _AgilityLocation => _DATALocation.Value + 0x1C;
+        private bool _Agility_IsSet => _DATALocation.HasValue;
+        public Byte Agility => _Agility_IsSet ? _data.Span[_AgilityLocation] : default;
+        #endregion
+        #region Speed
+        private int _SpeedLocation => _DATALocation.Value + 0x1D;
+        private bool _Speed_IsSet => _DATALocation.HasValue;
+        public Byte Speed => _Speed_IsSet ? _data.Span[_SpeedLocation] : default;
+        #endregion
+        #region Endurance
+        private int _EnduranceLocation => _DATALocation.Value + 0x1E;
+        private bool _Endurance_IsSet => _DATALocation.HasValue;
+        public Byte Endurance => _Endurance_IsSet ? _data.Span[_EnduranceLocation] : default;
+        #endregion
+        #region Personality
+        private int _PersonalityLocation => _DATALocation.Value + 0x1F;
+        private bool _Personality_IsSet => _DATALocation.HasValue;
+        public Byte Personality => _Personality_IsSet ? _data.Span[_PersonalityLocation] : default;
+        #endregion
+        #region Luck
+        private int _LuckLocation => _DATALocation.Value + 0x20;
+        private bool _Luck_IsSet => _DATALocation.HasValue;
+        public Byte Luck => _Luck_IsSet ? _data.Span[_LuckLocation] : default;
+        #endregion
         #region Hair
         private int? _HairLocation;
         public bool Hair_IsSet => _HairLocation.HasValue;

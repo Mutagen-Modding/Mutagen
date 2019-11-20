@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IDataFolderLocations item)
+        public void Clear(IDataFolderLocations item)
         {
             ClearPartial();
             item.Oblivion = default(String);

@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IScriptEffect item)
+        public void Clear(IScriptEffect item)
         {
             ClearPartial();
             item.Script = default(Script);

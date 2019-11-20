@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
+            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_TranslMask>(
                 item: item,
                 copyMask: copyMask);
         }
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
+            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter, T_ErrMask, T_TranslMask>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            return ((GroupSetterTranslationCommon)((IGroupGetter<T>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter>(
+            return ((GroupSetterTranslationCommon)((IGroupGetter<TGetter>)item).CommonSetterTranslationInstance()).DeepCopy<T, TGetter>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGroup<T> item)
+        public void Clear(IGroup<T> item)
         {
             ClearPartial();
             item.GroupType = default(GroupTypeEnum);
@@ -1457,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
                 item,
                 copyMask: copyMask);
@@ -1473,7 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
                 item,
                 errorMask: out errorMask,
@@ -1488,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            Group<T> ret = (Group<T>)((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance()).GetNew<T>();
+            Group<T> ret = (Group<T>)((GroupCommon<TGetter>)((IGroupGetter<TGetter>)item).CommonInstance()).GetNew<T>();
             ret.DeepCopyFieldsFrom<T, TGetter>(
                 item,
                 errorMask: errorMask,

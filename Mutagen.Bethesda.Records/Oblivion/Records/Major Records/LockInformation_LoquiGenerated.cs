@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ILockInformation item)
+        public void Clear(ILockInformation item)
         {
             ClearPartial();
             item.LockLevel = default(Byte);

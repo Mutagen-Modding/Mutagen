@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ICellLighting item)
+        public void Clear(ICellLighting item)
         {
             ClearPartial();
             item.AmbientColor = default(Color);

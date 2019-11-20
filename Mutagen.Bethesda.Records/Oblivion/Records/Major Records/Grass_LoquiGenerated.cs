@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGrassInternal item)
+        public void Clear(IGrassInternal item)
         {
             ClearPartial();
             item.Model_Unset();
@@ -1929,12 +1929,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyFieldsFrom(
+            IGrassInternal item,
+            IGrassGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            base.DeepCopyFieldsFrom(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
+        
+        public void DeepCopyFieldsFrom(
             IGrass item,
             IGrassGetter rhs,
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
-            ((OblivionMajorRecordSetterTranslationCommon)((IOblivionMajorRecordGetter)item).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+            base.DeepCopyFieldsFrom(
                 item,
                 rhs,
                 errorMask,
@@ -2019,6 +2032,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecordInternal item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGrassInternal)item,
+                rhs: (IGrassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IOblivionMajorRecord item,
+            IOblivionMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGrass)item,
+                rhs: (IGrassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGrassInternal)item,
+                rhs: (IGrassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyFieldsFrom(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            this.DeepCopyFieldsFrom(
+                item: (IGrass)item,
+                rhs: (IGrassGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         #endregion
@@ -3617,10 +3682,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Grass.DATADataType DATADataTypeState { get; private set; }
-        public Byte Density => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 0] : default;
-        public Byte MinSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 1] : default;
-        public Byte MaxSlope => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 2] : default;
-        public Byte Fluff1 => _DATALocation.HasValue ? _data.Span[_DATALocation.Value + 3] : default;
+        #region Density
+        private int _DensityLocation => _DATALocation.Value + 0x0;
+        private bool _Density_IsSet => _DATALocation.HasValue;
+        public Byte Density => _Density_IsSet ? _data.Span[_DensityLocation] : default;
+        #endregion
+        #region MinSlope
+        private int _MinSlopeLocation => _DATALocation.Value + 0x1;
+        private bool _MinSlope_IsSet => _DATALocation.HasValue;
+        public Byte MinSlope => _MinSlope_IsSet ? _data.Span[_MinSlopeLocation] : default;
+        #endregion
+        #region MaxSlope
+        private int _MaxSlopeLocation => _DATALocation.Value + 0x2;
+        private bool _MaxSlope_IsSet => _DATALocation.HasValue;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _data.Span[_MaxSlopeLocation] : default;
+        #endregion
+        #region Fluff1
+        private int _Fluff1Location => _DATALocation.Value + 0x3;
+        private bool _Fluff1_IsSet => _DATALocation.HasValue;
+        public Byte Fluff1 => _Fluff1_IsSet ? _data.Span[_Fluff1Location] : default;
+        #endregion
         #region UnitFromWaterAmount
         private int _UnitFromWaterAmountLocation => _DATALocation.Value + 0x4;
         private bool _UnitFromWaterAmount_IsSet => _DATALocation.HasValue;

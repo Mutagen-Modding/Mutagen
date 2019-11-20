@@ -1087,7 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ILocalVariable item)
+        public void Clear(ILocalVariable item)
         {
             ClearPartial();
             item.Index = default(Int32);

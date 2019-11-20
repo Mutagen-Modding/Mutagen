@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IPathGridPoint item)
+        public void Clear(IPathGridPoint item)
         {
             ClearPartial();
             item.Point = default(P3Float);

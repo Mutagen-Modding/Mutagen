@@ -1000,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAIPackageSchedule item)
+        public void Clear(IAIPackageSchedule item)
         {
             ClearPartial();
             item.Month = default(Month);

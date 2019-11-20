@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMapMarker item)
+        public void Clear(IMapMarker item)
         {
             ClearPartial();
             item.Flags_Unset();

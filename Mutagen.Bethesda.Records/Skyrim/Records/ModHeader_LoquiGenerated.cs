@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IModHeader item)
+        public void Clear(IModHeader item)
         {
             ClearPartial();
             item.Flags = default(ModHeader.HeaderFlag);

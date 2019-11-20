@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRelatedWaters item)
+        public void Clear(IRelatedWaters item)
         {
             ClearPartial();
             item.RelatedWaterDaytime = default(Water);

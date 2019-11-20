@@ -4613,7 +4613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IOblivionMod item)
+        public void Clear(IOblivionMod item)
         {
             ClearPartial();
         }

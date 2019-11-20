@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IModel item)
+        public void Clear(IModel item)
         {
             ClearPartial();
             item.File = default(String);

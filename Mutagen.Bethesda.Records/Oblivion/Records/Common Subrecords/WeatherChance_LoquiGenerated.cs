@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IWeatherChance item)
+        public void Clear(IWeatherChance item)
         {
             ClearPartial();
             item.Weather = default(Weather);

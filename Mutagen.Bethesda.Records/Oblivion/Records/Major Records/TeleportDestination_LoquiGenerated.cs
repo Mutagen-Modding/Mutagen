@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ITeleportDestination item)
+        public void Clear(ITeleportDestination item)
         {
             ClearPartial();
             item.Destination = default(IPlaced);

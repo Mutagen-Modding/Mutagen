@@ -1517,7 +1517,24 @@ namespace Mutagen.Bethesda.Internals
         public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public virtual void DeepCopyFieldsFrom(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+            {
+                item.FormKey = rhs.FormKey;
+            }
+            DeepCopyFieldsFrom(
+                (IMajorRecord)item,
+                (IMajorRecordGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public virtual void DeepCopyFieldsFrom(
             IMajorRecord item,
             IMajorRecordGetter rhs,
             ErrorMaskBuilder errorMask,

@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IDecal item)
+        public void Clear(IDecal item)
         {
             ClearPartial();
             item.MinWidth = default(Single);

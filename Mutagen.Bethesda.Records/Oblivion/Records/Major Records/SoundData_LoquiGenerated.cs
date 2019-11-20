@@ -1237,7 +1237,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly SoundDataSetterTranslationCommon Instance = new SoundDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public virtual void DeepCopyFieldsFrom(
+            ISoundDataInternal item,
+            ISoundDataInternalGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            DeepCopyFieldsFrom(
+                (ISoundData)item,
+                (ISoundDataGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public virtual void DeepCopyFieldsFrom(
             ISoundData item,
             ISoundDataGetter rhs,
             ErrorMaskBuilder errorMask,

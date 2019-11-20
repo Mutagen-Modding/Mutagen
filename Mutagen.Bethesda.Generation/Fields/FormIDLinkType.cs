@@ -227,7 +227,17 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.FormKey)");
+            switch (this.FormIDType)
+            {
+                case FormIDTypeEnum.Normal:
+                    fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.FormKey)");
+                    break;
+                case FormIDTypeEnum.EDIDChars:
+                    fg.AppendLine($"(r) => new {DirectTypeName(getter: false)}(r.EDID)");
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

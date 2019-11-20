@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IFacePart item)
+        public void Clear(IFacePart item)
         {
             ClearPartial();
             item.Index_Unset();

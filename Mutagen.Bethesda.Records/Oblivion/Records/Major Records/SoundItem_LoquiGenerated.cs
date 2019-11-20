@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISoundItem item)
+        public void Clear(ISoundItem item)
         {
             ClearPartial();
             item.Sound_Property.Unset();

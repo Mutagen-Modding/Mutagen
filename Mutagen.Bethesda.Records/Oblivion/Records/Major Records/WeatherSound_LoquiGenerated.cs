@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IWeatherSound item)
+        public void Clear(IWeatherSound item)
         {
             ClearPartial();
             item.Sound = default(Sound);

@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>be189bfdbbd2f7a0b6842e52f427b68a93f2b838</Sha>
+         <Sha>0eca3e7dd5b491635096cc6991c8f03f3ce325e2</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-06-2019 17:26:24</CommitDate>
-         <Description>ListExt.SetTo /w converter</Description>
+         <CommitDate>11-19-2019 18:17:02</CommitDate>
+         <Description>Missing ISetList.SetTo override</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>bb69f859e8cbdcaf6acd2be6417f70dfafe818f7</Sha>
+         <Sha>fd5a03918eaaa7f3471cdeafd7138e376f41385f</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-17-2019 20:50:56</CommitDate>
-         <Description>Loqui Deep copy with interface reftype</Description>
+         <CommitDate>11-19-2019 19:19:43</CommitDate>
+         <Description>DeepCopy fixes</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

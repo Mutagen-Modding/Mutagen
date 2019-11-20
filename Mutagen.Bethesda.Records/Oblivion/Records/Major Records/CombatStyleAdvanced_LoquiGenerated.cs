@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(ICombatStyleAdvanced item)
+        public void Clear(ICombatStyleAdvanced item)
         {
             ClearPartial();
             item.DodgeFatigueModMult = default(Single);

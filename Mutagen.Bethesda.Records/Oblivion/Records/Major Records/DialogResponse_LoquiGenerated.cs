@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IDialogResponse item)
+        public void Clear(IDialogResponse item)
         {
             ClearPartial();
             item.Emotion = default(EmotionType);
@@ -2917,7 +2917,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Fluff1_IsSet => _TRDTLocation.HasValue;
         public ReadOnlySpan<Byte> Fluff1 => _Fluff1_IsSet ? _data.Span.Slice(_Fluff1Location, 4).ToArray() : default;
         #endregion
-        public Byte ResponseNumber => _TRDTLocation.HasValue ? _data.Span[_TRDTLocation.Value + 12] : default;
+        #region ResponseNumber
+        private int _ResponseNumberLocation => _TRDTLocation.Value + 0xC;
+        private bool _ResponseNumber_IsSet => _TRDTLocation.HasValue;
+        public Byte ResponseNumber => _ResponseNumber_IsSet ? _data.Span[_ResponseNumberLocation] : default;
+        #endregion
         #region Fluff2
         private int _Fluff2Location => _TRDTLocation.Value + 0xD;
         private bool _Fluff2_IsSet => _TRDTLocation.HasValue;

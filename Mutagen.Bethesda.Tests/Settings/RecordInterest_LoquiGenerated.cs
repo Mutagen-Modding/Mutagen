@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRecordInterest item)
+        public void Clear(IRecordInterest item)
         {
             ClearPartial();
             item.InterestingTypes.Clear();

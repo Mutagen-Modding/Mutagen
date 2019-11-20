@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IClassTraining item)
+        public void Clear(IClassTraining item)
         {
             ClearPartial();
             item.TrainedSkill = default(Skill);

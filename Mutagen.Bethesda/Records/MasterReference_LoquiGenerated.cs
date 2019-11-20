@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMasterReference item)
+        public void Clear(IMasterReference item)
         {
             ClearPartial();
             item.Master = default(ModKey);

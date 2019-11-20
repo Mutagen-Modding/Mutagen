@@ -1294,7 +1294,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RegionDataSetterTranslationCommon Instance = new RegionDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyFieldsFrom(
+        public virtual void DeepCopyFieldsFrom(
+            IRegionDataInternal item,
+            IRegionDataGetter rhs,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal copyMask)
+        {
+            DeepCopyFieldsFrom(
+                (IRegionData)item,
+                (IRegionDataGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public virtual void DeepCopyFieldsFrom(
             IRegionData item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder errorMask,
@@ -2335,7 +2348,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _RDATLocation.HasValue;
         public RegionData.RegionDataFlag Flags => _Flags_IsSet ? (RegionData.RegionDataFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
         #endregion
-        public Byte Priority => _RDATLocation.HasValue ? _data.Span[_RDATLocation.Value + 5] : default;
+        #region Priority
+        private int _PriorityLocation => _RDATLocation.Value + 0x5;
+        private bool _Priority_IsSet => _RDATLocation.HasValue;
+        public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Examples.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMainVM item)
+        public void Clear(IMainVM item)
         {
             ClearPartial();
             item.ModFilePath = default(String);

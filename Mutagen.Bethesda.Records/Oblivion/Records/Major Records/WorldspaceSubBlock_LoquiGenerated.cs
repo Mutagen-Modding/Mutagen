@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IWorldspaceSubBlock item)
+        public void Clear(IWorldspaceSubBlock item)
         {
             ClearPartial();
             item.BlockNumberY = default(Int16);
