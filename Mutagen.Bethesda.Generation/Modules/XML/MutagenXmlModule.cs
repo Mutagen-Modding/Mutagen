@@ -181,11 +181,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override async Task PostCreateLoop(ObjectGeneration obj, FileGeneration fg)
-        {
-            BinaryTranslationModule.GenerateModLinking(obj, fg, "item");
-        }
-
         protected override void FillPrivateElement(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.IterateFields(includeBaseClass: true).Any(f => f.ReadOnly))

@@ -145,7 +145,6 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine("await Task.WhenAll(tasks);");
-                BinaryTranslationModule.GenerateModLinking(obj, fg, "item");
                 fg.AppendLine("return item;");
             }
             fg.AppendLine();

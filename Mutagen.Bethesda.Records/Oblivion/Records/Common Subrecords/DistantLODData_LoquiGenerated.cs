@@ -1189,6 +1189,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return DistantLODData.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IDistantLODDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class DistantLODDataSetterTranslationCommon
     {

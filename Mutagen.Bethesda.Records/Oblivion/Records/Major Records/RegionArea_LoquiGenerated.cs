@@ -1241,6 +1241,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RegionArea.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionAreaGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RegionAreaSetterTranslationCommon
     {

@@ -797,30 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Sounds.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Sounds)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => WeatherCommon.Instance.GetLinks(this);
         public Weather(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -920,8 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeather :
         IWeatherGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IWeatherInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IWeatherInternal>
     {
         new String TextureLowerLayer { get; set; }
         new bool TextureLowerLayer_IsSet { get; set; }
@@ -1021,6 +997,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IWeatherGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region TextureLowerLayer
@@ -3279,6 +3256,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IWeatherGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Weather obj, Weather rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -7004,6 +6994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => WeatherCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

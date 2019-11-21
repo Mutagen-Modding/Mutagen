@@ -1203,6 +1203,14 @@ namespace Mutagen.Bethesda.Internals
             return MasterReference.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IMasterReferenceGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class MasterReferenceSetterTranslationCommon
     {

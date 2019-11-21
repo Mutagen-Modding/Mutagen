@@ -1148,6 +1148,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ObjectBounds.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IObjectBoundsGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ObjectBoundsSetterTranslationCommon
     {

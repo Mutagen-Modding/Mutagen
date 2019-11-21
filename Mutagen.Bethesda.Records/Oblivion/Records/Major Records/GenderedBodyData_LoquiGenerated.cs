@@ -1289,6 +1289,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return GenderedBodyData.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IGenderedBodyDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class GenderedBodyDataSetterTranslationCommon
     {

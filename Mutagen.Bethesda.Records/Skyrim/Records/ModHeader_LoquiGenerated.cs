@@ -483,25 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in OverriddenForms)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            foreach (var item in OverriddenForms)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
         public async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
@@ -602,8 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IModHeader :
         IModHeaderGetter,
-        ILoquiObjectSetter<IModHeader>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IModHeader>
     {
         new ModHeader.HeaderFlag Flags { get; set; }
 
@@ -655,6 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<IModHeaderGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1988,6 +1970,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return ModHeader.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IModHeaderGetter obj)
+        {
+            foreach (var item in obj.OverriddenForms)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class ModHeaderSetterTranslationCommon
@@ -4113,6 +4107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

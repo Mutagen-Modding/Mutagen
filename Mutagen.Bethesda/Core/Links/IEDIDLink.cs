@@ -6,25 +6,41 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IEDIDLinkGetter<out T> : ILinkGetter<T>
-       where T : IMajorRecordCommonGetter
+    public interface IEDIDLinkGetter : ILinkGetter
     {
         RecordType EDID { get; }
     }
 
-    public interface IEDIDLink<T> : IEDIDLinkGetter<T>, ILink<T>
-       where T : IMajorRecordCommonGetter
-    {
-        void Set(RecordType item);
-    }
-
-    public interface IEDIDSetLinkGetter<out T> : IEDIDLinkGetter<T>, ISetLinkGetter<T>
-       where T : IMajorRecordCommonGetter
+    public interface IEDIDLinkGetter<out TMajor> : ILinkGetter<TMajor>, IEDIDLinkGetter
+       where TMajor : IMajorRecordCommonGetter
     {
     }
 
-    public interface IEDIDSetLink<T> : IEDIDLink<T>, ISetLink<T>, IEDIDSetLinkGetter<T>
+    public interface IEDIDLink<T> : IEDIDLinkGetter<T>, IEDIDLinkGetter
        where T : IMajorRecordCommonGetter
     {
+        new RecordType EDID { get; set; }
+        void Unset();
+    }
+
+    public interface IEDIDSetLinkGetter<out TMajor> : IEDIDLinkGetter<TMajor>, ISetLinkGetter<TMajor>
+       where TMajor : IMajorRecordCommonGetter
+    {
+    }
+
+    public interface IEDIDSetLink<TMajor> : IEDIDLink<TMajor>, ISetLink<TMajor>, IEDIDSetLinkGetter<TMajor>
+       where TMajor : IMajorRecordCommonGetter
+    {
+    }
+
+    public static class IEDIDLinkExt
+    {
+        public static bool TryResolve<TMajor, TMod>(this IEDIDLinkGetter<TMajor> edidLink, LinkingPackage<TMod> package, out TMajor item)
+            where TMajor : IMajorRecordCommonGetter
+            where TMod : IMod
+        {
+            item = edidLink.Resolve(package);
+            return item != null;
+        }
     }
 }

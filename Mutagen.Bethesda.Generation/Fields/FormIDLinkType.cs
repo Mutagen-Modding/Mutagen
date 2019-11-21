@@ -24,8 +24,8 @@ namespace Mutagen.Bethesda.Generation
         private FormIDType _rawFormID;
         public LoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
-        public override bool HasProperty => true;
-        public override string TypeName(bool getter) =>  $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
+        public override bool HasProperty => false;
+        public override string TypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
@@ -49,7 +49,6 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             LoquiType = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<LoquiType>();
             _rawFormID = this.ObjectGen.ProtoGen.Gen.GetTypeGeneration<FormIDType>();
-            this.ObjectCentralizedProperty.OnNext(false);
             LoquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             await LoquiType.Load(node, requireName: false);
             LoquiType.Name = this.Name;
@@ -70,45 +69,7 @@ namespace Mutagen.Bethesda.Generation
             return $"{(negate ? "!" : null)}object.Equals({accessor.DirectAccess}, {rhsAccessor.DirectAccess})";
         }
 
-        public override void GenerateForClass(FileGeneration fg)
-        {
-            string linkString;
-            switch (this.FormIDType)
-            {
-                case FormIDTypeEnum.Normal:
-                    linkString = "FormID";
-                    break;
-                case FormIDTypeEnum.EDIDChars:
-                    linkString = "EDID";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            fg.AppendLine($"public {TypeName(getter: false)} {this.Property} {{ get; }} = new {DirectTypeName(getter: false)}();");
-            fg.AppendLine($"public {LoquiType.TypeName(getter: false)} {this.Name} {{ get => {this.Property}.Item; {(this.ReadOnly ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
-            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"{this.TypeName(getter: false)} {this.ObjectGen.Interface(getter: false, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
-            fg.AppendLine($"{LoquiType.TypeName(getter: true, internalInterface: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Name} => this.{this.Property}.Item;");
-            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, internalInterface: this.InternalGetInterface)}.{this.Property} => this.{this.Property};");
-        }
-
         public override string EqualsMaskAccessor(string accessor) => accessor;
-
-        public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
-        {
-            if (!ApplicableInterfaceField(getter, internalInterface)) return;
-            if (getter)
-            {
-                fg.AppendLine($"{LoquiType.TypeName(getter: true, internalInterface: true)} {this.Name} {{ get; }}");
-                fg.AppendLine($"{TypeName(getter: true)} {this.Property} {{ get; }}");
-                fg.AppendLine();
-            }
-            else
-            {
-                fg.AppendLine($"new {LoquiType.TypeName(getter: false)} {this.Name} {{ get; set; }}");
-                fg.AppendLine($"new {TypeName(getter: false)} {this.Property} {{ get; }}");
-            }
-        }
 
         public override string SkipCheck(string copyMaskAccessor, bool deepCopy)
         {
@@ -142,7 +103,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
-            fg.AppendLine($"if (!{accessor.PropertyAccess}.Equals({rhsAccessor.PropertyAccess})) return false;");
+            fg.AppendLine($"if (!{accessor.PropertyOrDirectAccess}.Equals({rhsAccessor.PropertyOrDirectAccess})) return false;");
         }
 
         public override void GenerateForCopy(FileGeneration fg, Accessor accessor, string rhsAccessorPrefix, string copyMaskAccessor, bool protectedMembers, bool getter)
@@ -150,23 +111,33 @@ namespace Mutagen.Bethesda.Generation
             if (this.HasBeenSet)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{accessor.PropertyAccess}.{(getter ? "SetToFormKey" : "SetLink")}"))
+                    $"{accessor.PropertyOrDirectAccess}.{(getter ? "SetToFormKey" : "SetLink")}"))
                 {
-                    args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
+                    args.Add($"rhs: {rhsAccessorPrefix}.{this.GetName(false, property: false)}");
                 }
             }
             else
             {
                 if (getter)
                 {
-                    fg.AppendLine($"{accessor.PropertyAccess}.FormKey = {rhsAccessorPrefix}.{this.GetName(false, property: true)}.FormKey;");
+                    switch (this.FormIDType)
+                    {
+                        case FormIDTypeEnum.Normal:
+                            fg.AppendLine($"{accessor.PropertyOrDirectAccess}.FormKey = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.FormKey;");
+                            break;
+                        case FormIDTypeEnum.EDIDChars:
+                            fg.AppendLine($"{accessor.PropertyOrDirectAccess}.EDID = {rhsAccessorPrefix}.{this.GetName(false, property: false)}.EDID;");
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                 }
                 else
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{accessor.PropertyAccess}.SetLink"))
+                        $"{accessor.PropertyOrDirectAccess}.SetLink"))
                     {
-                        args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: true)}");
+                        args.Add($"value: {rhsAccessorPrefix}.{this.GetName(false, property: false)}");
                     }
                 }
             }
@@ -186,7 +157,7 @@ namespace Mutagen.Bethesda.Generation
                 if (this.HasBeenSet)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{identifier.PropertyAccess}.Unset"))
+                        $"{identifier.PropertyOrDirectAccess}.Unset"))
                     {
                     }
                 }
@@ -201,28 +172,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateClear(FileGeneration fg, Accessor identifier)
         {
             if (this.ReadOnly || !this.IntegrateField) return;
-            if (this.NotifyingType != NotifyingType.None)
-            {
-                if (this.HasBeenSet)
-                {
-                    fg.AppendLine($"{identifier.PropertyAccess}.Unset();");
-                }
-                else
-                {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
-                }
-            }
-            else
-            {
-                if (this.HasBeenSet)
-                {
-                    fg.AppendLine($"{identifier.PropertyAccess}.Unset();");
-                }
-                else
-                {
-                    fg.AppendLine($"{identifier.DirectAccess} = default({LoquiType.TypeName(getter: false)});");
-                }
-            }
+            fg.AppendLine($"{identifier.PropertyOrDirectAccess}.Unset();");
         }
 
         public override void GenerateCopySetToConverter(FileGeneration fg)

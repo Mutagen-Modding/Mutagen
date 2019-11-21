@@ -1130,6 +1130,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return InterCellPoint.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IInterCellPointGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class InterCellPointSetterTranslationCommon
     {

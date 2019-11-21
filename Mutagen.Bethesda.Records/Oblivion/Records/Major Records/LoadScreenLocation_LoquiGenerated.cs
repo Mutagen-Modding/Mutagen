@@ -50,20 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        public IFormIDLink<Place> Direct_Property { get; } = new FormIDLink<Place>();
-        public Place Direct { get => Direct_Property.Item; set => Direct_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Place> ILoadScreenLocation.Direct_Property => this.Direct_Property;
-        IPlaceGetter ILoadScreenLocationGetter.Direct => this.Direct_Property.Item;
-        IFormIDLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct_Property => this.Direct_Property;
+        public IFormIDLink<Place> Direct { get; set; }
+        IFormIDLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
         #endregion
         #region Indirect
-        public IFormIDLink<Worldspace> Indirect_Property { get; } = new FormIDLink<Worldspace>();
-        public Worldspace Indirect { get => Indirect_Property.Item; set => Indirect_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Worldspace> ILoadScreenLocation.Indirect_Property => this.Indirect_Property;
-        IWorldspaceGetter ILoadScreenLocationGetter.Indirect => this.Indirect_Property.Item;
-        IFormIDLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect_Property => this.Indirect_Property;
+        public IFormIDLink<Worldspace> Indirect { get; set; }
+        IFormIDLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
         #endregion
         #region GridPoint
         public P2Int16 GridPoint { get; set; }
@@ -271,21 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LoadScreenLocation_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Direct_Property;
-            yield return Indirect_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Direct_Property.Link(package);
-            Indirect_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => LoadScreenLocationCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -374,13 +352,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILoadScreenLocation :
         ILoadScreenLocationGetter,
-        ILoquiObjectSetter<ILoadScreenLocation>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILoadScreenLocation>
     {
-        new Place Direct { get; set; }
-        new IFormIDLink<Place> Direct_Property { get; }
-        new Worldspace Indirect { get; set; }
-        new IFormIDLink<Worldspace> Indirect_Property { get; }
+        new IFormIDLink<Place> Direct { get; set; }
+
+        new IFormIDLink<Worldspace> Indirect { get; set; }
+
         new P2Int16 GridPoint { get; set; }
 
     }
@@ -389,6 +366,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ILoadScreenLocationGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -398,13 +376,11 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Direct
-        IPlaceGetter Direct { get; }
-        IFormIDLinkGetter<IPlaceGetter> Direct_Property { get; }
+        IFormIDLinkGetter<IPlaceGetter> Direct { get; }
 
         #endregion
         #region Indirect
-        IWorldspaceGetter Indirect { get; }
-        IFormIDLinkGetter<IWorldspaceGetter> Indirect_Property { get; }
+        IFormIDLinkGetter<IWorldspaceGetter> Indirect { get; }
 
         #endregion
         #region GridPoint
@@ -987,8 +963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct = default(Place);
-            item.Indirect = default(Worldspace);
+            item.Direct.Unset();
+            item.Indirect.Unset();
             item.GridPoint = default(P2Int16);
         }
         
@@ -1028,14 +1004,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Direct_Property);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                item: out IFormIDLink<Place> DirectParse))
+            {
+                item.Direct = DirectParse;
+            }
+            else
+            {
+                item.Direct = default(IFormIDLink<Place>);
+            }
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Indirect_Property);
+                item: out IFormIDLink<Worldspace> IndirectParse))
+            {
+                item.Indirect = IndirectParse;
+            }
+            else
+            {
+                item.Indirect = default(IFormIDLink<Worldspace>);
+            }
             if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 item: out P2Int16 GridPointParse))
@@ -1096,8 +1086,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Direct = item.Direct_Property.FormKey == rhs.Direct_Property.FormKey;
-            ret.Indirect = item.Indirect_Property.FormKey == rhs.Indirect_Property.FormKey;
+            ret.Direct = object.Equals(item.Direct, rhs.Direct);
+            ret.Indirect = object.Equals(item.Indirect, rhs.Indirect);
             ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
         }
         
@@ -1147,11 +1137,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Direct ?? true)
             {
-                fg.AppendLine($"Direct => {item.Direct_Property}");
+                fg.AppendLine($"Direct => {item.Direct}");
             }
             if (printMask?.Indirect ?? true)
             {
-                fg.AppendLine($"Indirect => {item.Indirect_Property}");
+                fg.AppendLine($"Indirect => {item.Indirect}");
             }
             if (printMask?.GridPoint ?? true)
             {
@@ -1182,8 +1172,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Direct_Property.Equals(rhs.Direct_Property)) return false;
-            if (!lhs.Indirect_Property.Equals(rhs.Indirect_Property)) return false;
+            if (!lhs.Direct.Equals(rhs.Direct)) return false;
+            if (!lhs.Indirect.Equals(rhs.Indirect)) return false;
             if (!lhs.GridPoint.Equals(rhs.GridPoint)) return false;
             return true;
         }
@@ -1205,6 +1195,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return LoadScreenLocation.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILoadScreenLocationGetter obj)
+        {
+            yield return obj.Direct;
+            yield return obj.Indirect;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class LoadScreenLocationSetterTranslationCommon
     {
@@ -1219,11 +1219,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct_Property.FormKey = rhs.Direct_Property.FormKey;
+                item.Direct.FormKey = rhs.Direct.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect_Property.FormKey = rhs.Indirect_Property.FormKey;
+                item.Indirect.FormKey = rhs.Indirect.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {
@@ -1317,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Direct),
-                    item: item.Direct_Property?.FormKey,
+                    item: item.Direct?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
                     errorMask: errorMask);
             }
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Indirect),
-                    item: item.Indirect_Property?.FormKey,
+                    item: item.Indirect?.FormKey,
                     fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
                     errorMask: errorMask);
             }
@@ -1446,18 +1446,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Direct":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Direct_Property,
-                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Direct,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Place> DirectParse,
+                            errorMask: errorMask))
+                        {
+                            item.Direct = DirectParse;
+                        }
+                        else
+                        {
+                            item.Direct = default(IFormIDLink<Place>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Indirect":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Indirect_Property,
-                        fieldIndex: (int)LoadScreenLocation_FieldIndex.Indirect,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Worldspace> IndirectParse,
+                            errorMask: errorMask))
+                        {
+                            item.Indirect = IndirectParse;
+                        }
+                        else
+                        {
+                            item.Indirect = default(IFormIDLink<Worldspace>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "GridPoint":
                     try
@@ -1983,11 +2021,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Direct_Property,
+                item: item.Direct,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Indirect_Property,
+                item: item.Indirect,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2114,6 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenLocationGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => LoadScreenLocationCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => LoadScreenLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2145,14 +2184,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Direct
-        public IFormIDLinkGetter<IPlaceGetter> Direct_Property => new FormIDLink<IPlaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IPlaceGetter Direct => default;
-        #endregion
-        #region Indirect
-        public IFormIDLinkGetter<IWorldspaceGetter> Indirect_Property => new FormIDLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IWorldspaceGetter Indirect => default;
-        #endregion
+        public IFormIDLinkGetter<IPlaceGetter> Direct => new FormIDLink<IPlaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IWorldspaceGetter> Indirect => new FormIDLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -1,5 +1,4 @@
 using Loqui;
-using Mutagen.Bethesda.Tests;
 using Noggog;
 using Noggog.Notifying;
 using ReactiveUI;
@@ -11,188 +10,112 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T> : IFormIDLink<T>, IEquatable<ILink<T>>
-       where T : class, IMajorRecordCommonGetter
+    public class FormIDLink<TMajor> : IFormIDLink<TMajor>, IEquatable<IFormIDLinkGetter<TMajor>>
+       where TMajor : class, IMajorRecordCommonGetter
     {
-        public static readonly IFormIDLinkGetter<T> Empty = new FormIDLink<T>();
+        public static readonly IFormIDLinkGetter<TMajor> Empty = new FormIDLink<TMajor>();
 
-        private T _Item;
-        public T Item
-        {
-            get => this._Item;
-            set => this.Set(value);
-        }
-        public bool Linked => this.Item != null;
-        public FormKey? UnlinkedForm { get; private set; }
-        public FormKey FormKey => LinkExt.GetFormKey(this);
-        Type ILinkGetter.TargetType => typeof(T);
-        FormKey ILink.FormKey
-        {
-            get => this.FormKey;
-            set => SetUnlinkedForm(value);
-        }
-#if DEBUG
-        public bool AttemptedLink { get; set; }
-#endif
+        public FormKey FormKey { get; set; } = FormKey.NULL;
+        Type ILinkGetter.TargetType => typeof(TMajor);
 
         public FormIDLink()
         {
-#if DEBUG
-            FormIDLinkTesterHelper.Add(this);
-#endif
         }
 
         public FormIDLink(FormKey formKey)
         {
-            this.UnlinkedForm = formKey;
-#if DEBUG
-            FormIDLinkTesterHelper.Add(this);
-#endif
+            this.FormKey = formKey;
         }
 
-        private void UpdateUnlinkedForm(T change)
+        public virtual void Set(FormKey formKey)
         {
-            this.UnlinkedForm = change?.FormKey ?? UnlinkedForm;
+            this.Set(formKey);
         }
 
-        public void SetUnlinkedForm(FormKey form)
+        public virtual void Set(TMajor value)
         {
-            this.UnlinkedForm = form;
-            this.Item = default;
+            this.FormKey = value?.FormKey ?? FormKey.NULL;
         }
 
-        public virtual void Set(T value)
+        public virtual void Unset()
         {
-            UpdateUnlinkedForm(value);
-            this._Item = value;
+            this.FormKey = FormKey.NULL;
         }
 
-        public void SetIfSucceeded(TryGet<FormKey> formKey)
-        {
-            if (formKey.Failed) return;
-            this.Set(formKey.Value);
-        }
-
-        public void SetLink(ILinkGetter<T> value)
-        {
-            this.Set(value.Item);
-        }
-
-        public void Set(FormKey id)
-        {
-            this.UnlinkedForm = id;
-        }
-
-        public void SetIfSucceededOrDefault(TryGet<FormKey> formKey)
-        {
-            if (formKey.Failed)
-            {
-                this.Unset();            }
-            else
-            {
-                this.UnlinkedForm = formKey.Value;
-            }
-        }
-
-        public void Set(ILinkGetter<T> link)
-        {
-            if (link.Linked)
-            {
-                this.Set(link.Item);
-            }
-            else
-            {
-                this.UnlinkedForm = link.FormKey;
-            }
-        }
-
-        public void Set<R>(ILinkGetter<R> link)
-            where R : T
-        {
-            if (link.Linked)
-            {
-                this.Set(link.Item);
-            }
-            else
-            {
-                this.UnlinkedForm = link.FormKey;
-            }
-        }
-
-        public static bool TryGetLink<M>(
-            FormKey? unlinkedForm,
-            LinkingPackage<M> package,
-            out T item)
-            where M : IMod
-        {
-            if (!unlinkedForm.HasValue
-                || unlinkedForm.Equals(FormKey.NULL))
-            {
-                item = default(T);
-                return false;
-            }
-            if (!package.TryGetMajorRecords(unlinkedForm.Value.ModKey, out var majorRecs))
-            {
-                item = default;
-                return false;
-            }
-            if (!majorRecs.TryGetValue(unlinkedForm.Value, out var rec))
-            {
-                item = default(T);
-                return false;
-            }
-            if (rec is T t)
-            {
-                item = t;
-                return true;
-            }
-            item = default(T);
-            return false;
-        }
-
-        public virtual bool Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-#if DEBUG
-            this.AttemptedLink = true;
-#endif
-            if (!TryGetLink(
-                this.UnlinkedForm,
-                package,
-                out var item))
-            {
-                this.Item = default;
-                return false;
-            }
-            this.Set(item);
-            return true;
-        }
-
-        public static bool operator ==(FormIDLink<T> lhs, IFormIDLink<T> rhs)
+        public static bool operator ==(FormIDLink<TMajor> lhs, IFormIDLink<TMajor> rhs)
         {
             return lhs.FormKey.Equals(rhs.FormKey);
         }
 
-        public static bool operator !=(FormIDLink<T> lhs, IFormIDLink<T> rhs)
+        public static bool operator !=(FormIDLink<TMajor> lhs, IFormIDLink<TMajor> rhs)
         {
             return !lhs.FormKey.Equals(rhs.FormKey);
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ILink<T> rhs)) return false;
+            if (!(obj is ILinkGetter<TMajor> rhs)) return false;
             return this.Equals(rhs);
         }
 
-        public bool Equals(ILink<T> other) => LinkExt.Equals(this, other);
+        public bool Equals(IFormIDLinkGetter<TMajor> other) => this.FormKey.Equals(other.FormKey);
 
-        public override int GetHashCode() => LinkExt.HashCode(this);
+        public override int GetHashCode() => this.FormKey.GetHashCode();
 
-        public override string ToString() => LinkExt.ToString(this);
+        public override string ToString() => this.FormKey.ToString();
 
-        public virtual void Unset()
+        public bool TryResolve<M>(LinkingPackage<M> package, out TMajor major)
+            where M : IModGetter
         {
-            this.Set(default(T));
+            if (this.FormKey.Equals(FormKey.NULL))
+            {
+                major = default;
+                return false;
+            }
+            if (!package.TryGetMajorRecords(this.FormKey.ModKey, out var majorRecs))
+            {
+                major = default;
+                return false;
+            }
+            if (!majorRecs.TryGetValue(this.FormKey, out var rec))
+            {
+                major = default;
+                return false;
+            }
+            if (rec is TMajor t)
+            {
+                major = t;
+                return true;
+            }
+            major = default;
+            return false;
+        }
+
+        public bool TryResolveFormKey<M>(LinkingPackage<M> package, out FormKey formKey)
+            where M : IModGetter
+        {
+            formKey = this.FormKey;
+            return true;
+        }
+
+        bool ILinkGetter.TryResolve<M>(LinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        {
+            if (TryResolve(package, out TMajor rec))
+            {
+                formKey = rec;
+                return true;
+            }
+            formKey = default;
+            return false;
+        }
+
+        TMajor ILinkGetter<TMajor>.Resolve<M>(LinkingPackage<M> package)
+        {
+            if (this.TryResolve(package, out var major))
+            {
+                return major;
+            }
+            return default;
         }
     }
 }

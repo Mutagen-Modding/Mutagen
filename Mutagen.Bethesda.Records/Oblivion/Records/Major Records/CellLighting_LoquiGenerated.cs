@@ -1422,6 +1422,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return CellLighting.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ICellLightingGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class CellLightingSetterTranslationCommon
     {

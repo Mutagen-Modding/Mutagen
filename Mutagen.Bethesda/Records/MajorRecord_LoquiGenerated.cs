@@ -296,17 +296,7 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
-        public virtual IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield break;
-        }
-
-        public virtual void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-        }
-
+        public virtual IEnumerable<ILinkGetter> Links => MajorRecordCommon.Instance.GetLinks(this);
         public virtual async Task WriteToXmlFolder(
             DirectoryPath? dir,
             string name,
@@ -373,8 +363,7 @@ namespace Mutagen.Bethesda
     public partial interface IMajorRecord :
         IMajorRecordGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IMajorRecordInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IMajorRecordInternal>
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
 
@@ -400,6 +389,7 @@ namespace Mutagen.Bethesda
         IMajorRecordGetterEnumerable,
         ILoquiObject<IMajorRecordGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1498,6 +1488,11 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IMajorRecordGetter obj)
+        {
+            yield break;
+        }
+        
         partial void PostDuplicate(MajorRecord obj, MajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public virtual IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2542,6 +2537,7 @@ namespace Mutagen.Bethesda.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 
+        public virtual IEnumerable<ILinkGetter> Links => MajorRecordCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

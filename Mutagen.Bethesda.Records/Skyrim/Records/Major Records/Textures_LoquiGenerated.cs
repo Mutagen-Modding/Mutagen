@@ -1774,6 +1774,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return Textures.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ITexturesGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class TexturesSetterTranslationCommon
     {

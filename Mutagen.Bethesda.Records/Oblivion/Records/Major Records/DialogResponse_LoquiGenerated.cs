@@ -1524,6 +1524,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return DialogResponse.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IDialogResponseGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class DialogResponseSetterTranslationCommon
     {

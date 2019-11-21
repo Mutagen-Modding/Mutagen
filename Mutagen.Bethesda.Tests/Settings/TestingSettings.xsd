@@ -8,7 +8,6 @@
    <xs:complexType name="TestingSettingsType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element name="TestGroupMasks" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="TestModList" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFlattenedMod" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestBenchmarks" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestLocators" type="ValueType" minOccurs="0" maxOccurs="1" />

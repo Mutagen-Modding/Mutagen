@@ -323,30 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PathGrid_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in PointToReferenceMappings.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in PointToReferenceMappings)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => PathGridCommon.Instance.GetLinks(this);
         public PathGrid(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -446,8 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IPathGrid :
         IPathGridGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IPathGridInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IPathGridInternal>
     {
         new ISetList<PathGridPoint> PointToPointConnections { get; }
         new Byte[] Unknown { get; set; }
@@ -470,6 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IPathGridGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region PointToPointConnections
@@ -1557,6 +1534,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPathGridGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PointToReferenceMappings.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(PathGrid obj, PathGrid rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2995,6 +2985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPathGridGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => PathGridCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => PathGridXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

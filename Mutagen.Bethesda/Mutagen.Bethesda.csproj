@@ -66,13 +66,11 @@
     <Compile Include="Core\Links\EDIDLink.cs" />
     <Compile Include="Core\Links\EDIDSetLink.cs" />
     <Compile Include="Core\Links\FormIDLink.cs" />
-    <Compile Include="Core\Links\FormIDLinkTesterHelper.cs" />
     <Compile Include="Core\Links\FormIDSetLink.cs" />
     <Compile Include="Core\Links\IEDIDLink.cs" />
     <Compile Include="Core\Links\IFormIDLink.cs" />
     <Compile Include="Core\Links\ILink.cs" />
     <Compile Include="Core\Links\ILinkContainer.cs" />
-    <Compile Include="Core\Links\LinkExt.cs" />
     <Compile Include="Core\MasterReferences.cs" />
     <Compile Include="Preprocessing\ModDecompressor.cs" />
     <Compile Include="Core\Structs\ModID.cs" />
@@ -135,6 +133,7 @@
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UtilityTranslation.cs" />
     <Compile Include="Translators\Folder\FolderTranslation.cs" />
+    <Compile Include="Translators\XML\RecordTypeXmlTranslation.cs" />
     <Compile Include="Translators\XML\FormKeyXmlTranslation.cs" />
     <Compile Include="Translators\Folder\IXmlFolderItem.cs" />
     <Compile Include="Translators\Folder\LoquiXmlFolderTranslation.cs" />

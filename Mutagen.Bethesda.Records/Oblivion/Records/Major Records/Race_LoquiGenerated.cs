@@ -735,76 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Spells)
-            {
-                yield return item;
-            }
-            foreach (var item in Relations.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            if (Voices != null)
-            {
-                foreach (var item in Voices.Links)
-                {
-                    yield return item;
-                }
-            }
-            if (DefaultHair != null)
-            {
-                foreach (var item in DefaultHair.Links)
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in Hairs)
-            {
-                yield return item;
-            }
-            foreach (var item in Eyes)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Spells)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Relations)
-            {
-                item.Link(package: package);
-            }
-            if (Voices != null)
-            {
-                Voices?.Link(package: package);
-            }
-            if (DefaultHair != null)
-            {
-                DefaultHair?.Link(package: package);
-            }
-            foreach (var item in Hairs)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Eyes)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
         public Race(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -904,8 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRace :
         IRaceGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IRaceInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRaceInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -995,6 +925,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Name
@@ -3074,6 +3005,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRaceGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Spells)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Relations.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            if (obj.Voices != null)
+            {
+                foreach (var item in obj.Voices.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultHair != null)
+            {
+                foreach (var item in obj.DefaultHair.Links)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Hairs)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -6527,6 +6497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

@@ -252,30 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataWeather_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Weathers.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Weathers)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => RegionDataWeatherCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -364,8 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataWeather :
         IRegionDataWeatherGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataWeatherInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRegionDataWeatherInternal>
     {
         new ISetList<WeatherChance> Weathers { get; }
     }
@@ -381,6 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGetter,
         ILoquiObject<IRegionDataWeatherGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Weathers
@@ -1259,6 +1236,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RegionDataWeather.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionDataWeatherGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weathers.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RegionDataWeatherSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -2124,6 +2117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataWeatherGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => RegionDataWeatherCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => RegionDataWeatherXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

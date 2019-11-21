@@ -1279,6 +1279,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return BodyData.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IBodyDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class BodyDataSetterTranslationCommon
     {

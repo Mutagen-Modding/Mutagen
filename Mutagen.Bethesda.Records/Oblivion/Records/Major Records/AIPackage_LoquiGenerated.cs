@@ -388,33 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            if (Location != null)
-            {
-                foreach (var item in Location.Links)
-                {
-                    yield return item;
-                }
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            if (Location != null)
-            {
-                Location?.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => AIPackageCommon.Instance.GetLinks(this);
         public AIPackage(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -514,8 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAIPackage :
         IAIPackageGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IAIPackageInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IAIPackageInternal>
     {
         new AIPackage.Flag Flags { get; set; }
 
@@ -552,6 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IAIPackageGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Flags
@@ -1766,6 +1740,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IAIPackageGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Location != null)
+            {
+                foreach (var item in obj.Location.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(AIPackage obj, AIPackage rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -3346,6 +3336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => AIPackageCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => AIPackageXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

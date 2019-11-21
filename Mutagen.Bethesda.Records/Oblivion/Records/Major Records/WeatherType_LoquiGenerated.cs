@@ -1227,6 +1227,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return WeatherType.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IWeatherTypeGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class WeatherTypeSetterTranslationCommon
     {

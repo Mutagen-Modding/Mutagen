@@ -350,28 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
-            {
-                foreach (var item in ResultScriptlinkCont.Links)
-                {
-                    yield return item;
-                }
-            }
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            if (ResultScript is ILinkSubContainer ResultScriptlinkCont)
-            {
-                ResultScriptlinkCont?.Link(package: package);
-            }
-        }
-
+        public IEnumerable<ILinkGetter> Links => LogEntryCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -460,8 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILogEntry :
         ILogEntryGetter,
-        ILoquiObjectSetter<ILogEntry>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILogEntry>
     {
         new LogEntry.Flag Flags { get; set; }
         new bool Flags_IsSet { get; set; }
@@ -485,6 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ILogEntryGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1479,6 +1458,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return LogEntry.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILogEntryGetter obj)
+        {
+            if (obj.ResultScript is ILinkContainer ResultScriptlinkCont)
+            {
+                foreach (var item in ResultScriptlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class LogEntrySetterTranslationCommon
@@ -2715,6 +2709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => LogEntryCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

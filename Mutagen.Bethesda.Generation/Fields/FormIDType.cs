@@ -12,18 +12,18 @@ namespace Mutagen.Bethesda.Generation
     {
         public override Type Type(bool getter) => typeof(FormID);
 
-        public override bool HasProperty => true;
+        public override bool HasProperty => false;
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"if ({accessor.PropertyAccess}.FormKey != {rhsAccessor.PropertyAccess}.FormKey) return false;");
+            fg.AppendLine($"if ({accessor.PropertyOrDirectAccess}.FormKey != {rhsAccessor.PropertyOrDirectAccess}.FormKey) return false;");
         }
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
             if (!this.IntegrateField) return;
-            fg.AppendLine($"{retAccessor} = {accessor.PropertyAccess}.FormKey == {rhsAccessor.PropertyAccess}.FormKey;");
+            fg.AppendLine($"{retAccessor} = object.Equals({accessor.PropertyOrDirectAccess}, {rhsAccessor.PropertyOrDirectAccess});");
         }
     }
 }

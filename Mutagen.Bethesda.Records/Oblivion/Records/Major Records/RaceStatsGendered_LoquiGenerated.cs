@@ -1165,6 +1165,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RaceStatsGendered.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRaceStatsGenderedGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RaceStatsGenderedSetterTranslationCommon
     {

@@ -45,18 +45,15 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public ScriptObjectReference()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Reference
-        public IFormIDLink<OblivionMajorRecord> Reference_Property { get; } = new FormIDLink<OblivionMajorRecord>();
-        public OblivionMajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<OblivionMajorRecord> IScriptObjectReference.Reference_Property => this.Reference_Property;
-        IOblivionMajorRecordGetter IScriptObjectReferenceGetter.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
+        public IFormIDLink<OblivionMajorRecord> Reference { get; set; }
+        IFormIDLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -244,26 +241,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((ScriptObjectReference_FieldIndex)index)
+            {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ScriptObjectReference_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield return Reference_Property;
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            Reference_Property.Link(package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => ScriptObjectReferenceCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -352,22 +344,21 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IScriptObjectReference :
         IScriptObjectReferenceGetter,
         IScriptReference,
-        ILoquiObjectSetter<IScriptObjectReference>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IScriptObjectReference>
     {
-        new OblivionMajorRecord Reference { get; set; }
-        new IFormIDLink<OblivionMajorRecord> Reference_Property { get; }
+        new IFormIDLink<OblivionMajorRecord> Reference { get; set; }
+
     }
 
     public partial interface IScriptObjectReferenceGetter :
         IScriptReferenceGetter,
         ILoquiObject<IScriptObjectReferenceGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Reference
-        IOblivionMajorRecordGetter Reference { get; }
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference_Property { get; }
+        IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
 
         #endregion
 
@@ -910,7 +901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
-            item.Reference = default(OblivionMajorRecord);
+            item.Reference.Unset();
             base.Clear(item);
         }
         
@@ -974,10 +965,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Reference_Property);
+                        item: out IFormIDLink<OblivionMajorRecord> ReferenceParse))
+                    {
+                        item.Reference = ReferenceParse;
+                    }
+                    else
+                    {
+                        item.Reference = default(IFormIDLink<OblivionMajorRecord>);
+                    }
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 }
                 default:
@@ -1031,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
+            ret.Reference = object.Equals(item.Reference, rhs.Reference);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1085,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference_Property}");
+                fg.AppendLine($"Reference => {item.Reference}");
             }
         }
         
@@ -1125,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (!lhs.Reference.Equals(rhs.Reference)) return false;
             return true;
         }
         
@@ -1159,6 +1157,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ScriptObjectReference.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IScriptObjectReferenceGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Reference;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ScriptObjectReferenceSetterTranslationCommon : ScriptReferenceSetterTranslationCommon
     {
@@ -1178,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference_Property.FormKey = rhs.Reference_Property.FormKey;
+                item.Reference.FormKey = rhs.Reference.FormKey;
             }
         }
         
@@ -1286,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Reference),
-                    item: item.Reference_Property?.FormKey,
+                    item: item.Reference?.FormKey,
                     fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1383,11 +1394,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<OblivionMajorRecord> ReferenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Reference = ReferenceParse;
+                        }
+                        else
+                        {
+                            item.Reference = default(IFormIDLink<OblivionMajorRecord>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     ScriptReferenceXmlCreateTranslation.FillPublicElementXml(
@@ -1736,7 +1766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference_Property,
+                item: item.Reference,
                 header: recordTypeConverter.ConvertToCustom(ScriptObjectReference_Registration.SCRO_HEADER),
                 nullable: false,
                 masterReferences: masterReferences);
@@ -1842,6 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptObjectReferenceGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => ScriptObjectReferenceCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => ScriptObjectReferenceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1874,8 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Reference
         private int? _ReferenceLocation;
         public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference_Property => _ReferenceLocation.HasValue ? new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormIDLink<IOblivionMajorRecordGetter>.Empty;
-        public IOblivionMajorRecordGetter Reference => default;
+        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormIDLink<IOblivionMajorRecordGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

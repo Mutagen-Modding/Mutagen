@@ -774,18 +774,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public static void GenerateModLinking(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
-        {
-            if (obj.GetObjectType() != ObjectType.Mod) return;
-            fg.AppendLine($"var package = new LinkingPackage<{obj.Interface(getter: false, internalInterface: true)}>({accessor}, default);");
-            fg.AppendLine($"foreach (var link in {accessor}.Links)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("if (link.Linked) continue;");
-                fg.AppendLine("link.Link(package);");
-            }
-        }
-
         private void GenerateStructStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
         {
             if (!obj.StructHasBeenSet()) return;
@@ -1127,7 +1115,6 @@ namespace Mutagen.Bethesda.Generation
                         throw new NotImplementedException();
                 }
                 GenerateStructStateSubscriptions(obj, fg);
-                GenerateModLinking(obj, fg, accessor);
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
                     using (var args = new ArgsWrapper(fg,
@@ -1520,6 +1507,12 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);");
                     fg.AppendLine($"IReadOnlyList<{nameof(IMasterReferenceGetter)}> {nameof(IModGetter)}.MasterReferences => this.ModHeader.MasterReferences;");
+                }
+
+                if (obj.GetObjectType() == ObjectType.Mod
+                    || (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No))
+                {
+                    fg.AppendLine($"public{await obj.FunctionOverride(async (o) => (await LinkModule.HasLinks(o, includeBaseClass: false)) != LinkModule.LinkCase.No)}IEnumerable<{nameof(ILinkGetter)}> Links => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinks(this);");
                 }
 
                 if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)

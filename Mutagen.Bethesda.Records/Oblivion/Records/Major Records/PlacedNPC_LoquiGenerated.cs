@@ -52,12 +52,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public IFormIDSetLink<NPC> Base_Property { get; } = new FormIDSetLink<NPC>();
-        public NPC Base { get => Base_Property.Item; set => Base_Property.Item = value; }
+        public bool Base_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Base];
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Base] = value;
+        }
+        bool IPlacedNPCGetter.Base_IsSet => Base_IsSet;
+        private IFormIDSetLink<NPC> _Base;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<NPC> IPlacedNPC.Base_Property => this.Base_Property;
-        INPCGetter IPlacedNPCGetter.Base => this.Base_Property.Item;
-        IFormIDSetLinkGetter<INPCGetter> IPlacedNPCGetter.Base_Property => this.Base_Property;
+        public IFormIDSetLink<NPC> Base
+        {
+            get => this._Base;
+            set => Base_Set(value);
+        }
+        IFormIDSetLinkGetter<INPCGetter> IPlacedNPCGetter.Base => this.Base;
+        public void Base_Set(
+            IFormIDSetLink<NPC> value,
+            bool markSet = true)
+        {
+            _Base = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Base] = markSet;
+        }
+        public void Base_Unset()
+        {
+            this.Base_Set(default(IFormIDSetLink<NPC>), false);
+        }
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,20 +193,58 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter IPlacedNPCGetter.EnableParent => this.EnableParent;
         #endregion
         #region MerchantContainer
-        public IFormIDSetLink<PlacedObject> MerchantContainer_Property { get; } = new FormIDSetLink<PlacedObject>();
-        public PlacedObject MerchantContainer { get => MerchantContainer_Property.Item; set => MerchantContainer_Property.Item = value; }
+        public bool MerchantContainer_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.MerchantContainer];
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.MerchantContainer] = value;
+        }
+        bool IPlacedNPCGetter.MerchantContainer_IsSet => MerchantContainer_IsSet;
+        private IFormIDSetLink<PlacedObject> _MerchantContainer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<PlacedObject> IPlacedNPC.MerchantContainer_Property => this.MerchantContainer_Property;
-        IPlacedObjectGetter IPlacedNPCGetter.MerchantContainer => this.MerchantContainer_Property.Item;
-        IFormIDSetLinkGetter<IPlacedObjectGetter> IPlacedNPCGetter.MerchantContainer_Property => this.MerchantContainer_Property;
+        public IFormIDSetLink<PlacedObject> MerchantContainer
+        {
+            get => this._MerchantContainer;
+            set => MerchantContainer_Set(value);
+        }
+        IFormIDSetLinkGetter<IPlacedObjectGetter> IPlacedNPCGetter.MerchantContainer => this.MerchantContainer;
+        public void MerchantContainer_Set(
+            IFormIDSetLink<PlacedObject> value,
+            bool markSet = true)
+        {
+            _MerchantContainer = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.MerchantContainer] = markSet;
+        }
+        public void MerchantContainer_Unset()
+        {
+            this.MerchantContainer_Set(default(IFormIDSetLink<PlacedObject>), false);
+        }
         #endregion
         #region Horse
-        public IFormIDSetLink<PlacedCreature> Horse_Property { get; } = new FormIDSetLink<PlacedCreature>();
-        public PlacedCreature Horse { get => Horse_Property.Item; set => Horse_Property.Item = value; }
+        public bool Horse_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Horse];
+            set => _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Horse] = value;
+        }
+        bool IPlacedNPCGetter.Horse_IsSet => Horse_IsSet;
+        private IFormIDSetLink<PlacedCreature> _Horse;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<PlacedCreature> IPlacedNPC.Horse_Property => this.Horse_Property;
-        IPlacedCreatureGetter IPlacedNPCGetter.Horse => this.Horse_Property.Item;
-        IFormIDSetLinkGetter<IPlacedCreatureGetter> IPlacedNPCGetter.Horse_Property => this.Horse_Property;
+        public IFormIDSetLink<PlacedCreature> Horse
+        {
+            get => this._Horse;
+            set => Horse_Set(value);
+        }
+        IFormIDSetLinkGetter<IPlacedCreatureGetter> IPlacedNPCGetter.Horse => this.Horse;
+        public void Horse_Set(
+            IFormIDSetLink<PlacedCreature> value,
+            bool markSet = true)
+        {
+            _Horse = value;
+            _hasBeenSetTracker[(int)PlacedNPC_FieldIndex.Horse] = markSet;
+        }
+        public void Horse_Unset()
+        {
+            this.Horse_Set(default(IFormIDSetLink<PlacedCreature>), false);
+        }
         #endregion
         #region RagdollData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -462,19 +519,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((PlacedNPC_FieldIndex)index)
             {
+                case PlacedNPC_FieldIndex.Base:
                 case PlacedNPC_FieldIndex.XPCIFluff:
                 case PlacedNPC_FieldIndex.FULLFluff:
                 case PlacedNPC_FieldIndex.DistantLODData:
                 case PlacedNPC_FieldIndex.EnableParent:
+                case PlacedNPC_FieldIndex.MerchantContainer:
+                case PlacedNPC_FieldIndex.Horse:
                 case PlacedNPC_FieldIndex.RagdollData:
                 case PlacedNPC_FieldIndex.Scale:
                     return _hasBeenSetTracker[index];
-                case PlacedNPC_FieldIndex.Base:
-                    return Base_Property.HasBeenSet;
-                case PlacedNPC_FieldIndex.MerchantContainer:
-                    return MerchantContainer_Property.HasBeenSet;
-                case PlacedNPC_FieldIndex.Horse:
-                    return Horse_Property.HasBeenSet;
                 case PlacedNPC_FieldIndex.Position:
                 case PlacedNPC_FieldIndex.Rotation:
                 case PlacedNPC_FieldIndex.DATADataTypeState:
@@ -491,39 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield return Base_Property;
-            if (EnableParent != null)
-            {
-                foreach (var item in EnableParent.Links)
-                {
-                    yield return item;
-                }
-            }
-            yield return MerchantContainer_Property;
-            yield return Horse_Property;
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            Base_Property.Link(package);
-            if (EnableParent != null)
-            {
-                EnableParent?.Link(package: package);
-            }
-            MerchantContainer_Property.Link(package);
-            Horse_Property.Link(package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => PlacedNPCCommon.Instance.GetLinks(this);
         public PlacedNPC(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -624,11 +646,13 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedNPCGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedNPCInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IPlacedNPCInternal>
     {
-        new NPC Base { get; set; }
-        new IFormIDSetLink<NPC> Base_Property { get; }
+        new IFormIDSetLink<NPC> Base { get; set; }
+        new bool Base_IsSet { get; set; }
+        void Base_Set(IFormIDSetLink<NPC> value, bool hasBeenSet = true);
+        void Base_Unset();
+
         new Byte[] XPCIFluff { get; set; }
         new bool XPCIFluff_IsSet { get; set; }
         void XPCIFluff_Set(Byte[] value, bool hasBeenSet = true);
@@ -649,10 +673,16 @@ namespace Mutagen.Bethesda.Oblivion
         void EnableParent_Set(EnableParent value, bool hasBeenSet = true);
         void EnableParent_Unset();
 
-        new PlacedObject MerchantContainer { get; set; }
-        new IFormIDSetLink<PlacedObject> MerchantContainer_Property { get; }
-        new PlacedCreature Horse { get; set; }
-        new IFormIDSetLink<PlacedCreature> Horse_Property { get; }
+        new IFormIDSetLink<PlacedObject> MerchantContainer { get; set; }
+        new bool MerchantContainer_IsSet { get; set; }
+        void MerchantContainer_Set(IFormIDSetLink<PlacedObject> value, bool hasBeenSet = true);
+        void MerchantContainer_Unset();
+
+        new IFormIDSetLink<PlacedCreature> Horse { get; set; }
+        new bool Horse_IsSet { get; set; }
+        void Horse_Set(IFormIDSetLink<PlacedCreature> value, bool hasBeenSet = true);
+        void Horse_Unset();
+
         new Byte[] RagdollData { get; set; }
         new bool RagdollData_IsSet { get; set; }
         void RagdollData_Set(Byte[] value, bool hasBeenSet = true);
@@ -683,11 +713,12 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter,
         ILoquiObject<IPlacedNPCGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Base
-        INPCGetter Base { get; }
-        IFormIDSetLinkGetter<INPCGetter> Base_Property { get; }
+        IFormIDSetLinkGetter<INPCGetter> Base { get; }
+        bool Base_IsSet { get; }
 
         #endregion
         #region XPCIFluff
@@ -711,13 +742,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MerchantContainer
-        IPlacedObjectGetter MerchantContainer { get; }
-        IFormIDSetLinkGetter<IPlacedObjectGetter> MerchantContainer_Property { get; }
+        IFormIDSetLinkGetter<IPlacedObjectGetter> MerchantContainer { get; }
+        bool MerchantContainer_IsSet { get; }
 
         #endregion
         #region Horse
-        IPlacedCreatureGetter Horse { get; }
-        IFormIDSetLinkGetter<IPlacedCreatureGetter> Horse_Property { get; }
+        IFormIDSetLinkGetter<IPlacedCreatureGetter> Horse { get; }
+        bool Horse_IsSet { get; }
 
         #endregion
         #region RagdollData
@@ -1430,13 +1461,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedNPCInternal item)
         {
             ClearPartial();
-            item.Base_Property.Unset();
+            item.Base.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.DistantLODData_Unset();
             item.EnableParent_Unset();
-            item.MerchantContainer_Property.Unset();
-            item.Horse_Property.Unset();
+            item.MerchantContainer.Unset();
+            item.Horse.Unset();
             item.RagdollData_Unset();
             item.Scale_Unset();
             item.Position = default(P3Float);
@@ -1543,10 +1574,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x454D414E: // NAME
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Base_Property);
+                        item: out IFormIDSetLink<NPC> BaseParse))
+                    {
+                        item.Base = BaseParse;
+                    }
+                    else
+                    {
+                        item.Base = default(IFormIDSetLink<NPC>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
@@ -1626,19 +1664,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x43524D58: // XMRC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.MerchantContainer_Property);
+                        item: out IFormIDSetLink<PlacedObject> MerchantContainerParse))
+                    {
+                        item.MerchantContainer = MerchantContainerParse;
+                    }
+                    else
+                    {
+                        item.MerchantContainer = default(IFormIDSetLink<PlacedObject>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.MerchantContainer);
                 }
                 case 0x53524858: // XHRS
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Horse_Property);
+                        item: out IFormIDSetLink<PlacedCreature> HorseParse))
+                    {
+                        item.Horse = HorseParse;
+                    }
+                    else
+                    {
+                        item.Horse = default(IFormIDSetLink<PlacedCreature>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedNPC_FieldIndex.Horse);
                 }
                 case 0x44475258: // XRGD
@@ -1759,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
+            ret.Base = object.Equals(item.Base, rhs.Base);
             ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && MemoryExtensions.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && MemoryExtensions.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
@@ -1776,8 +1828,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.MerchantContainer = item.MerchantContainer_Property.FormKey == rhs.MerchantContainer_Property.FormKey;
-            ret.Horse = item.Horse_Property.FormKey == rhs.Horse_Property.FormKey;
+            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
+            ret.Horse = object.Equals(item.Horse, rhs.Horse);
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
@@ -1836,7 +1888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendLine($"Base => {item.Base_Property}");
+                fg.AppendLine($"Base => {item.Base}");
             }
             if (printMask?.XPCIFluff ?? true)
             {
@@ -1856,11 +1908,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendLine($"MerchantContainer => {item.MerchantContainer_Property}");
+                fg.AppendLine($"MerchantContainer => {item.MerchantContainer}");
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendLine($"Horse => {item.Horse_Property}");
+                fg.AppendLine($"Horse => {item.Horse}");
             }
             if (printMask?.RagdollData ?? true)
             {
@@ -1888,15 +1940,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCGetter item,
             PlacedNPC_Mask<bool?> checkMask)
         {
-            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
+            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_IsSet) return false;
             if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
             if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
             if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
             if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_Property.HasBeenSet) return false;
-            if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_Property.HasBeenSet) return false;
+            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != item.MerchantContainer_IsSet) return false;
+            if (checkMask.Horse.HasValue && checkMask.Horse.Value != item.Horse_IsSet) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
             return base.HasBeenSet(
@@ -1908,13 +1960,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNPCGetter item,
             PlacedNPC_Mask<bool> mask)
         {
-            mask.Base = item.Base_Property.HasBeenSet;
+            mask.Base = item.Base_IsSet;
             mask.XPCIFluff = item.XPCIFluff_IsSet;
             mask.FULLFluff = item.FULLFluff_IsSet;
             mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
             mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
-            mask.MerchantContainer = item.MerchantContainer_Property.HasBeenSet;
-            mask.Horse = item.Horse_Property.HasBeenSet;
+            mask.MerchantContainer = item.MerchantContainer_IsSet;
+            mask.Horse = item.Horse_IsSet;
             mask.RagdollData = item.RagdollData_IsSet;
             mask.Scale = item.Scale_IsSet;
             mask.Position = true;
@@ -1969,10 +2021,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
-            if (lhs.Base_Property.HasBeenSet)
+            if (lhs.Base_IsSet != rhs.Base_IsSet) return false;
+            if (lhs.Base_IsSet)
             {
-                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
+                if (!lhs.Base.Equals(rhs.Base)) return false;
             }
             if (lhs.XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
             if (lhs.XPCIFluff_IsSet)
@@ -1994,15 +2046,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
             }
-            if (lhs.MerchantContainer_Property.HasBeenSet != rhs.MerchantContainer_Property.HasBeenSet) return false;
-            if (lhs.MerchantContainer_Property.HasBeenSet)
+            if (lhs.MerchantContainer_IsSet != rhs.MerchantContainer_IsSet) return false;
+            if (lhs.MerchantContainer_IsSet)
             {
-                if (!lhs.MerchantContainer_Property.Equals(rhs.MerchantContainer_Property)) return false;
+                if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
             }
-            if (lhs.Horse_Property.HasBeenSet != rhs.Horse_Property.HasBeenSet) return false;
-            if (lhs.Horse_Property.HasBeenSet)
+            if (lhs.Horse_IsSet != rhs.Horse_IsSet) return false;
+            if (lhs.Horse_IsSet)
             {
-                if (!lhs.Horse_Property.Equals(rhs.Horse_Property)) return false;
+                if (!lhs.Horse.Equals(rhs.Horse)) return false;
             }
             if (lhs.RagdollData_IsSet != rhs.RagdollData_IsSet) return false;
             if (lhs.RagdollData_IsSet)
@@ -2041,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IPlacedNPCGetter item)
         {
             int ret = 0;
-            if (item.Base_Property.HasBeenSet)
+            if (item.Base_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
             }
@@ -2061,11 +2113,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
             }
-            if (item.MerchantContainer_Property.HasBeenSet)
+            if (item.MerchantContainer_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.MerchantContainer).CombineHashCode(ret);
             }
-            if (item.Horse_Property.HasBeenSet)
+            if (item.Horse_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Horse).CombineHashCode(ret);
             }
@@ -2103,6 +2155,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPlacedNPCGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Base;
+            if (obj.EnableParent != null)
+            {
+                foreach (var item in obj.EnableParent.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.MerchantContainer;
+            yield return obj.Horse;
+            yield break;
+        }
+        
         partial void PostDuplicate(PlacedNPC obj, PlacedNPC rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2151,7 +2222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToFormKey(rhs: rhs.Base_Property);
+                    item.Base.SetToFormKey(rhs: rhs.Base);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2272,7 +2343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
                 try
                 {
-                    item.MerchantContainer_Property.SetToFormKey(rhs: rhs.MerchantContainer_Property);
+                    item.MerchantContainer.SetToFormKey(rhs: rhs.MerchantContainer);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2289,7 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
                 try
                 {
-                    item.Horse_Property.SetToFormKey(rhs: rhs.Horse_Property);
+                    item.Horse.SetToFormKey(rhs: rhs.Horse);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2500,13 +2571,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Base_Property.HasBeenSet
+            if (item.Base_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Base) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base_Property?.FormKey,
+                    item: item.Base?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -2554,23 +2625,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedNPC_FieldIndex.EnableParent));
             }
-            if (item.MerchantContainer_Property.HasBeenSet
+            if (item.MerchantContainer_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.MerchantContainer) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MerchantContainer),
-                    item: item.MerchantContainer_Property?.FormKey,
+                    item: item.MerchantContainer?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }
-            if (item.Horse_Property.HasBeenSet
+            if (item.Horse_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedNPC_FieldIndex.Horse) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Horse),
-                    item: item.Horse_Property?.FormKey,
+                    item: item.Horse?.FormKey,
                     fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
                     errorMask: errorMask);
             }
@@ -2732,11 +2803,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Base":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Base_Property,
-                        fieldIndex: (int)PlacedNPC_FieldIndex.Base,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Base);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<NPC> BaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.Base = BaseParse;
+                        }
+                        else
+                        {
+                            item.Base = default(IFormIDSetLink<NPC>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "XPCIFluff":
                     try
@@ -2845,18 +2935,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "MerchantContainer":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.MerchantContainer_Property,
-                        fieldIndex: (int)PlacedNPC_FieldIndex.MerchantContainer,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.MerchantContainer);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<PlacedObject> MerchantContainerParse,
+                            errorMask: errorMask))
+                        {
+                            item.MerchantContainer = MerchantContainerParse;
+                        }
+                        else
+                        {
+                            item.MerchantContainer = default(IFormIDSetLink<PlacedObject>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Horse":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Horse_Property,
-                        fieldIndex: (int)PlacedNPC_FieldIndex.Horse,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedNPC_FieldIndex.Horse);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<PlacedCreature> HorseParse,
+                            errorMask: errorMask))
+                        {
+                            item.Horse = HorseParse;
+                        }
+                        else
+                        {
+                            item.Horse = default(IFormIDSetLink<PlacedCreature>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "RagdollData":
                     try
@@ -3652,11 +3780,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            if (item.Base_Property.HasBeenSet)
+            if (item.Base_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Base_Property,
+                    item: item.Base,
                     header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.NAME_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -3697,20 +3825,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.MerchantContainer_Property.HasBeenSet)
+            if (item.MerchantContainer_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.MerchantContainer_Property,
+                    item: item.MerchantContainer,
                     header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XMRC_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Horse_Property.HasBeenSet)
+            if (item.Horse_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Horse_Property,
+                    item: item.Horse,
                     header: recordTypeConverter.ConvertToCustom(PlacedNPC_Registration.XHRS_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -3871,6 +3999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedNPCGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => PlacedNPCCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => PlacedNPCXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3903,8 +4032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Base
         private int? _BaseLocation;
         public bool Base_IsSet => _BaseLocation.HasValue;
-        public IFormIDSetLinkGetter<INPCGetter> Base_Property => _BaseLocation.HasValue ? new FormIDSetLink<INPCGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<INPCGetter>.Empty;
-        public INPCGetter Base => default;
+        public IFormIDSetLinkGetter<INPCGetter> Base => _BaseLocation.HasValue ? new FormIDSetLink<INPCGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<INPCGetter>.Empty;
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -3931,14 +4059,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MerchantContainer
         private int? _MerchantContainerLocation;
         public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedObjectGetter> MerchantContainer_Property => _MerchantContainerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
-        public IPlacedObjectGetter MerchantContainer => default;
+        public IFormIDSetLinkGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormIDSetLink<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedObjectGetter>.Empty;
         #endregion
         #region Horse
         private int? _HorseLocation;
         public bool Horse_IsSet => _HorseLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedCreatureGetter> Horse_Property => _HorseLocation.HasValue ? new FormIDSetLink<IPlacedCreatureGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedCreatureGetter>.Empty;
-        public IPlacedCreatureGetter Horse => default;
+        public IFormIDSetLinkGetter<IPlacedCreatureGetter> Horse => _HorseLocation.HasValue ? new FormIDSetLink<IPlacedCreatureGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedCreatureGetter>.Empty;
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;

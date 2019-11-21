@@ -1238,6 +1238,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return AlphaLayer.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IAlphaLayerGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
     {

@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Binary
                 masterReferences: masterReferences,
                 item: out FormKey val))
             {
-                item.Set(val);
+                item.FormKey = val;
             }
             else
             {
-                item.Unset();
+                item.FormKey = FormKey.NULL;
             }
         }
 
@@ -70,11 +70,11 @@ namespace Mutagen.Bethesda.Binary
                 masterReferences: masterReferences,
                 item: out FormKey val))
             {
-                item.Set(val);
+                item.FormKey = val;
             }
             else
             {
-                item.Unset();
+                item.FormKey = FormKey.NULL;
             }
         }
 

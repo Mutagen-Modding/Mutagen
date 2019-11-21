@@ -1207,6 +1207,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RoadPoint.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRoadPointGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RoadPointSetterTranslationCommon
     {

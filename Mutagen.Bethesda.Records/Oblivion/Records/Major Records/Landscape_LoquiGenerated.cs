@@ -399,38 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Landscape_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Layers.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            foreach (var item in Textures)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Layers)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Textures)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => LandscapeCommon.Instance.GetLinks(this);
         public Landscape(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -531,8 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscapeGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<ILandscapeInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILandscapeInternal>
     {
         new Byte[] Unknown { get; set; }
         new bool Unknown_IsSet { get; set; }
@@ -570,6 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter,
         ILoquiObject<ILandscapeGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Unknown
@@ -1765,6 +1734,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILandscapeGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Layers.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Textures)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Landscape obj, Landscape rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -3248,6 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => LandscapeCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

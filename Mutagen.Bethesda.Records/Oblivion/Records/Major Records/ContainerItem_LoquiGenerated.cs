@@ -50,12 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public IFormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
-        public ItemAbstract Item { get => Item_Property.Item; set => Item_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<ItemAbstract> IContainerItem.Item_Property => this.Item_Property;
-        IItemAbstractGetter IContainerItemGetter.Item => this.Item_Property.Item;
-        IFormIDLinkGetter<IItemAbstractGetter> IContainerItemGetter.Item_Property => this.Item_Property;
+        public IFormIDLink<ItemAbstract> Item { get; set; }
+        IFormIDLinkGetter<IItemAbstractGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
         public UInt32 Count { get; set; }
@@ -262,19 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ContainerItem_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Item_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Item_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => ContainerItemCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -363,11 +347,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IContainerItem :
         IContainerItemGetter,
-        ILoquiObjectSetter<IContainerItem>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IContainerItem>
     {
-        new ItemAbstract Item { get; set; }
-        new IFormIDLink<ItemAbstract> Item_Property { get; }
+        new IFormIDLink<ItemAbstract> Item { get; set; }
+
         new UInt32 Count { get; set; }
 
     }
@@ -376,6 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IContainerItemGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -385,8 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Item
-        IItemAbstractGetter Item { get; }
-        IFormIDLinkGetter<IItemAbstractGetter> Item_Property { get; }
+        IFormIDLinkGetter<IItemAbstractGetter> Item { get; }
 
         #endregion
         #region Count
@@ -957,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = default(ItemAbstract);
+            item.Item.Unset();
             item.Count = default(UInt32);
         }
         
@@ -997,10 +980,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Item_Property);
+                item: out IFormIDLink<ItemAbstract> ItemParse))
+            {
+                item.Item = ItemParse;
+            }
+            else
+            {
+                item.Item = default(IFormIDLink<ItemAbstract>);
+            }
             item.Count = frame.ReadUInt32();
         }
         
@@ -1052,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Item = item.Item_Property.FormKey == rhs.Item_Property.FormKey;
+            ret.Item = object.Equals(item.Item, rhs.Item);
             ret.Count = item.Count == rhs.Count;
         }
         
@@ -1102,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Item ?? true)
             {
-                fg.AppendLine($"Item => {item.Item_Property}");
+                fg.AppendLine($"Item => {item.Item}");
             }
             if (printMask?.Count ?? true)
             {
@@ -1132,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Item_Property.Equals(rhs.Item_Property)) return false;
+            if (!lhs.Item.Equals(rhs.Item)) return false;
             if (lhs.Count != rhs.Count) return false;
             return true;
         }
@@ -1153,6 +1143,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ContainerItem.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IContainerItemGetter obj)
+        {
+            yield return obj.Item;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ContainerItemSetterTranslationCommon
     {
@@ -1167,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item_Property.FormKey = rhs.Item_Property.FormKey;
+                item.Item.FormKey = rhs.Item.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1261,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Item),
-                    item: item.Item_Property?.FormKey,
+                    item: item.Item?.FormKey,
                     fieldIndex: (int)ContainerItem_FieldIndex.Item,
                     errorMask: errorMask);
             }
@@ -1381,11 +1380,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Item":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Item_Property,
-                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<ItemAbstract> ItemParse,
+                            errorMask: errorMask))
+                        {
+                            item.Item = ItemParse;
+                        }
+                        else
+                        {
+                            item.Item = default(IFormIDLink<ItemAbstract>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Count":
                     try
@@ -1886,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Item_Property,
+                item: item.Item,
                 masterReferences: masterReferences);
             writer.Write(item.Count);
         }
@@ -2011,6 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerItemGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => ContainerItemCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => ContainerItemXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2042,10 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Item
-        public IFormIDLinkGetter<IItemAbstractGetter> Item_Property => new FormIDLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IItemAbstractGetter Item => default;
-        #endregion
+        public IFormIDLinkGetter<IItemAbstractGetter> Item => new FormIDLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

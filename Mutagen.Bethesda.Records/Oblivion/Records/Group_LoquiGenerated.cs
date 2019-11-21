@@ -288,26 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkContainer>()
-                .SelectMany((f) => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            foreach (var item in Items.Items.WhereCastable<T, ILinkSubContainer>())
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
@@ -398,8 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IGroup<T> :
         IGroupGetter<T>,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IGroup<T>>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IGroup<T>>
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new GroupTypeEnum GroupType { get; set; }
@@ -414,6 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -1374,6 +1355,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IGroupGetter<T> obj)
+        {
+            foreach (var item in obj.Items.Items.WhereCastable<T, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
         {
             foreach (var subItem in obj.Items.Items)
@@ -2531,6 +2522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

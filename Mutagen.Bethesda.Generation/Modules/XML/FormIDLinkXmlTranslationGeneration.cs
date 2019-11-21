@@ -11,9 +11,32 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormKey>
     {
+        public override string TypeName(TypeGeneration typeGen)
+        {
+            FormIDLinkType type = typeGen as FormIDLinkType;
+            switch (type.FormIDType)
+            {
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    return base.TypeName(typeGen);
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    return "RecordType";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         protected override string ItemWriteAccess(TypeGeneration typeGen, Accessor itemAccessor)
         {
-            return $"{itemAccessor.PropertyOrDirectAccess}?.FormKey";
+            FormIDLinkType type = typeGen as FormIDLinkType;
+            switch (type.FormIDType)
+            {
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    return $"{itemAccessor.PropertyOrDirectAccess}?.FormKey";
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    return $"{itemAccessor.PropertyOrDirectAccess}?.EDID";
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public override void GenerateCopyInRet(
@@ -28,7 +51,7 @@ namespace Mutagen.Bethesda.Generation
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.TypeName}XmlTranslation.Instance.Parse",
+                $"{retAccessor.DirectAccess}{this.TypeName(typeGen)}XmlTranslation.Instance.Parse",
                 $".Bubble((o) => new {linkType.TypeName(getter: false)}(o.Value))"))
             {
                 args.Add(nodeAccessor.DirectAccess);
@@ -52,7 +75,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     FG = fg,
                     TypeGen = typeGen,
-                    TranslatorLine = $"{this.TypeName}XmlTranslation.Instance",
+                    TranslatorLine = $"{this.TypeName(typeGen)}XmlTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,

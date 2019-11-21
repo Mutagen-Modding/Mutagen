@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class EDIDSetLink<T> : FormIDSetLink<T>, IEDIDSetLink<T>
+    public class EDIDSetLink<T> : EDIDLink<T>, IEDIDSetLink<T>
        where T : class, IMajorRecordCommonGetter
     {
         public new static readonly IEDIDSetLinkGetter<T> Empty = new EDIDSetLink<T>();
 
-        private IDisposable edidSub;
-        public RecordType EDID { get; private set; } = EDIDLink<T>.UNLINKED;
+        public bool HasBeenSet { get; set; }
 
         public EDIDSetLink()
             : base()
@@ -28,73 +27,45 @@ namespace Mutagen.Bethesda
             this.EDID = unlinkedEDID;
         }
 
-        public EDIDSetLink(FormKey unlinkedForm)
-            : base(unlinkedForm)
+        public void Set(RecordType value, bool hasBeenSet)
         {
+            this.HasBeenSet = hasBeenSet;
+            this.EDID = value;
         }
 
-        private void HandleItemChange(Change<T> change)
+        public void Set(T value, bool hasBeenSet)
         {
-            this.EDID = EDIDLink<T>.UNLINKED;
-            this.edidSub?.Dispose();
-            this.edidSub = change.New?.WhenAny(x => x.EditorID)
-                .Subscribe(UpdateUnlinked);
-        }
-
-        private void UpdateUnlinked(string change)
-        {
-            this.EDID = new RecordType(change);
-        }
-
-        public void Set(IEDIDLink<T> link)
-        {
-            if (link.Linked)
+            if (value?.EditorID == null)
             {
-                base.Set(link.Item);
+                this.EDID = UNLINKED;
+                this.HasBeenSet = hasBeenSet;
             }
-            else
-            {
-                this.EDID = link.EDID;
-            }
+            this.Set(new RecordType(value.EditorID), hasBeenSet);
         }
 
-        public override void Set(T value, bool hasBeenSet = true)
+        public override void Unset()
         {
-            HandleItemChange(new Change<T>(this.Item, value));
-            base.Set(value, hasBeenSet);
+            this.HasBeenSet = false;
+            this.EDID = UNLINKED;
         }
 
-        public void SetIfSucceeded(TryGet<RecordType> item)
+        public override bool Equals(object obj)
         {
-            if (item.Failed) return;
-            Set(item.Value);
+            if (!(obj is IEDIDSetLink<T> rhs)) return false;
+            return this.Equals(rhs);
         }
 
-        public void Set(RecordType item)
+        public bool Equals(IEDIDSetLink<T> other)
         {
-            this.EDID = item;
-            this.HasBeenSet = true;
+            if (this.HasBeenSet != other.HasBeenSet) return false;
+            if (this.EDID != other.EDID) return false;
+            return true;
         }
 
-        public void SetIfSuccessful(TryGet<string> item)
+        public override int GetHashCode()
         {
-            if (!item.Succeeded) return;
-            Set(item.Value);
-        }
-
-        public void Set(string item)
-        {
-            this.EDID = new RecordType(item);
-            this.HasBeenSet = true;
-        }
-
-        public override bool Link<M>(LinkingPackage<M> package)
-        {
-            if (this.UnlinkedForm.HasValue)
-            {
-                return base.Link(package);
-            }
-            return EDIDLink<T>.TryLink(this, package);
+            return this.EDID.GetHashCode()
+                .CombineHashCode(this.HasBeenSet.GetHashCode());
         }
     }
 }

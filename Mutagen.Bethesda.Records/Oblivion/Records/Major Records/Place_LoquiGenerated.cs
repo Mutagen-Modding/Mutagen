@@ -241,22 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => PlaceCommon.Instance.GetLinks(this);
         public Place(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -311,8 +296,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaceGetter,
         IOblivionMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IPlaceInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IPlaceInternal>
     {
     }
 
@@ -328,6 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IPlaceGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
 
@@ -1159,6 +1144,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPlaceGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Place obj, Place rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -1868,6 +1862,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlaceGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => PlaceCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => PlaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Examples
                     NPCs = true,
                     Classes = true,
                 });
+            var links = new LinkingPackage<IOblivionModGetter>(mod, null);
             foreach (var npc in mod.NPCs.Items.Items)
             {
                 // Not all NPCs have classes, so skip any that don't have one
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Examples
 
                 // Access class directly, and get its name.
                 // Also, we can still get access to the FormID (Or the more strongly typed FormKey) if desired through the property
-                output($"{npc.EditorID} => {npc.Class.Name} ({npc.Class_Property.FormKey})");
+                output($"{npc.EditorID} => {npc.Class.Resolve(links).Name} ({npc.Class.FormKey})");
             }
         }
     }

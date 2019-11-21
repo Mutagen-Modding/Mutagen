@@ -321,30 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LoadScreen_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Locations.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Locations)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => LoadScreenCommon.Instance.GetLinks(this);
         public LoadScreen(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -444,8 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILoadScreen :
         ILoadScreenGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ILoadScreenInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILoadScreenInternal>
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
@@ -471,6 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<ILoadScreenGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Icon
@@ -1494,6 +1471,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILoadScreenGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Locations.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(LoadScreen obj, LoadScreen rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2617,6 +2607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILoadScreenGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => LoadScreenCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => LoadScreenXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

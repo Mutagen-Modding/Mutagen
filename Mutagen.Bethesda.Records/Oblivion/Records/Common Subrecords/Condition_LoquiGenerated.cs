@@ -1382,6 +1382,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return Condition.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IConditionGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ConditionSetterTranslationCommon
     {

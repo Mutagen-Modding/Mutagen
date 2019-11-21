@@ -1244,6 +1244,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return AIPackageSchedule.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IAIPackageScheduleGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class AIPackageScheduleSetterTranslationCommon
     {

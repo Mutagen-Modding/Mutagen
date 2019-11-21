@@ -16,11 +16,11 @@ namespace Mutagen.Bethesda.Binary
         {
             if (Parse(frame, ExpectedLength, out RecordType val))
             {
-                item.Set(val);
+                item.EDID = val;
             }
             else
             {
-                item.Unset();
+                item.EDID = EDIDLink<T>.UNLINKED;
             }
         }
 
@@ -29,11 +29,11 @@ namespace Mutagen.Bethesda.Binary
         {
             if (Parse(frame, ExpectedLength, out RecordType val))
             {
-                item.Set(val);
+                item.EDID = val;
             }
             else
             {
-                item.Unset();
+                item.EDID = EDIDLink<T>.UNLINKED;
             }
         }
 
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDLink<T> item,
-            MasterReferences masterReferences)
+            MasterReferences masterReferences = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDSetLink<T> item,
-            MasterReferences masterReferences)
+            MasterReferences masterReferences = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.WriteValue(
                 writer,
-                item.Linked ? item.EDID : EDIDLink<T>.UNLINKED);
+                item.EDID);
         }
 
         public void Write<T>(

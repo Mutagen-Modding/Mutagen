@@ -50,12 +50,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public IFormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
-        public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
+        public bool Sound_IsSet
+        {
+            get => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound];
+            set => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound] = value;
+        }
+        bool ISoundItemGetter.Sound_IsSet => Sound_IsSet;
+        private IFormIDSetLink<Sound> _Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Sound> ISoundItem.Sound_Property => this.Sound_Property;
-        ISoundGetter ISoundItemGetter.Sound => this.Sound_Property.Item;
-        IFormIDSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound_Property => this.Sound_Property;
+        public IFormIDSetLink<Sound> Sound
+        {
+            get => this._Sound;
+            set => Sound_Set(value);
+        }
+        IFormIDSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
+        public void Sound_Set(
+            IFormIDSetLink<Sound> value,
+            bool markSet = true)
+        {
+            _Sound = value;
+            _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound] = markSet;
+        }
+        public void Sound_Unset()
+        {
+            this.Sound_Set(default(IFormIDSetLink<Sound>), false);
+        }
         #endregion
         #region Chance
         public bool Chance_IsSet
@@ -276,29 +295,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((SoundItem_FieldIndex)index)
             {
+                case SoundItem_FieldIndex.Sound:
                 case SoundItem_FieldIndex.Chance:
                     return _hasBeenSetTracker[index];
-                case SoundItem_FieldIndex.Sound:
-                    return Sound_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
             }
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Sound_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Sound_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => SoundItemCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -387,11 +393,13 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISoundItem :
         ISoundItemGetter,
-        ILoquiObjectSetter<ISoundItem>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ISoundItem>
     {
-        new Sound Sound { get; set; }
-        new IFormIDSetLink<Sound> Sound_Property { get; }
+        new IFormIDSetLink<Sound> Sound { get; set; }
+        new bool Sound_IsSet { get; set; }
+        void Sound_Set(IFormIDSetLink<Sound> value, bool hasBeenSet = true);
+        void Sound_Unset();
+
         new Byte Chance { get; set; }
         new bool Chance_IsSet { get; set; }
         void Chance_Set(Byte value, bool hasBeenSet = true);
@@ -403,6 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ISoundItemGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -412,8 +421,8 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Sound
-        ISoundGetter Sound { get; }
-        IFormIDSetLinkGetter<ISoundGetter> Sound_Property { get; }
+        IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
+        bool Sound_IsSet { get; }
 
         #endregion
         #region Chance
@@ -997,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ISoundItem item)
         {
             ClearPartial();
-            item.Sound_Property.Unset();
+            item.Sound.Unset();
             item.Chance_Unset();
         }
         
@@ -1056,10 +1065,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Sound_Property);
+                        item: out IFormIDSetLink<Sound> SoundParse))
+                    {
+                        item.Sound = SoundParse;
+                    }
+                    else
+                    {
+                        item.Sound = default(IFormIDSetLink<Sound>);
+                    }
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 }
                 case 0x43445343: // CSDC
@@ -1120,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Sound = item.Sound_Property.FormKey == rhs.Sound_Property.FormKey;
+            ret.Sound = object.Equals(item.Sound, rhs.Sound);
             ret.Chance = item.Chance_IsSet == rhs.Chance_IsSet && item.Chance == rhs.Chance;
         }
         
@@ -1170,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Sound ?? true)
             {
-                fg.AppendLine($"Sound => {item.Sound_Property}");
+                fg.AppendLine($"Sound => {item.Sound}");
             }
             if (printMask?.Chance ?? true)
             {
@@ -1182,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItemGetter item,
             SoundItem_Mask<bool?> checkMask)
         {
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_IsSet) return false;
             if (checkMask.Chance.HasValue && checkMask.Chance.Value != item.Chance_IsSet) return false;
             return true;
         }
@@ -1191,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItemGetter item,
             SoundItem_Mask<bool> mask)
         {
-            mask.Sound = item.Sound_Property.HasBeenSet;
+            mask.Sound = item.Sound_IsSet;
             mask.Chance = item.Chance_IsSet;
         }
         
@@ -1202,10 +1218,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
-            if (lhs.Sound_Property.HasBeenSet)
+            if (lhs.Sound_IsSet != rhs.Sound_IsSet) return false;
+            if (lhs.Sound_IsSet)
             {
-                if (!lhs.Sound_Property.Equals(rhs.Sound_Property)) return false;
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
             if (lhs.Chance_IsSet != rhs.Chance_IsSet) return false;
             if (lhs.Chance_IsSet)
@@ -1218,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISoundItemGetter item)
         {
             int ret = 0;
-            if (item.Sound_Property.HasBeenSet)
+            if (item.Sound_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
             }
@@ -1237,6 +1253,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return SoundItem.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ISoundItemGetter obj)
+        {
+            yield return obj.Sound;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class SoundItemSetterTranslationCommon
     {
@@ -1254,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
                 try
                 {
-                    item.Sound_Property.SetToFormKey(rhs: rhs.Sound_Property);
+                    item.Sound.SetToFormKey(rhs: rhs.Sound);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1373,13 +1398,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if (item.Sound_Property.HasBeenSet
+            if (item.Sound_IsSet
                 && (translationMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Sound),
-                    item: item.Sound_Property?.FormKey,
+                    item: item.Sound?.FormKey,
                     fieldIndex: (int)SoundItem_FieldIndex.Sound,
                     errorMask: errorMask);
             }
@@ -1500,11 +1525,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Sound":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Sound_Property,
-                        fieldIndex: (int)SoundItem_FieldIndex.Sound,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Sound> SoundParse,
+                            errorMask: errorMask))
+                        {
+                            item.Sound = SoundParse;
+                        }
+                        else
+                        {
+                            item.Sound = default(IFormIDSetLink<Sound>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Chance":
                     try
@@ -2004,11 +2048,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.Sound_Property.HasBeenSet)
+            if (item.Sound_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Sound_Property,
+                    item: item.Sound,
                     header: recordTypeConverter.ConvertToCustom(SoundItem_Registration.CSDI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -2138,6 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => SoundItemCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2172,8 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoundGetter> Sound_Property => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
-        public ISoundGetter Sound => default;
+        public IFormIDSetLinkGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormIDSetLink<ISoundGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormIDSetLink<ISoundGetter>.Empty;
         #endregion
         #region Chance
         private int? _ChanceLocation;

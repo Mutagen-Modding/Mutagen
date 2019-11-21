@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
             }
 
-             TranslationGeneration.WrapParseCall(
+            TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
                 {
                     FG = fg,
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
                 case FormIDLinkType.FormIDTypeEnum.Normal:
                     return $"new {linkType.DirectTypeName(getter: true, internalInterface: true)}(FormKey.Factory({packageAccessor}.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian({dataAccessor})))";
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
-                    return $"EDIDLink<{linkType.LoquiType.TypeName(getter: true, internalInterface: true)}>.FactoryFromCache(edidRecordType: new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})), targetRecordType: {linkType.LoquiType.TargetObjectGeneration.GetTriggeringSource()}, package: {packageAccessor})";
+                    return $"new EDIDLink<{linkType.LoquiType.TypeName(getter: true, internalInterface: true)}>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})))";
                 default:
                     throw new NotImplementedException();
             }
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new ArgumentException();
                 }
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true, internalInterface: true)}.Empty;");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Empty;");
             }
             else
             {
@@ -226,15 +226,14 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (dataType == null)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
                 }
                 else
                 {
                     DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Property} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {linkType.DirectTypeName(getter: true, internalInterface: true)}.Empty;");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {linkType.DirectTypeName(getter: true)}.Empty;");
                 }
             }
-            fg.AppendLine($"public {linkType.LoquiType.TypeName(getter: true, internalInterface: true)} {linkType.Name} => default;");
         }
     }
 }

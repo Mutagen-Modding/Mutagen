@@ -52,12 +52,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        public IFormIDSetLink<OblivionMajorRecord> Base_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
-        public OblivionMajorRecord Base { get => Base_Property.Item; set => Base_Property.Item = value; }
+        public bool Base_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Base];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Base] = value;
+        }
+        bool IPlacedObjectGetter.Base_IsSet => Base_IsSet;
+        private IFormIDSetLink<OblivionMajorRecord> _Base;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<OblivionMajorRecord> IPlacedObject.Base_Property => this.Base_Property;
-        IOblivionMajorRecordGetter IPlacedObjectGetter.Base => this.Base_Property.Item;
-        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base_Property => this.Base_Property;
+        public IFormIDSetLink<OblivionMajorRecord> Base
+        {
+            get => this._Base;
+            set => Base_Set(value);
+        }
+        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
+        public void Base_Set(
+            IFormIDSetLink<OblivionMajorRecord> value,
+            bool markSet = true)
+        {
+            _Base = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Base] = markSet;
+        }
+        public void Base_Unset()
+        {
+            this.Base_Set(default(IFormIDSetLink<OblivionMajorRecord>), false);
+        }
         #endregion
         #region XPCIFluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,12 +193,31 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformationGetter IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
-        public IFormIDSetLink<IOwner> Owner_Property { get; } = new FormIDSetLink<IOwner>();
-        public IOwner Owner { get => Owner_Property.Item; set => Owner_Property.Item = value; }
+        public bool Owner_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Owner];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Owner] = value;
+        }
+        bool IPlacedObjectGetter.Owner_IsSet => Owner_IsSet;
+        private IFormIDSetLink<IOwner> _Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<IOwner> IPlacedObject.Owner_Property => this.Owner_Property;
-        IOwner IPlacedObjectGetter.Owner => this.Owner_Property.Item;
-        IFormIDSetLinkGetter<IOwner> IPlacedObjectGetter.Owner_Property => this.Owner_Property;
+        public IFormIDSetLink<IOwner> Owner
+        {
+            get => this._Owner;
+            set => Owner_Set(value);
+        }
+        IFormIDSetLinkGetter<IOwner> IPlacedObjectGetter.Owner => this.Owner;
+        public void Owner_Set(
+            IFormIDSetLink<IOwner> value,
+            bool markSet = true)
+        {
+            _Owner = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Owner] = markSet;
+        }
+        public void Owner_Unset()
+        {
+            this.Owner_Set(default(IFormIDSetLink<IOwner>), false);
+        }
         #endregion
         #region FactionRank
         public bool FactionRank_IsSet
@@ -209,12 +247,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GlobalVariable
-        public IFormIDSetLink<Global> GlobalVariable_Property { get; } = new FormIDSetLink<Global>();
-        public Global GlobalVariable { get => GlobalVariable_Property.Item; set => GlobalVariable_Property.Item = value; }
+        public bool GlobalVariable_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.GlobalVariable];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.GlobalVariable] = value;
+        }
+        bool IPlacedObjectGetter.GlobalVariable_IsSet => GlobalVariable_IsSet;
+        private IFormIDSetLink<Global> _GlobalVariable;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Global> IPlacedObject.GlobalVariable_Property => this.GlobalVariable_Property;
-        IGlobalGetter IPlacedObjectGetter.GlobalVariable => this.GlobalVariable_Property.Item;
-        IFormIDSetLinkGetter<IGlobalGetter> IPlacedObjectGetter.GlobalVariable_Property => this.GlobalVariable_Property;
+        public IFormIDSetLink<Global> GlobalVariable
+        {
+            get => this._GlobalVariable;
+            set => GlobalVariable_Set(value);
+        }
+        IFormIDSetLinkGetter<IGlobalGetter> IPlacedObjectGetter.GlobalVariable => this.GlobalVariable;
+        public void GlobalVariable_Set(
+            IFormIDSetLink<Global> value,
+            bool markSet = true)
+        {
+            _GlobalVariable = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.GlobalVariable] = markSet;
+        }
+        public void GlobalVariable_Unset()
+        {
+            this.GlobalVariable_Set(default(IFormIDSetLink<Global>), false);
+        }
         #endregion
         #region EnableParent
         public bool EnableParent_IsSet
@@ -245,12 +302,31 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
-        public IFormIDSetLink<IPlaced> Target_Property { get; } = new FormIDSetLink<IPlaced>();
-        public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
+        public bool Target_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Target];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Target] = value;
+        }
+        bool IPlacedObjectGetter.Target_IsSet => Target_IsSet;
+        private IFormIDSetLink<IPlaced> _Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<IPlaced> IPlacedObject.Target_Property => this.Target_Property;
-        IPlacedGetter IPlacedObjectGetter.Target => this.Target_Property.Item;
-        IFormIDSetLinkGetter<IPlacedGetter> IPlacedObjectGetter.Target_Property => this.Target_Property;
+        public IFormIDSetLink<IPlaced> Target
+        {
+            get => this._Target;
+            set => Target_Set(value);
+        }
+        IFormIDSetLinkGetter<IPlacedGetter> IPlacedObjectGetter.Target => this.Target;
+        public void Target_Set(
+            IFormIDSetLink<IPlaced> value,
+            bool markSet = true)
+        {
+            _Target = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Target] = markSet;
+        }
+        public void Target_Unset()
+        {
+            this.Target_Set(default(IFormIDSetLink<IPlaced>), false);
+        }
         #endregion
         #region SpeedTreeSeed
         public bool SpeedTreeSeed_IsSet
@@ -389,12 +465,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Unknown
-        public IFormIDSetLink<OblivionMajorRecord> Unknown_Property { get; } = new FormIDSetLink<OblivionMajorRecord>();
-        public OblivionMajorRecord Unknown { get => Unknown_Property.Item; set => Unknown_Property.Item = value; }
+        public bool Unknown_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Unknown];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Unknown] = value;
+        }
+        bool IPlacedObjectGetter.Unknown_IsSet => Unknown_IsSet;
+        private IFormIDSetLink<OblivionMajorRecord> _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<OblivionMajorRecord> IPlacedObject.Unknown_Property => this.Unknown_Property;
-        IOblivionMajorRecordGetter IPlacedObjectGetter.Unknown => this.Unknown_Property.Item;
-        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Unknown_Property => this.Unknown_Property;
+        public IFormIDSetLink<OblivionMajorRecord> Unknown
+        {
+            get => this._Unknown;
+            set => Unknown_Set(value);
+        }
+        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Unknown => this.Unknown;
+        public void Unknown_Set(
+            IFormIDSetLink<OblivionMajorRecord> value,
+            bool markSet = true)
+        {
+            _Unknown = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Unknown] = markSet;
+        }
+        public void Unknown_Unset()
+        {
+            this.Unknown_Set(default(IFormIDSetLink<OblivionMajorRecord>), false);
+        }
         #endregion
         #region ActionFlags
         public bool ActionFlags_IsSet
@@ -538,12 +633,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ContainedSoul
-        public IFormIDSetLink<SoulGem> ContainedSoul_Property { get; } = new FormIDSetLink<SoulGem>();
-        public SoulGem ContainedSoul { get => ContainedSoul_Property.Item; set => ContainedSoul_Property.Item = value; }
+        public bool ContainedSoul_IsSet
+        {
+            get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ContainedSoul];
+            set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ContainedSoul] = value;
+        }
+        bool IPlacedObjectGetter.ContainedSoul_IsSet => ContainedSoul_IsSet;
+        private IFormIDSetLink<SoulGem> _ContainedSoul;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<SoulGem> IPlacedObject.ContainedSoul_Property => this.ContainedSoul_Property;
-        ISoulGemGetter IPlacedObjectGetter.ContainedSoul => this.ContainedSoul_Property.Item;
-        IFormIDSetLinkGetter<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul_Property => this.ContainedSoul_Property;
+        public IFormIDSetLink<SoulGem> ContainedSoul
+        {
+            get => this._ContainedSoul;
+            set => ContainedSoul_Set(value);
+        }
+        IFormIDSetLinkGetter<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul => this.ContainedSoul;
+        public void ContainedSoul_Set(
+            IFormIDSetLink<SoulGem> value,
+            bool markSet = true)
+        {
+            _ContainedSoul = value;
+            _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ContainedSoul] = markSet;
+        }
+        public void ContainedSoul_Unset()
+        {
+            this.ContainedSoul_Set(default(IFormIDSetLink<SoulGem>), false);
+        }
         #endregion
         #region Position
         private P3Float _Position;
@@ -762,35 +876,29 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch ((PlacedObject_FieldIndex)index)
             {
+                case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.XPCIFluff:
                 case PlacedObject_FieldIndex.FULLFluff:
                 case PlacedObject_FieldIndex.TeleportDestination:
                 case PlacedObject_FieldIndex.Lock:
+                case PlacedObject_FieldIndex.Owner:
                 case PlacedObject_FieldIndex.FactionRank:
+                case PlacedObject_FieldIndex.GlobalVariable:
                 case PlacedObject_FieldIndex.EnableParent:
+                case PlacedObject_FieldIndex.Target:
                 case PlacedObject_FieldIndex.SpeedTreeSeed:
                 case PlacedObject_FieldIndex.DistantLODData:
                 case PlacedObject_FieldIndex.Charge:
                 case PlacedObject_FieldIndex.Health:
                 case PlacedObject_FieldIndex.LevelModifier:
+                case PlacedObject_FieldIndex.Unknown:
                 case PlacedObject_FieldIndex.ActionFlags:
                 case PlacedObject_FieldIndex.Count:
                 case PlacedObject_FieldIndex.MapMarker:
                 case PlacedObject_FieldIndex.RagdollData:
                 case PlacedObject_FieldIndex.Scale:
-                    return _hasBeenSetTracker[index];
-                case PlacedObject_FieldIndex.Base:
-                    return Base_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.Owner:
-                    return Owner_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.GlobalVariable:
-                    return GlobalVariable_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.Target:
-                    return Target_Property.HasBeenSet;
-                case PlacedObject_FieldIndex.Unknown:
-                    return Unknown_Property.HasBeenSet;
                 case PlacedObject_FieldIndex.ContainedSoul:
-                    return ContainedSoul_Property.HasBeenSet;
+                    return _hasBeenSetTracker[index];
                 case PlacedObject_FieldIndex.OpenByDefault:
                 case PlacedObject_FieldIndex.Position:
                 case PlacedObject_FieldIndex.Rotation:
@@ -808,67 +916,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield return Base_Property;
-            if (TeleportDestination != null)
-            {
-                foreach (var item in TeleportDestination.Links)
-                {
-                    yield return item;
-                }
-            }
-            if (Lock != null)
-            {
-                foreach (var item in Lock.Links)
-                {
-                    yield return item;
-                }
-            }
-            yield return Owner_Property;
-            yield return GlobalVariable_Property;
-            if (EnableParent != null)
-            {
-                foreach (var item in EnableParent.Links)
-                {
-                    yield return item;
-                }
-            }
-            yield return Target_Property;
-            yield return Unknown_Property;
-            yield return ContainedSoul_Property;
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            Base_Property.Link(package);
-            if (TeleportDestination != null)
-            {
-                TeleportDestination?.Link(package: package);
-            }
-            if (Lock != null)
-            {
-                Lock?.Link(package: package);
-            }
-            Owner_Property.Link(package);
-            GlobalVariable_Property.Link(package);
-            if (EnableParent != null)
-            {
-                EnableParent?.Link(package: package);
-            }
-            Target_Property.Link(package);
-            Unknown_Property.Link(package);
-            ContainedSoul_Property.Link(package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
         public PlacedObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -969,11 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedObjectGetter,
         IOblivionMajorRecord,
         IPlaced,
-        ILoquiObjectSetter<IPlacedObjectInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IPlacedObjectInternal>
     {
-        new OblivionMajorRecord Base { get; set; }
-        new IFormIDSetLink<OblivionMajorRecord> Base_Property { get; }
+        new IFormIDSetLink<OblivionMajorRecord> Base { get; set; }
+        new bool Base_IsSet { get; set; }
+        void Base_Set(IFormIDSetLink<OblivionMajorRecord> value, bool hasBeenSet = true);
+        void Base_Unset();
+
         new Byte[] XPCIFluff { get; set; }
         new bool XPCIFluff_IsSet { get; set; }
         void XPCIFluff_Set(Byte[] value, bool hasBeenSet = true);
@@ -994,22 +1044,31 @@ namespace Mutagen.Bethesda.Oblivion
         void Lock_Set(LockInformation value, bool hasBeenSet = true);
         void Lock_Unset();
 
-        new IOwner Owner { get; set; }
-        new IFormIDSetLink<IOwner> Owner_Property { get; }
+        new IFormIDSetLink<IOwner> Owner { get; set; }
+        new bool Owner_IsSet { get; set; }
+        void Owner_Set(IFormIDSetLink<IOwner> value, bool hasBeenSet = true);
+        void Owner_Unset();
+
         new Int32 FactionRank { get; set; }
         new bool FactionRank_IsSet { get; set; }
         void FactionRank_Set(Int32 value, bool hasBeenSet = true);
         void FactionRank_Unset();
 
-        new Global GlobalVariable { get; set; }
-        new IFormIDSetLink<Global> GlobalVariable_Property { get; }
+        new IFormIDSetLink<Global> GlobalVariable { get; set; }
+        new bool GlobalVariable_IsSet { get; set; }
+        void GlobalVariable_Set(IFormIDSetLink<Global> value, bool hasBeenSet = true);
+        void GlobalVariable_Unset();
+
         new EnableParent EnableParent { get; set; }
         new bool EnableParent_IsSet { get; set; }
         void EnableParent_Set(EnableParent value, bool hasBeenSet = true);
         void EnableParent_Unset();
 
-        new IPlaced Target { get; set; }
-        new IFormIDSetLink<IPlaced> Target_Property { get; }
+        new IFormIDSetLink<IPlaced> Target { get; set; }
+        new bool Target_IsSet { get; set; }
+        void Target_Set(IFormIDSetLink<IPlaced> value, bool hasBeenSet = true);
+        void Target_Unset();
+
         new Byte SpeedTreeSeed { get; set; }
         new bool SpeedTreeSeed_IsSet { get; set; }
         void SpeedTreeSeed_Set(Byte value, bool hasBeenSet = true);
@@ -1035,8 +1094,11 @@ namespace Mutagen.Bethesda.Oblivion
         void LevelModifier_Set(Int32 value, bool hasBeenSet = true);
         void LevelModifier_Unset();
 
-        new OblivionMajorRecord Unknown { get; set; }
-        new IFormIDSetLink<OblivionMajorRecord> Unknown_Property { get; }
+        new IFormIDSetLink<OblivionMajorRecord> Unknown { get; set; }
+        new bool Unknown_IsSet { get; set; }
+        void Unknown_Set(IFormIDSetLink<OblivionMajorRecord> value, bool hasBeenSet = true);
+        void Unknown_Unset();
+
         new PlacedObject.ActionFlag ActionFlags { get; set; }
         new bool ActionFlags_IsSet { get; set; }
         void ActionFlags_Set(PlacedObject.ActionFlag value, bool hasBeenSet = true);
@@ -1064,8 +1126,11 @@ namespace Mutagen.Bethesda.Oblivion
         void Scale_Set(Single value, bool hasBeenSet = true);
         void Scale_Unset();
 
-        new SoulGem ContainedSoul { get; set; }
-        new IFormIDSetLink<SoulGem> ContainedSoul_Property { get; }
+        new IFormIDSetLink<SoulGem> ContainedSoul { get; set; }
+        new bool ContainedSoul_IsSet { get; set; }
+        void ContainedSoul_Set(IFormIDSetLink<SoulGem> value, bool hasBeenSet = true);
+        void ContainedSoul_Unset();
+
         new P3Float Position { get; set; }
 
         new P3Float Rotation { get; set; }
@@ -1086,11 +1151,12 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Base
-        IOblivionMajorRecordGetter Base { get; }
-        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Base_Property { get; }
+        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Base { get; }
+        bool Base_IsSet { get; }
 
         #endregion
         #region XPCIFluff
@@ -1114,8 +1180,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Owner
-        IOwner Owner { get; }
-        IFormIDSetLinkGetter<IOwner> Owner_Property { get; }
+        IFormIDSetLinkGetter<IOwner> Owner { get; }
+        bool Owner_IsSet { get; }
 
         #endregion
         #region FactionRank
@@ -1124,8 +1190,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region GlobalVariable
-        IGlobalGetter GlobalVariable { get; }
-        IFormIDSetLinkGetter<IGlobalGetter> GlobalVariable_Property { get; }
+        IFormIDSetLinkGetter<IGlobalGetter> GlobalVariable { get; }
+        bool GlobalVariable_IsSet { get; }
 
         #endregion
         #region EnableParent
@@ -1134,8 +1200,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Target
-        IPlacedGetter Target { get; }
-        IFormIDSetLinkGetter<IPlacedGetter> Target_Property { get; }
+        IFormIDSetLinkGetter<IPlacedGetter> Target { get; }
+        bool Target_IsSet { get; }
 
         #endregion
         #region SpeedTreeSeed
@@ -1164,8 +1230,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        IOblivionMajorRecordGetter Unknown { get; }
-        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Unknown_Property { get; }
+        IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Unknown { get; }
+        bool Unknown_IsSet { get; }
 
         #endregion
         #region ActionFlags
@@ -1198,8 +1264,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region ContainedSoul
-        ISoulGemGetter ContainedSoul { get; }
-        IFormIDSetLinkGetter<ISoulGemGetter> ContainedSoul_Property { get; }
+        IFormIDSetLinkGetter<ISoulGemGetter> ContainedSoul { get; }
+        bool ContainedSoul_IsSet { get; }
 
         #endregion
         #region Position
@@ -2084,29 +2150,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
-            item.Base_Property.Unset();
+            item.Base.Unset();
             item.XPCIFluff_Unset();
             item.FULLFluff_Unset();
             item.TeleportDestination_Unset();
             item.Lock_Unset();
-            item.Owner_Property.Unset();
+            item.Owner.Unset();
             item.FactionRank_Unset();
-            item.GlobalVariable_Property.Unset();
+            item.GlobalVariable.Unset();
             item.EnableParent_Unset();
-            item.Target_Property.Unset();
+            item.Target.Unset();
             item.SpeedTreeSeed_Unset();
             item.DistantLODData_Unset();
             item.Charge_Unset();
             item.Health_Unset();
             item.LevelModifier_Unset();
-            item.Unknown_Property.Unset();
+            item.Unknown.Unset();
             item.ActionFlags_Unset();
             item.Count_Unset();
             item.MapMarker_Unset();
             item.OpenByDefault = default(Boolean);
             item.RagdollData_Unset();
             item.Scale_Unset();
-            item.ContainedSoul_Property.Unset();
+            item.ContainedSoul.Unset();
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
             item.DATADataTypeState = default(PlacedObject.DATADataType);
@@ -2211,10 +2277,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x454D414E: // NAME
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Base_Property);
+                        item: out IFormIDSetLink<OblivionMajorRecord> BaseParse))
+                    {
+                        item.Base = BaseParse;
+                    }
+                    else
+                    {
+                        item.Base = default(IFormIDSetLink<OblivionMajorRecord>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
@@ -2294,10 +2367,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E574F58: // XOWN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Owner_Property);
+                        item: out IFormIDSetLink<IOwner> OwnerParse))
+                    {
+                        item.Owner = OwnerParse;
+                    }
+                    else
+                    {
+                        item.Owner = default(IFormIDSetLink<IOwner>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
@@ -2309,10 +2389,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x424C4758: // XGLB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.GlobalVariable_Property);
+                        item: out IFormIDSetLink<Global> GlobalVariableParse))
+                    {
+                        item.GlobalVariable = GlobalVariableParse;
+                    }
+                    else
+                    {
+                        item.GlobalVariable = default(IFormIDSetLink<Global>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -2340,10 +2427,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x47525458: // XTRG
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Target_Property);
+                        item: out IFormIDSetLink<IPlaced> TargetParse))
+                    {
+                        item.Target = TargetParse;
+                    }
+                    else
+                    {
+                        item.Target = default(IFormIDSetLink<IPlaced>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 }
                 case 0x44455358: // XSED
@@ -2404,10 +2498,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D545258: // XRTM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Unknown_Property);
+                        item: out IFormIDSetLink<OblivionMajorRecord> UnknownParse))
+                    {
+                        item.Unknown = UnknownParse;
+                    }
+                    else
+                    {
+                        item.Unknown = default(IFormIDSetLink<OblivionMajorRecord>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 }
                 case 0x54434158: // XACT
@@ -2496,10 +2597,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4F5358: // XSOL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.ContainedSoul_Property);
+                        item: out IFormIDSetLink<SoulGem> ContainedSoulParse))
+                    {
+                        item.ContainedSoul = ContainedSoulParse;
+                    }
+                    else
+                    {
+                        item.ContainedSoul = default(IFormIDSetLink<SoulGem>);
+                    }
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 }
                 case 0x41544144: // DATA
@@ -2590,7 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Base = item.Base_Property.FormKey == rhs.Base_Property.FormKey;
+            ret.Base = object.Equals(item.Base, rhs.Base);
             ret.XPCIFluff = item.XPCIFluff_IsSet == rhs.XPCIFluff_IsSet && MemoryExtensions.SequenceEqual(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = item.FULLFluff_IsSet == rhs.FULLFluff_IsSet && MemoryExtensions.SequenceEqual(item.FULLFluff, rhs.FULLFluff);
             ret.TeleportDestination = EqualsMaskHelper.EqualsHelper(
@@ -2607,9 +2715,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Lock,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Owner = item.Owner_Property.FormKey == rhs.Owner_Property.FormKey;
+            ret.Owner = object.Equals(item.Owner, rhs.Owner);
             ret.FactionRank = item.FactionRank_IsSet == rhs.FactionRank_IsSet && item.FactionRank == rhs.FactionRank;
-            ret.GlobalVariable = item.GlobalVariable_Property.FormKey == rhs.GlobalVariable_Property.FormKey;
+            ret.GlobalVariable = object.Equals(item.GlobalVariable, rhs.GlobalVariable);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent_IsSet,
                 rhs.EnableParent_IsSet,
@@ -2617,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
-            ret.Target = item.Target_Property.FormKey == rhs.Target_Property.FormKey;
+            ret.Target = object.Equals(item.Target, rhs.Target);
             ret.SpeedTreeSeed = item.SpeedTreeSeed_IsSet == rhs.SpeedTreeSeed_IsSet && item.SpeedTreeSeed == rhs.SpeedTreeSeed;
             ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
                 item.DistantLODData_IsSet,
@@ -2629,7 +2737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Charge = item.Charge_IsSet == rhs.Charge_IsSet && item.Charge.EqualsWithin(rhs.Charge);
             ret.Health = item.Health_IsSet == rhs.Health_IsSet && item.Health == rhs.Health;
             ret.LevelModifier = item.LevelModifier_IsSet == rhs.LevelModifier_IsSet && item.LevelModifier == rhs.LevelModifier;
-            ret.Unknown = item.Unknown_Property.FormKey == rhs.Unknown_Property.FormKey;
+            ret.Unknown = object.Equals(item.Unknown, rhs.Unknown);
             ret.ActionFlags = item.ActionFlags_IsSet == rhs.ActionFlags_IsSet && item.ActionFlags == rhs.ActionFlags;
             ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
             ret.MapMarker = EqualsMaskHelper.EqualsHelper(
@@ -2642,7 +2750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.OpenByDefault = item.OpenByDefault == rhs.OpenByDefault;
             ret.RagdollData = item.RagdollData_IsSet == rhs.RagdollData_IsSet && MemoryExtensions.SequenceEqual(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale_IsSet == rhs.Scale_IsSet && item.Scale.EqualsWithin(rhs.Scale);
-            ret.ContainedSoul = item.ContainedSoul_Property.FormKey == rhs.ContainedSoul_Property.FormKey;
+            ret.ContainedSoul = object.Equals(item.ContainedSoul, rhs.ContainedSoul);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -2699,7 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendLine($"Base => {item.Base_Property}");
+                fg.AppendLine($"Base => {item.Base}");
             }
             if (printMask?.XPCIFluff ?? true)
             {
@@ -2719,7 +2827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendLine($"Owner => {item.Owner_Property}");
+                fg.AppendLine($"Owner => {item.Owner}");
             }
             if (printMask?.FactionRank ?? true)
             {
@@ -2727,7 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendLine($"GlobalVariable => {item.GlobalVariable_Property}");
+                fg.AppendLine($"GlobalVariable => {item.GlobalVariable}");
             }
             if (printMask?.EnableParent?.Overall ?? true)
             {
@@ -2735,7 +2843,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendLine($"Target => {item.Target_Property}");
+                fg.AppendLine($"Target => {item.Target}");
             }
             if (printMask?.SpeedTreeSeed ?? true)
             {
@@ -2759,7 +2867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {item.Unknown_Property}");
+                fg.AppendLine($"Unknown => {item.Unknown}");
             }
             if (printMask?.ActionFlags ?? true)
             {
@@ -2787,7 +2895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.ContainedSoul ?? true)
             {
-                fg.AppendLine($"ContainedSoul => {item.ContainedSoul_Property}");
+                fg.AppendLine($"ContainedSoul => {item.ContainedSoul}");
             }
             if (printMask?.Position ?? true)
             {
@@ -2807,33 +2915,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectGetter item,
             PlacedObject_Mask<bool?> checkMask)
         {
-            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_Property.HasBeenSet) return false;
+            if (checkMask.Base.HasValue && checkMask.Base.Value != item.Base_IsSet) return false;
             if (checkMask.XPCIFluff.HasValue && checkMask.XPCIFluff.Value != item.XPCIFluff_IsSet) return false;
             if (checkMask.FULLFluff.HasValue && checkMask.FULLFluff.Value != item.FULLFluff_IsSet) return false;
             if (checkMask.TeleportDestination.Overall.HasValue && checkMask.TeleportDestination.Overall.Value != item.TeleportDestination_IsSet) return false;
             if (checkMask.TeleportDestination.Specific != null && (item.TeleportDestination == null || !item.TeleportDestination.HasBeenSet(checkMask.TeleportDestination.Specific))) return false;
             if (checkMask.Lock.Overall.HasValue && checkMask.Lock.Overall.Value != item.Lock_IsSet) return false;
             if (checkMask.Lock.Specific != null && (item.Lock == null || !item.Lock.HasBeenSet(checkMask.Lock.Specific))) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_Property.HasBeenSet) return false;
+            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_IsSet) return false;
             if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_Property.HasBeenSet) return false;
+            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_IsSet) return false;
             if (checkMask.EnableParent.Overall.HasValue && checkMask.EnableParent.Overall.Value != item.EnableParent_IsSet) return false;
             if (checkMask.EnableParent.Specific != null && (item.EnableParent == null || !item.EnableParent.HasBeenSet(checkMask.EnableParent.Specific))) return false;
-            if (checkMask.Target.HasValue && checkMask.Target.Value != item.Target_Property.HasBeenSet) return false;
+            if (checkMask.Target.HasValue && checkMask.Target.Value != item.Target_IsSet) return false;
             if (checkMask.SpeedTreeSeed.HasValue && checkMask.SpeedTreeSeed.Value != item.SpeedTreeSeed_IsSet) return false;
             if (checkMask.DistantLODData.Overall.HasValue && checkMask.DistantLODData.Overall.Value != item.DistantLODData_IsSet) return false;
             if (checkMask.DistantLODData.Specific != null && (item.DistantLODData == null || !item.DistantLODData.HasBeenSet(checkMask.DistantLODData.Specific))) return false;
             if (checkMask.Charge.HasValue && checkMask.Charge.Value != item.Charge_IsSet) return false;
             if (checkMask.Health.HasValue && checkMask.Health.Value != item.Health_IsSet) return false;
             if (checkMask.LevelModifier.HasValue && checkMask.LevelModifier.Value != item.LevelModifier_IsSet) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_IsSet) return false;
             if (checkMask.ActionFlags.HasValue && checkMask.ActionFlags.Value != item.ActionFlags_IsSet) return false;
             if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_IsSet) return false;
             if (checkMask.MapMarker.Overall.HasValue && checkMask.MapMarker.Overall.Value != item.MapMarker_IsSet) return false;
             if (checkMask.MapMarker.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != item.RagdollData_IsSet) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != item.Scale_IsSet) return false;
-            if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_Property.HasBeenSet) return false;
+            if (checkMask.ContainedSoul.HasValue && checkMask.ContainedSoul.Value != item.ContainedSoul_IsSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2843,29 +2951,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedObjectGetter item,
             PlacedObject_Mask<bool> mask)
         {
-            mask.Base = item.Base_Property.HasBeenSet;
+            mask.Base = item.Base_IsSet;
             mask.XPCIFluff = item.XPCIFluff_IsSet;
             mask.FULLFluff = item.FULLFluff_IsSet;
             mask.TeleportDestination = new MaskItem<bool, TeleportDestination_Mask<bool>>(item.TeleportDestination_IsSet, item.TeleportDestination.GetHasBeenSetMask());
             mask.Lock = new MaskItem<bool, LockInformation_Mask<bool>>(item.Lock_IsSet, item.Lock.GetHasBeenSetMask());
-            mask.Owner = item.Owner_Property.HasBeenSet;
+            mask.Owner = item.Owner_IsSet;
             mask.FactionRank = item.FactionRank_IsSet;
-            mask.GlobalVariable = item.GlobalVariable_Property.HasBeenSet;
+            mask.GlobalVariable = item.GlobalVariable_IsSet;
             mask.EnableParent = new MaskItem<bool, EnableParent_Mask<bool>>(item.EnableParent_IsSet, item.EnableParent.GetHasBeenSetMask());
-            mask.Target = item.Target_Property.HasBeenSet;
+            mask.Target = item.Target_IsSet;
             mask.SpeedTreeSeed = item.SpeedTreeSeed_IsSet;
             mask.DistantLODData = new MaskItem<bool, DistantLODData_Mask<bool>>(item.DistantLODData_IsSet, item.DistantLODData.GetHasBeenSetMask());
             mask.Charge = item.Charge_IsSet;
             mask.Health = item.Health_IsSet;
             mask.LevelModifier = item.LevelModifier_IsSet;
-            mask.Unknown = item.Unknown_Property.HasBeenSet;
+            mask.Unknown = item.Unknown_IsSet;
             mask.ActionFlags = item.ActionFlags_IsSet;
             mask.Count = item.Count_IsSet;
             mask.MapMarker = new MaskItem<bool, MapMarker_Mask<bool>>(item.MapMarker_IsSet, item.MapMarker.GetHasBeenSetMask());
             mask.OpenByDefault = true;
             mask.RagdollData = item.RagdollData_IsSet;
             mask.Scale = item.Scale_IsSet;
-            mask.ContainedSoul = item.ContainedSoul_Property.HasBeenSet;
+            mask.ContainedSoul = item.ContainedSoul_IsSet;
             mask.Position = true;
             mask.Rotation = true;
             mask.DATADataTypeState = true;
@@ -2918,10 +3026,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Base_Property.HasBeenSet != rhs.Base_Property.HasBeenSet) return false;
-            if (lhs.Base_Property.HasBeenSet)
+            if (lhs.Base_IsSet != rhs.Base_IsSet) return false;
+            if (lhs.Base_IsSet)
             {
-                if (!lhs.Base_Property.Equals(rhs.Base_Property)) return false;
+                if (!lhs.Base.Equals(rhs.Base)) return false;
             }
             if (lhs.XPCIFluff_IsSet != rhs.XPCIFluff_IsSet) return false;
             if (lhs.XPCIFluff_IsSet)
@@ -2943,30 +3051,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
             }
-            if (lhs.Owner_Property.HasBeenSet != rhs.Owner_Property.HasBeenSet) return false;
-            if (lhs.Owner_Property.HasBeenSet)
+            if (lhs.Owner_IsSet != rhs.Owner_IsSet) return false;
+            if (lhs.Owner_IsSet)
             {
-                if (!lhs.Owner_Property.Equals(rhs.Owner_Property)) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
             if (lhs.FactionRank_IsSet != rhs.FactionRank_IsSet) return false;
             if (lhs.FactionRank_IsSet)
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if (lhs.GlobalVariable_Property.HasBeenSet != rhs.GlobalVariable_Property.HasBeenSet) return false;
-            if (lhs.GlobalVariable_Property.HasBeenSet)
+            if (lhs.GlobalVariable_IsSet != rhs.GlobalVariable_IsSet) return false;
+            if (lhs.GlobalVariable_IsSet)
             {
-                if (!lhs.GlobalVariable_Property.Equals(rhs.GlobalVariable_Property)) return false;
+                if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             }
             if (lhs.EnableParent_IsSet != rhs.EnableParent_IsSet) return false;
             if (lhs.EnableParent_IsSet)
             {
                 if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
             }
-            if (lhs.Target_Property.HasBeenSet != rhs.Target_Property.HasBeenSet) return false;
-            if (lhs.Target_Property.HasBeenSet)
+            if (lhs.Target_IsSet != rhs.Target_IsSet) return false;
+            if (lhs.Target_IsSet)
             {
-                if (!lhs.Target_Property.Equals(rhs.Target_Property)) return false;
+                if (!lhs.Target.Equals(rhs.Target)) return false;
             }
             if (lhs.SpeedTreeSeed_IsSet != rhs.SpeedTreeSeed_IsSet) return false;
             if (lhs.SpeedTreeSeed_IsSet)
@@ -2993,10 +3101,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (lhs.LevelModifier != rhs.LevelModifier) return false;
             }
-            if (lhs.Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
-            if (lhs.Unknown_Property.HasBeenSet)
+            if (lhs.Unknown_IsSet != rhs.Unknown_IsSet) return false;
+            if (lhs.Unknown_IsSet)
             {
-                if (!lhs.Unknown_Property.Equals(rhs.Unknown_Property)) return false;
+                if (!lhs.Unknown.Equals(rhs.Unknown)) return false;
             }
             if (lhs.ActionFlags_IsSet != rhs.ActionFlags_IsSet) return false;
             if (lhs.ActionFlags_IsSet)
@@ -3024,10 +3132,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if (lhs.ContainedSoul_Property.HasBeenSet != rhs.ContainedSoul_Property.HasBeenSet) return false;
-            if (lhs.ContainedSoul_Property.HasBeenSet)
+            if (lhs.ContainedSoul_IsSet != rhs.ContainedSoul_IsSet) return false;
+            if (lhs.ContainedSoul_IsSet)
             {
-                if (!lhs.ContainedSoul_Property.Equals(rhs.ContainedSoul_Property)) return false;
+                if (!lhs.ContainedSoul.Equals(rhs.ContainedSoul)) return false;
             }
             if (!lhs.Position.Equals(rhs.Position)) return false;
             if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
@@ -3056,7 +3164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             int ret = 0;
-            if (item.Base_Property.HasBeenSet)
+            if (item.Base_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Base).CombineHashCode(ret);
             }
@@ -3076,7 +3184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Lock).CombineHashCode(ret);
             }
-            if (item.Owner_Property.HasBeenSet)
+            if (item.Owner_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
             }
@@ -3084,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
             }
-            if (item.GlobalVariable_Property.HasBeenSet)
+            if (item.GlobalVariable_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
             }
@@ -3092,7 +3200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.EnableParent).CombineHashCode(ret);
             }
-            if (item.Target_Property.HasBeenSet)
+            if (item.Target_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Target).CombineHashCode(ret);
             }
@@ -3116,7 +3224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.LevelModifier).CombineHashCode(ret);
             }
-            if (item.Unknown_Property.HasBeenSet)
+            if (item.Unknown_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
             }
@@ -3141,7 +3249,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Scale).CombineHashCode(ret);
             }
-            if (item.ContainedSoul_Property.HasBeenSet)
+            if (item.ContainedSoul_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.ContainedSoul).CombineHashCode(ret);
             }
@@ -3171,6 +3279,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPlacedObjectGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Base;
+            if (obj.TeleportDestination != null)
+            {
+                foreach (var item in obj.TeleportDestination.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Lock != null)
+            {
+                foreach (var item in obj.Lock.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.Owner;
+            yield return obj.GlobalVariable;
+            if (obj.EnableParent != null)
+            {
+                foreach (var item in obj.EnableParent.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.Target;
+            yield return obj.Unknown;
+            yield return obj.ContainedSoul;
+            yield break;
+        }
+        
         partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -3219,7 +3363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Base);
                 try
                 {
-                    item.Base_Property.SetToFormKey(rhs: rhs.Base_Property);
+                    item.Base.SetToFormKey(rhs: rhs.Base);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3340,7 +3484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Owner);
                 try
                 {
-                    item.Owner_Property.SetToFormKey(rhs: rhs.Owner_Property);
+                    item.Owner.SetToFormKey(rhs: rhs.Owner);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3381,7 +3525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.GlobalVariable);
                 try
                 {
-                    item.GlobalVariable_Property.SetToFormKey(rhs: rhs.GlobalVariable_Property);
+                    item.GlobalVariable.SetToFormKey(rhs: rhs.GlobalVariable);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3426,7 +3570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Target);
                 try
                 {
-                    item.Target_Property.SetToFormKey(rhs: rhs.Target_Property);
+                    item.Target.SetToFormKey(rhs: rhs.Target);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3567,7 +3711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
                 try
                 {
-                    item.Unknown_Property.SetToFormKey(rhs: rhs.Unknown_Property);
+                    item.Unknown.SetToFormKey(rhs: rhs.Unknown);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3712,7 +3856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.ContainedSoul);
                 try
                 {
-                    item.ContainedSoul_Property.SetToFormKey(rhs: rhs.ContainedSoul_Property);
+                    item.ContainedSoul.SetToFormKey(rhs: rhs.ContainedSoul);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3875,13 +4019,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if (item.Base_Property.HasBeenSet
+            if (item.Base_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Base),
-                    item: item.Base_Property?.FormKey,
+                    item: item.Base?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Base,
                     errorMask: errorMask);
             }
@@ -3929,13 +4073,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
             }
-            if (item.Owner_Property.HasBeenSet
+            if (item.Owner_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Owner),
-                    item: item.Owner_Property?.FormKey,
+                    item: item.Owner?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Owner,
                     errorMask: errorMask);
             }
@@ -3949,13 +4093,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.FactionRank,
                     errorMask: errorMask);
             }
-            if (item.GlobalVariable_Property.HasBeenSet
+            if (item.GlobalVariable_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.GlobalVariable),
-                    item: item.GlobalVariable_Property?.FormKey,
+                    item: item.GlobalVariable?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
                     errorMask: errorMask);
             }
@@ -3971,13 +4115,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
             }
-            if (item.Target_Property.HasBeenSet
+            if (item.Target_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Target),
-                    item: item.Target_Property?.FormKey,
+                    item: item.Target?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Target,
                     errorMask: errorMask);
             }
@@ -4033,13 +4177,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.LevelModifier,
                     errorMask: errorMask);
             }
-            if (item.Unknown_Property.HasBeenSet
+            if (item.Unknown_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
-                    item: item.Unknown_Property?.FormKey,
+                    item: item.Unknown?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
@@ -4104,13 +4248,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            if (item.ContainedSoul_Property.HasBeenSet
+            if (item.ContainedSoul_IsSet
                 && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.ContainedSoul),
-                    item: item.ContainedSoul_Property?.FormKey,
+                    item: item.ContainedSoul?.FormKey,
                     fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
                     errorMask: errorMask);
             }
@@ -4252,11 +4396,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Base":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Base_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Base,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Base);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<OblivionMajorRecord> BaseParse,
+                            errorMask: errorMask))
+                        {
+                            item.Base = BaseParse;
+                        }
+                        else
+                        {
+                            item.Base = default(IFormIDSetLink<OblivionMajorRecord>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "XPCIFluff":
                     try
@@ -4365,11 +4528,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Owner":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Owner_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Owner,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Owner);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<IOwner> OwnerParse,
+                            errorMask: errorMask))
+                        {
+                            item.Owner = OwnerParse;
+                        }
+                        else
+                        {
+                            item.Owner = default(IFormIDSetLink<IOwner>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "FactionRank":
                     try
@@ -4398,11 +4580,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "GlobalVariable":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.GlobalVariable_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.GlobalVariable,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.GlobalVariable);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Global> GlobalVariableParse,
+                            errorMask: errorMask))
+                        {
+                            item.GlobalVariable = GlobalVariableParse;
+                        }
+                        else
+                        {
+                            item.GlobalVariable = default(IFormIDSetLink<Global>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "EnableParent":
                     try
@@ -4432,11 +4633,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Target":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Target_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Target,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Target);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<IPlaced> TargetParse,
+                            errorMask: errorMask))
+                        {
+                            item.Target = TargetParse;
+                        }
+                        else
+                        {
+                            item.Target = default(IFormIDSetLink<IPlaced>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "SpeedTreeSeed":
                     try
@@ -4570,11 +4790,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Unknown":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Unknown_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.Unknown,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<OblivionMajorRecord> UnknownParse,
+                            errorMask: errorMask))
+                        {
+                            item.Unknown = UnknownParse;
+                        }
+                        else
+                        {
+                            item.Unknown = default(IFormIDSetLink<OblivionMajorRecord>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "ActionFlags":
                     try
@@ -4734,11 +4973,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "ContainedSoul":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.ContainedSoul_Property,
-                        fieldIndex: (int)PlacedObject_FieldIndex.ContainedSoul,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PlacedObject_FieldIndex.ContainedSoul);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<SoulGem> ContainedSoulParse,
+                            errorMask: errorMask))
+                        {
+                            item.ContainedSoul = ContainedSoulParse;
+                        }
+                        else
+                        {
+                            item.ContainedSoul = default(IFormIDSetLink<SoulGem>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Position":
                     try
@@ -5887,11 +6145,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask,
                 masterReferences: masterReferences);
-            if (item.Base_Property.HasBeenSet)
+            if (item.Base_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Base_Property,
+                    item: item.Base,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.NAME_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5932,11 +6190,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.Owner_Property.HasBeenSet)
+            if (item.Owner_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Owner_Property,
+                    item: item.Owner,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XOWN_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5949,11 +6207,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRNK_HEADER),
                     nullable: false);
             }
-            if (item.GlobalVariable_Property.HasBeenSet)
+            if (item.GlobalVariable_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.GlobalVariable_Property,
+                    item: item.GlobalVariable,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XGLB_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -5968,11 +6226,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.Target_Property.HasBeenSet)
+            if (item.Target_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Target_Property,
+                    item: item.Target,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XTRG_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -6019,11 +6277,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XLCM_HEADER),
                     nullable: false);
             }
-            if (item.Unknown_Property.HasBeenSet)
+            if (item.Unknown_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Unknown_Property,
+                    item: item.Unknown,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XRTM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -6077,11 +6335,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSCL_HEADER),
                     nullable: false);
             }
-            if (item.ContainedSoul_Property.HasBeenSet)
+            if (item.ContainedSoul_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ContainedSoul_Property,
+                    item: item.ContainedSoul,
                     header: recordTypeConverter.ConvertToCustom(PlacedObject_Registration.XSOL_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -6245,6 +6503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -6277,8 +6536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Base
         private int? _BaseLocation;
         public bool Base_IsSet => _BaseLocation.HasValue;
-        public IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Base_Property => _BaseLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordGetter>.Empty;
-        public IOblivionMajorRecordGetter Base => default;
+        public IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordGetter>.Empty;
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
@@ -6305,8 +6563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Owner
         private int? _OwnerLocation;
         public bool Owner_IsSet => _OwnerLocation.HasValue;
-        public IFormIDSetLinkGetter<IOwner> Owner_Property => _OwnerLocation.HasValue ? new FormIDSetLink<IOwner>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormIDSetLink<IOwner>.Empty;
-        public IOwner Owner => default;
+        public IFormIDSetLinkGetter<IOwner> Owner => _OwnerLocation.HasValue ? new FormIDSetLink<IOwner>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormIDSetLink<IOwner>.Empty;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
@@ -6316,8 +6573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region GlobalVariable
         private int? _GlobalVariableLocation;
         public bool GlobalVariable_IsSet => _GlobalVariableLocation.HasValue;
-        public IFormIDSetLinkGetter<IGlobalGetter> GlobalVariable_Property => _GlobalVariableLocation.HasValue ? new FormIDSetLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormIDSetLink<IGlobalGetter>.Empty;
-        public IGlobalGetter GlobalVariable => default;
+        public IFormIDSetLinkGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormIDSetLink<IGlobalGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalVariableLocation.Value, _package.Meta)))) : FormIDSetLink<IGlobalGetter>.Empty;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -6328,8 +6584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Target
         private int? _TargetLocation;
         public bool Target_IsSet => _TargetLocation.HasValue;
-        public IFormIDSetLinkGetter<IPlacedGetter> Target_Property => _TargetLocation.HasValue ? new FormIDSetLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TargetLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedGetter>.Empty;
-        public IPlacedGetter Target => default;
+        public IFormIDSetLinkGetter<IPlacedGetter> Target => _TargetLocation.HasValue ? new FormIDSetLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TargetLocation.Value, _package.Meta)))) : FormIDSetLink<IPlacedGetter>.Empty;
         #endregion
         #region SpeedTreeSeed
         private int? _SpeedTreeSeedLocation;
@@ -6360,8 +6615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Unknown
         private int? _UnknownLocation;
         public bool Unknown_IsSet => _UnknownLocation.HasValue;
-        public IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Unknown_Property => _UnknownLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordGetter>.Empty;
-        public IOblivionMajorRecordGetter Unknown => default;
+        public IFormIDSetLinkGetter<IOblivionMajorRecordGetter> Unknown => _UnknownLocation.HasValue ? new FormIDSetLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta)))) : FormIDSetLink<IOblivionMajorRecordGetter>.Empty;
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
@@ -6397,8 +6651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region ContainedSoul
         private int? _ContainedSoulLocation;
         public bool ContainedSoul_IsSet => _ContainedSoulLocation.HasValue;
-        public IFormIDSetLinkGetter<ISoulGemGetter> ContainedSoul_Property => _ContainedSoulLocation.HasValue ? new FormIDSetLink<ISoulGemGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation.Value, _package.Meta)))) : FormIDSetLink<ISoulGemGetter>.Empty;
-        public ISoulGemGetter ContainedSoul => default;
+        public IFormIDSetLinkGetter<ISoulGemGetter> ContainedSoul => _ContainedSoulLocation.HasValue ? new FormIDSetLink<ISoulGemGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation.Value, _package.Meta)))) : FormIDSetLink<ISoulGemGetter>.Empty;
         #endregion
         private int? _DATALocation;
         public PlacedObject.DATADataType DATADataTypeState { get; private set; }

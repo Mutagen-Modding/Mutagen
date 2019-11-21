@@ -271,20 +271,58 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        public IFormIDSetLink<ItemAbstract> DeathItem_Property { get; } = new FormIDSetLink<ItemAbstract>();
-        public ItemAbstract DeathItem { get => DeathItem_Property.Item; set => DeathItem_Property.Item = value; }
+        public bool DeathItem_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Creature_FieldIndex.DeathItem];
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.DeathItem] = value;
+        }
+        bool ICreatureGetter.DeathItem_IsSet => DeathItem_IsSet;
+        private IFormIDSetLink<ItemAbstract> _DeathItem;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<ItemAbstract> ICreature.DeathItem_Property => this.DeathItem_Property;
-        IItemAbstractGetter ICreatureGetter.DeathItem => this.DeathItem_Property.Item;
-        IFormIDSetLinkGetter<IItemAbstractGetter> ICreatureGetter.DeathItem_Property => this.DeathItem_Property;
+        public IFormIDSetLink<ItemAbstract> DeathItem
+        {
+            get => this._DeathItem;
+            set => DeathItem_Set(value);
+        }
+        IFormIDSetLinkGetter<IItemAbstractGetter> ICreatureGetter.DeathItem => this.DeathItem;
+        public void DeathItem_Set(
+            IFormIDSetLink<ItemAbstract> value,
+            bool markSet = true)
+        {
+            _DeathItem = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.DeathItem] = markSet;
+        }
+        public void DeathItem_Unset()
+        {
+            this.DeathItem_Set(default(IFormIDSetLink<ItemAbstract>), false);
+        }
         #endregion
         #region Script
-        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        public bool Script_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Creature_FieldIndex.Script];
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.Script] = value;
+        }
+        bool ICreatureGetter.Script_IsSet => Script_IsSet;
+        private IFormIDSetLink<Script> _Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Script> ICreature.Script_Property => this.Script_Property;
-        IScriptGetter ICreatureGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<IScriptGetter> ICreatureGetter.Script_Property => this.Script_Property;
+        public IFormIDSetLink<Script> Script
+        {
+            get => this._Script;
+            set => Script_Set(value);
+        }
+        IFormIDSetLinkGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
+        public void Script_Set(
+            IFormIDSetLink<Script> value,
+            bool markSet = true)
+        {
+            _Script = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.Script] = markSet;
+        }
+        public void Script_Unset()
+        {
+            this.Script_Set(default(IFormIDSetLink<Script>), false);
+        }
         #endregion
         #region Aggression
         private Byte _Aggression;
@@ -602,12 +640,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CombatStyle
-        public IFormIDSetLink<CombatStyle> CombatStyle_Property { get; } = new FormIDSetLink<CombatStyle>();
-        public CombatStyle CombatStyle { get => CombatStyle_Property.Item; set => CombatStyle_Property.Item = value; }
+        public bool CombatStyle_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Creature_FieldIndex.CombatStyle];
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.CombatStyle] = value;
+        }
+        bool ICreatureGetter.CombatStyle_IsSet => CombatStyle_IsSet;
+        private IFormIDSetLink<CombatStyle> _CombatStyle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<CombatStyle> ICreature.CombatStyle_Property => this.CombatStyle_Property;
-        ICombatStyleGetter ICreatureGetter.CombatStyle => this.CombatStyle_Property.Item;
-        IFormIDSetLinkGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle_Property => this.CombatStyle_Property;
+        public IFormIDSetLink<CombatStyle> CombatStyle
+        {
+            get => this._CombatStyle;
+            set => CombatStyle_Set(value);
+        }
+        IFormIDSetLinkGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
+        public void CombatStyle_Set(
+            IFormIDSetLink<CombatStyle> value,
+            bool markSet = true)
+        {
+            _CombatStyle = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.CombatStyle] = markSet;
+        }
+        public void CombatStyle_Unset()
+        {
+            this.CombatStyle_Set(default(IFormIDSetLink<CombatStyle>), false);
+        }
         #endregion
         #region TurningSpeed
         public bool TurningSpeed_IsSet
@@ -745,12 +802,31 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region InheritsSoundFrom
-        public IFormIDSetLink<Creature> InheritsSoundFrom_Property { get; } = new FormIDSetLink<Creature>();
-        public Creature InheritsSoundFrom { get => InheritsSoundFrom_Property.Item; set => InheritsSoundFrom_Property.Item = value; }
+        public bool InheritsSoundFrom_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Creature_FieldIndex.InheritsSoundFrom];
+            set => _hasBeenSetTracker[(int)Creature_FieldIndex.InheritsSoundFrom] = value;
+        }
+        bool ICreatureGetter.InheritsSoundFrom_IsSet => InheritsSoundFrom_IsSet;
+        private IFormIDSetLink<Creature> _InheritsSoundFrom;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Creature> ICreature.InheritsSoundFrom_Property => this.InheritsSoundFrom_Property;
-        ICreatureGetter ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom_Property.Item;
-        IFormIDSetLinkGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom_Property => this.InheritsSoundFrom_Property;
+        public IFormIDSetLink<Creature> InheritsSoundFrom
+        {
+            get => this._InheritsSoundFrom;
+            set => InheritsSoundFrom_Set(value);
+        }
+        IFormIDSetLinkGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;
+        public void InheritsSoundFrom_Set(
+            IFormIDSetLink<Creature> value,
+            bool markSet = true)
+        {
+            _InheritsSoundFrom = value;
+            _hasBeenSetTracker[(int)Creature_FieldIndex.InheritsSoundFrom] = markSet;
+        }
+        public void InheritsSoundFrom_Unset()
+        {
+            this.InheritsSoundFrom_Set(default(IFormIDSetLink<Creature>), false);
+        }
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -966,12 +1042,16 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.Name:
                 case Creature_FieldIndex.Model:
                 case Creature_FieldIndex.NIFT:
+                case Creature_FieldIndex.DeathItem:
+                case Creature_FieldIndex.Script:
                 case Creature_FieldIndex.AttackReach:
+                case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
                 case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
+                case Creature_FieldIndex.InheritsSoundFrom:
                     return _hasBeenSetTracker[index];
                 case Creature_FieldIndex.Items:
                     return Items.HasBeenSet;
@@ -981,18 +1061,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return Models.HasBeenSet;
                 case Creature_FieldIndex.Factions:
                     return Factions.HasBeenSet;
-                case Creature_FieldIndex.DeathItem:
-                    return DeathItem_Property.HasBeenSet;
-                case Creature_FieldIndex.Script:
-                    return Script_Property.HasBeenSet;
                 case Creature_FieldIndex.AIPackages:
                     return AIPackages.HasBeenSet;
                 case Creature_FieldIndex.Animations:
                     return Animations.HasBeenSet;
-                case Creature_FieldIndex.CombatStyle:
-                    return CombatStyle_Property.HasBeenSet;
-                case Creature_FieldIndex.InheritsSoundFrom:
-                    return InheritsSoundFrom_Property.HasBeenSet;
                 case Creature_FieldIndex.Sounds:
                     return Sounds.HasBeenSet;
                 case Creature_FieldIndex.Flags:
@@ -1050,70 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Items.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            foreach (var item in Spells)
-            {
-                yield return item;
-            }
-            foreach (var item in Factions.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield return DeathItem_Property;
-            yield return Script_Property;
-            foreach (var item in AIPackages)
-            {
-                yield return item;
-            }
-            yield return CombatStyle_Property;
-            yield return InheritsSoundFrom_Property;
-            foreach (var item in Sounds.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Items)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Spells)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Factions)
-            {
-                item.Link(package: package);
-            }
-            DeathItem_Property.Link(package);
-            Script_Property.Link(package);
-            foreach (var item in AIPackages)
-            {
-                item.Link(package: package);
-            }
-            CombatStyle_Property.Link(package);
-            InheritsSoundFrom_Property.Link(package);
-            foreach (var item in Sounds)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
         public Creature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1213,8 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreature :
         ICreatureGetter,
         INPCAbstract,
-        ILoquiObjectSetter<ICreatureInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ICreatureInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -1249,10 +1257,16 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt16 CalcMax { get; set; }
 
         new ISetList<RankPlacement> Factions { get; }
-        new ItemAbstract DeathItem { get; set; }
-        new IFormIDSetLink<ItemAbstract> DeathItem_Property { get; }
-        new Script Script { get; set; }
-        new IFormIDSetLink<Script> Script_Property { get; }
+        new IFormIDSetLink<ItemAbstract> DeathItem { get; set; }
+        new bool DeathItem_IsSet { get; set; }
+        void DeathItem_Set(IFormIDSetLink<ItemAbstract> value, bool hasBeenSet = true);
+        void DeathItem_Unset();
+
+        new IFormIDSetLink<Script> Script { get; set; }
+        new bool Script_IsSet { get; set; }
+        void Script_Set(IFormIDSetLink<Script> value, bool hasBeenSet = true);
+        void Script_Unset();
+
         new Byte Aggression { get; set; }
 
         new Byte Confidence { get; set; }
@@ -1304,8 +1318,11 @@ namespace Mutagen.Bethesda.Oblivion
         void AttackReach_Set(Byte value, bool hasBeenSet = true);
         void AttackReach_Unset();
 
-        new CombatStyle CombatStyle { get; set; }
-        new IFormIDSetLink<CombatStyle> CombatStyle_Property { get; }
+        new IFormIDSetLink<CombatStyle> CombatStyle { get; set; }
+        new bool CombatStyle_IsSet { get; set; }
+        void CombatStyle_Set(IFormIDSetLink<CombatStyle> value, bool hasBeenSet = true);
+        void CombatStyle_Unset();
+
         new Single TurningSpeed { get; set; }
         new bool TurningSpeed_IsSet { get; set; }
         void TurningSpeed_Set(Single value, bool hasBeenSet = true);
@@ -1331,8 +1348,11 @@ namespace Mutagen.Bethesda.Oblivion
         void BloodDecal_Set(String value, bool hasBeenSet = true);
         void BloodDecal_Unset();
 
-        new Creature InheritsSoundFrom { get; set; }
-        new IFormIDSetLink<Creature> InheritsSoundFrom_Property { get; }
+        new IFormIDSetLink<Creature> InheritsSoundFrom { get; set; }
+        new bool InheritsSoundFrom_IsSet { get; set; }
+        void InheritsSoundFrom_Set(IFormIDSetLink<Creature> value, bool hasBeenSet = true);
+        void InheritsSoundFrom_Unset();
+
         new ISetList<CreatureSound> Sounds { get; }
         new Creature.ACBSDataType ACBSDataTypeState { get; set; }
 
@@ -1353,6 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
         INPCAbstractGetter,
         ILoquiObject<ICreatureGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Name
@@ -1411,13 +1432,13 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlySetList<IRankPlacementGetter> Factions { get; }
         #endregion
         #region DeathItem
-        IItemAbstractGetter DeathItem { get; }
-        IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem_Property { get; }
+        IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem { get; }
+        bool DeathItem_IsSet { get; }
 
         #endregion
         #region Script
-        IScriptGetter Script { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        bool Script_IsSet { get; }
 
         #endregion
         #region Aggression
@@ -1520,8 +1541,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CombatStyle
-        ICombatStyleGetter CombatStyle { get; }
-        IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle_Property { get; }
+        IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle { get; }
+        bool CombatStyle_IsSet { get; }
 
         #endregion
         #region TurningSpeed
@@ -1550,8 +1571,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region InheritsSoundFrom
-        ICreatureGetter InheritsSoundFrom { get; }
-        IFormIDSetLinkGetter<ICreatureGetter> InheritsSoundFrom_Property { get; }
+        IFormIDSetLinkGetter<ICreatureGetter> InheritsSoundFrom { get; }
+        bool InheritsSoundFrom_IsSet { get; }
 
         #endregion
         #region Sounds
@@ -2767,8 +2788,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CalcMin = default(UInt16);
             item.CalcMax = default(UInt16);
             item.Factions.Unset();
-            item.DeathItem_Property.Unset();
-            item.Script_Property.Unset();
+            item.DeathItem.Unset();
+            item.Script.Unset();
             item.Aggression = default(Byte);
             item.Confidence = default(Byte);
             item.EnergyLevel = default(Byte);
@@ -2794,13 +2815,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Personality = default(Byte);
             item.Luck = default(Byte);
             item.AttackReach_Unset();
-            item.CombatStyle_Property.Unset();
+            item.CombatStyle.Unset();
             item.TurningSpeed_Unset();
             item.BaseScale_Unset();
             item.FootWeight_Unset();
             item.BloodSpray_Unset();
             item.BloodDecal_Unset();
-            item.InheritsSoundFrom_Property.Unset();
+            item.InheritsSoundFrom.Unset();
             item.Sounds.Unset();
             item.ACBSDataTypeState = default(Creature.ACBSDataType);
             item.AIDTDataTypeState = default(Creature.AIDTDataType);
@@ -3065,19 +3086,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.DeathItem_Property);
+                        item: out IFormIDSetLink<ItemAbstract> DeathItemParse))
+                    {
+                        item.DeathItem = DeathItemParse;
+                    }
+                    else
+                    {
+                        item.DeathItem = default(IFormIDSetLink<ItemAbstract>);
+                    }
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
                 }
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property);
+                        item: out IFormIDSetLink<Script> ScriptParse))
+                    {
+                        item.Script = ScriptParse;
+                    }
+                    else
+                    {
+                        item.Script = default(IFormIDSetLink<Script>);
+                    }
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
                 }
                 case 0x54444941: // AIDT
@@ -3194,10 +3229,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.CombatStyle_Property);
+                        item: out IFormIDSetLink<CombatStyle> CombatStyleParse))
+                    {
+                        item.CombatStyle = CombatStyleParse;
+                    }
+                    else
+                    {
+                        item.CombatStyle = default(IFormIDSetLink<CombatStyle>);
+                    }
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
                 }
                 case 0x4D414E54: // TNAM
@@ -3280,10 +3322,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52435343: // CSCR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.InheritsSoundFrom_Property);
+                        item: out IFormIDSetLink<Creature> InheritsSoundFromParse))
+                    {
+                        item.InheritsSoundFrom = InheritsSoundFromParse;
+                    }
+                    else
+                    {
+                        item.InheritsSoundFrom = default(IFormIDSetLink<Creature>);
+                    }
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
                 }
                 case 0x54445343: // CSDT
@@ -3397,8 +3446,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DeathItem = item.DeathItem_Property.FormKey == rhs.DeathItem_Property.FormKey;
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
+            ret.DeathItem = object.Equals(item.DeathItem, rhs.DeathItem);
+            ret.Script = object.Equals(item.Script, rhs.Script);
             ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
@@ -3430,13 +3479,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Personality = item.Personality == rhs.Personality;
             ret.Luck = item.Luck == rhs.Luck;
             ret.AttackReach = item.AttackReach_IsSet == rhs.AttackReach_IsSet && item.AttackReach == rhs.AttackReach;
-            ret.CombatStyle = item.CombatStyle_Property.FormKey == rhs.CombatStyle_Property.FormKey;
+            ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
             ret.TurningSpeed = item.TurningSpeed_IsSet == rhs.TurningSpeed_IsSet && item.TurningSpeed.EqualsWithin(rhs.TurningSpeed);
             ret.BaseScale = item.BaseScale_IsSet == rhs.BaseScale_IsSet && item.BaseScale.EqualsWithin(rhs.BaseScale);
             ret.FootWeight = item.FootWeight_IsSet == rhs.FootWeight_IsSet && item.FootWeight.EqualsWithin(rhs.FootWeight);
             ret.BloodSpray = item.BloodSpray_IsSet == rhs.BloodSpray_IsSet && string.Equals(item.BloodSpray, rhs.BloodSpray);
             ret.BloodDecal = item.BloodDecal_IsSet == rhs.BloodDecal_IsSet && string.Equals(item.BloodDecal, rhs.BloodDecal);
-            ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.FormKey == rhs.InheritsSoundFrom_Property.FormKey;
+            ret.InheritsSoundFrom = object.Equals(item.InheritsSoundFrom, rhs.InheritsSoundFrom);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3609,11 +3658,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.DeathItem ?? true)
             {
-                fg.AppendLine($"DeathItem => {item.DeathItem_Property}");
+                fg.AppendLine($"DeathItem => {item.DeathItem}");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendLine($"Script => {item.Script_Property}");
+                fg.AppendLine($"Script => {item.Script}");
             }
             if (printMask?.Aggression ?? true)
             {
@@ -3745,7 +3794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendLine($"CombatStyle => {item.CombatStyle_Property}");
+                fg.AppendLine($"CombatStyle => {item.CombatStyle}");
             }
             if (printMask?.TurningSpeed ?? true)
             {
@@ -3769,7 +3818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.InheritsSoundFrom ?? true)
             {
-                fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom_Property}");
+                fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom}");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
@@ -3815,18 +3864,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Models.Overall.HasValue && checkMask.Models.Overall.Value != item.Models.HasBeenSet) return false;
             if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != item.NIFT_IsSet) return false;
             if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
-            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_IsSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_IsSet) return false;
             if (checkMask.AIPackages.Overall.HasValue && checkMask.AIPackages.Overall.Value != item.AIPackages.HasBeenSet) return false;
             if (checkMask.Animations.Overall.HasValue && checkMask.Animations.Overall.Value != item.Animations.HasBeenSet) return false;
             if (checkMask.AttackReach.HasValue && checkMask.AttackReach.Value != item.AttackReach_IsSet) return false;
-            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
+            if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_IsSet) return false;
             if (checkMask.TurningSpeed.HasValue && checkMask.TurningSpeed.Value != item.TurningSpeed_IsSet) return false;
             if (checkMask.BaseScale.HasValue && checkMask.BaseScale.Value != item.BaseScale_IsSet) return false;
             if (checkMask.FootWeight.HasValue && checkMask.FootWeight.Value != item.FootWeight_IsSet) return false;
             if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != item.BloodSpray_IsSet) return false;
             if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != item.BloodDecal_IsSet) return false;
-            if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_Property.HasBeenSet) return false;
+            if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_IsSet) return false;
             if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
@@ -3851,8 +3900,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.CalcMin = true;
             mask.CalcMax = true;
             mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement_Mask<bool>>>>(item.Factions.HasBeenSet, item.Factions.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.DeathItem = item.DeathItem_Property.HasBeenSet;
-            mask.Script = item.Script_Property.HasBeenSet;
+            mask.DeathItem = item.DeathItem_IsSet;
+            mask.Script = item.Script_IsSet;
             mask.Aggression = true;
             mask.Confidence = true;
             mask.EnergyLevel = true;
@@ -3878,13 +3927,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Personality = true;
             mask.Luck = true;
             mask.AttackReach = item.AttackReach_IsSet;
-            mask.CombatStyle = item.CombatStyle_Property.HasBeenSet;
+            mask.CombatStyle = item.CombatStyle_IsSet;
             mask.TurningSpeed = item.TurningSpeed_IsSet;
             mask.BaseScale = item.BaseScale_IsSet;
             mask.FootWeight = item.FootWeight_IsSet;
             mask.BloodSpray = item.BloodSpray_IsSet;
             mask.BloodDecal = item.BloodDecal_IsSet;
-            mask.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
+            mask.InheritsSoundFrom = item.InheritsSoundFrom_IsSet;
             mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.WithIndex().Select((i) => new MaskItemIndexed<bool, CreatureSound_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.ACBSDataTypeState = true;
             mask.AIDTDataTypeState = true;
@@ -4018,15 +4067,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
             }
-            if (lhs.DeathItem_Property.HasBeenSet != rhs.DeathItem_Property.HasBeenSet) return false;
-            if (lhs.DeathItem_Property.HasBeenSet)
+            if (lhs.DeathItem_IsSet != rhs.DeathItem_IsSet) return false;
+            if (lhs.DeathItem_IsSet)
             {
-                if (!lhs.DeathItem_Property.Equals(rhs.DeathItem_Property)) return false;
+                if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
+            if (lhs.Script_IsSet != rhs.Script_IsSet) return false;
+            if (lhs.Script_IsSet)
             {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+                if (!lhs.Script.Equals(rhs.Script)) return false;
             }
             if (lhs.Aggression != rhs.Aggression) return false;
             if (lhs.Confidence != rhs.Confidence) return false;
@@ -4065,10 +4114,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (lhs.AttackReach != rhs.AttackReach) return false;
             }
-            if (lhs.CombatStyle_Property.HasBeenSet != rhs.CombatStyle_Property.HasBeenSet) return false;
-            if (lhs.CombatStyle_Property.HasBeenSet)
+            if (lhs.CombatStyle_IsSet != rhs.CombatStyle_IsSet) return false;
+            if (lhs.CombatStyle_IsSet)
             {
-                if (!lhs.CombatStyle_Property.Equals(rhs.CombatStyle_Property)) return false;
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
             if (lhs.TurningSpeed_IsSet != rhs.TurningSpeed_IsSet) return false;
             if (lhs.TurningSpeed_IsSet)
@@ -4095,10 +4144,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
             }
-            if (lhs.InheritsSoundFrom_Property.HasBeenSet != rhs.InheritsSoundFrom_Property.HasBeenSet) return false;
-            if (lhs.InheritsSoundFrom_Property.HasBeenSet)
+            if (lhs.InheritsSoundFrom_IsSet != rhs.InheritsSoundFrom_IsSet) return false;
+            if (lhs.InheritsSoundFrom_IsSet)
             {
-                if (!lhs.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property)) return false;
+                if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
             }
             if (lhs.Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
             if (lhs.Sounds.HasBeenSet)
@@ -4185,11 +4234,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
             }
-            if (item.DeathItem_Property.HasBeenSet)
+            if (item.DeathItem_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.DeathItem).CombineHashCode(ret);
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
             }
@@ -4227,7 +4276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.AttackReach).CombineHashCode(ret);
             }
-            if (item.CombatStyle_Property.HasBeenSet)
+            if (item.CombatStyle_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.CombatStyle).CombineHashCode(ret);
             }
@@ -4251,7 +4300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.BloodDecal).CombineHashCode(ret);
             }
-            if (item.InheritsSoundFrom_Property.HasBeenSet)
+            if (item.InheritsSoundFrom_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.InheritsSoundFrom).CombineHashCode(ret);
             }
@@ -4295,6 +4344,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ICreatureGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Spells)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Factions.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield return obj.DeathItem;
+            yield return obj.Script;
+            foreach (var item in obj.AIPackages)
+            {
+                yield return item;
+            }
+            yield return obj.CombatStyle;
+            yield return obj.InheritsSoundFrom;
+            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -4531,7 +4613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                 try
                 {
-                    item.DeathItem_Property.SetToFormKey(rhs: rhs.DeathItem_Property);
+                    item.DeathItem.SetToFormKey(rhs: rhs.DeathItem);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4548,7 +4630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
+                    item.Script.SetToFormKey(rhs: rhs.Script);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4713,7 +4795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                 try
                 {
-                    item.CombatStyle_Property.SetToFormKey(rhs: rhs.CombatStyle_Property);
+                    item.CombatStyle.SetToFormKey(rhs: rhs.CombatStyle);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4850,7 +4932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                 try
                 {
-                    item.InheritsSoundFrom_Property.SetToFormKey(rhs: rhs.InheritsSoundFrom_Property);
+                    item.InheritsSoundFrom.SetToFormKey(rhs: rhs.InheritsSoundFrom);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5267,23 +5349,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.DeathItem_Property.HasBeenSet
+            if (item.DeathItem_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DeathItem),
-                    item: item.DeathItem_Property?.FormKey,
+                    item: item.DeathItem?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.DeathItem,
                     errorMask: errorMask);
             }
-            if (item.Script_Property.HasBeenSet
+            if (item.Script_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
+                    item: item.Script?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.Script,
                     errorMask: errorMask);
             }
@@ -5539,13 +5621,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.AttackReach,
                     errorMask: errorMask);
             }
-            if (item.CombatStyle_Property.HasBeenSet
+            if (item.CombatStyle_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.CombatStyle),
-                    item: item.CombatStyle_Property?.FormKey,
+                    item: item.CombatStyle?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.CombatStyle,
                     errorMask: errorMask);
             }
@@ -5599,13 +5681,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Creature_FieldIndex.BloodDecal,
                     errorMask: errorMask);
             }
-            if (item.InheritsSoundFrom_Property.HasBeenSet
+            if (item.InheritsSoundFrom_IsSet
                 && (translationMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.InheritsSoundFrom),
-                    item: item.InheritsSoundFrom_Property?.FormKey,
+                    item: item.InheritsSoundFrom?.FormKey,
                     fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                     errorMask: errorMask);
             }
@@ -6169,18 +6251,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "DeathItem":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.DeathItem_Property,
-                        fieldIndex: (int)Creature_FieldIndex.DeathItem,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<ItemAbstract> DeathItemParse,
+                            errorMask: errorMask))
+                        {
+                            item.DeathItem = DeathItemParse;
+                        }
+                        else
+                        {
+                            item.DeathItem = default(IFormIDSetLink<ItemAbstract>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Creature_FieldIndex.Script,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.Script);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Script> ScriptParse,
+                            errorMask: errorMask))
+                        {
+                            item.Script = ScriptParse;
+                        }
+                        else
+                        {
+                            item.Script = default(IFormIDSetLink<Script>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Aggression":
                     try
@@ -6839,11 +6959,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "CombatStyle":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.CombatStyle_Property,
-                        fieldIndex: (int)Creature_FieldIndex.CombatStyle,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<CombatStyle> CombatStyleParse,
+                            errorMask: errorMask))
+                        {
+                            item.CombatStyle = CombatStyleParse;
+                        }
+                        else
+                        {
+                            item.CombatStyle = default(IFormIDSetLink<CombatStyle>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "TurningSpeed":
                     try
@@ -6976,11 +7115,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "InheritsSoundFrom":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.InheritsSoundFrom_Property,
-                        fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Creature> InheritsSoundFromParse,
+                            errorMask: errorMask))
+                        {
+                            item.InheritsSoundFrom = InheritsSoundFromParse;
+                        }
+                        else
+                        {
+                            item.InheritsSoundFrom = default(IFormIDSetLink<Creature>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Sounds":
                     try
@@ -9350,20 +9508,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: null);
                     });
             }
-            if (item.DeathItem_Property.HasBeenSet)
+            if (item.DeathItem_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.DeathItem_Property,
+                    item: item.DeathItem,
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.INAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Script_Property,
+                    item: item.Script,
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -9446,11 +9604,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.RNAM_HEADER),
                     nullable: false);
             }
-            if (item.CombatStyle_Property.HasBeenSet)
+            if (item.CombatStyle_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.CombatStyle_Property,
+                    item: item.CombatStyle,
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.ZNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -9495,11 +9653,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.NAM1_HEADER),
                     nullable: false);
             }
-            if (item.InheritsSoundFrom_Property.HasBeenSet)
+            if (item.InheritsSoundFrom_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.InheritsSoundFrom_Property,
+                    item: item.InheritsSoundFrom,
                     header: recordTypeConverter.ConvertToCustom(Creature_Registration.CSCR_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -9680,6 +9838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -9767,14 +9926,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem_Property => _DeathItemLocation.HasValue ? new FormIDSetLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormIDSetLink<IItemAbstractGetter>.Empty;
-        public IItemAbstractGetter DeathItem => default;
+        public IFormIDSetLinkGetter<IItemAbstractGetter> DeathItem => _DeathItemLocation.HasValue ? new FormIDSetLink<IItemAbstractGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormIDSetLink<IItemAbstractGetter>.Empty;
         #endregion
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
-        public IScriptGetter Script => default;
+        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
         private int? _AIDTLocation;
         public Creature.AIDTDataType AIDTDataTypeState { get; private set; }
@@ -9900,8 +10057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region CombatStyle
         private int? _CombatStyleLocation;
         public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle_Property => _CombatStyleLocation.HasValue ? new FormIDSetLink<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormIDSetLink<ICombatStyleGetter>.Empty;
-        public ICombatStyleGetter CombatStyle => default;
+        public IFormIDSetLinkGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormIDSetLink<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormIDSetLink<ICombatStyleGetter>.Empty;
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
@@ -9931,8 +10087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
         public bool InheritsSoundFrom_IsSet => _InheritsSoundFromLocation.HasValue;
-        public IFormIDSetLinkGetter<ICreatureGetter> InheritsSoundFrom_Property => _InheritsSoundFromLocation.HasValue ? new FormIDSetLink<ICreatureGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormIDSetLink<ICreatureGetter>.Empty;
-        public ICreatureGetter InheritsSoundFrom => default;
+        public IFormIDSetLinkGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormIDSetLink<ICreatureGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormIDSetLink<ICreatureGetter>.Empty;
         #endregion
         public IReadOnlySetList<ICreatureSoundGetter> Sounds { get; private set; } = EmptySetList<CreatureSoundBinaryWrapper>.Instance;
         partial void CustomCtor(

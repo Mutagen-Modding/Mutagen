@@ -1313,6 +1313,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RaceStats.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRaceStatsGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RaceStatsSetterTranslationCommon
     {

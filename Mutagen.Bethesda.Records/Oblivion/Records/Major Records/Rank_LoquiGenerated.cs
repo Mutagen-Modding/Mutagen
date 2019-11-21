@@ -1420,6 +1420,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return Rank.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRankGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RankSetterTranslationCommon
     {

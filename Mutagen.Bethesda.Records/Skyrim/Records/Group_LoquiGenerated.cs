@@ -1385,6 +1385,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IGroupGetter<T> obj)
+        {
+            yield break;
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
         {
             foreach (var subItem in obj.Items.Items)

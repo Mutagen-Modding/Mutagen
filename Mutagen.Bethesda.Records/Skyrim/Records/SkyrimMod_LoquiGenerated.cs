@@ -443,23 +443,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
-            foreach (var rec in router.Values)
-            {
-                foreach (var link in rec.Links)
-                {
-                    if (link.FormKey.ModKey == rhs.ModKey
-                        && router.TryGetValue(link.FormKey, out var duppedRecord))
-                    {
-                        link.FormKey = duppedRecord.FormKey;
-                    }
-                }
-            }
             var package = new LinkingPackage<SkyrimMod>(this, default);
             foreach (var rec in router.Values)
             {
-                foreach (var link in rec.Links)
+                foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormIDLink>())
                 {
-                    link.Link(package);
+                    if (link.TryResolveFormKey(package, out var formKey)
+                        && router.TryGetValue(formKey, out var duppedRecord))
+                    {
+                        link.FormKey = duppedRecord.FormKey;
+                    }
                 }
             }
             return router;
@@ -486,16 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void GetCustomRecordCount(Action<int> setter);
 
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in ModHeader.Links)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
+        public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         public static Task<SkyrimMod> CreateFromXmlFolder(
             DirectoryPath dir,
             ModKey modKey)
@@ -566,12 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Classes)));
             await Task.WhenAll(tasks);
-            var package = new LinkingPackage<ISkyrimMod>(item, default);
-            foreach (var link in item.Links)
-            {
-                if (link.Linked) continue;
-                link.Link(package);
-            }
             return item;
         }
 
@@ -833,8 +811,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMod :
         ISkyrimModGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ISkyrimMod>,
-        ILinkContainer
+        ILoquiObjectSetter<ISkyrimMod>
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -850,7 +827,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
-        IXmlItem
+        IXmlItem,
+        ILinkContainer
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -1793,12 +1771,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         translationMask: translationMask);
                 }
-                var package = new LinkingPackage<ISkyrimMod>(item, default);
-                foreach (var link in item.Links)
-                {
-                    if (link.Linked) continue;
-                    link.Link(package);
-                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -2115,12 +2087,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
-            var package = new LinkingPackage<ISkyrimMod>(item, default);
-            foreach (var link in item.Links)
-            {
-                if (link.Linked) continue;
-                link.Link(package);
-            }
         }
         
         #endregion
@@ -2460,6 +2426,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }));
             }
             return await UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+        }
+        
+        public IEnumerable<ILinkGetter> GetLinks(ISkyrimModGetter obj)
+        {
+            foreach (var item in obj.ModHeader.Links)
+            {
+                yield return item;
+            }
+            yield break;
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
@@ -4198,6 +4173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKey) => this.WriteToBinaryAsync(path, modKey);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

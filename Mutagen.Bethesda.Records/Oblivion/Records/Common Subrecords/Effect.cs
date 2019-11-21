@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.MagicEffect_Property);
+                        item: item.MagicEffect);
                 }
             }
         }

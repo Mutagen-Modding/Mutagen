@@ -56,10 +56,6 @@ namespace Mutagen.Bethesda.Tests
                 yield return OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough);
                 yield return OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough);
             }
-            if (settings.TestModList)
-            {
-                yield return ModList_Tests.Oblivion_Modlist(settings);
-            }
             if (settings.TestFlattenedMod)
             {
                 yield return FlattenedMod_Tests.Oblivion_FlattenMod(settings);

@@ -45,18 +45,15 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public PointToReferenceMapping()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Reference
-        public IFormIDLink<IPlaced> Reference_Property { get; } = new FormIDLink<IPlaced>();
-        public IPlaced Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<IPlaced> IPointToReferenceMapping.Reference_Property => this.Reference_Property;
-        IPlacedGetter IPointToReferenceMappingGetter.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference_Property => this.Reference_Property;
+        public IFormIDLink<IPlaced> Reference { get; set; }
+        IFormIDLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -257,21 +254,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((PointToReferenceMapping_FieldIndex)index)
+            {
+                case PointToReferenceMapping_FieldIndex.Reference:
+                case PointToReferenceMapping_FieldIndex.Points:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = PointToReferenceMapping_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Reference_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Reference_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => PointToReferenceMappingCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -360,11 +358,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPointToReferenceMapping :
         IPointToReferenceMappingGetter,
-        ILoquiObjectSetter<IPointToReferenceMapping>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IPointToReferenceMapping>
     {
-        new IPlaced Reference { get; set; }
-        new IFormIDLink<IPlaced> Reference_Property { get; }
+        new IFormIDLink<IPlaced> Reference { get; set; }
+
         new IExtendedList<Int16> Points { get; }
     }
 
@@ -372,6 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IPointToReferenceMappingGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -381,8 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Reference
-        IPlacedGetter Reference { get; }
-        IFormIDLinkGetter<IPlacedGetter> Reference_Property { get; }
+        IFormIDLinkGetter<IPlacedGetter> Reference { get; }
 
         #endregion
         #region Points
@@ -953,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
-            item.Reference = default(IPlaced);
+            item.Reference.Unset();
             item.Points.Clear();
         }
         
@@ -993,10 +990,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Reference_Property);
+                item: out IFormIDLink<IPlaced> ReferenceParse))
+            {
+                item.Reference = ReferenceParse;
+            }
+            else
+            {
+                item.Reference = default(IFormIDLink<IPlaced>);
+            }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: item.Points,
@@ -1051,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
+            ret.Reference = object.Equals(item.Reference, rhs.Reference);
             ret.Points = item.Points.CollectionEqualsHelper(
                 rhs.Points,
                 (l, r) => l == r,
@@ -1104,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference_Property}");
+                fg.AppendLine($"Reference => {item.Reference}");
             }
             if (printMask?.Points?.Overall ?? true)
             {
@@ -1148,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (!lhs.Reference.Equals(rhs.Reference)) return false;
             if (!lhs.Points.SequenceEqual(rhs.Points)) return false;
             return true;
         }
@@ -1169,6 +1173,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return PointToReferenceMapping.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPointToReferenceMappingGetter obj)
+        {
+            yield return obj.Reference;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class PointToReferenceMappingSetterTranslationCommon
     {
@@ -1183,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                item.Reference_Property.FormKey = rhs.Reference_Property.FormKey;
+                item.Reference.FormKey = rhs.Reference.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {
@@ -1290,7 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Reference),
-                    item: item.Reference_Property?.FormKey,
+                    item: item.Reference?.FormKey,
                     fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1419,11 +1432,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)PointToReferenceMapping_FieldIndex.Reference,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<IPlaced> ReferenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Reference = ReferenceParse;
+                        }
+                        else
+                        {
+                            item.Reference = default(IFormIDLink<IPlaced>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Points":
                     try
@@ -1995,7 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference_Property,
+                item: item.Reference,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
@@ -2123,6 +2155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPointToReferenceMappingGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => PointToReferenceMappingCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => PointToReferenceMappingXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2154,10 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Reference
-        public IFormIDLinkGetter<IPlacedGetter> Reference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IPlacedGetter Reference => default;
-        #endregion
+        public IFormIDLinkGetter<IPlacedGetter> Reference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public IReadOnlyList<Int16> Points => BinaryWrapperSetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         partial void CustomCtor(
             IBinaryReadStream stream,

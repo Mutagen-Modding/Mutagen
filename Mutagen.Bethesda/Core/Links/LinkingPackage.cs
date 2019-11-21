@@ -5,30 +5,30 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public class LinkingPackage<M>
-        where M : IMod
+    public class LinkingPackage<TMod>
+        where TMod : IModGetter
     {
-        public M SourceMod { get; private set; }
-        private IReadOnlyDictionary<FormKey, IMajorRecordCommon> _sourceModMajorRecords;
-        private readonly IReadOnlyDictionary<FormKey, IMajorRecordCommon>[] _modListMajorRecords;
-        public ModList<M> ModList { get; }
+        public TMod SourceMod { get; private set; }
+        private IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> _sourceModMajorRecords;
+        private readonly IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter>[] _modListMajorRecords;
+        public ModList<TMod> ModList { get; }
 
-        public LinkingPackage(M sourceMod, ModList<M> modList)
+        public LinkingPackage(TMod sourceMod, ModList<TMod> modList)
         {
             this.SourceMod = sourceMod;
             this.ModList = modList;
             if (this.ModList != null)
             {
-                this._modListMajorRecords = new IReadOnlyDictionary<FormKey, IMajorRecordCommon>[this.ModList.Count];
+                this._modListMajorRecords = new IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter>[this.ModList.Count];
             }
         }
 
-        public LinkingPackage(ModList<M> modList)
+        public LinkingPackage(ModList<TMod> modList)
             : this(default, modList)
         {
         }
 
-        public bool TryGetMajorRecords(ModKey modKey, out IReadOnlyDictionary<FormKey, IMajorRecordCommon> dict)
+        public bool TryGetMajorRecords(ModKey modKey, out IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> dict)
         {
             if (this.ModList != null && this.ModList.TryGetMod(modKey, out var mod))
             {
@@ -48,13 +48,13 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public void SetSourceMod(M sourceMod)
+        public void SetSourceMod(TMod sourceMod)
         {
             this.SourceMod = sourceMod;
             this._sourceModMajorRecords = null;
         }
 
-        public IReadOnlyDictionary<FormKey, IMajorRecordCommon> GetMajorRecords(ModID modIndex)
+        public IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> GetMajorRecords(ModID modIndex)
         {
             if (!_modListMajorRecords.InRange(modIndex.ID))
             {
@@ -67,9 +67,9 @@ namespace Mutagen.Bethesda
             return _modListMajorRecords[modIndex.ID];
         }
 
-        private IReadOnlyDictionary<FormKey, IMajorRecordCommon> GetDictionary(M mod)
+        private IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> GetDictionary(TMod mod)
         {
-            Dictionary<FormKey, IMajorRecordCommon> majorRecords = new Dictionary<FormKey, IMajorRecordCommon>();
+            Dictionary<FormKey, IMajorRecordCommonGetter> majorRecords = new Dictionary<FormKey, IMajorRecordCommonGetter>();
             foreach (var majorRec in mod.EnumerateMajorRecords())
             {
                 majorRecords[majorRec.FormKey] = majorRec;

@@ -305,17 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public virtual IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield break;
-        }
-
-        public virtual void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-        }
-
+        public virtual IEnumerable<ILinkGetter> Links => RegionDataCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -356,8 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionData :
         IRegionDataGetter,
-        ILoquiObjectSetter<IRegionDataInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRegionDataInternal>
     {
         new RegionData.RegionDataFlag Flags { get; set; }
 
@@ -379,6 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IRegionDataGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1287,6 +1277,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RegionData.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class RegionDataSetterTranslationCommon
@@ -2305,6 +2303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
 
+        public virtual IEnumerable<ILinkGetter> Links => RegionDataCommon.Instance.GetLinks(this);
         protected virtual object XmlWriteTranslator => RegionDataXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

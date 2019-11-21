@@ -321,30 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledSpell_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Entries.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Entries)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => LeveledSpellCommon.Instance.GetLinks(this);
         public LeveledSpell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -444,8 +421,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILeveledSpell :
         ILeveledSpellGetter,
         ISpellAbstract,
-        ILoquiObjectSetter<ILeveledSpellInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILeveledSpellInternal>
     {
         new Byte ChanceNone { get; set; }
         new bool ChanceNone_IsSet { get; set; }
@@ -471,6 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellAbstractGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region ChanceNone
@@ -1521,6 +1498,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILeveledSpellGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Entries.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(LeveledSpell obj, LeveledSpell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2701,6 +2691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledSpellGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => LeveledSpellCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => LeveledSpellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

@@ -53,12 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; }
         #endregion
         #region LocationReference
-        public IFormIDLink<IPlaced> LocationReference_Property { get; } = new FormIDLink<IPlaced>();
-        public IPlaced LocationReference { get => LocationReference_Property.Item; set => LocationReference_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<IPlaced> IAIPackageLocation.LocationReference_Property => this.LocationReference_Property;
-        IPlacedGetter IAIPackageLocationGetter.LocationReference => this.LocationReference_Property.Item;
-        IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference_Property => this.LocationReference_Property;
+        public IFormIDLink<IPlaced> LocationReference { get; set; }
+        IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
         public Single Radius { get; set; }
@@ -266,19 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = AIPackageLocation_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return LocationReference_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            LocationReference_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => AIPackageLocationCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -367,13 +351,12 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IAIPackageLocation :
         IAIPackageLocationGetter,
-        ILoquiObjectSetter<IAIPackageLocation>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
 
-        new IPlaced LocationReference { get; set; }
-        new IFormIDLink<IPlaced> LocationReference_Property { get; }
+        new IFormIDLink<IPlaced> LocationReference { get; set; }
+
         new Single Radius { get; set; }
 
     }
@@ -382,6 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IAIPackageLocationGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -395,8 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LocationReference
-        IPlacedGetter LocationReference { get; }
-        IFormIDLinkGetter<IPlacedGetter> LocationReference_Property { get; }
+        IFormIDLinkGetter<IPlacedGetter> LocationReference { get; }
 
         #endregion
         #region Radius
@@ -980,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default(AIPackageLocation.LocationType);
-            item.LocationReference = default(IPlaced);
+            item.LocationReference.Unset();
             item.Radius = default(Single);
         }
         
@@ -1030,10 +1013,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Type = default(AIPackageLocation.LocationType);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.LocationReference_Property);
+                item: out IFormIDLink<IPlaced> LocationReferenceParse))
+            {
+                item.LocationReference = LocationReferenceParse;
+            }
+            else
+            {
+                item.LocationReference = default(IFormIDLink<IPlaced>);
+            }
             if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 item: out Single RadiusParse))
@@ -1095,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
-            ret.LocationReference = item.LocationReference_Property.FormKey == rhs.LocationReference_Property.FormKey;
+            ret.LocationReference = object.Equals(item.LocationReference, rhs.LocationReference);
             ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
         }
         
@@ -1149,7 +1139,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendLine($"LocationReference => {item.LocationReference_Property}");
+                fg.AppendLine($"LocationReference => {item.LocationReference}");
             }
             if (printMask?.Radius ?? true)
             {
@@ -1181,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Type != rhs.Type) return false;
-            if (!lhs.LocationReference_Property.Equals(rhs.LocationReference_Property)) return false;
+            if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             return true;
         }
@@ -1203,6 +1193,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return AIPackageLocation.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IAIPackageLocationGetter obj)
+        {
+            yield return obj.LocationReference;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class AIPackageLocationSetterTranslationCommon
     {
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference_Property.FormKey = rhs.LocationReference_Property.FormKey;
+                item.LocationReference.FormKey = rhs.LocationReference.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
@@ -1324,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LocationReference),
-                    item: item.LocationReference_Property?.FormKey,
+                    item: item.LocationReference?.FormKey,
                     fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
                     errorMask: errorMask);
             }
@@ -1470,11 +1469,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "LocationReference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.LocationReference_Property,
-                        fieldIndex: (int)AIPackageLocation_FieldIndex.LocationReference,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<IPlaced> LocationReferenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.LocationReference = LocationReferenceParse;
+                        }
+                        else
+                        {
+                            item.LocationReference = default(IFormIDLink<IPlaced>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Radius":
                     try
@@ -2004,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 4);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LocationReference_Property,
+                item: item.LocationReference,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2131,6 +2149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageLocationGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => AIPackageLocationCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => AIPackageLocationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2163,10 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        #region LocationReference
-        public IFormIDLinkGetter<IPlacedGetter> LocationReference_Property => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IPlacedGetter LocationReference => default;
-        #endregion
+        public IFormIDLinkGetter<IPlacedGetter> LocationReference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public Single Radius => SpanExt.GetFloat(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

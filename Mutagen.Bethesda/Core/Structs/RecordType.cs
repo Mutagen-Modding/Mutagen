@@ -30,6 +30,18 @@ namespace Mutagen.Bethesda
             this.TypeInt = GetTypeInt(type);
         }
 
+        public static bool TryFactory(string str, out RecordType recType)
+        {
+            if (str == null
+                || str.Length != HEADER_LENGTH)
+            {
+                recType = default;
+                return false;
+            }
+            recType = new RecordType(GetTypeInt(str));
+            return true;
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is RecordType rhs)) return false;

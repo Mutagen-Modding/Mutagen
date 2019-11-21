@@ -62,12 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> ILockInformationGetter.Fluff => this.Fluff;
         #endregion
         #region Key
-        public IFormIDLink<Key> Key_Property { get; } = new FormIDLink<Key>();
-        public Key Key { get => Key_Property.Item; set => Key_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Key> ILockInformation.Key_Property => this.Key_Property;
-        IKeyGetter ILockInformationGetter.Key => this.Key_Property.Item;
-        IFormIDLinkGetter<IKeyGetter> ILockInformationGetter.Key_Property => this.Key_Property;
+        public IFormIDLink<Key> Key { get; set; }
+        IFormIDLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; }
@@ -276,19 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LockInformation_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Key_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Key_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => LockInformationCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -377,15 +361,14 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILockInformation :
         ILockInformationGetter,
-        ILoquiObjectSetter<ILockInformation>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILockInformation>
     {
         new Byte LockLevel { get; set; }
 
         new Byte[] Fluff { get; set; }
 
-        new Key Key { get; set; }
-        new IFormIDLink<Key> Key_Property { get; }
+        new IFormIDLink<Key> Key { get; set; }
+
         new LockInformation.Flag Flags { get; set; }
 
     }
@@ -394,6 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ILockInformationGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -411,8 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Key
-        IKeyGetter Key { get; }
-        IFormIDLinkGetter<IKeyGetter> Key_Property { get; }
+        IFormIDLinkGetter<IKeyGetter> Key { get; }
 
         #endregion
         #region Flags
@@ -1009,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.LockLevel = default(Byte);
             item.Fluff = default(Byte[]);
-            item.Key = default(Key);
+            item.Key.Unset();
             item.Flags = default(LockInformation.Flag);
         }
         
@@ -1060,10 +1043,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Fluff = default(Byte[]);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Key_Property);
+                item: out IFormIDLink<Key> KeyParse))
+            {
+                item.Key = KeyParse;
+            }
+            else
+            {
+                item.Key = default(IFormIDLink<Key>);
+            }
             if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
                 item: out LockInformation.Flag FlagsParse))
@@ -1126,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.Key = item.Key_Property.FormKey == rhs.Key_Property.FormKey;
+            ret.Key = object.Equals(item.Key, rhs.Key);
             ret.Flags = item.Flags == rhs.Flags;
         }
         
@@ -1184,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendLine($"Key => {item.Key_Property}");
+                fg.AppendLine($"Key => {item.Key}");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1218,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.LockLevel != rhs.LockLevel) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.Key_Property.Equals(rhs.Key_Property)) return false;
+            if (!lhs.Key.Equals(rhs.Key)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
@@ -1240,6 +1230,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return LockInformation.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILockInformationGetter obj)
+        {
+            yield return obj.Key;
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class LockInformationSetterTranslationCommon
@@ -1263,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key_Property.FormKey = rhs.Key_Property.FormKey;
+                item.Key.FormKey = rhs.Key.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
@@ -1375,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Key),
-                    item: item.Key_Property?.FormKey,
+                    item: item.Key?.FormKey,
                     fieldIndex: (int)LockInformation_FieldIndex.Key,
                     errorMask: errorMask);
             }
@@ -1547,11 +1546,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Key":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Key_Property,
-                        fieldIndex: (int)LockInformation_FieldIndex.Key,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Key> KeyParse,
+                            errorMask: errorMask))
+                        {
+                            item.Key = KeyParse;
+                        }
+                        else
+                        {
+                            item.Key = default(IFormIDLink<Key>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Flags":
                     try
@@ -2106,7 +2124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Fluff);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Key_Property,
+                item: item.Key,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockInformation.Flag>.Instance.Write(
                 writer,
@@ -2234,6 +2252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILockInformationGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => LockInformationCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => LockInformationXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2267,10 +2286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0];
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
-        #region Key
-        public IFormIDLinkGetter<IKeyGetter> Key_Property => new FormIDLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IKeyGetter Key => default;
-        #endregion
+        public IFormIDLinkGetter<IKeyGetter> Key => new FormIDLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

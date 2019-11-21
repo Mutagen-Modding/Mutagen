@@ -1130,6 +1130,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return SkillBoost.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ISkillBoostGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class SkillBoostSetterTranslationCommon
     {

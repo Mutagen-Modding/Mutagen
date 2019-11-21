@@ -336,30 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in RelatedIdleAnimations)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in RelatedIdleAnimations)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
         public IdleAnimation(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -459,8 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IIdleAnimation :
         IIdleAnimationGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<IIdleAnimationInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IIdleAnimationInternal>
     {
         new Model Model { get; set; }
         new bool Model_IsSet { get; set; }
@@ -487,6 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IIdleAnimationGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Model
@@ -1584,6 +1561,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IIdleAnimationGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RelatedIdleAnimations)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2903,6 +2893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

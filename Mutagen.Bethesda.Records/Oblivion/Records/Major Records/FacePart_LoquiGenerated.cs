@@ -1359,6 +1359,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return FacePart.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IFacePartGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class FacePartSetterTranslationCommon
     {

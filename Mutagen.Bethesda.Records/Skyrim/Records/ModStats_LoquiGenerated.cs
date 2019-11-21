@@ -1171,6 +1171,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ModStats.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IModStatsGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ModStatsSetterTranslationCommon
     {

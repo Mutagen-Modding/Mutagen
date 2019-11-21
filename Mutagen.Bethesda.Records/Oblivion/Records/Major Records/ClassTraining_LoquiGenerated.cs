@@ -1178,6 +1178,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ClassTraining.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IClassTrainingGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ClassTrainingSetterTranslationCommon
     {

@@ -1502,6 +1502,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return Decal.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IDecalGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class DecalSetterTranslationCommon
     {

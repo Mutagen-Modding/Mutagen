@@ -280,22 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => SpellCommon.Instance.GetLinks(this);
         public Spell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -347,8 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpell :
         ISpellGetter,
         ISpellAbstract,
-        ILoquiObjectSetter<ISpellInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ISpellInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -368,6 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellAbstractGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Name
@@ -1298,6 +1283,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ISpellGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Spell obj, Spell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2180,6 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => SpellCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => SpellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

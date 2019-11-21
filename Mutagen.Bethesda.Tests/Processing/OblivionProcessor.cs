@@ -1028,6 +1028,7 @@ namespace Mutagen.Bethesda.Tests
         private void ProcessMagicEDID(
             IMutagenReadStream stream)
         {
+            return; // Disabled now that EDID links no longer auto-clear
             var startLoc = stream.Position;
             var edid = stream.ReadZString(4);
             if (!magicEffectEDIDs.Contains(edid))

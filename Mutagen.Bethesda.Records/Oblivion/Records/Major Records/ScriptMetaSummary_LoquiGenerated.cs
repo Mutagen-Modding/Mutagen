@@ -1273,6 +1273,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ScriptMetaSummary.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IScriptMetaSummaryGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ScriptMetaSummarySetterTranslationCommon
     {

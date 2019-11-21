@@ -50,12 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public IFormIDLink<OblivionMajorRecord> Object_Property { get; } = new FormIDLink<OblivionMajorRecord>();
-        public OblivionMajorRecord Object { get => Object_Property.Item; set => Object_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<OblivionMajorRecord> IRegionDataObject.Object_Property => this.Object_Property;
-        IOblivionMajorRecordGetter IRegionDataObjectGetter.Object => this.Object_Property.Item;
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object_Property => this.Object_Property;
+        public IFormIDLink<OblivionMajorRecord> Object { get; set; }
+        IFormIDLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; }
@@ -333,19 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Object_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Object_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -434,11 +418,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionDataObject :
         IRegionDataObjectGetter,
-        ILoquiObjectSetter<IRegionDataObject>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRegionDataObject>
     {
-        new OblivionMajorRecord Object { get; set; }
-        new IFormIDLink<OblivionMajorRecord> Object_Property { get; }
+        new IFormIDLink<OblivionMajorRecord> Object { get; set; }
+
         new UInt16 ParentIndex { get; set; }
 
         new Byte[] Unknown1 { get; set; }
@@ -477,6 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IRegionDataObjectGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -486,8 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Object
-        IOblivionMajorRecordGetter Object { get; }
-        IFormIDLinkGetter<IOblivionMajorRecordGetter> Object_Property { get; }
+        IFormIDLinkGetter<IOblivionMajorRecordGetter> Object { get; }
 
         #endregion
         #region ParentIndex
@@ -1296,7 +1279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionDataObject item)
         {
             ClearPartial();
-            item.Object = default(OblivionMajorRecord);
+            item.Object.Unset();
             item.ParentIndex = default(UInt16);
             item.Unknown1 = default(Byte[]);
             item.Density = default(Single);
@@ -1351,10 +1334,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Object_Property);
+                item: out IFormIDLink<OblivionMajorRecord> ObjectParse))
+            {
+                item.Object = ObjectParse;
+            }
+            else
+            {
+                item.Object = default(IFormIDLink<OblivionMajorRecord>);
+            }
             item.ParentIndex = frame.ReadUInt16();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.SpawnWithLength(2),
@@ -1508,7 +1498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Object = item.Object_Property.FormKey == rhs.Object_Property.FormKey;
+            ret.Object = object.Equals(item.Object, rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
             ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1, rhs.Unknown1);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
@@ -1573,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Object ?? true)
             {
-                fg.AppendLine($"Object => {item.Object_Property}");
+                fg.AppendLine($"Object => {item.Object}");
             }
             if (printMask?.ParentIndex ?? true)
             {
@@ -1678,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Object_Property.Equals(rhs.Object_Property)) return false;
+            if (!lhs.Object.Equals(rhs.Object)) return false;
             if (lhs.ParentIndex != rhs.ParentIndex) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unknown1, rhs.Unknown1)) return false;
             if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
@@ -1729,6 +1719,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RegionDataObject.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionDataObjectGetter obj)
+        {
+            yield return obj.Object;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RegionDataObjectSetterTranslationCommon
     {
@@ -1743,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Object) ?? true))
             {
-                item.Object_Property.FormKey = rhs.Object_Property.FormKey;
+                item.Object.FormKey = rhs.Object.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.ParentIndex) ?? true))
             {
@@ -1897,7 +1896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Object),
-                    item: item.Object_Property?.FormKey,
+                    item: item.Object?.FormKey,
                     fieldIndex: (int)RegionDataObject_FieldIndex.Object,
                     errorMask: errorMask);
             }
@@ -2152,11 +2151,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Object":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Object_Property,
-                        fieldIndex: (int)RegionDataObject_FieldIndex.Object,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<OblivionMajorRecord> ObjectParse,
+                            errorMask: errorMask))
+                        {
+                            item.Object = ObjectParse;
+                        }
+                        else
+                        {
+                            item.Object = default(IFormIDLink<OblivionMajorRecord>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "ParentIndex":
                     try
@@ -3422,7 +3440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Object_Property,
+                item: item.Object,
                 masterReferences: masterReferences);
             writer.Write(item.ParentIndex);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -3577,6 +3595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -3608,10 +3627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Object
-        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Object_Property => new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IOblivionMajorRecordGetter Object => default;
-        #endregion
+        public IFormIDLinkGetter<IOblivionMajorRecordGetter> Object => new FormIDLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
         public ReadOnlySpan<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
         public Single Density => SpanExt.GetFloat(_data.Span.Slice(8, 4));

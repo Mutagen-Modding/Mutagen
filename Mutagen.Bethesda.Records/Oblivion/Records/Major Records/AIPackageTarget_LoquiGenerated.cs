@@ -1171,6 +1171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return AIPackageTarget.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IAIPackageTargetGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class AIPackageTargetSetterTranslationCommon
     {

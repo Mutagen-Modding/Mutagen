@@ -12,14 +12,14 @@ using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda
 {
-    public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
-       where T : class, IMajorRecordCommonGetter
+    public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
+       where TMajor : class, IMajorRecordCommonGetter
     {
-        public new static readonly IEDIDLinkGetter<T> Empty = new EDIDLink<T>();
+        public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
 
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
-        private IDisposable edidSub;
-        public RecordType EDID { get; private set; } = UNLINKED;
+        virtual public RecordType EDID { get; set; } = UNLINKED;
+        Type ILinkGetter.TargetType => typeof(TMajor);
 
         public EDIDLink()
             : base()
@@ -32,150 +32,120 @@ namespace Mutagen.Bethesda
             this.EDID = unlinkedEDID;
         }
 
-        public EDIDLink(FormKey unlinkedForm)
-            : base(unlinkedForm)
+        public void Set(RecordType type)
         {
+            this.EDID = type;
         }
 
-        public override void Set(T value)
+        public void Set(TMajor value)
         {
-            HandleItemChange(new Change<T>(this.Item, value));
-            base.Set(value);
-        }
-
-        public void Set(IEDIDLink<T> link)
-        {
-            if (link.Linked)
+            if (value?.EditorID == null)
             {
-                this.Set(link.Item);
+                this.EDID = UNLINKED;
             }
-            else
+            this.Set(new RecordType(value.EditorID));
+        }
+
+        public bool Equals(IEDIDLinkGetter<TMajor> other) => this.EDID.Equals(other.EDID);
+
+        public override int GetHashCode() => this.EDID.GetHashCode();
+
+        public override string ToString() => this.EDID.ToString();
+
+        private bool TryLinkToMod(
+            IModGetter mod,
+            out TMajor item)
+        {
+            if (this.EDID == UNLINKED)
             {
-                this.EDID = link.EDID;
+                item = default;
+                return false;
             }
-        }
-
-        private void HandleItemChange(Change<T> change)
-        {
-            this.EDID = EDIDLink<T>.UNLINKED;
-            this.edidSub?.Dispose();
-            this.edidSub = change.New?.WhenAny(x => x.EditorID)
-                .Subscribe(UpdateUnlinked);
-        }
-
-        private void UpdateUnlinked(string change)
-        {
-            this.EDID = new RecordType(change);
-        }
-
-        public void SetIfSucceeded(TryGet<RecordType> item)
-        {
-            if (item.Failed) return;
-            Set(item.Value);
-        }
-
-        public void Set(RecordType item)
-        {
-            this.EDID = item;
-        }
-
-        public void SetIfSuccessful(TryGet<string> item)
-        {
-            if (!item.Succeeded) return;
-            Set(item.Value);
-        }
-
-        public void Set(string item)
-        {
-            this.EDID = new RecordType(item);
-        }
-
-        public void SetIfSucceededOrDefault(TryGet<RecordType> item)
-        {
-            if (item.Failed)
-            {
-                this.Unset();
-                return;
-            }
-            this.EDID = item.Value;
-        }
-
-        public void SetIfSuccessfulOrDefault(TryGet<string> item)
-        {
-            if (!item.Succeeded)
-            {
-                this.Unset();
-                return;
-            }
-            this.EDID = new RecordType(item.Value);
-        }
-
-        public static IEDIDLink<T> FactoryFromCache(RecordType edidRecordType, RecordType targetRecordType, BinaryWrapperFactoryPackage package)
-        {
-            var ret = new EDIDLink<T>(edidRecordType);
-            TryLinkToCache(ret, package.EdidLinkCache[targetRecordType]);
-            return ret;
-        }
-
-        public static bool TryLinkToCache(
-            IEDIDLink<T> link,
-            IReadOnlyDictionary<RecordType, object> cache)
-        {
-            if (link.EDID == UNLINKED) return false;
-            if (cache.TryGetValue(link.EDID, out var rec))
-            {
-                link.Item = (T)rec;
-                return true;
-            }
-            link.Item = default;
-            return false;
-        }
-
-        private static bool TryLinkToMod(
-            IEDIDLink<T> link,
-            IModGetter mod)
-        {
-            if (link.EDID == UNLINKED) return false;
             // ToDo
             // Improve to not be a forloop
-            var group = mod.GetGroupGetter<T>();
+            var group = mod.GetGroupGetter<TMajor>();
             foreach (var rec in group.Items)
             {
-                if (link.EDID.Type.Equals(rec.EditorID))
+                if (this.EDID.Type.Equals(rec.EditorID))
                 {
-                    link.Item = rec;
+                    item = rec;
                     return true;
                 }
             }
-            link.Item = default;
+            item = default;
             return false;
         }
 
-        public static bool TryLink<M>(
-            IEDIDLink<T> link,
-            LinkingPackage<M> package)
-            where M : IMod
+        public bool TryResolve<M>(LinkingPackage<M> package, out TMajor major)
+            where M : IModGetter
         {
-#if DEBUG
-            link.AttemptedLink = true;
-#endif
-            if (package.SourceMod != null && TryLinkToMod(link, package.SourceMod)) return true;
-            if (package.ModList == null) return false;
+            if (this.EDID == UNLINKED)
+            {
+                major = default;
+                return false;
+            }
+            if (package.SourceMod != null && TryLinkToMod(package.SourceMod, out var item))
+            {
+                major = item;
+                return true;
+            }
+            if (package.ModList == null)
+            {
+                major = default;
+                return false;
+            }
             foreach (var listing in package.ModList)
             {
-                if (!listing.Loaded) return false;
-                if (TryLinkToMod(link, listing.Mod)) return true;
+                if (!listing.Loaded)
+                {
+                    major = default;
+                    return false;
+                }
+                if (TryLinkToMod(listing.Mod, out item))
+                {
+                    major = item;
+                    return true;
+                }
             }
+            major = default;
             return false;
         }
 
-        public override bool Link<M>(LinkingPackage<M> package)
+        public bool TryResolveFormKey<M>(LinkingPackage<M> package, out FormKey formKey)
+            where M : IModGetter
         {
-            if (this.UnlinkedForm.HasValue)
+            if (TryResolve(package, out var rec))
             {
-                return base.Link(package);
+                formKey = rec.FormKey;
+                return true;
             }
-            return TryLink(this, package);
+            formKey = default;
+            return false;
+        }
+
+        bool ILinkGetter.TryResolve<M>(LinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        {
+            if (TryResolve(package, out TMajor rec))
+            {
+                formKey = rec;
+                return true;
+            }
+            formKey = default;
+            return false;
+        }
+
+        TMajor ILinkGetter<TMajor>.Resolve<M>(LinkingPackage<M> package)
+        {
+            if (this.TryResolve(package, out var major))
+            {
+                return major;
+            }
+            return default;
+        }
+
+        public virtual void Unset()
+        {
+            this.EDID = UNLINKED;
         }
     }
 }

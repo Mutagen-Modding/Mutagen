@@ -1144,6 +1144,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ScriptVariableReference.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IScriptVariableReferenceGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ScriptVariableReferenceSetterTranslationCommon : ScriptReferenceSetterTranslationCommon
     {

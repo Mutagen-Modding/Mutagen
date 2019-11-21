@@ -1189,6 +1189,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return MapData.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IMapDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class MapDataSetterTranslationCommon
     {

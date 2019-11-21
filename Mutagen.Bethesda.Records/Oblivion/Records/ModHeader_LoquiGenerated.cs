@@ -1756,6 +1756,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ModHeader.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IModHeaderGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ModHeaderSetterTranslationCommon
     {

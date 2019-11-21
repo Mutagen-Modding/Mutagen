@@ -316,26 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkContainer>()
-                .SelectMany((f) => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            foreach (var item in References.WhereCastable<ScriptReference, ILinkSubContainer>())
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public IEnumerable<ILinkGetter> Links => ScriptFieldsCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -424,8 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptFields :
         IScriptFieldsGetter,
-        ILoquiObjectSetter<IScriptFields>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IScriptFields>
     {
         new ScriptMetaSummary MetadataSummary { get; }
         new Byte[] CompiledScript { get; set; }
@@ -446,6 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IScriptFieldsGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1546,6 +1527,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return ScriptFields.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IScriptFieldsGetter obj)
+        {
+            foreach (var item in obj.References.WhereCastable<IScriptReferenceGetter, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class ScriptFieldsSetterTranslationCommon
@@ -2982,6 +2976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFieldsGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => ScriptFieldsCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => ScriptFieldsXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

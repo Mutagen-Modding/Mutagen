@@ -1171,6 +1171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return HavokData.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IHavokDataGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class HavokDataSetterTranslationCommon
     {

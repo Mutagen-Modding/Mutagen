@@ -350,30 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LandTexture_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in PotentialGrass)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in PotentialGrass)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => LandTextureCommon.Instance.GetLinks(this);
         public LandTexture(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -473,8 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILandTexture :
         ILandTextureGetter,
         IOblivionMajorRecord,
-        ILoquiObjectSetter<ILandTextureInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILandTextureInternal>
     {
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
@@ -505,6 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<ILandTextureGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Icon
@@ -1574,6 +1551,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILandTextureGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PotentialGrass)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(LandTexture obj, LandTexture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2792,6 +2782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandTextureGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => LandTextureCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

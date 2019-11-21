@@ -347,38 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogTopic_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Quests)
-            {
-                yield return item;
-            }
-            foreach (var item in Items.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Quests)
-            {
-                item.Link(package: package);
-            }
-            foreach (var item in Items)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
         public DialogTopic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -481,8 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogTopicGetter,
         IOblivionMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IDialogTopicInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IDialogTopicInternal>
     {
         new ISetList<IFormIDLink<Quest>> Quests { get; }
         new String Name { get; set; }
@@ -512,6 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Quests
@@ -1641,6 +1610,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IDialogTopicGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests)
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -3052,6 +3038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

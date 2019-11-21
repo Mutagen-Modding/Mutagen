@@ -1399,6 +1399,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return LocalVariable.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILocalVariableGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class LocalVariableSetterTranslationCommon
     {

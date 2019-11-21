@@ -252,30 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataGrasses_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Grasses)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Grasses)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => RegionDataGrassesCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -364,8 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataGrasses :
         IRegionDataGrassesGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataGrassesInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRegionDataGrassesInternal>
     {
         new ISetList<IFormIDLink<Grass>> Grasses { get; }
     }
@@ -381,6 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGetter,
         ILoquiObject<IRegionDataGrassesGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Grasses
@@ -1251,6 +1228,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RegionDataGrasses.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionDataGrassesGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RegionDataGrassesSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
@@ -2093,6 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGrassesGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => RegionDataGrassesCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => RegionDataGrassesXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

@@ -63,12 +63,8 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
         #region Reference
-        public IFormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
-        public T Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<T> ILeveledEntry<T>.Reference_Property => this.Reference_Property;
-        T ILeveledEntryGetter<T>.Reference => this.Reference_Property.Item;
-        IFormIDLinkGetter<T> ILeveledEntryGetter<T>.Reference_Property => this.Reference_Property;
+        public IFormIDLink<T> Reference { get; set; }
+        IFormIDLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
         public bool Count_IsSet
@@ -345,19 +341,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledEntry_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Reference_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Reference_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => LeveledEntryCommon<T>.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -447,16 +431,15 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILeveledEntry<T> :
         ILeveledEntryGetter<T>,
-        ILoquiObjectSetter<ILeveledEntry<T>>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ILeveledEntry<T>>
         where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
     {
         new Int16 Level { get; set; }
 
         new Byte[] Fluff { get; set; }
 
-        new T Reference { get; set; }
-        new IFormIDLink<T> Reference_Property { get; }
+        new IFormIDLink<T> Reference { get; set; }
+
         new Int16 Count { get; set; }
         new bool Count_IsSet { get; set; }
         void Count_Set(Int16 value, bool hasBeenSet = true);
@@ -473,6 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ILeveledEntryGetter<T>>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
         where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -491,8 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Reference
-        T Reference { get; }
-        IFormIDLinkGetter<T> Reference_Property { get; }
+        IFormIDLinkGetter<T> Reference { get; }
 
         #endregion
         #region Count
@@ -1172,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Level = default(Int16);
             item.Fluff = default(Byte[]);
-            item.Reference = default(T);
+            item.Reference.Unset();
             item.Count_Unset();
             item.Fluff2_Unset();
         }
@@ -1224,10 +1207,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Fluff = default(Byte[]);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Reference_Property);
+                item: out IFormIDLink<T> ReferenceParse))
+            {
+                item.Reference = ReferenceParse;
+            }
+            else
+            {
+                item.Reference = default(IFormIDLink<T>);
+            }
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
             if (frame.Complete) return;
@@ -1294,7 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff, rhs.Fluff);
-            ret.Reference = item.Reference_Property.FormKey == rhs.Reference_Property.FormKey;
+            ret.Reference = object.Equals(item.Reference, rhs.Reference);
             ret.Count = item.Count_IsSet == rhs.Count_IsSet && item.Count == rhs.Count;
             ret.Fluff2 = item.Fluff2_IsSet == rhs.Fluff2_IsSet && MemoryExtensions.SequenceEqual(item.Fluff2, rhs.Fluff2);
         }
@@ -1353,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendLine($"Reference => {item.Reference_Property}");
+                fg.AppendLine($"Reference => {item.Reference}");
             }
             if (printMask?.Count ?? true)
             {
@@ -1394,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Level != rhs.Level) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Fluff, rhs.Fluff)) return false;
-            if (!lhs.Reference_Property.Equals(rhs.Reference_Property)) return false;
+            if (!lhs.Reference.Equals(rhs.Reference)) return false;
             if (lhs.Count_IsSet != rhs.Count_IsSet) return false;
             if (lhs.Count_IsSet)
             {
@@ -1434,6 +1424,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return LeveledEntry<T_Setter>.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ILeveledEntryGetter<T> obj)
+        {
+            yield return obj.Reference;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class LeveledEntrySetterTranslationCommon
     {
@@ -1458,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Reference) ?? true))
             {
-                item.Reference_Property.FormKey = rhs.Reference_Property.FormKey;
+                item.Reference.FormKey = rhs.Reference.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledEntry_FieldIndex.Count) ?? true))
             {
@@ -1624,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Reference),
-                    item: item.Reference_Property?.FormKey,
+                    item: item.Reference?.FormKey,
                     fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
                     errorMask: errorMask);
             }
@@ -1805,11 +1804,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Reference":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Reference_Property,
-                        fieldIndex: (int)LeveledEntry_FieldIndex.Reference,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<T> ReferenceParse,
+                            errorMask: errorMask))
+                        {
+                            item.Reference = ReferenceParse;
+                        }
+                        else
+                        {
+                            item.Reference = default(IFormIDLink<T>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Count":
                     try
@@ -2437,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Fluff);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference_Property,
+                item: item.Reference,
                 masterReferences: masterReferences);
             if (item.Count_IsSet)
             {
@@ -2574,6 +2592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => LeveledEntryCommon<T>.Instance.GetLinks(this);
         protected object XmlWriteTranslator => LeveledEntryXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2607,10 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));
         public ReadOnlySpan<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
-        #region Reference
-        public IFormIDLinkGetter<T> Reference_Property => new FormIDLink<T>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public T Reference => default;
-        #endregion
+        public IFormIDLinkGetter<T> Reference => new FormIDLink<T>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         #region Count
         public bool Count_IsSet => _data.Length >= 10;
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(8, 2));

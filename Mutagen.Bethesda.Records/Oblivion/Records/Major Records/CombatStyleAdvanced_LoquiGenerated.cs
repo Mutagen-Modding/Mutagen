@@ -1927,6 +1927,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return CombatStyleAdvanced.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ICombatStyleAdvancedGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class CombatStyleAdvancedSetterTranslationCommon
     {

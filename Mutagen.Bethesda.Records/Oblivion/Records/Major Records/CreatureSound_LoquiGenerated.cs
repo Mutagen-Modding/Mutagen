@@ -292,25 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in Sounds.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            foreach (var item in Sounds)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public IEnumerable<ILinkGetter> Links => CreatureSoundCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -399,8 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ICreatureSound :
         ICreatureSoundGetter,
-        ILoquiObjectSetter<ICreatureSound>,
-        ILinkSubContainer
+        ILoquiObjectSetter<ICreatureSound>
     {
         new CreatureSound.CreatureSoundType SoundType { get; set; }
         new bool SoundType_IsSet { get; set; }
@@ -414,6 +395,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<ICreatureSoundGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1286,6 +1268,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return CreatureSound.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ICreatureSoundGetter obj)
+        {
+            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class CreatureSoundSetterTranslationCommon
@@ -2315,6 +2309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureSoundGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => CreatureSoundCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => CreatureSoundXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

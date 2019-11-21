@@ -1230,6 +1230,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return SoundDataExtended.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(ISoundDataExtendedGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
     {

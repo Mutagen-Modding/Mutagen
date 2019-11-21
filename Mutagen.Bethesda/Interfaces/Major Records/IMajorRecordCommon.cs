@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkSubContainer
+    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkContainer
     {
         new bool IsCompressed { get; set; }
         new int MajorRecordFlagsRaw { get; set; }

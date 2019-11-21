@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class ModListing<M>
-        where M : IMod
+    public class ModListing<TMod>
+        where TMod : IModGetter
     {
-        public M Mod { get; private set; }
+        public TMod Mod { get; private set; }
         public ModKey Key { get; private set; }
         public bool Loaded => Mod != null;
 
-        public ModListing(ModKey key, M mod)
+        public ModListing(ModKey key, TMod mod)
         {
             this.Key = key;
             this.Mod = mod;

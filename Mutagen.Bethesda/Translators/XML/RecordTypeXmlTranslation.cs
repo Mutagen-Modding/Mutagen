@@ -10,24 +10,24 @@ using System.Xml.Linq;
 
 namespace Mutagen.Bethesda
 {
-    public class FormKeyXmlTranslation : PrimitiveXmlTranslation<FormKey>
+    public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
     {
-        public readonly static FormKeyXmlTranslation Instance = new FormKeyXmlTranslation();
-
-        public void ParseInto<T>(XElement node, int fieldIndex, IFormIDSetLink<T> item, ErrorMaskBuilder errorMask)
+        public readonly static RecordTypeXmlTranslation Instance = new RecordTypeXmlTranslation();
+         
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(node, out FormKey val, errorMask))
+                    if (Parse(node, out RecordType val, errorMask))
                     {
-                        item.FormKey = val;
+                        item.EDID = val;
                     }
                     else
                     {
-                        item.FormKey = FormKey.NULL;
+                        item.EDID = EDIDLink<T>.UNLINKED;
                     }
                 }
                 catch (Exception ex)
@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public void ParseInto<T>(XElement node, int fieldIndex, IFormIDLink<T> item, ErrorMaskBuilder errorMask)
+        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDSetLink<T> item, ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             using (errorMask.PushIndex(fieldIndex))
             {
                 try
                 {
-                    if (Parse(node, out FormKey val, errorMask))
+                    if (Parse(node, out RecordType val, errorMask))
                     {
-                        item.FormKey = val;
+                        item.EDID = val;
                     }
                     else
                     {
-                        item.FormKey = FormKey.NULL;
+                        item.EDID = EDIDLink<T>.UNLINKED;
                     }
                 }
                 catch (Exception ex)
@@ -64,50 +64,50 @@ namespace Mutagen.Bethesda
 
         public bool Parse<T>(
             XElement node, 
-            out IFormIDLink<T> item, 
+            out IEDIDLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordCommonGetter
         {
-            if (Parse(node, out FormKey id, errorMask))
+            if (Parse(node, out RecordType id, errorMask))
             {
-                item = new FormIDLink<T>(id);
+                item = new EDIDLink<T>(id);
                 return true;
             }
-            item = new FormIDLink<T>();
+            item = new EDIDLink<T>();
             return false;
+        }
+
+        public bool Parse<T>(
+            XElement node, 
+            out IEDIDLink<T> item,
+            ErrorMaskBuilder errorMask,
+            TranslationCrystal translationMask)
+            where T : class, IMajorRecordCommonGetter
+        {
+            return this.Parse(
+                node: node,
+                item: out item,
+                errorMask: errorMask);
         }
 
         public bool Parse<T>(
             XElement node,
-            out IFormIDLink<T> item, 
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
-            where T : class, IMajorRecordCommonGetter
-        {
-            return this.Parse(
-                node: node,
-                item: out item,
-                errorMask: errorMask);
-        }
-
-        public bool Parse<T>(
-            XElement node, 
-            out IFormIDSetLink<T> item,
+            out IEDIDSetLink<T> item,
             ErrorMaskBuilder errorMask)
             where T : class, IMajorRecordCommonGetter
         {
-            if (Parse(node, out FormKey id, errorMask))
+            if (Parse(node, out RecordType id, errorMask))
             {
-                item = new FormIDSetLink<T>(id);
+                item = new EDIDSetLink<T>(id);
                 return true;
             }
-            item = new FormIDSetLink<T>();
+            item = new EDIDSetLink<T>();
             return false;
         }
 
         public bool Parse<T>(
             XElement node, 
-            out IFormIDSetLink<T> item, 
+            out IEDIDSetLink<T> item, 
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
             where T : class, IMajorRecordCommonGetter
@@ -118,16 +118,16 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool ParseNonNullString(string str, out FormKey value, ErrorMaskBuilder errorMask)
+        protected override bool ParseNonNullString(string str, out RecordType value, ErrorMaskBuilder errorMask)
         {
-            if (FormKey.TryFactory(str, out FormKey parsed))
+            if (RecordType.TryFactory(str, out RecordType parsed))
             {
                 value = parsed;
                 return true;
             }
             errorMask.ReportExceptionOrThrow(
                 new ArgumentException($"Could not convert to {NullableName}: {str}"));
-            value = FormKey.NULL;
+            value = default;
             return false;
         }
     }

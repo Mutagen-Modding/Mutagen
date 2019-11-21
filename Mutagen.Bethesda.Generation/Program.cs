@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "public virtual void DeepCopyFieldsFrom(";
+            string testString = "j.Temporary.WhereCastable<IPlaced, ILinkContainer>()";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

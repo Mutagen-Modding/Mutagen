@@ -52,12 +52,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Target
-        public IFormIDLink<IPlaced> Target_Property { get; } = new FormIDLink<IPlaced>();
-        public IPlaced Target { get => Target_Property.Item; set => Target_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<IPlaced> IQuestTarget.Target_Property => this.Target_Property;
-        IPlacedGetter IQuestTargetGetter.Target => this.Target_Property.Item;
-        IFormIDLinkGetter<IPlacedGetter> IQuestTargetGetter.Target_Property => this.Target_Property;
+        private IFormIDLink<IPlaced> _Target;
+        public IFormIDLink<IPlaced> Target
+        {
+            get => this._Target;
+            set
+            {
+                this.QSTADataTypeState |= QSTADataType.Has;
+                this._Target = value;
+            }
+        }
+        IFormIDLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
         #endregion
         #region Flags
         private QuestTarget.Flag _Flags;
@@ -296,19 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Target_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Target_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => QuestTargetCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -397,11 +390,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IQuestTarget :
         IQuestTargetGetter,
-        ILoquiObjectSetter<IQuestTarget>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IQuestTarget>
     {
-        new IPlaced Target { get; set; }
-        new IFormIDLink<IPlaced> Target_Property { get; }
+        new IFormIDLink<IPlaced> Target { get; set; }
+
         new QuestTarget.Flag Flags { get; set; }
 
         new ISetList<Condition> Conditions { get; }
@@ -413,6 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IQuestTargetGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -422,8 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Target
-        IPlacedGetter Target { get; }
-        IFormIDLinkGetter<IPlacedGetter> Target_Property { get; }
+        IFormIDLinkGetter<IPlacedGetter> Target { get; }
 
         #endregion
         #region Flags
@@ -1029,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Target = default(IPlaced);
+            item.Target.Unset();
             item.Flags = default(QuestTarget.Flag);
             item.Conditions.Unset();
             item.QSTADataTypeState = default(QuestTarget.QSTADataType);
@@ -1095,10 +1087,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.QSTADataTypeState = QuestTarget.QSTADataType.Has;
                     }
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: item.Target_Property);
+                        item: out IFormIDLink<IPlaced> TargetParse))
+                    {
+                        item.Target = TargetParse;
+                    }
+                    else
+                    {
+                        item.Target = default(IFormIDLink<IPlaced>);
+                    }
                     if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
                         item: out QuestTarget.Flag FlagsParse))
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Target = item.Target_Property.FormKey == rhs.Target_Property.FormKey;
+            ret.Target = object.Equals(item.Target, rhs.Target);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1237,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendLine($"Target => {item.Target_Property}");
+                fg.AppendLine($"Target => {item.Target}");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1292,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Target_Property.Equals(rhs.Target_Property)) return false;
+            if (!lhs.Target.Equals(rhs.Target)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.Conditions.HasBeenSet != rhs.Conditions.HasBeenSet) return false;
             if (lhs.Conditions.HasBeenSet)
@@ -1324,6 +1323,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return QuestTarget.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IQuestTargetGetter obj)
+        {
+            yield return obj.Target;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class QuestTargetSetterTranslationCommon
     {
@@ -1338,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target_Property.FormKey = rhs.Target_Property.FormKey;
+                item.Target.FormKey = rhs.Target.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {
@@ -1462,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     FormKeyXmlTranslation.Instance.Write(
                         node: node,
                         name: nameof(item.Target),
-                        item: item.Target_Property?.FormKey,
+                        item: item.Target?.FormKey,
                         fieldIndex: (int)QuestTarget_FieldIndex.Target,
                         errorMask: errorMask);
                 }
@@ -1613,11 +1621,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Target":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Target_Property,
-                        fieldIndex: (int)QuestTarget_FieldIndex.Target,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<IPlaced> TargetParse,
+                            errorMask: errorMask))
+                        {
+                            item.Target = TargetParse;
+                        }
+                        else
+                        {
+                            item.Target = default(IFormIDLink<IPlaced>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     item.QSTADataTypeState |= QuestTarget.QSTADataType.Has;
                     break;
                 case "Flags":
@@ -2314,7 +2341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.Target_Property,
+                        item: item.Target,
                         masterReferences: masterReferences);
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
                         writer,
@@ -2462,6 +2489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IQuestTargetGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => QuestTargetCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => QuestTargetXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2498,8 +2526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Target
         private int _TargetLocation => _QSTALocation.Value + 0x0;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormIDLinkGetter<IPlacedGetter> Target_Property => _Target_IsSet ? new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormIDLink<IPlacedGetter>.Empty;
-        public IPlacedGetter Target => default;
+        public IFormIDLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 4)))) : FormIDLink<IPlacedGetter>.Empty;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation.Value + 0x4;

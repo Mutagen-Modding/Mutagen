@@ -50,12 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Weather
-        public IFormIDLink<Weather> Weather_Property { get; } = new FormIDLink<Weather>();
-        public Weather Weather { get => Weather_Property.Item; set => Weather_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Weather> IWeatherChance.Weather_Property => this.Weather_Property;
-        IWeatherGetter IWeatherChanceGetter.Weather => this.Weather_Property.Item;
-        IFormIDLinkGetter<IWeatherGetter> IWeatherChanceGetter.Weather_Property => this.Weather_Property;
+        public IFormIDLink<Weather> Weather { get; set; }
+        IFormIDLinkGetter<IWeatherGetter> IWeatherChanceGetter.Weather => this.Weather;
         #endregion
         #region Chance
         public Int32 Chance { get; set; }
@@ -261,19 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Weather_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Weather_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => WeatherChanceCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -362,11 +346,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IWeatherChance :
         IWeatherChanceGetter,
-        ILoquiObjectSetter<IWeatherChance>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IWeatherChance>
     {
-        new Weather Weather { get; set; }
-        new IFormIDLink<Weather> Weather_Property { get; }
+        new IFormIDLink<Weather> Weather { get; set; }
+
         new Int32 Chance { get; set; }
 
     }
@@ -375,6 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IWeatherChanceGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -384,8 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Weather
-        IWeatherGetter Weather { get; }
-        IFormIDLinkGetter<IWeatherGetter> Weather_Property { get; }
+        IFormIDLinkGetter<IWeatherGetter> Weather { get; }
 
         #endregion
         #region Chance
@@ -954,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherChance item)
         {
             ClearPartial();
-            item.Weather = default(Weather);
+            item.Weather.Unset();
             item.Chance = default(Int32);
         }
         
@@ -994,10 +977,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Weather_Property);
+                item: out IFormIDLink<Weather> WeatherParse))
+            {
+                item.Weather = WeatherParse;
+            }
+            else
+            {
+                item.Weather = default(IFormIDLink<Weather>);
+            }
             item.Chance = frame.ReadInt32();
         }
         
@@ -1046,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Weather = item.Weather_Property.FormKey == rhs.Weather_Property.FormKey;
+            ret.Weather = object.Equals(item.Weather, rhs.Weather);
             ret.Chance = item.Chance == rhs.Chance;
         }
         
@@ -1096,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Weather ?? true)
             {
-                fg.AppendLine($"Weather => {item.Weather_Property}");
+                fg.AppendLine($"Weather => {item.Weather}");
             }
             if (printMask?.Chance ?? true)
             {
@@ -1126,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Weather_Property.Equals(rhs.Weather_Property)) return false;
+            if (!lhs.Weather.Equals(rhs.Weather)) return false;
             if (lhs.Chance != rhs.Chance) return false;
             return true;
         }
@@ -1147,6 +1137,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return WeatherChance.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IWeatherChanceGetter obj)
+        {
+            yield return obj.Weather;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class WeatherChanceSetterTranslationCommon
     {
@@ -1161,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Weather) ?? true))
             {
-                item.Weather_Property.FormKey = rhs.Weather_Property.FormKey;
+                item.Weather.FormKey = rhs.Weather.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherChance_FieldIndex.Chance) ?? true))
             {
@@ -1255,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Weather),
-                    item: item.Weather_Property?.FormKey,
+                    item: item.Weather?.FormKey,
                     fieldIndex: (int)WeatherChance_FieldIndex.Weather,
                     errorMask: errorMask);
             }
@@ -1375,11 +1374,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Weather":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Weather_Property,
-                        fieldIndex: (int)WeatherChance_FieldIndex.Weather,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Weather> WeatherParse,
+                            errorMask: errorMask))
+                        {
+                            item.Weather = WeatherParse;
+                        }
+                        else
+                        {
+                            item.Weather = default(IFormIDLink<Weather>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Chance":
                     try
@@ -1880,7 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Weather_Property,
+                item: item.Weather,
                 masterReferences: masterReferences);
             writer.Write(item.Chance);
         }
@@ -1999,6 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherChanceGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => WeatherChanceCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => WeatherChanceXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2030,10 +2049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Weather
-        public IFormIDLinkGetter<IWeatherGetter> Weather_Property => new FormIDLink<IWeatherGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IWeatherGetter Weather => default;
-        #endregion
+        public IFormIDLinkGetter<IWeatherGetter> Weather => new FormIDLink<IWeatherGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,

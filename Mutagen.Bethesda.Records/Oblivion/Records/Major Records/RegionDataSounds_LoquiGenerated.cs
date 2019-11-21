@@ -292,30 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataSounds_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            foreach (var item in Sounds.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            foreach (var item in Sounds)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => RegionDataSoundsCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -404,8 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataSounds :
         IRegionDataSoundsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataSoundsInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRegionDataSoundsInternal>
     {
         new MusicType MusicType { get; set; }
         new bool MusicType_IsSet { get; set; }
@@ -426,6 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGetter,
         ILoquiObject<IRegionDataSoundsGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region MusicType
@@ -1355,6 +1332,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return RegionDataSounds.GetNew();
         }
+        
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRegionDataSoundsGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        #endregion
         
     }
     public partial class RegionDataSoundsSetterTranslationCommon : RegionDataSetterTranslationCommon
@@ -2315,6 +2308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataSoundsGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => RegionDataSoundsCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => RegionDataSoundsXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

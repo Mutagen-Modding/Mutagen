@@ -1235,6 +1235,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return PathGridPoint.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IPathGridPointGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class PathGridPointSetterTranslationCommon
     {

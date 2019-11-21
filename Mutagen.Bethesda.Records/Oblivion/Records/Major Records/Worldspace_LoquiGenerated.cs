@@ -83,28 +83,85 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Parent
-        public IFormIDSetLink<Worldspace> Parent_Property { get; } = new FormIDSetLink<Worldspace>();
-        public Worldspace Parent { get => Parent_Property.Item; set => Parent_Property.Item = value; }
+        public bool Parent_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Parent];
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Parent] = value;
+        }
+        bool IWorldspaceGetter.Parent_IsSet => Parent_IsSet;
+        private IFormIDSetLink<Worldspace> _Parent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Worldspace> IWorldspace.Parent_Property => this.Parent_Property;
-        IWorldspaceGetter IWorldspaceGetter.Parent => this.Parent_Property.Item;
-        IFormIDSetLinkGetter<IWorldspaceGetter> IWorldspaceGetter.Parent_Property => this.Parent_Property;
+        public IFormIDSetLink<Worldspace> Parent
+        {
+            get => this._Parent;
+            set => Parent_Set(value);
+        }
+        IFormIDSetLinkGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
+        public void Parent_Set(
+            IFormIDSetLink<Worldspace> value,
+            bool markSet = true)
+        {
+            _Parent = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Parent] = markSet;
+        }
+        public void Parent_Unset()
+        {
+            this.Parent_Set(default(IFormIDSetLink<Worldspace>), false);
+        }
         #endregion
         #region Climate
-        public IFormIDSetLink<Climate> Climate_Property { get; } = new FormIDSetLink<Climate>();
-        public Climate Climate { get => Climate_Property.Item; set => Climate_Property.Item = value; }
+        public bool Climate_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Climate];
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Climate] = value;
+        }
+        bool IWorldspaceGetter.Climate_IsSet => Climate_IsSet;
+        private IFormIDSetLink<Climate> _Climate;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Climate> IWorldspace.Climate_Property => this.Climate_Property;
-        IClimateGetter IWorldspaceGetter.Climate => this.Climate_Property.Item;
-        IFormIDSetLinkGetter<IClimateGetter> IWorldspaceGetter.Climate_Property => this.Climate_Property;
+        public IFormIDSetLink<Climate> Climate
+        {
+            get => this._Climate;
+            set => Climate_Set(value);
+        }
+        IFormIDSetLinkGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
+        public void Climate_Set(
+            IFormIDSetLink<Climate> value,
+            bool markSet = true)
+        {
+            _Climate = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Climate] = markSet;
+        }
+        public void Climate_Unset()
+        {
+            this.Climate_Set(default(IFormIDSetLink<Climate>), false);
+        }
         #endregion
         #region Water
-        public IFormIDSetLink<Water> Water_Property { get; } = new FormIDSetLink<Water>();
-        public Water Water { get => Water_Property.Item; set => Water_Property.Item = value; }
+        public bool Water_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Water];
+            set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Water] = value;
+        }
+        bool IWorldspaceGetter.Water_IsSet => Water_IsSet;
+        private IFormIDSetLink<Water> _Water;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Water> IWorldspace.Water_Property => this.Water_Property;
-        IWaterGetter IWorldspaceGetter.Water => this.Water_Property.Item;
-        IFormIDSetLinkGetter<IWaterGetter> IWorldspaceGetter.Water_Property => this.Water_Property;
+        public IFormIDSetLink<Water> Water
+        {
+            get => this._Water;
+            set => Water_Set(value);
+        }
+        IFormIDSetLinkGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
+        public void Water_Set(
+            IFormIDSetLink<Water> value,
+            bool markSet = true)
+        {
+            _Water = value;
+            _hasBeenSetTracker[(int)Worldspace_FieldIndex.Water] = markSet;
+        }
+        public void Water_Unset()
+        {
+            this.Water_Set(default(IFormIDSetLink<Water>), false);
+        }
         #endregion
         #region Icon
         public bool Icon_IsSet
@@ -569,6 +626,9 @@ namespace Mutagen.Bethesda.Oblivion
             switch ((Worldspace_FieldIndex)index)
             {
                 case Worldspace_FieldIndex.Name:
+                case Worldspace_FieldIndex.Parent:
+                case Worldspace_FieldIndex.Climate:
+                case Worldspace_FieldIndex.Water:
                 case Worldspace_FieldIndex.Icon:
                 case Worldspace_FieldIndex.MapData:
                 case Worldspace_FieldIndex.Flags:
@@ -579,12 +639,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case Worldspace_FieldIndex.Road:
                 case Worldspace_FieldIndex.TopCell:
                     return _hasBeenSetTracker[index];
-                case Worldspace_FieldIndex.Parent:
-                    return Parent_Property.HasBeenSet;
-                case Worldspace_FieldIndex.Climate:
-                    return Climate_Property.HasBeenSet;
-                case Worldspace_FieldIndex.Water:
-                    return Water_Property.HasBeenSet;
                 case Worldspace_FieldIndex.SubCells:
                     return SubCells.HasBeenSet;
                 case Worldspace_FieldIndex.SubCellsTimestamp:
@@ -597,47 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Worldspace_Registration.TRIGGERING_RECORD_TYPE;
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield return Parent_Property;
-            yield return Climate_Property;
-            yield return Water_Property;
-            if (TopCell != null)
-            {
-                foreach (var item in TopCell.Links)
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in SubCells.SelectMany(f => f.Links))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            Parent_Property.Link(package);
-            Climate_Property.Link(package);
-            Water_Property.Link(package);
-            if (TopCell != null)
-            {
-                TopCell?.Link(package: package);
-            }
-            foreach (var item in SubCells)
-            {
-                item.Link(package: package);
-            }
-        }
-
+        public override IEnumerable<ILinkGetter> Links => WorldspaceCommon.Instance.GetLinks(this);
         public Worldspace(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -738,20 +752,28 @@ namespace Mutagen.Bethesda.Oblivion
         IWorldspaceGetter,
         IPlace,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IWorldspaceInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IWorldspaceInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
         void Name_Set(String value, bool hasBeenSet = true);
         void Name_Unset();
 
-        new Worldspace Parent { get; set; }
-        new IFormIDSetLink<Worldspace> Parent_Property { get; }
-        new Climate Climate { get; set; }
-        new IFormIDSetLink<Climate> Climate_Property { get; }
-        new Water Water { get; set; }
-        new IFormIDSetLink<Water> Water_Property { get; }
+        new IFormIDSetLink<Worldspace> Parent { get; set; }
+        new bool Parent_IsSet { get; set; }
+        void Parent_Set(IFormIDSetLink<Worldspace> value, bool hasBeenSet = true);
+        void Parent_Unset();
+
+        new IFormIDSetLink<Climate> Climate { get; set; }
+        new bool Climate_IsSet { get; set; }
+        void Climate_Set(IFormIDSetLink<Climate> value, bool hasBeenSet = true);
+        void Climate_Unset();
+
+        new IFormIDSetLink<Water> Water { get; set; }
+        new bool Water_IsSet { get; set; }
+        void Water_Set(IFormIDSetLink<Water> value, bool hasBeenSet = true);
+        void Water_Unset();
+
         new String Icon { get; set; }
         new bool Icon_IsSet { get; set; }
         void Icon_Set(String value, bool hasBeenSet = true);
@@ -816,6 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Name
@@ -824,18 +847,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Parent
-        IWorldspaceGetter Parent { get; }
-        IFormIDSetLinkGetter<IWorldspaceGetter> Parent_Property { get; }
+        IFormIDSetLinkGetter<IWorldspaceGetter> Parent { get; }
+        bool Parent_IsSet { get; }
 
         #endregion
         #region Climate
-        IClimateGetter Climate { get; }
-        IFormIDSetLinkGetter<IClimateGetter> Climate_Property { get; }
+        IFormIDSetLinkGetter<IClimateGetter> Climate { get; }
+        bool Climate_IsSet { get; }
 
         #endregion
         #region Water
-        IWaterGetter Water { get; }
-        IFormIDSetLinkGetter<IWaterGetter> Water_Property { get; }
+        IFormIDSetLinkGetter<IWaterGetter> Water { get; }
+        bool Water_IsSet { get; }
 
         #endregion
         #region Icon
@@ -1649,9 +1672,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Name_Unset();
-            item.Parent_Property.Unset();
-            item.Climate_Property.Unset();
-            item.Water_Property.Unset();
+            item.Parent.Unset();
+            item.Climate.Unset();
+            item.Water.Unset();
             item.Icon_Unset();
             item.MapData_Unset();
             item.Flags_Unset();
@@ -1812,28 +1835,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Parent_Property);
+                        item: out IFormIDSetLink<Worldspace> ParentParse))
+                    {
+                        item.Parent = ParentParse;
+                    }
+                    else
+                    {
+                        item.Parent = default(IFormIDSetLink<Worldspace>);
+                    }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Parent);
                 }
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Climate_Property);
+                        item: out IFormIDSetLink<Climate> ClimateParse))
+                    {
+                        item.Climate = ClimateParse;
+                    }
+                    else
+                    {
+                        item.Climate = default(IFormIDSetLink<Climate>);
+                    }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Climate);
                 }
                 case 0x324D414E: // NAM2
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Water_Property);
+                        item: out IFormIDSetLink<Water> WaterParse))
+                    {
+                        item.Water = WaterParse;
+                    }
+                    else
+                    {
+                        item.Water = default(IFormIDSetLink<Water>);
+                    }
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.Water);
                 }
                 case 0x4E4F4349: // ICON
@@ -2024,9 +2068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Name = item.Name_IsSet == rhs.Name_IsSet && string.Equals(item.Name, rhs.Name);
-            ret.Parent = item.Parent_Property.FormKey == rhs.Parent_Property.FormKey;
-            ret.Climate = item.Climate_Property.FormKey == rhs.Climate_Property.FormKey;
-            ret.Water = item.Water_Property.FormKey == rhs.Water_Property.FormKey;
+            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Climate = object.Equals(item.Climate, rhs.Climate);
+            ret.Water = object.Equals(item.Water, rhs.Water);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
             ret.MapData = EqualsMaskHelper.EqualsHelper(
                 item.MapData_IsSet,
@@ -2117,15 +2161,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendLine($"Parent => {item.Parent_Property}");
+                fg.AppendLine($"Parent => {item.Parent}");
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendLine($"Climate => {item.Climate_Property}");
+                fg.AppendLine($"Climate => {item.Climate}");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendLine($"Water => {item.Water_Property}");
+                fg.AppendLine($"Water => {item.Water}");
             }
             if (printMask?.Icon ?? true)
             {
@@ -2196,9 +2240,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
-            if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_Property.HasBeenSet) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_Property.HasBeenSet) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_Property.HasBeenSet) return false;
+            if (checkMask.Parent.HasValue && checkMask.Parent.Value != item.Parent_IsSet) return false;
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_IsSet) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_IsSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.MapData.Overall.HasValue && checkMask.MapData.Overall.Value != item.MapData_IsSet) return false;
             if (checkMask.MapData.Specific != null && (item.MapData == null || !item.MapData.HasBeenSet(checkMask.MapData.Specific))) return false;
@@ -2222,9 +2266,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace_Mask<bool> mask)
         {
             mask.Name = item.Name_IsSet;
-            mask.Parent = item.Parent_Property.HasBeenSet;
-            mask.Climate = item.Climate_Property.HasBeenSet;
-            mask.Water = item.Water_Property.HasBeenSet;
+            mask.Parent = item.Parent_IsSet;
+            mask.Climate = item.Climate_IsSet;
+            mask.Water = item.Water_IsSet;
             mask.Icon = item.Icon_IsSet;
             mask.MapData = new MaskItem<bool, MapData_Mask<bool>>(item.MapData_IsSet, item.MapData.GetHasBeenSetMask());
             mask.Flags = item.Flags_IsSet;
@@ -2310,20 +2354,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if (lhs.Parent_Property.HasBeenSet != rhs.Parent_Property.HasBeenSet) return false;
-            if (lhs.Parent_Property.HasBeenSet)
+            if (lhs.Parent_IsSet != rhs.Parent_IsSet) return false;
+            if (lhs.Parent_IsSet)
             {
-                if (!lhs.Parent_Property.Equals(rhs.Parent_Property)) return false;
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
             }
-            if (lhs.Climate_Property.HasBeenSet != rhs.Climate_Property.HasBeenSet) return false;
-            if (lhs.Climate_Property.HasBeenSet)
+            if (lhs.Climate_IsSet != rhs.Climate_IsSet) return false;
+            if (lhs.Climate_IsSet)
             {
-                if (!lhs.Climate_Property.Equals(rhs.Climate_Property)) return false;
+                if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if (lhs.Water_Property.HasBeenSet != rhs.Water_Property.HasBeenSet) return false;
-            if (lhs.Water_Property.HasBeenSet)
+            if (lhs.Water_IsSet != rhs.Water_IsSet) return false;
+            if (lhs.Water_IsSet)
             {
-                if (!lhs.Water_Property.Equals(rhs.Water_Property)) return false;
+                if (!lhs.Water.Equals(rhs.Water)) return false;
             }
             if (lhs.Icon_IsSet != rhs.Icon_IsSet) return false;
             if (lhs.Icon_IsSet)
@@ -2414,15 +2458,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Name).CombineHashCode(ret);
             }
-            if (item.Parent_Property.HasBeenSet)
+            if (item.Parent_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Parent).CombineHashCode(ret);
             }
-            if (item.Climate_Property.HasBeenSet)
+            if (item.Climate_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
             }
-            if (item.Water_Property.HasBeenSet)
+            if (item.Water_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
             }
@@ -2496,6 +2540,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IWorldspaceGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Parent;
+            yield return obj.Climate;
+            yield return obj.Water;
+            if (obj.TopCell != null)
+            {
+                foreach (var item in obj.TopCell.Links)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(Worldspace obj, Worldspace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2594,7 +2661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
                 try
                 {
-                    item.Parent_Property.SetToFormKey(rhs: rhs.Parent_Property);
+                    item.Parent.SetToFormKey(rhs: rhs.Parent);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2611,7 +2678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
                 try
                 {
-                    item.Climate_Property.SetToFormKey(rhs: rhs.Climate_Property);
+                    item.Climate.SetToFormKey(rhs: rhs.Climate);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2628,7 +2695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
                 try
                 {
-                    item.Water_Property.SetToFormKey(rhs: rhs.Water_Property);
+                    item.Water.SetToFormKey(rhs: rhs.Water);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3081,33 +3148,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Worldspace_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if (item.Parent_Property.HasBeenSet
+            if (item.Parent_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Parent),
-                    item: item.Parent_Property?.FormKey,
+                    item: item.Parent?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Parent,
                     errorMask: errorMask);
             }
-            if (item.Climate_Property.HasBeenSet
+            if (item.Climate_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Climate),
-                    item: item.Climate_Property?.FormKey,
+                    item: item.Climate?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Climate,
                     errorMask: errorMask);
             }
-            if (item.Water_Property.HasBeenSet
+            if (item.Water_IsSet
                 && (translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Water),
-                    item: item.Water_Property?.FormKey,
+                    item: item.Water?.FormKey,
                     fieldIndex: (int)Worldspace_FieldIndex.Water,
                     errorMask: errorMask);
             }
@@ -3395,25 +3462,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Parent":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Parent_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Parent,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Parent);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Worldspace> ParentParse,
+                            errorMask: errorMask))
+                        {
+                            item.Parent = ParentParse;
+                        }
+                        else
+                        {
+                            item.Parent = default(IFormIDSetLink<Worldspace>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Climate":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Climate_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Climate,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Climate);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Climate> ClimateParse,
+                            errorMask: errorMask))
+                        {
+                            item.Climate = ClimateParse;
+                        }
+                        else
+                        {
+                            item.Climate = default(IFormIDSetLink<Climate>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Water":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Water_Property,
-                        fieldIndex: (int)Worldspace_FieldIndex.Water,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Worldspace_FieldIndex.Water);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Water> WaterParse,
+                            errorMask: errorMask))
+                        {
+                            item.Water = WaterParse;
+                        }
+                        else
+                        {
+                            item.Water = default(IFormIDSetLink<Water>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Icon":
                     try
@@ -4648,29 +4772,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.FULL_HEADER),
                     nullable: false);
             }
-            if (item.Parent_Property.HasBeenSet)
+            if (item.Parent_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Parent_Property,
+                    item: item.Parent,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.WNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Climate_Property.HasBeenSet)
+            if (item.Climate_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Climate_Property,
+                    item: item.Climate,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.CNAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Water_Property.HasBeenSet)
+            if (item.Water_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Water_Property,
+                    item: item.Water,
                     header: recordTypeConverter.ConvertToCustom(Worldspace_Registration.NAM2_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -4923,6 +5047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => WorldspaceCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -4961,20 +5086,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Parent
         private int? _ParentLocation;
         public bool Parent_IsSet => _ParentLocation.HasValue;
-        public IFormIDSetLinkGetter<IWorldspaceGetter> Parent_Property => _ParentLocation.HasValue ? new FormIDSetLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceGetter>.Empty;
-        public IWorldspaceGetter Parent => default;
+        public IFormIDSetLinkGetter<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormIDSetLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceGetter>.Empty;
         #endregion
         #region Climate
         private int? _ClimateLocation;
         public bool Climate_IsSet => _ClimateLocation.HasValue;
-        public IFormIDSetLinkGetter<IClimateGetter> Climate_Property => _ClimateLocation.HasValue ? new FormIDSetLink<IClimateGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormIDSetLink<IClimateGetter>.Empty;
-        public IClimateGetter Climate => default;
+        public IFormIDSetLinkGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormIDSetLink<IClimateGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClimateLocation.Value, _package.Meta)))) : FormIDSetLink<IClimateGetter>.Empty;
         #endregion
         #region Water
         private int? _WaterLocation;
         public bool Water_IsSet => _WaterLocation.HasValue;
-        public IFormIDSetLinkGetter<IWaterGetter> Water_Property => _WaterLocation.HasValue ? new FormIDSetLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormIDSetLink<IWaterGetter>.Empty;
-        public IWaterGetter Water => default;
+        public IFormIDSetLinkGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormIDSetLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterLocation.Value, _package.Meta)))) : FormIDSetLink<IWaterGetter>.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

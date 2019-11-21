@@ -135,20 +135,58 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        public IFormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
-        public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        public bool Script_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Script];
+            set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Script] = value;
+        }
+        bool IWeaponGetter.Script_IsSet => Script_IsSet;
+        private IFormIDSetLink<Script> _Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Script> IWeapon.Script_Property => this.Script_Property;
-        IScriptGetter IWeaponGetter.Script => this.Script_Property.Item;
-        IFormIDSetLinkGetter<IScriptGetter> IWeaponGetter.Script_Property => this.Script_Property;
+        public IFormIDSetLink<Script> Script
+        {
+            get => this._Script;
+            set => Script_Set(value);
+        }
+        IFormIDSetLinkGetter<IScriptGetter> IWeaponGetter.Script => this.Script;
+        public void Script_Set(
+            IFormIDSetLink<Script> value,
+            bool markSet = true)
+        {
+            _Script = value;
+            _hasBeenSetTracker[(int)Weapon_FieldIndex.Script] = markSet;
+        }
+        public void Script_Unset()
+        {
+            this.Script_Set(default(IFormIDSetLink<Script>), false);
+        }
         #endregion
         #region Enchantment
-        public IFormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
-        public Enchantment Enchantment { get => Enchantment_Property.Item; set => Enchantment_Property.Item = value; }
+        public bool Enchantment_IsSet
+        {
+            get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Enchantment];
+            set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Enchantment] = value;
+        }
+        bool IWeaponGetter.Enchantment_IsSet => Enchantment_IsSet;
+        private IFormIDSetLink<Enchantment> _Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDSetLink<Enchantment> IWeapon.Enchantment_Property => this.Enchantment_Property;
-        IEnchantmentGetter IWeaponGetter.Enchantment => this.Enchantment_Property.Item;
-        IFormIDSetLinkGetter<IEnchantmentGetter> IWeaponGetter.Enchantment_Property => this.Enchantment_Property;
+        public IFormIDSetLink<Enchantment> Enchantment
+        {
+            get => this._Enchantment;
+            set => Enchantment_Set(value);
+        }
+        IFormIDSetLinkGetter<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;
+        public void Enchantment_Set(
+            IFormIDSetLink<Enchantment> value,
+            bool markSet = true)
+        {
+            _Enchantment = value;
+            _hasBeenSetTracker[(int)Weapon_FieldIndex.Enchantment] = markSet;
+        }
+        public void Enchantment_Unset()
+        {
+            this.Enchantment_Set(default(IFormIDSetLink<Enchantment>), false);
+        }
         #endregion
         #region EnchantmentPoints
         public bool EnchantmentPoints_IsSet
@@ -469,12 +507,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case Weapon_FieldIndex.Name:
                 case Weapon_FieldIndex.Model:
                 case Weapon_FieldIndex.Icon:
+                case Weapon_FieldIndex.Script:
+                case Weapon_FieldIndex.Enchantment:
                 case Weapon_FieldIndex.EnchantmentPoints:
                     return _hasBeenSetTracker[index];
-                case Weapon_FieldIndex.Script:
-                    return Script_Property.HasBeenSet;
-                case Weapon_FieldIndex.Enchantment:
-                    return Enchantment_Property.HasBeenSet;
                 case Weapon_FieldIndex.Type:
                 case Weapon_FieldIndex.Speed:
                 case Weapon_FieldIndex.Reach:
@@ -497,26 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield return Script_Property;
-            yield return Enchantment_Property;
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-            Script_Property.Link(package);
-            Enchantment_Property.Link(package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => WeaponCommon.Instance.GetLinks(this);
         public Weapon(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -616,8 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWeapon :
         IWeaponGetter,
         IItemAbstract,
-        ILoquiObjectSetter<IWeaponInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IWeaponInternal>
     {
         new String Name { get; set; }
         new bool Name_IsSet { get; set; }
@@ -634,10 +650,16 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new Script Script { get; set; }
-        new IFormIDSetLink<Script> Script_Property { get; }
-        new Enchantment Enchantment { get; set; }
-        new IFormIDSetLink<Enchantment> Enchantment_Property { get; }
+        new IFormIDSetLink<Script> Script { get; set; }
+        new bool Script_IsSet { get; set; }
+        void Script_Set(IFormIDSetLink<Script> value, bool hasBeenSet = true);
+        void Script_Unset();
+
+        new IFormIDSetLink<Enchantment> Enchantment { get; set; }
+        new bool Enchantment_IsSet { get; set; }
+        void Enchantment_Set(IFormIDSetLink<Enchantment> value, bool hasBeenSet = true);
+        void Enchantment_Unset();
+
         new UInt16 EnchantmentPoints { get; set; }
         new bool EnchantmentPoints_IsSet { get; set; }
         void EnchantmentPoints_Set(UInt16 value, bool hasBeenSet = true);
@@ -674,6 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
         IItemAbstractGetter,
         ILoquiObject<IWeaponGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region Name
@@ -692,13 +715,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        IScriptGetter Script { get; }
-        IFormIDSetLinkGetter<IScriptGetter> Script_Property { get; }
+        IFormIDSetLinkGetter<IScriptGetter> Script { get; }
+        bool Script_IsSet { get; }
 
         #endregion
         #region Enchantment
-        IEnchantmentGetter Enchantment { get; }
-        IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment_Property { get; }
+        IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
+        bool Enchantment_IsSet { get; }
 
         #endregion
         #region EnchantmentPoints
@@ -1466,8 +1489,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Model_Unset();
             item.Icon_Unset();
-            item.Script_Property.Unset();
-            item.Enchantment_Property.Unset();
+            item.Script.Unset();
+            item.Enchantment.Unset();
             item.EnchantmentPoints_Unset();
             item.Type = default(Weapon.WeaponType);
             item.Speed = default(Single);
@@ -1638,19 +1661,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Script_Property);
+                        item: out IFormIDSetLink<Script> ScriptParse))
+                    {
+                        item.Script = ScriptParse;
+                    }
+                    else
+                    {
+                        item.Script = default(IFormIDSetLink<Script>);
+                    }
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Script);
                 }
                 case 0x4D414E45: // ENAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: item.Enchantment_Property);
+                        item: out IFormIDSetLink<Enchantment> EnchantmentParse))
+                    {
+                        item.Enchantment = EnchantmentParse;
+                    }
+                    else
+                    {
+                        item.Enchantment = default(IFormIDSetLink<Enchantment>);
+                    }
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
@@ -1789,8 +1826,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs),
                 include);
             ret.Icon = item.Icon_IsSet == rhs.Icon_IsSet && string.Equals(item.Icon, rhs.Icon);
-            ret.Script = item.Script_Property.FormKey == rhs.Script_Property.FormKey;
-            ret.Enchantment = item.Enchantment_Property.FormKey == rhs.Enchantment_Property.FormKey;
+            ret.Script = object.Equals(item.Script, rhs.Script);
+            ret.Enchantment = object.Equals(item.Enchantment, rhs.Enchantment);
             ret.EnchantmentPoints = item.EnchantmentPoints_IsSet == rhs.EnchantmentPoints_IsSet && item.EnchantmentPoints == rhs.EnchantmentPoints;
             ret.Type = item.Type == rhs.Type;
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
@@ -1866,11 +1903,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendLine($"Script => {item.Script_Property}");
+                fg.AppendLine($"Script => {item.Script}");
             }
             if (printMask?.Enchantment ?? true)
             {
-                fg.AppendLine($"Enchantment => {item.Enchantment_Property}");
+                fg.AppendLine($"Enchantment => {item.Enchantment}");
             }
             if (printMask?.EnchantmentPoints ?? true)
             {
@@ -1922,8 +1959,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_IsSet) return false;
+            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_IsSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
             return base.HasBeenSet(
                 item: item,
@@ -1937,8 +1974,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = item.Name_IsSet;
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
             mask.Icon = item.Icon_IsSet;
-            mask.Script = item.Script_Property.HasBeenSet;
-            mask.Enchantment = item.Enchantment_Property.HasBeenSet;
+            mask.Script = item.Script_IsSet;
+            mask.Enchantment = item.Enchantment_IsSet;
             mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
             mask.Type = true;
             mask.Speed = true;
@@ -2032,15 +2069,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if (lhs.Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
-            if (lhs.Script_Property.HasBeenSet)
+            if (lhs.Script_IsSet != rhs.Script_IsSet) return false;
+            if (lhs.Script_IsSet)
             {
-                if (!lhs.Script_Property.Equals(rhs.Script_Property)) return false;
+                if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if (lhs.Enchantment_Property.HasBeenSet != rhs.Enchantment_Property.HasBeenSet) return false;
-            if (lhs.Enchantment_Property.HasBeenSet)
+            if (lhs.Enchantment_IsSet != rhs.Enchantment_IsSet) return false;
+            if (lhs.Enchantment_IsSet)
             {
-                if (!lhs.Enchantment_Property.Equals(rhs.Enchantment_Property)) return false;
+                if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             }
             if (lhs.EnchantmentPoints_IsSet != rhs.EnchantmentPoints_IsSet) return false;
             if (lhs.EnchantmentPoints_IsSet)
@@ -2101,11 +2138,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
             }
-            if (item.Enchantment_Property.HasBeenSet)
+            if (item.Enchantment_IsSet)
             {
                 ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
             }
@@ -2150,6 +2187,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IWeaponGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield return obj.Script;
+            yield return obj.Enchantment;
+            yield break;
+        }
+        
         partial void PostDuplicate(Weapon obj, Weapon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2274,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Script);
                 try
                 {
-                    item.Script_Property.SetToFormKey(rhs: rhs.Script_Property);
+                    item.Script.SetToFormKey(rhs: rhs.Script);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2291,7 +2339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Enchantment);
                 try
                 {
-                    item.Enchantment_Property.SetToFormKey(rhs: rhs.Enchantment_Property);
+                    item.Enchantment.SetToFormKey(rhs: rhs.Enchantment);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2560,23 +2608,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Weapon_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Script_Property.HasBeenSet
+            if (item.Script_IsSet
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Script),
-                    item: item.Script_Property?.FormKey,
+                    item: item.Script?.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Enchantment_Property.HasBeenSet
+            if (item.Enchantment_IsSet
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Enchantment),
-                    item: item.Enchantment_Property?.FormKey,
+                    item: item.Enchantment?.FormKey,
                     fieldIndex: (int)Weapon_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }
@@ -2876,18 +2924,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Script":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Script_Property,
-                        fieldIndex: (int)Weapon_FieldIndex.Script,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Script);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Script> ScriptParse,
+                            errorMask: errorMask))
+                        {
+                            item.Script = ScriptParse;
+                        }
+                        else
+                        {
+                            item.Script = default(IFormIDSetLink<Script>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Enchantment":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Enchantment_Property,
-                        fieldIndex: (int)Weapon_FieldIndex.Enchantment,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)Weapon_FieldIndex.Enchantment);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDSetLink<Enchantment> EnchantmentParse,
+                            errorMask: errorMask))
+                        {
+                            item.Enchantment = EnchantmentParse;
+                        }
+                        else
+                        {
+                            item.Enchantment = default(IFormIDSetLink<Enchantment>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "EnchantmentPoints":
                     try
@@ -3902,20 +3988,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Weapon_Registration.ICON_HEADER),
                     nullable: false);
             }
-            if (item.Script_Property.HasBeenSet)
+            if (item.Script_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Script_Property,
+                    item: item.Script,
                     header: recordTypeConverter.ConvertToCustom(Weapon_Registration.SCRI_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Enchantment_Property.HasBeenSet)
+            if (item.Enchantment_IsSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Enchantment_Property,
+                    item: item.Enchantment,
                     header: recordTypeConverter.ConvertToCustom(Weapon_Registration.ENAM_HEADER),
                     nullable: false,
                     masterReferences: masterReferences);
@@ -4097,6 +4183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => WeaponCommon.Instance.GetLinks(this);
         protected override object XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4143,14 +4230,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormIDSetLinkGetter<IScriptGetter> Script_Property => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
-        public IScriptGetter Script => default;
+        public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
         #region Enchantment
         private int? _EnchantmentLocation;
         public bool Enchantment_IsSet => _EnchantmentLocation.HasValue;
-        public IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment_Property => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentGetter>.Empty;
-        public IEnchantmentGetter Enchantment => default;
+        public IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormIDSetLink<IEnchantmentGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EnchantmentLocation.Value, _package.Meta)))) : FormIDSetLink<IEnchantmentGetter>.Empty;
         #endregion
         #region EnchantmentPoints
         private int? _EnchantmentPointsLocation;

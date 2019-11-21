@@ -43,26 +43,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RaceVoices()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Male
-        public IFormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
-        public Race Male { get => Male_Property.Item; set => Male_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Race> IRaceVoices.Male_Property => this.Male_Property;
-        IRaceGetter IRaceVoicesGetter.Male => this.Male_Property.Item;
-        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        public IFormIDLink<Race> Male { get; set; }
+        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Male => this.Male;
         #endregion
         #region Female
-        public IFormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
-        public Race Female { get => Female_Property.Item; set => Female_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Race> IRaceVoices.Female_Property => this.Female_Property;
-        IRaceGetter IRaceVoicesGetter.Female => this.Female_Property.Item;
-        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        public IFormIDLink<Race> Female { get; set; }
+        IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Female => this.Female;
         #endregion
 
         #region To String
@@ -251,23 +244,22 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RaceVoices_FieldIndex)index)
+            {
+                case RaceVoices_FieldIndex.Male:
+                case RaceVoices_FieldIndex.Female:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RaceVoices_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return Male_Property;
-            yield return Female_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            Male_Property.Link(package);
-            Female_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => RaceVoicesCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -356,19 +348,19 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRaceVoices :
         IRaceVoicesGetter,
-        ILoquiObjectSetter<IRaceVoices>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRaceVoices>
     {
-        new Race Male { get; set; }
-        new IFormIDLink<Race> Male_Property { get; }
-        new Race Female { get; set; }
-        new IFormIDLink<Race> Female_Property { get; }
+        new IFormIDLink<Race> Male { get; set; }
+
+        new IFormIDLink<Race> Female { get; set; }
+
     }
 
     public partial interface IRaceVoicesGetter :
         ILoquiObject,
         ILoquiObject<IRaceVoicesGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -378,13 +370,11 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region Male
-        IRaceGetter Male { get; }
-        IFormIDLinkGetter<IRaceGetter> Male_Property { get; }
+        IFormIDLinkGetter<IRaceGetter> Male { get; }
 
         #endregion
         #region Female
-        IRaceGetter Female { get; }
-        IFormIDLinkGetter<IRaceGetter> Female_Property { get; }
+        IFormIDLinkGetter<IRaceGetter> Female { get; }
 
         #endregion
 
@@ -951,8 +941,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceVoices item)
         {
             ClearPartial();
-            item.Male = default(Race);
-            item.Female = default(Race);
+            item.Male.Unset();
+            item.Female.Unset();
         }
         
         #region Xml Translation
@@ -991,14 +981,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Male_Property);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                item: out IFormIDLink<Race> MaleParse))
+            {
+                item.Male = MaleParse;
+            }
+            else
+            {
+                item.Male = default(IFormIDLink<Race>);
+            }
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.Female_Property);
+                item: out IFormIDLink<Race> FemaleParse))
+            {
+                item.Female = FemaleParse;
+            }
+            else
+            {
+                item.Female = default(IFormIDLink<Race>);
+            }
         }
         
         public void CopyInFromBinary(
@@ -1049,8 +1053,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Male = item.Male_Property.FormKey == rhs.Male_Property.FormKey;
-            ret.Female = item.Female_Property.FormKey == rhs.Female_Property.FormKey;
+            ret.Male = object.Equals(item.Male, rhs.Male);
+            ret.Female = object.Equals(item.Female, rhs.Female);
         }
         
         public string ToString(
@@ -1099,11 +1103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.Male ?? true)
             {
-                fg.AppendLine($"Male => {item.Male_Property}");
+                fg.AppendLine($"Male => {item.Male}");
             }
             if (printMask?.Female ?? true)
             {
-                fg.AppendLine($"Female => {item.Female_Property}");
+                fg.AppendLine($"Female => {item.Female}");
             }
         }
         
@@ -1129,8 +1133,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Male_Property.Equals(rhs.Male_Property)) return false;
-            if (!lhs.Female_Property.Equals(rhs.Female_Property)) return false;
+            if (!lhs.Male.Equals(rhs.Male)) return false;
+            if (!lhs.Female.Equals(rhs.Female)) return false;
             return true;
         }
         
@@ -1150,6 +1154,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RaceVoices.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRaceVoicesGetter obj)
+        {
+            yield return obj.Male;
+            yield return obj.Female;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RaceVoicesSetterTranslationCommon
     {
@@ -1164,11 +1178,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceVoices_FieldIndex.Male) ?? true))
             {
-                item.Male_Property.FormKey = rhs.Male_Property.FormKey;
+                item.Male.FormKey = rhs.Male.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RaceVoices_FieldIndex.Female) ?? true))
             {
-                item.Female_Property.FormKey = rhs.Female_Property.FormKey;
+                item.Female.FormKey = rhs.Female.FormKey;
             }
         }
         
@@ -1258,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Male),
-                    item: item.Male_Property?.FormKey,
+                    item: item.Male?.FormKey,
                     fieldIndex: (int)RaceVoices_FieldIndex.Male,
                     errorMask: errorMask);
             }
@@ -1267,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Female),
-                    item: item.Female_Property?.FormKey,
+                    item: item.Female?.FormKey,
                     fieldIndex: (int)RaceVoices_FieldIndex.Female,
                     errorMask: errorMask);
             }
@@ -1378,18 +1392,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Male":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Male_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceVoices_FieldIndex.Male);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Race> MaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.Male = MaleParse;
+                        }
+                        else
+                        {
+                            item.Male = default(IFormIDLink<Race>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Female":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.Female_Property,
-                        fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RaceVoices_FieldIndex.Female);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Race> FemaleParse,
+                            errorMask: errorMask))
+                        {
+                            item.Female = FemaleParse;
+                        }
+                        else
+                        {
+                            item.Female = default(IFormIDLink<Race>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;
@@ -1864,11 +1916,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Male_Property,
+                item: item.Male,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Female_Property,
+                item: item.Female,
                 masterReferences: masterReferences);
         }
 
@@ -1992,6 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => RaceVoicesCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2023,14 +2076,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region Male
-        public IFormIDLinkGetter<IRaceGetter> Male_Property => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IRaceGetter Male => default;
-        #endregion
-        #region Female
-        public IFormIDLinkGetter<IRaceGetter> Female_Property => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IRaceGetter Female => default;
-        #endregion
+        public IFormIDLinkGetter<IRaceGetter> Male => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IRaceGetter> Female => new FormIDLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1342,6 +1342,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return MapMarker.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IMapMarkerGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class MapMarkerSetterTranslationCommon
     {

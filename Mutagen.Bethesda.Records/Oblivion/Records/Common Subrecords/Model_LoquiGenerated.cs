@@ -1263,6 +1263,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return Model.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IModelGetter obj)
+        {
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class ModelSetterTranslationCommon
     {

@@ -43,34 +43,23 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public RelatedWaters()
         {
+            _hasBeenSetTracker = new BitArray(((ILoquiObject)this).Registration.FieldCount);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region RelatedWaterDaytime
-        public IFormIDLink<Water> RelatedWaterDaytime_Property { get; } = new FormIDLink<Water>();
-        public Water RelatedWaterDaytime { get => RelatedWaterDaytime_Property.Item; set => RelatedWaterDaytime_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Water> IRelatedWaters.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
-        IWaterGetter IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime_Property.Item;
-        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime_Property => this.RelatedWaterDaytime_Property;
+        public IFormIDLink<Water> RelatedWaterDaytime { get; set; }
+        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
         #endregion
         #region RelatedWaterNighttime
-        public IFormIDLink<Water> RelatedWaterNighttime_Property { get; } = new FormIDLink<Water>();
-        public Water RelatedWaterNighttime { get => RelatedWaterNighttime_Property.Item; set => RelatedWaterNighttime_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Water> IRelatedWaters.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
-        IWaterGetter IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime_Property.Item;
-        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime_Property => this.RelatedWaterNighttime_Property;
+        public IFormIDLink<Water> RelatedWaterNighttime { get; set; }
+        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
         #endregion
         #region RelatedWaterUnderwater
-        public IFormIDLink<Water> RelatedWaterUnderwater_Property { get; } = new FormIDLink<Water>();
-        public Water RelatedWaterUnderwater { get => RelatedWaterUnderwater_Property.Item; set => RelatedWaterUnderwater_Property.Item = value; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormIDLink<Water> IRelatedWaters.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
-        IWaterGetter IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater_Property.Item;
-        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater_Property => this.RelatedWaterUnderwater_Property;
+        public IFormIDLink<Water> RelatedWaterUnderwater { get; set; }
+        IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
         #endregion
 
         #region To String
@@ -259,25 +248,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        protected readonly BitArray _hasBeenSetTracker;
+        protected bool GetHasBeenSet(int index)
+        {
+            switch ((RelatedWaters_FieldIndex)index)
+            {
+                case RelatedWaters_FieldIndex.RelatedWaterDaytime:
+                case RelatedWaters_FieldIndex.RelatedWaterNighttime:
+                case RelatedWaters_FieldIndex.RelatedWaterUnderwater:
+                    return true;
+                default:
+                    throw new ArgumentException($"Unknown field index: {index}");
+            }
+        }
+
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RelatedWaters_Registration.TRIGGERING_RECORD_TYPE;
-        public IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            yield return RelatedWaterDaytime_Property;
-            yield return RelatedWaterNighttime_Property;
-            yield return RelatedWaterUnderwater_Property;
-            yield break;
-        }
-
-        public void Link<M>(LinkingPackage<M> package)
-            where M : IMod
-        {
-            RelatedWaterDaytime_Property.Link(package);
-            RelatedWaterNighttime_Property.Link(package);
-            RelatedWaterUnderwater_Property.Link(package);
-        }
-
+        public IEnumerable<ILinkGetter> Links => RelatedWatersCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -366,21 +353,21 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRelatedWaters :
         IRelatedWatersGetter,
-        ILoquiObjectSetter<IRelatedWaters>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IRelatedWaters>
     {
-        new Water RelatedWaterDaytime { get; set; }
-        new IFormIDLink<Water> RelatedWaterDaytime_Property { get; }
-        new Water RelatedWaterNighttime { get; set; }
-        new IFormIDLink<Water> RelatedWaterNighttime_Property { get; }
-        new Water RelatedWaterUnderwater { get; set; }
-        new IFormIDLink<Water> RelatedWaterUnderwater_Property { get; }
+        new IFormIDLink<Water> RelatedWaterDaytime { get; set; }
+
+        new IFormIDLink<Water> RelatedWaterNighttime { get; set; }
+
+        new IFormIDLink<Water> RelatedWaterUnderwater { get; set; }
+
     }
 
     public partial interface IRelatedWatersGetter :
         ILoquiObject,
         ILoquiObject<IRelatedWatersGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -390,18 +377,15 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         #region RelatedWaterDaytime
-        IWaterGetter RelatedWaterDaytime { get; }
-        IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime_Property { get; }
+        IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime { get; }
 
         #endregion
         #region RelatedWaterNighttime
-        IWaterGetter RelatedWaterNighttime { get; }
-        IFormIDLinkGetter<IWaterGetter> RelatedWaterNighttime_Property { get; }
+        IFormIDLinkGetter<IWaterGetter> RelatedWaterNighttime { get; }
 
         #endregion
         #region RelatedWaterUnderwater
-        IWaterGetter RelatedWaterUnderwater { get; }
-        IFormIDLinkGetter<IWaterGetter> RelatedWaterUnderwater_Property { get; }
+        IFormIDLinkGetter<IWaterGetter> RelatedWaterUnderwater { get; }
 
         #endregion
 
@@ -980,9 +964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelatedWaters item)
         {
             ClearPartial();
-            item.RelatedWaterDaytime = default(Water);
-            item.RelatedWaterNighttime = default(Water);
-            item.RelatedWaterUnderwater = default(Water);
+            item.RelatedWaterDaytime.Unset();
+            item.RelatedWaterNighttime.Unset();
+            item.RelatedWaterUnderwater.Unset();
         }
         
         #region Xml Translation
@@ -1021,18 +1005,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterDaytime_Property);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                item: out IFormIDLink<Water> RelatedWaterDaytimeParse))
+            {
+                item.RelatedWaterDaytime = RelatedWaterDaytimeParse;
+            }
+            else
+            {
+                item.RelatedWaterDaytime = default(IFormIDLink<Water>);
+            }
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterNighttime_Property);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.ParseInto(
+                item: out IFormIDLink<Water> RelatedWaterNighttimeParse))
+            {
+                item.RelatedWaterNighttime = RelatedWaterNighttimeParse;
+            }
+            else
+            {
+                item.RelatedWaterNighttime = default(IFormIDLink<Water>);
+            }
+            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: item.RelatedWaterUnderwater_Property);
+                item: out IFormIDLink<Water> RelatedWaterUnderwaterParse))
+            {
+                item.RelatedWaterUnderwater = RelatedWaterUnderwaterParse;
+            }
+            else
+            {
+                item.RelatedWaterUnderwater = default(IFormIDLink<Water>);
+            }
         }
         
         public void CopyInFromBinary(
@@ -1083,9 +1088,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.RelatedWaterDaytime = item.RelatedWaterDaytime_Property.FormKey == rhs.RelatedWaterDaytime_Property.FormKey;
-            ret.RelatedWaterNighttime = item.RelatedWaterNighttime_Property.FormKey == rhs.RelatedWaterNighttime_Property.FormKey;
-            ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater_Property.FormKey == rhs.RelatedWaterUnderwater_Property.FormKey;
+            ret.RelatedWaterDaytime = object.Equals(item.RelatedWaterDaytime, rhs.RelatedWaterDaytime);
+            ret.RelatedWaterNighttime = object.Equals(item.RelatedWaterNighttime, rhs.RelatedWaterNighttime);
+            ret.RelatedWaterUnderwater = object.Equals(item.RelatedWaterUnderwater, rhs.RelatedWaterUnderwater);
         }
         
         public string ToString(
@@ -1134,15 +1139,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
-                fg.AppendLine($"RelatedWaterDaytime => {item.RelatedWaterDaytime_Property}");
+                fg.AppendLine($"RelatedWaterDaytime => {item.RelatedWaterDaytime}");
             }
             if (printMask?.RelatedWaterNighttime ?? true)
             {
-                fg.AppendLine($"RelatedWaterNighttime => {item.RelatedWaterNighttime_Property}");
+                fg.AppendLine($"RelatedWaterNighttime => {item.RelatedWaterNighttime}");
             }
             if (printMask?.RelatedWaterUnderwater ?? true)
             {
-                fg.AppendLine($"RelatedWaterUnderwater => {item.RelatedWaterUnderwater_Property}");
+                fg.AppendLine($"RelatedWaterUnderwater => {item.RelatedWaterUnderwater}");
             }
         }
         
@@ -1169,9 +1174,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.RelatedWaterDaytime_Property.Equals(rhs.RelatedWaterDaytime_Property)) return false;
-            if (!lhs.RelatedWaterNighttime_Property.Equals(rhs.RelatedWaterNighttime_Property)) return false;
-            if (!lhs.RelatedWaterUnderwater_Property.Equals(rhs.RelatedWaterUnderwater_Property)) return false;
+            if (!lhs.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime)) return false;
+            if (!lhs.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime)) return false;
+            if (!lhs.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater)) return false;
             return true;
         }
         
@@ -1192,6 +1197,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return RelatedWaters.GetNew();
         }
         
+        #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IRelatedWatersGetter obj)
+        {
+            yield return obj.RelatedWaterDaytime;
+            yield return obj.RelatedWaterNighttime;
+            yield return obj.RelatedWaterUnderwater;
+            yield break;
+        }
+        
+        #endregion
+        
     }
     public partial class RelatedWatersSetterTranslationCommon
     {
@@ -1206,15 +1222,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
             {
-                item.RelatedWaterDaytime_Property.FormKey = rhs.RelatedWaterDaytime_Property.FormKey;
+                item.RelatedWaterDaytime.FormKey = rhs.RelatedWaterDaytime.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
             {
-                item.RelatedWaterNighttime_Property.FormKey = rhs.RelatedWaterNighttime_Property.FormKey;
+                item.RelatedWaterNighttime.FormKey = rhs.RelatedWaterNighttime.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
             {
-                item.RelatedWaterUnderwater_Property.FormKey = rhs.RelatedWaterUnderwater_Property.FormKey;
+                item.RelatedWaterUnderwater.FormKey = rhs.RelatedWaterUnderwater.FormKey;
             }
         }
         
@@ -1304,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterDaytime),
-                    item: item.RelatedWaterDaytime_Property?.FormKey,
+                    item: item.RelatedWaterDaytime?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
                     errorMask: errorMask);
             }
@@ -1313,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterNighttime),
-                    item: item.RelatedWaterNighttime_Property?.FormKey,
+                    item: item.RelatedWaterNighttime?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
                     errorMask: errorMask);
             }
@@ -1322,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RelatedWaterUnderwater),
-                    item: item.RelatedWaterUnderwater_Property?.FormKey,
+                    item: item.RelatedWaterUnderwater?.FormKey,
                     fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
                     errorMask: errorMask);
             }
@@ -1433,25 +1449,82 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "RelatedWaterDaytime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterDaytime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterDaytime,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Water> RelatedWaterDaytimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.RelatedWaterDaytime = RelatedWaterDaytimeParse;
+                        }
+                        else
+                        {
+                            item.RelatedWaterDaytime = default(IFormIDLink<Water>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "RelatedWaterNighttime":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterNighttime_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterNighttime,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Water> RelatedWaterNighttimeParse,
+                            errorMask: errorMask))
+                        {
+                            item.RelatedWaterNighttime = RelatedWaterNighttimeParse;
+                        }
+                        else
+                        {
+                            item.RelatedWaterNighttime = default(IFormIDLink<Water>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "RelatedWaterUnderwater":
-                    FormKeyXmlTranslation.Instance.ParseInto(
-                        node: node,
-                        item: item.RelatedWaterUnderwater_Property,
-                        fieldIndex: (int)RelatedWaters_FieldIndex.RelatedWaterUnderwater,
-                        errorMask: errorMask);
+                    try
+                    {
+                        errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
+                        if (FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            item: out IFormIDLink<Water> RelatedWaterUnderwaterParse,
+                            errorMask: errorMask))
+                        {
+                            item.RelatedWaterUnderwater = RelatedWaterUnderwaterParse;
+                        }
+                        else
+                        {
+                            item.RelatedWaterUnderwater = default(IFormIDLink<Water>);
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 default:
                     break;
@@ -1951,15 +2024,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RelatedWaterDaytime_Property,
+                item: item.RelatedWaterDaytime,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RelatedWaterNighttime_Property,
+                item: item.RelatedWaterNighttime,
                 masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RelatedWaterUnderwater_Property,
+                item: item.RelatedWaterUnderwater,
                 masterReferences: masterReferences);
         }
 
@@ -2083,6 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelatedWatersGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => RelatedWatersCommon.Instance.GetLinks(this);
         protected object XmlWriteTranslator => RelatedWatersXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2114,18 +2188,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        #region RelatedWaterDaytime
-        public IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime_Property => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IWaterGetter RelatedWaterDaytime => default;
-        #endregion
-        #region RelatedWaterNighttime
-        public IFormIDLinkGetter<IWaterGetter> RelatedWaterNighttime_Property => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public IWaterGetter RelatedWaterNighttime => default;
-        #endregion
-        #region RelatedWaterUnderwater
-        public IFormIDLinkGetter<IWaterGetter> RelatedWaterUnderwater_Property => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
-        public IWaterGetter RelatedWaterUnderwater => default;
-        #endregion
+        public IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
+        public IFormIDLinkGetter<IWaterGetter> RelatedWaterNighttime => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
+        public IFormIDLinkGetter<IWaterGetter> RelatedWaterUnderwater => new FormIDLink<IWaterGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

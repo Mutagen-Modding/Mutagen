@@ -251,22 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public override IEnumerable<ILink> Links => GetLinks();
-        private IEnumerable<ILink> GetLinks()
-        {
-            foreach (var item in base.Links)
-            {
-                yield return item;
-            }
-            yield break;
-        }
-
-        public override void Link<M>(LinkingPackage<M> package)
-            
-        {
-            base.Link(package: package);
-        }
-
+        public override IEnumerable<ILinkGetter> Links => OblivionMajorRecordCommon.Instance.GetLinks(this);
         public OblivionMajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -321,8 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IMajorRecord,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMajorRecordInternal>,
-        ILinkSubContainer
+        ILoquiObjectSetter<IOblivionMajorRecordInternal>
     {
         new OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; set; }
 
@@ -340,6 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionMajorRecordGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region OblivionMajorRecordFlags
@@ -1307,6 +1292,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
+        public IEnumerable<ILinkGetter> GetLinks(IOblivionMajorRecordGetter obj)
+        {
+            foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         partial void PostDuplicate(OblivionMajorRecord obj, OblivionMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecords)
@@ -2050,6 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => OblivionMajorRecordCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
