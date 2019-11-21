@@ -299,12 +299,12 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int passedLength,
+            int? passedLength,
             DataType data = null)
         {
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
     }

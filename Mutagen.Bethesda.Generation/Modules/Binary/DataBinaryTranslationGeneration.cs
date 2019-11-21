@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor, 
-            int passedLength,
+            int? passedLength,
             DataType _)
         {
             DataType dataType = typeGen as DataType;
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
             }
 
-            var dataPassedLength = 0;
+            int? dataPassedLength = 0;
             foreach (var field in dataType.IterateFieldsWithMeta())
             {
                 if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
             fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
             bool generatedStart = false;
-            var passedLen = 0;
+            int? passedLen = 0;
             foreach (var item in dataType.IterateFieldsWithMeta())
             {
                 if (!this.Module.TryGetTypeGeneration(item.Field.GetType(), out var typeGen)) continue;
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
                         generatedStart = true;
                         fg.AppendLine($"var subLen = _package.Meta.SubRecord(_data.Slice({locationAccessor})).RecordLength;");
                     }
-                    fg.AppendLine($"if (subLen <= 0x{passedLen.ToString("X")})");
+                    fg.AppendLine($"if (subLen <= 0x{passedLen.Value.ToString("X")})");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"this.{dataType.StateName} |= {objGen.ObjectName}.{dataType.EnumName}.Break{item.BreakIndex};");
@@ -171,11 +171,11 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
 
-        public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, int pos)
+        public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, int? pos)
         {
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
             StringBuilder extraChecks = new StringBuilder();
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
-            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + 0x{pos.ToString("X")};");
+            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + 0x{pos.Value.ToString("X")};");
             switch (typeGen.GetFieldData().BinaryWrapperFallback)
             {
                 case BinaryGenerationType.Normal:

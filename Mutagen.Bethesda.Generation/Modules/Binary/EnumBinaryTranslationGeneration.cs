@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor,
-            int currentPosition,
+            int? currentPosition,
             DataType dataType)
         {
             var eType = typeGen as EnumType;
@@ -184,12 +184,12 @@ namespace Mutagen.Bethesda.Generation
 
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
             if (!data.RecordType.HasValue)
             {
-                return this.ExpectedLength(objGen, typeGen) ?? 0;
+                return this.ExpectedLength(objGen, typeGen) ?? null;
             }
             return 0;
         }

@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperFields(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, int currentPosition, DataType dataType = null)
+        public override void GenerateWrapperFields(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, int? currentPosition, DataType dataType = null)
         {
             var data = typeGen.GetFieldData();
             if (data.HasTrigger)

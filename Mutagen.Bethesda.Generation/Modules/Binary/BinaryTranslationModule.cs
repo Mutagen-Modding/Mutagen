@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Generation
 
                 fg.AppendLine();
 
-                int passedLength = 0;
+                int? passedLength = 0;
                 // Get passed length of all base classes, not including major record
                 if (obj.HasLoquiBaseObject)
                 {
@@ -1826,13 +1826,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Mod:
                                         break;
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Generation
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                fg.AppendLine($"stream.Position += 0x{(passedLength).ToString("X")}{headerAddition};");
+                                fg.AppendLine($"stream.Position += 0x{(passedLength).Value.ToString("X")}{headerAddition};");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"ret.CustomCtor"))

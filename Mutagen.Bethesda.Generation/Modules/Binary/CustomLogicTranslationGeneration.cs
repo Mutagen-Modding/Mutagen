@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            ref int currentPosition,
+            ref int? currentPosition,
             DataType dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
-            int passedLength, 
+            int? passedLength, 
             DataType data = null)
         {
             using (var args = new ArgsWrapper(fg,
