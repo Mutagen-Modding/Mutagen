@@ -51,12 +51,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region AlphaLayerData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool AlphaLayerData_IsSet
         {
             get => _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData];
             set => _hasBeenSetTracker[(int)AlphaLayer_FieldIndex.AlphaLayerData] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IAlphaLayerGetter.AlphaLayerData_IsSet => AlphaLayerData_IsSet;
         protected Byte[] _AlphaLayerData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

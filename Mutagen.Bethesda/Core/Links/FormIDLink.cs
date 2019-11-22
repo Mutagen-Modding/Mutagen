@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
     {
         public static readonly IFormIDLinkGetter<TMajor> Empty = new FormIDLink<TMajor>();
 
-        public FormKey FormKey { get; set; } = FormKey.NULL;
+        public virtual FormKey FormKey { get; set; } = FormKey.NULL;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         public FormIDLink()

@@ -51,16 +51,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        private IEDIDLink<MagicEffect> _MagicEffect;
-        public IEDIDLink<MagicEffect> MagicEffect
-        {
-            get => this._MagicEffect;
-            set
-            {
-                this.EFITDataTypeState |= EFITDataType.Has;
-                this._MagicEffect = value;
-            }
-        }
+        protected IEDIDLink<MagicEffect> _MagicEffect = new EDIDLink<MagicEffect>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEDIDLink<MagicEffect> MagicEffect => this._MagicEffect;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IEffectGetter.MagicEffect => this.MagicEffect;
         #endregion
         #region Magnitude
@@ -459,8 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEffectGetter,
         ILoquiObjectSetter<IEffect>
     {
-        new IEDIDLink<MagicEffect> MagicEffect { get; set; }
-
+        new IEDIDLink<MagicEffect> MagicEffect { get; }
         new UInt32 Magnitude { get; set; }
 
         new UInt32 Area { get; set; }
@@ -495,7 +488,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region MagicEffect
         IEDIDLinkGetter<IMagicEffectGetter> MagicEffect { get; }
-
         #endregion
         #region Magnitude
         UInt32 Magnitude { get; }
@@ -1246,13 +1238,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        item: out IEDIDLink<MagicEffect> MagicEffectParse))
+                        item: out RecordType MagicEffectParse))
                     {
-                        item.MagicEffect = MagicEffectParse;
+                        item.MagicEffect.EDID = MagicEffectParse;
                     }
                     else
                     {
-                        item.MagicEffect = default(IEDIDLink<MagicEffect>);
+                        item.MagicEffect.EDID = RecordType.NULL;
                     }
                     item.Magnitude = dataFrame.ReadUInt32();
                     item.Area = dataFrame.ReadUInt32();
@@ -1873,14 +1865,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Effect_FieldIndex.MagicEffect);
                         if (RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IEDIDLink<MagicEffect> MagicEffectParse,
+                            item: out RecordType MagicEffectParse,
                             errorMask: errorMask))
                         {
-                            item.MagicEffect = MagicEffectParse;
+                            item.MagicEffect.EDID = MagicEffectParse;
                         }
                         else
                         {
-                            item.MagicEffect = default(IEDIDLink<MagicEffect>);
+                            item.MagicEffect.EDID = RecordType.NULL;
                         }
                     }
                     catch (Exception ex)

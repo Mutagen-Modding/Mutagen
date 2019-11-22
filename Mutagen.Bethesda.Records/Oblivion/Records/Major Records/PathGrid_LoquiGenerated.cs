@@ -66,12 +66,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown];
             set => _hasBeenSetTracker[(int)PathGrid_FieldIndex.Unknown] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IPathGridGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

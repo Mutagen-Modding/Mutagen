@@ -471,12 +471,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFaceGenDataGetter IRaceGetter.FaceGenData => this.FaceGenData;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Unknown];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.Unknown] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IRaceGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

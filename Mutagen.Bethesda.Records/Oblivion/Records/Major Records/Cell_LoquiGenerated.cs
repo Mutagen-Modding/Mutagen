@@ -231,85 +231,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Climate
-        public bool Climate_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Climate];
-            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Climate] = value;
-        }
-        bool ICellGetter.Climate_IsSet => Climate_IsSet;
-        private IFormIDSetLink<Climate> _Climate;
+        protected IFormIDSetLink<Climate> _Climate = new FormIDSetLink<Climate>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Climate> Climate
-        {
-            get => this._Climate;
-            set => Climate_Set(value);
-        }
+        public IFormIDSetLink<Climate> Climate => this._Climate;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
-        public void Climate_Set(
-            IFormIDSetLink<Climate> value,
-            bool markSet = true)
-        {
-            _Climate = value;
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Climate] = markSet;
-        }
-        public void Climate_Unset()
-        {
-            this.Climate_Set(default(IFormIDSetLink<Climate>), false);
-        }
         #endregion
         #region Water
-        public bool Water_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Water];
-            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Water] = value;
-        }
-        bool ICellGetter.Water_IsSet => Water_IsSet;
-        private IFormIDSetLink<Water> _Water;
+        protected IFormIDSetLink<Water> _Water = new FormIDSetLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Water> Water
-        {
-            get => this._Water;
-            set => Water_Set(value);
-        }
+        public IFormIDSetLink<Water> Water => this._Water;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWaterGetter> ICellGetter.Water => this.Water;
-        public void Water_Set(
-            IFormIDSetLink<Water> value,
-            bool markSet = true)
-        {
-            _Water = value;
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Water] = markSet;
-        }
-        public void Water_Unset()
-        {
-            this.Water_Set(default(IFormIDSetLink<Water>), false);
-        }
         #endregion
         #region Owner
-        public bool Owner_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Cell_FieldIndex.Owner];
-            set => _hasBeenSetTracker[(int)Cell_FieldIndex.Owner] = value;
-        }
-        bool ICellGetter.Owner_IsSet => Owner_IsSet;
-        private IFormIDSetLink<Faction> _Owner;
+        protected IFormIDSetLink<Faction> _Owner = new FormIDSetLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Faction> Owner
-        {
-            get => this._Owner;
-            set => Owner_Set(value);
-        }
+        public IFormIDSetLink<Faction> Owner => this._Owner;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
-        public void Owner_Set(
-            IFormIDSetLink<Faction> value,
-            bool markSet = true)
-        {
-            _Owner = value;
-            _hasBeenSetTracker[(int)Cell_FieldIndex.Owner] = markSet;
-        }
-        public void Owner_Unset()
-        {
-            this.Owner_Set(default(IFormIDSetLink<Faction>), false);
-        }
         #endregion
         #region FactionRank
         public bool FactionRank_IsSet
@@ -339,31 +279,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GlobalVariable
-        public bool GlobalVariable_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Cell_FieldIndex.GlobalVariable];
-            set => _hasBeenSetTracker[(int)Cell_FieldIndex.GlobalVariable] = value;
-        }
-        bool ICellGetter.GlobalVariable_IsSet => GlobalVariable_IsSet;
-        private IFormIDSetLink<Global> _GlobalVariable;
+        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Global> GlobalVariable
-        {
-            get => this._GlobalVariable;
-            set => GlobalVariable_Set(value);
-        }
+        public IFormIDSetLink<Global> GlobalVariable => this._GlobalVariable;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
-        public void GlobalVariable_Set(
-            IFormIDSetLink<Global> value,
-            bool markSet = true)
-        {
-            _GlobalVariable = value;
-            _hasBeenSetTracker[(int)Cell_FieldIndex.GlobalVariable] = markSet;
-        }
-        public void GlobalVariable_Unset()
-        {
-            this.GlobalVariable_Set(default(IFormIDSetLink<Global>), false);
-        }
         #endregion
         #region PathGrid
         public bool PathGrid_IsSet
@@ -851,31 +771,15 @@ namespace Mutagen.Bethesda.Oblivion
         void WaterHeight_Set(Single value, bool hasBeenSet = true);
         void WaterHeight_Unset();
 
-        new IFormIDSetLink<Climate> Climate { get; set; }
-        new bool Climate_IsSet { get; set; }
-        void Climate_Set(IFormIDSetLink<Climate> value, bool hasBeenSet = true);
-        void Climate_Unset();
-
-        new IFormIDSetLink<Water> Water { get; set; }
-        new bool Water_IsSet { get; set; }
-        void Water_Set(IFormIDSetLink<Water> value, bool hasBeenSet = true);
-        void Water_Unset();
-
-        new IFormIDSetLink<Faction> Owner { get; set; }
-        new bool Owner_IsSet { get; set; }
-        void Owner_Set(IFormIDSetLink<Faction> value, bool hasBeenSet = true);
-        void Owner_Unset();
-
+        new IFormIDSetLink<Climate> Climate { get; }
+        new IFormIDSetLink<Water> Water { get; }
+        new IFormIDSetLink<Faction> Owner { get; }
         new Int32 FactionRank { get; set; }
         new bool FactionRank_IsSet { get; set; }
         void FactionRank_Set(Int32 value, bool hasBeenSet = true);
         void FactionRank_Unset();
 
-        new IFormIDSetLink<Global> GlobalVariable { get; set; }
-        new bool GlobalVariable_IsSet { get; set; }
-        void GlobalVariable_Set(IFormIDSetLink<Global> value, bool hasBeenSet = true);
-        void GlobalVariable_Unset();
-
+        new IFormIDSetLink<Global> GlobalVariable { get; }
         new PathGrid PathGrid { get; set; }
         new bool PathGrid_IsSet { get; set; }
         void PathGrid_Set(PathGrid value, bool hasBeenSet = true);
@@ -949,18 +853,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Climate
         IFormIDSetLinkGetter<IClimateGetter> Climate { get; }
-        bool Climate_IsSet { get; }
-
         #endregion
         #region Water
         IFormIDSetLinkGetter<IWaterGetter> Water { get; }
-        bool Water_IsSet { get; }
-
         #endregion
         #region Owner
         IFormIDSetLinkGetter<IFactionGetter> Owner { get; }
-        bool Owner_IsSet { get; }
-
         #endregion
         #region FactionRank
         Int32 FactionRank { get; }
@@ -969,8 +867,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region GlobalVariable
         IFormIDSetLinkGetter<IGlobalGetter> GlobalVariable { get; }
-        bool GlobalVariable_IsSet { get; }
-
         #endregion
         #region PathGrid
         IPathGridGetter PathGrid { get; }
@@ -2092,13 +1988,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Climate> ClimateParse))
+                        item: out FormKey ClimateParse))
                     {
-                        item.Climate = ClimateParse;
+                        item.Climate.FormKey = ClimateParse;
                     }
                     else
                     {
-                        item.Climate = default(IFormIDSetLink<Climate>);
+                        item.Climate.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 }
@@ -2108,13 +2004,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Water> WaterParse))
+                        item: out FormKey WaterParse))
                     {
-                        item.Water = WaterParse;
+                        item.Water.FormKey = WaterParse;
                     }
                     else
                     {
-                        item.Water = default(IFormIDSetLink<Water>);
+                        item.Water.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 }
@@ -2124,13 +2020,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Faction> OwnerParse))
+                        item: out FormKey OwnerParse))
                     {
-                        item.Owner = OwnerParse;
+                        item.Owner.FormKey = OwnerParse;
                     }
                     else
                     {
-                        item.Owner = default(IFormIDSetLink<Faction>);
+                        item.Owner.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
                 }
@@ -2146,13 +2042,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Global> GlobalVariableParse))
+                        item: out FormKey GlobalVariableParse))
                     {
-                        item.GlobalVariable = GlobalVariableParse;
+                        item.GlobalVariable.FormKey = GlobalVariableParse;
                     }
                     else
                     {
-                        item.GlobalVariable = default(IFormIDSetLink<Global>);
+                        item.GlobalVariable.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
                 }
@@ -2483,11 +2379,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Regions.Overall.HasValue && checkMask.Regions.Overall.Value != item.Regions.HasBeenSet) return false;
             if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_IsSet) return false;
             if (checkMask.WaterHeight.HasValue && checkMask.WaterHeight.Value != item.WaterHeight_IsSet) return false;
-            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate_IsSet) return false;
-            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water_IsSet) return false;
-            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner_IsSet) return false;
+            if (checkMask.Climate.HasValue && checkMask.Climate.Value != item.Climate.HasBeenSet) return false;
+            if (checkMask.Water.HasValue && checkMask.Water.Value != item.Water.HasBeenSet) return false;
+            if (checkMask.Owner.HasValue && checkMask.Owner.Value != item.Owner.HasBeenSet) return false;
             if (checkMask.FactionRank.HasValue && checkMask.FactionRank.Value != item.FactionRank_IsSet) return false;
-            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable_IsSet) return false;
+            if (checkMask.GlobalVariable.HasValue && checkMask.GlobalVariable.Value != item.GlobalVariable.HasBeenSet) return false;
             if (checkMask.PathGrid.Overall.HasValue && checkMask.PathGrid.Overall.Value != item.PathGrid_IsSet) return false;
             if (checkMask.PathGrid.Specific != null && (item.PathGrid == null || !item.PathGrid.HasBeenSet(checkMask.PathGrid.Specific))) return false;
             if (checkMask.Landscape.Overall.HasValue && checkMask.Landscape.Overall.Value != item.Landscape_IsSet) return false;
@@ -2511,11 +2407,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Regions = new MaskItem<bool, IEnumerable<(int, bool)>>(item.Regions.HasBeenSet, null);
             mask.MusicType = item.MusicType_IsSet;
             mask.WaterHeight = item.WaterHeight_IsSet;
-            mask.Climate = item.Climate_IsSet;
-            mask.Water = item.Water_IsSet;
-            mask.Owner = item.Owner_IsSet;
+            mask.Climate = item.Climate.HasBeenSet;
+            mask.Water = item.Water.HasBeenSet;
+            mask.Owner = item.Owner.HasBeenSet;
             mask.FactionRank = item.FactionRank_IsSet;
-            mask.GlobalVariable = item.GlobalVariable_IsSet;
+            mask.GlobalVariable = item.GlobalVariable.HasBeenSet;
             mask.PathGrid = new MaskItem<bool, PathGrid_Mask<bool>>(item.PathGrid_IsSet, item.PathGrid.GetHasBeenSetMask());
             mask.Landscape = new MaskItem<bool, Landscape_Mask<bool>>(item.Landscape_IsSet, item.Landscape.GetHasBeenSetMask());
             mask.Timestamp = true;
@@ -2628,18 +2524,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             }
-            if (lhs.Climate_IsSet != rhs.Climate_IsSet) return false;
-            if (lhs.Climate_IsSet)
+            if (lhs.Climate.HasBeenSet != rhs.Climate.HasBeenSet) return false;
+            if (lhs.Climate.HasBeenSet)
             {
                 if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if (lhs.Water_IsSet != rhs.Water_IsSet) return false;
-            if (lhs.Water_IsSet)
+            if (lhs.Water.HasBeenSet != rhs.Water.HasBeenSet) return false;
+            if (lhs.Water.HasBeenSet)
             {
                 if (!lhs.Water.Equals(rhs.Water)) return false;
             }
-            if (lhs.Owner_IsSet != rhs.Owner_IsSet) return false;
-            if (lhs.Owner_IsSet)
+            if (lhs.Owner.HasBeenSet != rhs.Owner.HasBeenSet) return false;
+            if (lhs.Owner.HasBeenSet)
             {
                 if (!lhs.Owner.Equals(rhs.Owner)) return false;
             }
@@ -2648,8 +2544,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (lhs.FactionRank != rhs.FactionRank) return false;
             }
-            if (lhs.GlobalVariable_IsSet != rhs.GlobalVariable_IsSet) return false;
-            if (lhs.GlobalVariable_IsSet)
+            if (lhs.GlobalVariable.HasBeenSet != rhs.GlobalVariable.HasBeenSet) return false;
+            if (lhs.GlobalVariable.HasBeenSet)
             {
                 if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             }
@@ -2743,15 +2639,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.WaterHeight).CombineHashCode(ret);
             }
-            if (item.Climate_IsSet)
+            if (item.Climate.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Climate).CombineHashCode(ret);
             }
-            if (item.Water_IsSet)
+            if (item.Water.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Water).CombineHashCode(ret);
             }
-            if (item.Owner_IsSet)
+            if (item.Owner.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Owner).CombineHashCode(ret);
             }
@@ -2759,7 +2655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.FactionRank).CombineHashCode(ret);
             }
-            if (item.GlobalVariable_IsSet)
+            if (item.GlobalVariable.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.GlobalVariable).CombineHashCode(ret);
             }
@@ -3584,7 +3480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.WaterHeight,
                     errorMask: errorMask);
             }
-            if (item.Climate_IsSet
+            if (item.Climate.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Climate) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3594,7 +3490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.Climate,
                     errorMask: errorMask);
             }
-            if (item.Water_IsSet
+            if (item.Water.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3604,7 +3500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.Water,
                     errorMask: errorMask);
             }
-            if (item.Owner_IsSet
+            if (item.Owner.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Owner) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -3624,7 +3520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Cell_FieldIndex.FactionRank,
                     errorMask: errorMask);
             }
-            if (item.GlobalVariable_IsSet
+            if (item.GlobalVariable.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -4070,14 +3966,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Climate> ClimateParse,
+                            item: out FormKey ClimateParse,
                             errorMask: errorMask))
                         {
-                            item.Climate = ClimateParse;
+                            item.Climate.FormKey = ClimateParse;
                         }
                         else
                         {
-                            item.Climate = default(IFormIDSetLink<Climate>);
+                            item.Climate.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -4096,14 +3992,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Cell_FieldIndex.Water);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Water> WaterParse,
+                            item: out FormKey WaterParse,
                             errorMask: errorMask))
                         {
-                            item.Water = WaterParse;
+                            item.Water.FormKey = WaterParse;
                         }
                         else
                         {
-                            item.Water = default(IFormIDSetLink<Water>);
+                            item.Water.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -4122,14 +4018,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Faction> OwnerParse,
+                            item: out FormKey OwnerParse,
                             errorMask: errorMask))
                         {
-                            item.Owner = OwnerParse;
+                            item.Owner.FormKey = OwnerParse;
                         }
                         else
                         {
-                            item.Owner = default(IFormIDSetLink<Faction>);
+                            item.Owner.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -4174,14 +4070,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Global> GlobalVariableParse,
+                            item: out FormKey GlobalVariableParse,
                             errorMask: errorMask))
                         {
-                            item.GlobalVariable = GlobalVariableParse;
+                            item.GlobalVariable.FormKey = GlobalVariableParse;
                         }
                         else
                         {
-                            item.GlobalVariable = default(IFormIDSetLink<Global>);
+                            item.GlobalVariable.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -5713,7 +5609,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLW_HEADER),
                     nullable: false);
             }
-            if (item.Climate_IsSet)
+            if (item.Climate.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -5722,7 +5618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Water_IsSet)
+            if (item.Water.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -5731,7 +5627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Owner_IsSet)
+            if (item.Owner.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -5748,7 +5644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Cell_Registration.XRNK_HEADER),
                     nullable: false);
             }
-            if (item.GlobalVariable_IsSet)
+            if (item.GlobalVariable.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

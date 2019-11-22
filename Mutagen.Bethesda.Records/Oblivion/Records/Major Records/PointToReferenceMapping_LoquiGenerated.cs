@@ -52,7 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public IFormIDLink<IPlaced> Reference { get; set; }
+        protected IFormIDLink<IPlaced> _Reference = new FormIDLink<IPlaced>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<IPlaced> Reference => this._Reference;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
         #endregion
         #region Points
@@ -360,8 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPointToReferenceMappingGetter,
         ILoquiObjectSetter<IPointToReferenceMapping>
     {
-        new IFormIDLink<IPlaced> Reference { get; set; }
-
+        new IFormIDLink<IPlaced> Reference { get; }
         new IExtendedList<Int16> Points { get; }
     }
 
@@ -380,7 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Reference
         IFormIDLinkGetter<IPlacedGetter> Reference { get; }
-
         #endregion
         #region Points
         IReadOnlyList<Int16> Points { get; }
@@ -993,13 +994,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<IPlaced> ReferenceParse))
+                item: out FormKey ReferenceParse))
             {
-                item.Reference = ReferenceParse;
+                item.Reference.FormKey = ReferenceParse;
             }
             else
             {
-                item.Reference = default(IFormIDLink<IPlaced>);
+                item.Reference.FormKey = FormKey.NULL;
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
@@ -1437,14 +1438,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<IPlaced> ReferenceParse,
+                            item: out FormKey ReferenceParse,
                             errorMask: errorMask))
                         {
-                            item.Reference = ReferenceParse;
+                            item.Reference.FormKey = ReferenceParse;
                         }
                         else
                         {
-                            item.Reference = default(IFormIDLink<IPlaced>);
+                            item.Reference.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

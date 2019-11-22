@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Race
-        public IFormIDLink<Race> Race { get; set; }
+        protected IFormIDLink<Race> _Race = new FormIDLink<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Race> Race => this._Race;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
         #endregion
         #region Modifier
@@ -349,8 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceRelationGetter,
         ILoquiObjectSetter<IRaceRelation>
     {
-        new IFormIDLink<Race> Race { get; set; }
-
+        new IFormIDLink<Race> Race { get; }
         new Int32 Modifier { get; set; }
 
     }
@@ -370,7 +372,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Race
         IFormIDLinkGetter<IRaceGetter> Race { get; }
-
         #endregion
         #region Modifier
         Int32 Modifier { get; }
@@ -983,13 +984,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Race> RaceParse))
+                item: out FormKey RaceParse))
             {
-                item.Race = RaceParse;
+                item.Race.FormKey = RaceParse;
             }
             else
             {
-                item.Race = default(IFormIDLink<Race>);
+                item.Race.FormKey = FormKey.NULL;
             }
             item.Modifier = frame.ReadInt32();
         }
@@ -1385,14 +1386,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RaceRelation_FieldIndex.Race);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Race> RaceParse,
+                            item: out FormKey RaceParse,
                             errorMask: errorMask))
                         {
-                            item.Race = RaceParse;
+                            item.Race.FormKey = RaceParse;
                         }
                         else
                         {
-                            item.Race = default(IFormIDLink<Race>);
+                            item.Race.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

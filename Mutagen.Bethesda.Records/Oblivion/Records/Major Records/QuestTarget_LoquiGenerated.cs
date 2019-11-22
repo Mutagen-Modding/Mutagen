@@ -52,16 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Target
-        private IFormIDLink<IPlaced> _Target;
-        public IFormIDLink<IPlaced> Target
-        {
-            get => this._Target;
-            set
-            {
-                this.QSTADataTypeState |= QSTADataType.Has;
-                this._Target = value;
-            }
-        }
+        protected IFormIDLink<IPlaced> _Target = new FormIDLink<IPlaced>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<IPlaced> Target => this._Target;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
         #endregion
         #region Flags
@@ -392,8 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestTargetGetter,
         ILoquiObjectSetter<IQuestTarget>
     {
-        new IFormIDLink<IPlaced> Target { get; set; }
-
+        new IFormIDLink<IPlaced> Target { get; }
         new QuestTarget.Flag Flags { get; set; }
 
         new ISetList<Condition> Conditions { get; }
@@ -416,7 +409,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Target
         IFormIDLinkGetter<IPlacedGetter> Target { get; }
-
         #endregion
         #region Flags
         QuestTarget.Flag Flags { get; }
@@ -1090,13 +1082,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: out IFormIDLink<IPlaced> TargetParse))
+                        item: out FormKey TargetParse))
                     {
-                        item.Target = TargetParse;
+                        item.Target.FormKey = TargetParse;
                     }
                     else
                     {
-                        item.Target = default(IFormIDLink<IPlaced>);
+                        item.Target.FormKey = FormKey.NULL;
                     }
                     if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
                         frame: dataFrame.SpawnWithLength(4),
@@ -1626,14 +1618,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<IPlaced> TargetParse,
+                            item: out FormKey TargetParse,
                             errorMask: errorMask))
                         {
-                            item.Target = TargetParse;
+                            item.Target.FormKey = TargetParse;
                         }
                         else
                         {
-                            item.Target = default(IFormIDLink<IPlaced>);
+                            item.Target.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

@@ -56,12 +56,12 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BoundRadius { get; set; }
         #endregion
         #region Hashes
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Hashes_IsSet
         {
             get => _hasBeenSetTracker[(int)Model_FieldIndex.Hashes];
             set => _hasBeenSetTracker[(int)Model_FieldIndex.Hashes] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModelGetter.Hashes_IsSet => Hashes_IsSet;
         protected Byte[] _Hashes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

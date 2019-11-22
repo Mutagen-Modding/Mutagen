@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8a3cc4cf5c37a1fab8ac91330b46fe722e707286</Sha>
+         <Sha>088038e5b4a42e9b59d451dbb12c405a5a7e19ee</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-20-2019 23:42:40</CommitDate>
-         <Description>PrimitiveXmlTranslationGeneration typename takes TypeGen parameter</Description>
+         <CommitDate>11-21-2019 21:58:07</CommitDate>
+         <Description>Bugfixes for ClassType</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

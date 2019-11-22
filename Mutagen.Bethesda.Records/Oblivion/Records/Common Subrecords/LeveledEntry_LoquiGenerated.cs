@@ -63,7 +63,10 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> ILeveledEntryGetter<T>.Fluff => this.Fluff;
         #endregion
         #region Reference
-        public IFormIDLink<T> Reference { get; set; }
+        protected IFormIDLink<T> _Reference = new FormIDLink<T>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<T> Reference => this._Reference;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<T> ILeveledEntryGetter<T>.Reference => this.Reference;
         #endregion
         #region Count
@@ -94,12 +97,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Fluff2_IsSet
         {
             get => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2];
             set => _hasBeenSetTracker[(int)LeveledEntry_FieldIndex.Fluff2] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILeveledEntryGetter<T>.Fluff2_IsSet => Fluff2_IsSet;
         protected Byte[] _Fluff2;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -438,8 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        new IFormIDLink<T> Reference { get; set; }
-
+        new IFormIDLink<T> Reference { get; }
         new Int16 Count { get; set; }
         new bool Count_IsSet { get; set; }
         void Count_Set(Int16 value, bool hasBeenSet = true);
@@ -476,7 +478,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reference
         IFormIDLinkGetter<T> Reference { get; }
-
         #endregion
         #region Count
         Int16 Count { get; }
@@ -1210,13 +1211,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<T> ReferenceParse))
+                item: out FormKey ReferenceParse))
             {
-                item.Reference = ReferenceParse;
+                item.Reference.FormKey = ReferenceParse;
             }
             else
             {
-                item.Reference = default(IFormIDLink<T>);
+                item.Reference.FormKey = FormKey.NULL;
             }
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
@@ -1809,14 +1810,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LeveledEntry_FieldIndex.Reference);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<T> ReferenceParse,
+                            item: out FormKey ReferenceParse,
                             errorMask: errorMask))
                         {
-                            item.Reference = ReferenceParse;
+                            item.Reference.FormKey = ReferenceParse;
                         }
                         else
                         {
-                            item.Reference = default(IFormIDLink<T>);
+                            item.Reference.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

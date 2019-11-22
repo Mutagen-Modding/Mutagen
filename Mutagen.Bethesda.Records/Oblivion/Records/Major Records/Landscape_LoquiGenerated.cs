@@ -54,12 +54,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Unknown_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown];
             set => _hasBeenSetTracker[(int)Landscape_FieldIndex.Unknown] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.Unknown_IsSet => Unknown_IsSet;
         protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -83,12 +83,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region VertexNormals
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool VertexNormals_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals];
             set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexNormals] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexNormals_IsSet => VertexNormals_IsSet;
         protected Byte[] _VertexNormals;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -112,12 +112,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region VertexHeightMap
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool VertexHeightMap_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap];
             set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexHeightMap] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexHeightMap_IsSet => VertexHeightMap_IsSet;
         protected Byte[] _VertexHeightMap;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -141,12 +141,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region VertexColors
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool VertexColors_IsSet
         {
             get => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors];
             set => _hasBeenSetTracker[(int)Landscape_FieldIndex.VertexColors] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexColors_IsSet => VertexColors_IsSet;
         protected Byte[] _VertexColors;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

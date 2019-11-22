@@ -127,9 +127,11 @@ namespace Mutagen.Bethesda.Generation
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = itemAccessor,
+                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
+                    TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
+                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.NULL" : "RecordType.NULL",
                     ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}"
                         .Single()
                         .AndWhen("masterReferences: masterReferences", () => linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal)

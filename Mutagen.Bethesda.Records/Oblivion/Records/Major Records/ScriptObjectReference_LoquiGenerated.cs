@@ -52,7 +52,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public IFormIDLink<OblivionMajorRecord> Reference { get; set; }
+        protected IFormIDLink<OblivionMajorRecord> _Reference = new FormIDLink<OblivionMajorRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<OblivionMajorRecord> Reference => this._Reference;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
         #endregion
 
@@ -346,8 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptReference,
         ILoquiObjectSetter<IScriptObjectReference>
     {
-        new IFormIDLink<OblivionMajorRecord> Reference { get; set; }
-
+        new IFormIDLink<OblivionMajorRecord> Reference { get; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
@@ -359,7 +361,6 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Reference
         IFormIDLinkGetter<IOblivionMajorRecordGetter> Reference { get; }
-
         #endregion
 
     }
@@ -968,13 +969,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDLink<OblivionMajorRecord> ReferenceParse))
+                        item: out FormKey ReferenceParse))
                     {
-                        item.Reference = ReferenceParse;
+                        item.Reference.FormKey = ReferenceParse;
                     }
                     else
                     {
-                        item.Reference = default(IFormIDLink<OblivionMajorRecord>);
+                        item.Reference.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 }
@@ -1399,14 +1400,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<OblivionMajorRecord> ReferenceParse,
+                            item: out FormKey ReferenceParse,
                             errorMask: errorMask))
                         {
-                            item.Reference = ReferenceParse;
+                            item.Reference.FormKey = ReferenceParse;
                         }
                         else
                         {
-                            item.Reference = default(IFormIDLink<OblivionMajorRecord>);
+                            item.Reference.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

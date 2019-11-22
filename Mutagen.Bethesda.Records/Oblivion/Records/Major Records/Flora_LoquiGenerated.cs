@@ -108,58 +108,18 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IFloraGetter.Model => this.Model;
         #endregion
         #region Script
-        public bool Script_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Script];
-            set => _hasBeenSetTracker[(int)Flora_FieldIndex.Script] = value;
-        }
-        bool IFloraGetter.Script_IsSet => Script_IsSet;
-        private IFormIDSetLink<Script> _Script;
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Script> Script
-        {
-            get => this._Script;
-            set => Script_Set(value);
-        }
+        public IFormIDSetLink<Script> Script => this._Script;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IFloraGetter.Script => this.Script;
-        public void Script_Set(
-            IFormIDSetLink<Script> value,
-            bool markSet = true)
-        {
-            _Script = value;
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Script] = markSet;
-        }
-        public void Script_Unset()
-        {
-            this.Script_Set(default(IFormIDSetLink<Script>), false);
-        }
         #endregion
         #region Ingredient
-        public bool Ingredient_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Flora_FieldIndex.Ingredient];
-            set => _hasBeenSetTracker[(int)Flora_FieldIndex.Ingredient] = value;
-        }
-        bool IFloraGetter.Ingredient_IsSet => Ingredient_IsSet;
-        private IFormIDSetLink<Ingredient> _Ingredient;
+        protected IFormIDSetLink<Ingredient> _Ingredient = new FormIDSetLink<Ingredient>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Ingredient> Ingredient
-        {
-            get => this._Ingredient;
-            set => Ingredient_Set(value);
-        }
+        public IFormIDSetLink<Ingredient> Ingredient => this._Ingredient;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
-        public void Ingredient_Set(
-            IFormIDSetLink<Ingredient> value,
-            bool markSet = true)
-        {
-            _Ingredient = value;
-            _hasBeenSetTracker[(int)Flora_FieldIndex.Ingredient] = markSet;
-        }
-        public void Ingredient_Unset()
-        {
-            this.Ingredient_Set(default(IFormIDSetLink<Ingredient>), false);
-        }
         #endregion
         #region Spring
         private Byte _Spring;
@@ -537,16 +497,8 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
-        new IFormIDSetLink<Script> Script { get; set; }
-        new bool Script_IsSet { get; set; }
-        void Script_Set(IFormIDSetLink<Script> value, bool hasBeenSet = true);
-        void Script_Unset();
-
-        new IFormIDSetLink<Ingredient> Ingredient { get; set; }
-        new bool Ingredient_IsSet { get; set; }
-        void Ingredient_Set(IFormIDSetLink<Ingredient> value, bool hasBeenSet = true);
-        void Ingredient_Unset();
-
+        new IFormIDSetLink<Script> Script { get; }
+        new IFormIDSetLink<Ingredient> Ingredient { get; }
         new Byte Spring { get; set; }
 
         new Byte Summer { get; set; }
@@ -585,13 +537,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        bool Script_IsSet { get; }
-
         #endregion
         #region Ingredient
         IFormIDSetLinkGetter<IIngredientGetter> Ingredient { get; }
-        bool Ingredient_IsSet { get; }
-
         #endregion
         #region Spring
         Byte Spring { get; }
@@ -1411,13 +1359,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Script> ScriptParse))
+                        item: out FormKey ScriptParse))
                     {
-                        item.Script = ScriptParse;
+                        item.Script.FormKey = ScriptParse;
                     }
                     else
                     {
-                        item.Script = default(IFormIDSetLink<Script>);
+                        item.Script.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
                 }
@@ -1427,13 +1375,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Ingredient> IngredientParse))
+                        item: out FormKey IngredientParse))
                     {
-                        item.Ingredient = IngredientParse;
+                        item.Ingredient.FormKey = IngredientParse;
                     }
                     else
                     {
-                        item.Ingredient = default(IFormIDSetLink<Ingredient>);
+                        item.Ingredient.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
@@ -1620,8 +1568,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_IsSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_IsSet) return false;
-            if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient_IsSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
+            if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != item.Ingredient.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1633,8 +1581,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Name = item.Name_IsSet;
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.Script = item.Script_IsSet;
-            mask.Ingredient = item.Ingredient_IsSet;
+            mask.Script = item.Script.HasBeenSet;
+            mask.Ingredient = item.Ingredient.HasBeenSet;
             mask.Spring = true;
             mask.Summer = true;
             mask.Fall = true;
@@ -1699,13 +1647,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!object.Equals(lhs.Model, rhs.Model)) return false;
             }
-            if (lhs.Script_IsSet != rhs.Script_IsSet) return false;
-            if (lhs.Script_IsSet)
+            if (lhs.Script.HasBeenSet != rhs.Script.HasBeenSet) return false;
+            if (lhs.Script.HasBeenSet)
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if (lhs.Ingredient_IsSet != rhs.Ingredient_IsSet) return false;
-            if (lhs.Ingredient_IsSet)
+            if (lhs.Ingredient.HasBeenSet != rhs.Ingredient.HasBeenSet) return false;
+            if (lhs.Ingredient.HasBeenSet)
             {
                 if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             }
@@ -1746,11 +1694,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
             }
-            if (item.Script_IsSet)
+            if (item.Script.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
             }
-            if (item.Ingredient_IsSet)
+            if (item.Ingredient.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Ingredient).CombineHashCode(ret);
             }
@@ -2103,7 +2051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
             }
-            if (item.Script_IsSet
+            if (item.Script.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2113,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Flora_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Ingredient_IsSet
+            if (item.Ingredient.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2337,14 +2285,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Flora_FieldIndex.Script);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Script> ScriptParse,
+                            item: out FormKey ScriptParse,
                             errorMask: errorMask))
                         {
-                            item.Script = ScriptParse;
+                            item.Script.FormKey = ScriptParse;
                         }
                         else
                         {
-                            item.Script = default(IFormIDSetLink<Script>);
+                            item.Script.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -2363,14 +2311,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Ingredient> IngredientParse,
+                            item: out FormKey IngredientParse,
                             errorMask: errorMask))
                         {
-                            item.Ingredient = IngredientParse;
+                            item.Ingredient.FormKey = IngredientParse;
                         }
                         else
                         {
-                            item.Ingredient = default(IFormIDSetLink<Ingredient>);
+                            item.Ingredient.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -3108,7 +3056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.Script_IsSet)
+            if (item.Script.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -3117,7 +3065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Ingredient_IsSet)
+            if (item.Ingredient.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

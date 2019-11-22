@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public IFormIDLink<IPlaced> Reference { get; set; }
+        protected IFormIDLink<IPlaced> _Reference = new FormIDLink<IPlaced>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<IPlaced> Reference => this._Reference;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
@@ -349,8 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter,
         ILoquiObjectSetter<IEnableParent>
     {
-        new IFormIDLink<IPlaced> Reference { get; set; }
-
+        new IFormIDLink<IPlaced> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
 
     }
@@ -370,7 +372,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Reference
         IFormIDLinkGetter<IPlacedGetter> Reference { get; }
-
         #endregion
         #region Flags
         EnableParent.Flag Flags { get; }
@@ -983,13 +984,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<IPlaced> ReferenceParse))
+                item: out FormKey ReferenceParse))
             {
-                item.Reference = ReferenceParse;
+                item.Reference.FormKey = ReferenceParse;
             }
             else
             {
-                item.Reference = default(IFormIDLink<IPlaced>);
+                item.Reference.FormKey = FormKey.NULL;
             }
             if (EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
@@ -1394,14 +1395,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<IPlaced> ReferenceParse,
+                            item: out FormKey ReferenceParse,
                             errorMask: errorMask))
                         {
-                            item.Reference = ReferenceParse;
+                            item.Reference.FormKey = ReferenceParse;
                         }
                         else
                         {
-                            item.Reference = default(IFormIDLink<IPlaced>);
+                            item.Reference.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

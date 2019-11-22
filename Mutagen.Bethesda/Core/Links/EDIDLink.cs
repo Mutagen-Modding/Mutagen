@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
         public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
 
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
-        virtual public RecordType EDID { get; set; } = UNLINKED;
+        public virtual RecordType EDID { get; set; } = UNLINKED;
         Type ILinkGetter.TargetType => typeof(TMajor);
 
         public EDIDLink()

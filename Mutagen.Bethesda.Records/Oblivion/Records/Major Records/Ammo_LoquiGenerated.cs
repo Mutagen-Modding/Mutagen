@@ -135,31 +135,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Enchantment
-        public bool Enchantment_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Ammo_FieldIndex.Enchantment];
-            set => _hasBeenSetTracker[(int)Ammo_FieldIndex.Enchantment] = value;
-        }
-        bool IAmmoGetter.Enchantment_IsSet => Enchantment_IsSet;
-        private IFormIDSetLink<Enchantment> _Enchantment;
+        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Enchantment> Enchantment
-        {
-            get => this._Enchantment;
-            set => Enchantment_Set(value);
-        }
+        public IFormIDSetLink<Enchantment> Enchantment => this._Enchantment;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IEnchantmentGetter> IAmmoGetter.Enchantment => this.Enchantment;
-        public void Enchantment_Set(
-            IFormIDSetLink<Enchantment> value,
-            bool markSet = true)
-        {
-            _Enchantment = value;
-            _hasBeenSetTracker[(int)Ammo_FieldIndex.Enchantment] = markSet;
-        }
-        public void Enchantment_Unset()
-        {
-            this.Enchantment_Set(default(IFormIDSetLink<Enchantment>), false);
-        }
         #endregion
         #region EnchantmentPoints
         public bool EnchantmentPoints_IsSet
@@ -583,11 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Icon_Set(String value, bool hasBeenSet = true);
         void Icon_Unset();
 
-        new IFormIDSetLink<Enchantment> Enchantment { get; set; }
-        new bool Enchantment_IsSet { get; set; }
-        void Enchantment_Set(IFormIDSetLink<Enchantment> value, bool hasBeenSet = true);
-        void Enchantment_Unset();
-
+        new IFormIDSetLink<Enchantment> Enchantment { get; }
         new UInt16 EnchantmentPoints { get; set; }
         new bool EnchantmentPoints_IsSet { get; set; }
         void EnchantmentPoints_Set(UInt16 value, bool hasBeenSet = true);
@@ -638,8 +614,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Enchantment
         IFormIDSetLinkGetter<IEnchantmentGetter> Enchantment { get; }
-        bool Enchantment_IsSet { get; }
-
         #endregion
         #region EnchantmentPoints
         UInt16 EnchantmentPoints { get; }
@@ -1516,13 +1490,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Enchantment> EnchantmentParse))
+                        item: out FormKey EnchantmentParse))
                     {
-                        item.Enchantment = EnchantmentParse;
+                        item.Enchantment.FormKey = EnchantmentParse;
                     }
                     else
                     {
-                        item.Enchantment = default(IFormIDSetLink<Enchantment>);
+                        item.Enchantment.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
                 }
@@ -1754,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
-            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_IsSet) return false;
+            if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_IsSet) return false;
             return base.HasBeenSet(
                 item: item,
@@ -1768,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = item.Name_IsSet;
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
             mask.Icon = item.Icon_IsSet;
-            mask.Enchantment = item.Enchantment_IsSet;
+            mask.Enchantment = item.Enchantment.HasBeenSet;
             mask.EnchantmentPoints = item.EnchantmentPoints_IsSet;
             mask.Speed = true;
             mask.Flags = true;
@@ -1859,8 +1833,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             }
-            if (lhs.Enchantment_IsSet != rhs.Enchantment_IsSet) return false;
-            if (lhs.Enchantment_IsSet)
+            if (lhs.Enchantment.HasBeenSet != rhs.Enchantment.HasBeenSet) return false;
+            if (lhs.Enchantment.HasBeenSet)
             {
                 if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
             }
@@ -1920,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Icon).CombineHashCode(ret);
             }
-            if (item.Enchantment_IsSet)
+            if (item.Enchantment.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Enchantment).CombineHashCode(ret);
             }
@@ -2353,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Ammo_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.Enchantment_IsSet
+            if (item.Enchantment.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Enchantment) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2637,14 +2611,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Enchantment> EnchantmentParse,
+                            item: out FormKey EnchantmentParse,
                             errorMask: errorMask))
                         {
-                            item.Enchantment = EnchantmentParse;
+                            item.Enchantment.FormKey = EnchantmentParse;
                         }
                         else
                         {
-                            item.Enchantment = default(IFormIDSetLink<Enchantment>);
+                            item.Enchantment.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -3492,7 +3466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ICON_HEADER),
                     nullable: false);
             }
-            if (item.Enchantment_IsSet)
+            if (item.Enchantment.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

@@ -9,6 +9,20 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static FormLinkBinaryTranslation Instance = new FormLinkBinaryTranslation();
 
+        public bool Parse(
+            MutagenFrame frame,
+            out FormKey item,
+            MasterReferences masterReferences)
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
+            {
+                item = id;
+                return true;
+            }
+            item = FormKey.NULL;
+            return false;
+        }
+
         public bool Parse<T>(
             MutagenFrame frame,
             out IFormIDLink<T> item,
@@ -37,45 +51,6 @@ namespace Mutagen.Bethesda.Binary
             }
             item = new FormIDSetLink<T>();
             return false;
-        }
-
-
-        public void ParseInto<T>(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            IFormIDSetLink<T> item)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (FormKeyBinaryTranslation.Instance.Parse(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: out FormKey val))
-            {
-                item.FormKey = val;
-            }
-            else
-            {
-                item.FormKey = FormKey.NULL;
-            }
-        }
-
-        public void ParseInto<T>(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            IFormIDLink<T> item)
-            where T : class, IMajorRecordCommonGetter
-        {
-            if (FormKeyBinaryTranslation.Instance.Parse(
-                frame: frame,
-                masterReferences: masterReferences,
-                item: out FormKey val))
-            {
-                item.FormKey = val;
-            }
-            else
-            {
-                item.FormKey = FormKey.NULL;
-            }
         }
 
         public void Write<T>(

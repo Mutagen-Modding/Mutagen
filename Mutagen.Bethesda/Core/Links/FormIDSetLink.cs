@@ -13,9 +13,14 @@ namespace Mutagen.Bethesda
     public class FormIDSetLink<T> : FormIDLink<T>, IFormIDSetLink<T>, IEquatable<IFormIDSetLinkGetter<T>>
        where T : class, IMajorRecordCommonGetter
     {
-        public static readonly IFormIDSetLinkGetter<T> Empty = new FormIDSetLink<T>();
+        public new static readonly IFormIDSetLinkGetter<T> Empty = new FormIDSetLink<T>();
 
         public bool HasBeenSet { get; set; }
+        public override FormKey FormKey
+        { 
+            get => base.FormKey;
+            set => this.Set(value, true);
+        }
 
         public FormIDSetLink()
         {
@@ -23,7 +28,7 @@ namespace Mutagen.Bethesda
 
         public FormIDSetLink(FormKey formKey)
         {
-            this.FormKey = formKey;
+            base.FormKey = formKey;
             this.HasBeenSet = true;
         }
 
@@ -39,13 +44,13 @@ namespace Mutagen.Bethesda
 
         public void Set(FormKey value, bool hasBeenSet)
         {
-            this.FormKey = value;
+            base.FormKey = value;
             this.HasBeenSet = hasBeenSet;
         }
 
         public override void Unset()
         {
-            this.FormKey = FormKey.NULL;
+            base.FormKey = FormKey.NULL;
             this.HasBeenSet = false;
         }
 

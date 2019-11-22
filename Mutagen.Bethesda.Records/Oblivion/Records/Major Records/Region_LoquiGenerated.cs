@@ -110,31 +110,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Worldspace
-        public bool Worldspace_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Region_FieldIndex.Worldspace];
-            set => _hasBeenSetTracker[(int)Region_FieldIndex.Worldspace] = value;
-        }
-        bool IRegionGetter.Worldspace_IsSet => Worldspace_IsSet;
-        private IFormIDSetLink<Worldspace> _Worldspace;
+        protected IFormIDSetLink<Worldspace> _Worldspace = new FormIDSetLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Worldspace> Worldspace
-        {
-            get => this._Worldspace;
-            set => Worldspace_Set(value);
-        }
+        public IFormIDSetLink<Worldspace> Worldspace => this._Worldspace;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
-        public void Worldspace_Set(
-            IFormIDSetLink<Worldspace> value,
-            bool markSet = true)
-        {
-            _Worldspace = value;
-            _hasBeenSetTracker[(int)Region_FieldIndex.Worldspace] = markSet;
-        }
-        public void Worldspace_Unset()
-        {
-            this.Worldspace_Set(default(IFormIDSetLink<Worldspace>), false);
-        }
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -608,11 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MapColor_Set(Color value, bool hasBeenSet = true);
         void MapColor_Unset();
 
-        new IFormIDSetLink<Worldspace> Worldspace { get; set; }
-        new bool Worldspace_IsSet { get; set; }
-        void Worldspace_Set(IFormIDSetLink<Worldspace> value, bool hasBeenSet = true);
-        void Worldspace_Unset();
-
+        new IFormIDSetLink<Worldspace> Worldspace { get; }
         new ISetList<RegionArea> Areas { get; }
         new RegionDataObjects Objects { get; set; }
         new bool Objects_IsSet { get; set; }
@@ -667,8 +643,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Worldspace
         IFormIDSetLinkGetter<IWorldspaceGetter> Worldspace { get; }
-        bool Worldspace_IsSet { get; }
-
         #endregion
         #region Areas
         IReadOnlySetList<IRegionAreaGetter> Areas { get; }
@@ -1489,13 +1463,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Worldspace> WorldspaceParse))
+                        item: out FormKey WorldspaceParse))
                     {
-                        item.Worldspace = WorldspaceParse;
+                        item.Worldspace.FormKey = WorldspaceParse;
                     }
                     else
                     {
-                        item.Worldspace = default(IFormIDSetLink<Worldspace>);
+                        item.Worldspace.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
@@ -1737,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_IsSet) return false;
             if (checkMask.MapColor.HasValue && checkMask.MapColor.Value != item.MapColor_IsSet) return false;
-            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace_IsSet) return false;
+            if (checkMask.Worldspace.HasValue && checkMask.Worldspace.Value != item.Worldspace.HasBeenSet) return false;
             if (checkMask.Areas.Overall.HasValue && checkMask.Areas.Overall.Value != item.Areas.HasBeenSet) return false;
             if (checkMask.Objects.Overall.HasValue && checkMask.Objects.Overall.Value != item.Objects_IsSet) return false;
             if (checkMask.Objects.Specific != null && (item.Objects == null || !item.Objects.HasBeenSet(checkMask.Objects.Specific))) return false;
@@ -1760,7 +1734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Icon = item.Icon_IsSet;
             mask.MapColor = item.MapColor_IsSet;
-            mask.Worldspace = item.Worldspace_IsSet;
+            mask.Worldspace = item.Worldspace.HasBeenSet;
             mask.Areas = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RegionArea_Mask<bool>>>>(item.Areas.HasBeenSet, item.Areas.WithIndex().Select((i) => new MaskItemIndexed<bool, RegionArea_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.Objects = new MaskItem<bool, RegionDataObjects_Mask<bool>>(item.Objects_IsSet, item.Objects.GetHasBeenSetMask());
             mask.Weather = new MaskItem<bool, RegionDataWeather_Mask<bool>>(item.Weather_IsSet, item.Weather.GetHasBeenSetMask());
@@ -1826,8 +1800,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
             }
-            if (lhs.Worldspace_IsSet != rhs.Worldspace_IsSet) return false;
-            if (lhs.Worldspace_IsSet)
+            if (lhs.Worldspace.HasBeenSet != rhs.Worldspace.HasBeenSet) return false;
+            if (lhs.Worldspace.HasBeenSet)
             {
                 if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
             }
@@ -1893,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.MapColor).CombineHashCode(ret);
             }
-            if (item.Worldspace_IsSet)
+            if (item.Worldspace.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Worldspace).CombineHashCode(ret);
             }
@@ -2413,7 +2387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Region_FieldIndex.MapColor,
                     errorMask: errorMask);
             }
-            if (item.Worldspace_IsSet
+            if (item.Worldspace.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2669,14 +2643,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Worldspace> WorldspaceParse,
+                            item: out FormKey WorldspaceParse,
                             errorMask: errorMask))
                         {
-                            item.Worldspace = WorldspaceParse;
+                            item.Worldspace.FormKey = WorldspaceParse;
                         }
                         else
                         {
-                            item.Worldspace = default(IFormIDSetLink<Worldspace>);
+                            item.Worldspace.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -3577,7 +3551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     nullable: false,
                     extraByte: true);
             }
-            if (item.Worldspace_IsSet)
+            if (item.Worldspace.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

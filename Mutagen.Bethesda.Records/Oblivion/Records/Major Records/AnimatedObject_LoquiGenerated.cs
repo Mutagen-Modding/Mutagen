@@ -80,31 +80,11 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IAnimatedObjectGetter.Model => this.Model;
         #endregion
         #region IdleAnimation
-        public bool IdleAnimation_IsSet
-        {
-            get => _hasBeenSetTracker[(int)AnimatedObject_FieldIndex.IdleAnimation];
-            set => _hasBeenSetTracker[(int)AnimatedObject_FieldIndex.IdleAnimation] = value;
-        }
-        bool IAnimatedObjectGetter.IdleAnimation_IsSet => IdleAnimation_IsSet;
-        private IFormIDSetLink<IdleAnimation> _IdleAnimation;
+        protected IFormIDSetLink<IdleAnimation> _IdleAnimation = new FormIDSetLink<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<IdleAnimation> IdleAnimation
-        {
-            get => this._IdleAnimation;
-            set => IdleAnimation_Set(value);
-        }
+        public IFormIDSetLink<IdleAnimation> IdleAnimation => this._IdleAnimation;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
-        public void IdleAnimation_Set(
-            IFormIDSetLink<IdleAnimation> value,
-            bool markSet = true)
-        {
-            _IdleAnimation = value;
-            _hasBeenSetTracker[(int)AnimatedObject_FieldIndex.IdleAnimation] = markSet;
-        }
-        public void IdleAnimation_Unset()
-        {
-            this.IdleAnimation_Set(default(IFormIDSetLink<IdleAnimation>), false);
-        }
         #endregion
 
         #region To String
@@ -413,11 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         void Model_Set(Model value, bool hasBeenSet = true);
         void Model_Unset();
 
-        new IFormIDSetLink<IdleAnimation> IdleAnimation { get; set; }
-        new bool IdleAnimation_IsSet { get; set; }
-        void IdleAnimation_Set(IFormIDSetLink<IdleAnimation> value, bool hasBeenSet = true);
-        void IdleAnimation_Unset();
-
+        new IFormIDSetLink<IdleAnimation> IdleAnimation { get; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -441,8 +417,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region IdleAnimation
         IFormIDSetLinkGetter<IIdleAnimationGetter> IdleAnimation { get; }
-        bool IdleAnimation_IsSet { get; }
-
         #endregion
 
     }
@@ -1129,13 +1103,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<IdleAnimation> IdleAnimationParse))
+                        item: out FormKey IdleAnimationParse))
                     {
-                        item.IdleAnimation = IdleAnimationParse;
+                        item.IdleAnimation.FormKey = IdleAnimationParse;
                     }
                     else
                     {
-                        item.IdleAnimation = default(IFormIDSetLink<IdleAnimation>);
+                        item.IdleAnimation.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
                 }
@@ -1272,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_IsSet) return false;
             if (checkMask.Model.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.IdleAnimation.HasValue && checkMask.IdleAnimation.Value != item.IdleAnimation_IsSet) return false;
+            if (checkMask.IdleAnimation.HasValue && checkMask.IdleAnimation.Value != item.IdleAnimation.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1283,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AnimatedObject_Mask<bool> mask)
         {
             mask.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_IsSet, item.Model.GetHasBeenSetMask());
-            mask.IdleAnimation = item.IdleAnimation_IsSet;
+            mask.IdleAnimation = item.IdleAnimation.HasBeenSet;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1338,8 +1312,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!object.Equals(lhs.Model, rhs.Model)) return false;
             }
-            if (lhs.IdleAnimation_IsSet != rhs.IdleAnimation_IsSet) return false;
-            if (lhs.IdleAnimation_IsSet)
+            if (lhs.IdleAnimation.HasBeenSet != rhs.IdleAnimation.HasBeenSet) return false;
+            if (lhs.IdleAnimation.HasBeenSet)
             {
                 if (!lhs.IdleAnimation.Equals(rhs.IdleAnimation)) return false;
             }
@@ -1371,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Model).CombineHashCode(ret);
             }
-            if (item.IdleAnimation_IsSet)
+            if (item.IdleAnimation.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.IdleAnimation).CombineHashCode(ret);
             }
@@ -1647,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model));
             }
-            if (item.IdleAnimation_IsSet
+            if (item.IdleAnimation.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -1797,14 +1771,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<IdleAnimation> IdleAnimationParse,
+                            item: out FormKey IdleAnimationParse,
                             errorMask: errorMask))
                         {
-                            item.IdleAnimation = IdleAnimationParse;
+                            item.IdleAnimation.FormKey = IdleAnimationParse;
                         }
                         else
                         {
-                            item.IdleAnimation = default(IFormIDSetLink<IdleAnimation>);
+                            item.IdleAnimation.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -2215,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
-            if (item.IdleAnimation_IsSet)
+            if (item.IdleAnimation.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

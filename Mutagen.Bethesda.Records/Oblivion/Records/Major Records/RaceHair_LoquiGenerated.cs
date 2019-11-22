@@ -50,11 +50,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        public IFormIDLink<Hair> Male { get; set; }
+        protected IFormIDLink<Hair> _Male = new FormIDLink<Hair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Hair> Male => this._Male;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IHairGetter> IRaceHairGetter.Male => this.Male;
         #endregion
         #region Female
-        public IFormIDLink<Hair> Female { get; set; }
+        protected IFormIDLink<Hair> _Female = new FormIDLink<Hair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Hair> Female => this._Female;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IHairGetter> IRaceHairGetter.Female => this.Female;
         #endregion
 
@@ -350,10 +356,8 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceHairGetter,
         ILoquiObjectSetter<IRaceHair>
     {
-        new IFormIDLink<Hair> Male { get; set; }
-
-        new IFormIDLink<Hair> Female { get; set; }
-
+        new IFormIDLink<Hair> Male { get; }
+        new IFormIDLink<Hair> Female { get; }
     }
 
     public partial interface IRaceHairGetter :
@@ -371,11 +375,9 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Male
         IFormIDLinkGetter<IHairGetter> Male { get; }
-
         #endregion
         #region Female
         IFormIDLinkGetter<IHairGetter> Female { get; }
-
         #endregion
 
     }
@@ -984,24 +986,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Hair> MaleParse))
+                item: out FormKey MaleParse))
             {
-                item.Male = MaleParse;
+                item.Male.FormKey = MaleParse;
             }
             else
             {
-                item.Male = default(IFormIDLink<Hair>);
+                item.Male.FormKey = FormKey.NULL;
             }
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Hair> FemaleParse))
+                item: out FormKey FemaleParse))
             {
-                item.Female = FemaleParse;
+                item.Female.FormKey = FemaleParse;
             }
             else
             {
-                item.Female = default(IFormIDLink<Hair>);
+                item.Female.FormKey = FormKey.NULL;
             }
         }
         
@@ -1397,14 +1399,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Male);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Hair> MaleParse,
+                            item: out FormKey MaleParse,
                             errorMask: errorMask))
                         {
-                            item.Male = MaleParse;
+                            item.Male.FormKey = MaleParse;
                         }
                         else
                         {
-                            item.Male = default(IFormIDLink<Hair>);
+                            item.Male.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -1423,14 +1425,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Female);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Hair> FemaleParse,
+                            item: out FormKey FemaleParse,
                             errorMask: errorMask))
                         {
-                            item.Female = FemaleParse;
+                            item.Female.FormKey = FemaleParse;
                         }
                         else
                         {
-                            item.Female = default(IFormIDLink<Hair>);
+                            item.Female.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

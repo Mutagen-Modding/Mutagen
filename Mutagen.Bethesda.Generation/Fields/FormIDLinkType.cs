@@ -11,7 +11,7 @@ using System.Reactive.Subjects;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkType : PrimitiveType
+    public class FormIDLinkType : ClassType
     {
         public enum FormIDTypeEnum
         {
@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Generation
         public LoquiType LoquiType { get; private set; }
         public FormIDTypeEnum FormIDType;
         public override bool HasProperty => false;
+        public override bool IsEnumerable => false;
+
         public override string TypeName(bool getter) => $"I{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string DirectTypeName(bool getter, bool internalInterface = false)
@@ -62,6 +64,8 @@ namespace Mutagen.Bethesda.Generation
             this.HasBeenSetProperty.Subscribe(i => LoquiType.HasBeenSetProperty.OnNext(i));
             this.HasBeenSetProperty.Subscribe(i => _rawFormID.HasBeenSetProperty.OnNext(i));
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
+            this.Singleton = SingletonLevel.Singleton;
+            this.SetPermission = PermissionLevel.@private;
         }
 
         public override string GenerateEqualsSnippet(Accessor accessor, Accessor rhsAccessor, bool negate = false)
@@ -76,22 +80,6 @@ namespace Mutagen.Bethesda.Generation
             return _rawFormID.SkipCheck(copyMaskAccessor, deepCopy);
         }
 
-        public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
-        {
-            _rawFormID.GenerateForHasBeenSetMaskGetter(
-                fg: fg,
-                accessor: accessor,
-                retAccessor: retAccessor);
-        }
-
-        public override void GenerateForHasBeenSetCheck(FileGeneration fg, Accessor accessor, string checkMaskAccessor)
-        {
-            _rawFormID.GenerateForHasBeenSetCheck(
-                fg: fg,
-                accessor: accessor,
-                checkMaskAccessor: checkMaskAccessor);
-        }
-
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
             _rawFormID.GenerateForEqualsMask(
@@ -99,6 +87,11 @@ namespace Mutagen.Bethesda.Generation
                 accessor: accessor,
                 rhsAccessor: rhsAccessor,
                 retAccessor: retAccessor);
+        }
+
+        public override string GetNewForNonNullable()
+        {
+            return $"new {DirectTypeName(getter: false, internalInterface: true)}()";
         }
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
@@ -188,6 +181,34 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        public override void GenerateForClass(FileGeneration fg)
+        {
+            fg.AppendLine($"protected {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} => this._{ this.Name};");
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
+        }
+
+        public override void GenerateForInterface(FileGeneration fg, bool getter, bool internalInterface)
+        {
+            if (getter)
+            {
+                if (!ApplicableInterfaceField(getter, internalInterface)) return;
+                fg.AppendLine($"{TypeName(getter: true)} {this.Name} {{ get; }}");
+            }
+            else
+            {
+                if (!ApplicableInterfaceField(getter, internalInterface)) return;
+                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; }}");
+            }
+        }
+
+        public override string HasBeenSetAccessor(Accessor accessor = null)
+        {
+            return $"{(accessor?.DirectAccess ?? $"this.{this.Name}")}.HasBeenSet";
         }
     }
 }

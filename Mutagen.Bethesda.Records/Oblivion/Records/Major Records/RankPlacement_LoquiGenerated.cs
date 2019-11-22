@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public IFormIDLink<Faction> Faction { get; set; }
+        protected IFormIDLink<Faction> _Faction = new FormIDLink<Faction>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Faction> Faction => this._Faction;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
@@ -359,8 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRankPlacementGetter,
         ILoquiObjectSetter<IRankPlacement>
     {
-        new IFormIDLink<Faction> Faction { get; set; }
-
+        new IFormIDLink<Faction> Faction { get; }
         new Byte Rank { get; set; }
 
         new Byte[] Fluff { get; set; }
@@ -382,7 +384,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Faction
         IFormIDLinkGetter<IFactionGetter> Faction { get; }
-
         #endregion
         #region Rank
         Byte Rank { get; }
@@ -1012,13 +1013,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Faction> FactionParse))
+                item: out FormKey FactionParse))
             {
-                item.Faction = FactionParse;
+                item.Faction.FormKey = FactionParse;
             }
             else
             {
-                item.Faction = default(IFormIDLink<Faction>);
+                item.Faction.FormKey = FormKey.NULL;
             }
             item.Rank = frame.ReadUInt8();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -1445,14 +1446,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Faction> FactionParse,
+                            item: out FormKey FactionParse,
                             errorMask: errorMask))
                         {
-                            item.Faction = FactionParse;
+                            item.Faction.FormKey = FactionParse;
                         }
                         else
                         {
-                            item.Faction = default(IFormIDLink<Faction>);
+                            item.Faction.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

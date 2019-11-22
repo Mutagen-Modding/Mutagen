@@ -70,6 +70,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
             TranslationGeneration.WrapParseCall(
                 new TranslationWrapParseArgs()
                 {
@@ -77,7 +78,9 @@ namespace Mutagen.Bethesda.Generation
                     TypeGen = typeGen,
                     TranslatorLine = $"{this.TypeName(typeGen)}XmlTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
-                    ItemAccessor = itemAccessor,
+                    ItemAccessor = $"{itemAccessor}.{(linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")}",
+                    TypeOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType",
+                    DefaultOverride = linkType.FormIDType == FormIDLinkType.FormIDTypeEnum.Normal ? "FormKey.NULL" : "RecordType.NULL",
                     IndexAccessor = typeGen.HasIndex ? typeGen.IndexEnumInt : null,
                     ExtraArgs = $"{XmlTranslationModule.XElementLine.GetParameterName(objGen)}: {frameAccessor}".Single(),
                 });

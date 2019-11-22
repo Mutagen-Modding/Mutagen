@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public IFormIDLink<ItemAbstract> Item { get; set; }
+        protected IFormIDLink<ItemAbstract> _Item = new FormIDLink<ItemAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<ItemAbstract> Item => this._Item;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IItemAbstractGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
@@ -349,8 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerItemGetter,
         ILoquiObjectSetter<IContainerItem>
     {
-        new IFormIDLink<ItemAbstract> Item { get; set; }
-
+        new IFormIDLink<ItemAbstract> Item { get; }
         new UInt32 Count { get; set; }
 
     }
@@ -370,7 +372,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Item
         IFormIDLinkGetter<IItemAbstractGetter> Item { get; }
-
         #endregion
         #region Count
         UInt32 Count { get; }
@@ -983,13 +984,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<ItemAbstract> ItemParse))
+                item: out FormKey ItemParse))
             {
-                item.Item = ItemParse;
+                item.Item.FormKey = ItemParse;
             }
             else
             {
-                item.Item = default(IFormIDLink<ItemAbstract>);
+                item.Item.FormKey = FormKey.NULL;
             }
             item.Count = frame.ReadUInt32();
         }
@@ -1385,14 +1386,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<ItemAbstract> ItemParse,
+                            item: out FormKey ItemParse,
                             errorMask: errorMask))
                         {
-                            item.Item = ItemParse;
+                            item.Item.FormKey = ItemParse;
                         }
                         else
                         {
-                            item.Item = default(IFormIDLink<ItemAbstract>);
+                            item.Item.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

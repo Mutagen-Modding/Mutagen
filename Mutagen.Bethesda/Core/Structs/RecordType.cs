@@ -14,6 +14,8 @@ namespace Mutagen.Bethesda
         public const byte HEADER_LENGTH = 4;
         public string Type => GetStringType(this.TypeInt);
 
+        public static readonly RecordType NULL = new RecordType("\0\0\0\0");
+
         [DebuggerStepThrough]
         public RecordType (int type)
         {

@@ -162,31 +162,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Sound
-        public bool Sound_IsSet
-        {
-            get => _hasBeenSetTracker[(int)Water_FieldIndex.Sound];
-            set => _hasBeenSetTracker[(int)Water_FieldIndex.Sound] = value;
-        }
-        bool IWaterGetter.Sound_IsSet => Sound_IsSet;
-        private IFormIDSetLink<Sound> _Sound;
+        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Sound> Sound
-        {
-            get => this._Sound;
-            set => Sound_Set(value);
-        }
+        public IFormIDSetLink<Sound> Sound => this._Sound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
-        public void Sound_Set(
-            IFormIDSetLink<Sound> value,
-            bool markSet = true)
-        {
-            _Sound = value;
-            _hasBeenSetTracker[(int)Water_FieldIndex.Sound] = markSet;
-        }
-        public void Sound_Unset()
-        {
-            this.Sound_Set(default(IFormIDSetLink<Sound>), false);
-        }
         #endregion
         #region WindVelocity
         private Single _WindVelocity;
@@ -952,11 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
         void MaterialID_Set(String value, bool hasBeenSet = true);
         void MaterialID_Unset();
 
-        new IFormIDSetLink<Sound> Sound { get; set; }
-        new bool Sound_IsSet { get; set; }
-        void Sound_Set(IFormIDSetLink<Sound> value, bool hasBeenSet = true);
-        void Sound_Unset();
-
+        new IFormIDSetLink<Sound> Sound { get; }
         new Single WindVelocity { get; set; }
 
         new Single WindDirection { get; set; }
@@ -1054,8 +1030,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sound
         IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
-        bool Sound_IsSet { get; }
-
         #endregion
         #region WindVelocity
         Single WindVelocity { get; }
@@ -2301,13 +2275,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Sound> SoundParse))
+                        item: out FormKey SoundParse))
                     {
-                        item.Sound = SoundParse;
+                        item.Sound.FormKey = SoundParse;
                     }
                     else
                     {
-                        item.Sound = default(IFormIDSetLink<Sound>);
+                        item.Sound.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
@@ -2919,7 +2893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Opacity.HasValue && checkMask.Opacity.Value != item.Opacity_IsSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
             if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != item.MaterialID_IsSet) return false;
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_IsSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
             if (checkMask.RelatedWaters.Overall.HasValue && checkMask.RelatedWaters.Overall.Value != item.RelatedWaters_IsSet) return false;
             if (checkMask.RelatedWaters.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
             return base.HasBeenSet(
@@ -2935,7 +2909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Opacity = item.Opacity_IsSet;
             mask.Flags = item.Flags_IsSet;
             mask.MaterialID = item.MaterialID_IsSet;
-            mask.Sound = item.Sound_IsSet;
+            mask.Sound = item.Sound.HasBeenSet;
             mask.WindVelocity = true;
             mask.WindDirection = true;
             mask.WaveAmplitude = true;
@@ -3033,8 +3007,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
             }
-            if (lhs.Sound_IsSet != rhs.Sound_IsSet) return false;
-            if (lhs.Sound_IsSet)
+            if (lhs.Sound.HasBeenSet != rhs.Sound.HasBeenSet) return false;
+            if (lhs.Sound.HasBeenSet)
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
@@ -3110,7 +3084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.MaterialID).CombineHashCode(ret);
             }
-            if (item.Sound_IsSet)
+            if (item.Sound.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
             }
@@ -3656,7 +3630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.MaterialID,
                     errorMask: errorMask);
             }
-            if (item.Sound_IsSet
+            if (item.Sound.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -4157,14 +4131,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Sound> SoundParse,
+                            item: out FormKey SoundParse,
                             errorMask: errorMask))
                         {
-                            item.Sound = SoundParse;
+                            item.Sound.FormKey = SoundParse;
                         }
                         else
                         {
-                            item.Sound = default(IFormIDSetLink<Sound>);
+                            item.Sound.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -6195,7 +6169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
                     nullable: false);
             }
-            if (item.Sound_IsSet)
+            if (item.Sound.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

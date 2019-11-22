@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Weather
-        public IFormIDLink<Weather> Weather { get; set; }
+        protected IFormIDLink<Weather> _Weather = new FormIDLink<Weather>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Weather> Weather => this._Weather;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IWeatherGetter> IWeatherChanceGetter.Weather => this.Weather;
         #endregion
         #region Chance
@@ -348,8 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherChanceGetter,
         ILoquiObjectSetter<IWeatherChance>
     {
-        new IFormIDLink<Weather> Weather { get; set; }
-
+        new IFormIDLink<Weather> Weather { get; }
         new Int32 Chance { get; set; }
 
     }
@@ -369,7 +371,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Weather
         IFormIDLinkGetter<IWeatherGetter> Weather { get; }
-
         #endregion
         #region Chance
         Int32 Chance { get; }
@@ -980,13 +981,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Weather> WeatherParse))
+                item: out FormKey WeatherParse))
             {
-                item.Weather = WeatherParse;
+                item.Weather.FormKey = WeatherParse;
             }
             else
             {
-                item.Weather = default(IFormIDLink<Weather>);
+                item.Weather.FormKey = FormKey.NULL;
             }
             item.Chance = frame.ReadInt32();
         }
@@ -1379,14 +1380,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Weather> WeatherParse,
+                            item: out FormKey WeatherParse,
                             errorMask: errorMask))
                         {
-                            item.Weather = WeatherParse;
+                            item.Weather.FormKey = WeatherParse;
                         }
                         else
                         {
-                            item.Weather = default(IFormIDLink<Weather>);
+                            item.Weather.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

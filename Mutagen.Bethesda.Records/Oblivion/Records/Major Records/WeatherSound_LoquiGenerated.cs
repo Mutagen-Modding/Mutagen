@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public IFormIDLink<Sound> Sound { get; set; }
+        protected IFormIDLink<Sound> _Sound = new FormIDLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Sound> Sound => this._Sound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
@@ -349,8 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherSoundGetter,
         ILoquiObjectSetter<IWeatherSound>
     {
-        new IFormIDLink<Sound> Sound { get; set; }
-
+        new IFormIDLink<Sound> Sound { get; }
         new WeatherSound.SoundType Type { get; set; }
 
     }
@@ -370,7 +372,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Sound
         IFormIDLinkGetter<ISoundGetter> Sound { get; }
-
         #endregion
         #region Type
         WeatherSound.SoundType Type { get; }
@@ -983,13 +984,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Sound> SoundParse))
+                item: out FormKey SoundParse))
             {
-                item.Sound = SoundParse;
+                item.Sound.FormKey = SoundParse;
             }
             else
             {
-                item.Sound = default(IFormIDLink<Sound>);
+                item.Sound.FormKey = FormKey.NULL;
             }
             if (EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
@@ -1394,14 +1395,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Sound> SoundParse,
+                            item: out FormKey SoundParse,
                             errorMask: errorMask))
                         {
-                            item.Sound = SoundParse;
+                            item.Sound.FormKey = SoundParse;
                         }
                         else
                         {
-                            item.Sound = default(IFormIDLink<Sound>);
+                            item.Sound.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

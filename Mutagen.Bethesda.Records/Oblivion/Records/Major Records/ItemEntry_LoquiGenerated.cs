@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public IFormIDLink<ItemAbstract> Item { get; set; }
+        protected IFormIDLink<ItemAbstract> _Item = new FormIDLink<ItemAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<ItemAbstract> Item => this._Item;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IItemAbstractGetter> IItemEntryGetter.Item => this.Item;
         #endregion
         #region Count
@@ -374,8 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         IItemEntryGetter,
         ILoquiObjectSetter<IItemEntry>
     {
-        new IFormIDLink<ItemAbstract> Item { get; set; }
-
+        new IFormIDLink<ItemAbstract> Item { get; }
         new Int32 Count { get; set; }
         new bool Count_IsSet { get; set; }
         void Count_Set(Int32 value, bool hasBeenSet = true);
@@ -398,7 +400,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Item
         IFormIDLinkGetter<IItemAbstractGetter> Item { get; }
-
         #endregion
         #region Count
         Int32 Count { get; }
@@ -1012,13 +1013,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<ItemAbstract> ItemParse))
+                item: out FormKey ItemParse))
             {
-                item.Item = ItemParse;
+                item.Item.FormKey = ItemParse;
             }
             else
             {
-                item.Item = default(IFormIDLink<ItemAbstract>);
+                item.Item.FormKey = FormKey.NULL;
             }
             if (frame.Complete) return;
             item.Count = frame.ReadInt32();
@@ -1444,14 +1445,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)ItemEntry_FieldIndex.Item);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<ItemAbstract> ItemParse,
+                            item: out FormKey ItemParse,
                             errorMask: errorMask))
                         {
-                            item.Item = ItemParse;
+                            item.Item.FormKey = ItemParse;
                         }
                         else
                         {
-                            item.Item = default(IFormIDLink<ItemAbstract>);
+                            item.Item.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

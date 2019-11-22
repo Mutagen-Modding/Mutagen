@@ -120,58 +120,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        public bool Script_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Script];
-            set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Script] = value;
-        }
-        bool ILeveledCreatureGetter.Script_IsSet => Script_IsSet;
-        private IFormIDSetLink<Script> _Script;
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Script> Script
-        {
-            get => this._Script;
-            set => Script_Set(value);
-        }
+        public IFormIDSetLink<Script> Script => this._Script;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
-        public void Script_Set(
-            IFormIDSetLink<Script> value,
-            bool markSet = true)
-        {
-            _Script = value;
-            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Script] = markSet;
-        }
-        public void Script_Unset()
-        {
-            this.Script_Set(default(IFormIDSetLink<Script>), false);
-        }
         #endregion
         #region Template
-        public bool Template_IsSet
-        {
-            get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Template];
-            set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Template] = value;
-        }
-        bool ILeveledCreatureGetter.Template_IsSet => Template_IsSet;
-        private IFormIDSetLink<NPCAbstract> _Template;
+        protected IFormIDSetLink<NPCAbstract> _Template = new FormIDSetLink<NPCAbstract>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<NPCAbstract> Template
-        {
-            get => this._Template;
-            set => Template_Set(value);
-        }
+        public IFormIDSetLink<NPCAbstract> Template => this._Template;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<INPCAbstractGetter> ILeveledCreatureGetter.Template => this.Template;
-        public void Template_Set(
-            IFormIDSetLink<NPCAbstract> value,
-            bool markSet = true)
-        {
-            _Template = value;
-            _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Template] = markSet;
-        }
-        public void Template_Unset()
-        {
-            this.Template_Set(default(IFormIDSetLink<NPCAbstract>), false);
-        }
         #endregion
 
         #region To String
@@ -490,16 +450,8 @@ namespace Mutagen.Bethesda.Oblivion
         void Flags_Unset();
 
         new ISetList<LeveledEntry<NPCSpawn>> Entries { get; }
-        new IFormIDSetLink<Script> Script { get; set; }
-        new bool Script_IsSet { get; set; }
-        void Script_Set(IFormIDSetLink<Script> value, bool hasBeenSet = true);
-        void Script_Unset();
-
-        new IFormIDSetLink<NPCAbstract> Template { get; set; }
-        new bool Template_IsSet { get; set; }
-        void Template_Set(IFormIDSetLink<NPCAbstract> value, bool hasBeenSet = true);
-        void Template_Unset();
-
+        new IFormIDSetLink<Script> Script { get; }
+        new IFormIDSetLink<NPCAbstract> Template { get; }
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -531,13 +483,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Script
         IFormIDSetLinkGetter<IScriptGetter> Script { get; }
-        bool Script_IsSet { get; }
-
         #endregion
         #region Template
         IFormIDSetLinkGetter<INPCAbstractGetter> Template { get; }
-        bool Template_IsSet { get; }
-
         #endregion
 
     }
@@ -1290,13 +1238,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Script> ScriptParse))
+                        item: out FormKey ScriptParse))
                     {
-                        item.Script = ScriptParse;
+                        item.Script.FormKey = ScriptParse;
                     }
                     else
                     {
-                        item.Script = default(IFormIDSetLink<Script>);
+                        item.Script.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
@@ -1306,13 +1254,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<NPCAbstract> TemplateParse))
+                        item: out FormKey TemplateParse))
                     {
-                        item.Template = TemplateParse;
+                        item.Template.FormKey = TemplateParse;
                     }
                     else
                     {
-                        item.Template = default(IFormIDSetLink<NPCAbstract>);
+                        item.Template.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
@@ -1476,8 +1424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.ChanceNone.HasValue && checkMask.ChanceNone.Value != item.ChanceNone_IsSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_IsSet) return false;
             if (checkMask.Entries.Overall.HasValue && checkMask.Entries.Overall.Value != item.Entries.HasBeenSet) return false;
-            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_IsSet) return false;
-            if (checkMask.Template.HasValue && checkMask.Template.Value != item.Template_IsSet) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script.HasBeenSet) return false;
+            if (checkMask.Template.HasValue && checkMask.Template.Value != item.Template.HasBeenSet) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1490,8 +1438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ChanceNone = item.ChanceNone_IsSet;
             mask.Flags = item.Flags_IsSet;
             mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry_Mask<bool>>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Script = item.Script_IsSet;
-            mask.Template = item.Template_IsSet;
+            mask.Script = item.Script.HasBeenSet;
+            mask.Template = item.Template.HasBeenSet;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1575,13 +1523,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
             }
-            if (lhs.Script_IsSet != rhs.Script_IsSet) return false;
-            if (lhs.Script_IsSet)
+            if (lhs.Script.HasBeenSet != rhs.Script.HasBeenSet) return false;
+            if (lhs.Script.HasBeenSet)
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if (lhs.Template_IsSet != rhs.Template_IsSet) return false;
-            if (lhs.Template_IsSet)
+            if (lhs.Template.HasBeenSet != rhs.Template.HasBeenSet) return false;
+            if (lhs.Template.HasBeenSet)
             {
                 if (!lhs.Template.Equals(rhs.Template)) return false;
             }
@@ -1630,11 +1578,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ret = HashHelper.GetHashCode(item.Entries).CombineHashCode(ret);
             }
-            if (item.Script_IsSet)
+            if (item.Script.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Script).CombineHashCode(ret);
             }
-            if (item.Template_IsSet)
+            if (item.Template.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Template).CombineHashCode(ret);
             }
@@ -2036,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.Script_IsSet
+            if (item.Script.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2046,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                     errorMask: errorMask);
             }
-            if (item.Template_IsSet
+            if (item.Template.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -2264,14 +2212,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Script> ScriptParse,
+                            item: out FormKey ScriptParse,
                             errorMask: errorMask))
                         {
-                            item.Script = ScriptParse;
+                            item.Script.FormKey = ScriptParse;
                         }
                         else
                         {
-                            item.Script = default(IFormIDSetLink<Script>);
+                            item.Script.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -2290,14 +2238,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<NPCAbstract> TemplateParse,
+                            item: out FormKey TemplateParse,
                             errorMask: errorMask))
                         {
-                            item.Template = TemplateParse;
+                            item.Template.FormKey = TemplateParse;
                         }
                         else
                         {
-                            item.Template = default(IFormIDSetLink<NPCAbstract>);
+                            item.Template.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -2874,7 +2822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: null);
                     });
             }
-            if (item.Script_IsSet)
+            if (item.Script.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2883,7 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     nullable: false,
                     masterReferences: masterReferences);
             }
-            if (item.Template_IsSet)
+            if (item.Template.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

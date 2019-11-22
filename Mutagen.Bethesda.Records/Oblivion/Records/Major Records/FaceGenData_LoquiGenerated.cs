@@ -50,12 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SymmetricGeometry
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool SymmetricGeometry_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry];
             set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricGeometry] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.SymmetricGeometry_IsSet => SymmetricGeometry_IsSet;
         protected Byte[] _SymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,12 +79,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region AsymmetricGeometry
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool AsymmetricGeometry_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry];
             set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.AsymmetricGeometry] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.AsymmetricGeometry_IsSet => AsymmetricGeometry_IsSet;
         protected Byte[] _AsymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,12 +108,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SymmetricTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool SymmetricTexture_IsSet
         {
             get => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture];
             set => _hasBeenSetTracker[(int)FaceGenData_FieldIndex.SymmetricTexture] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.SymmetricTexture_IsSet => SymmetricTexture_IsSet;
         protected Byte[] _SymmetricTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -15,6 +15,11 @@ namespace Mutagen.Bethesda
         public new static readonly IEDIDSetLinkGetter<T> Empty = new EDIDSetLink<T>();
 
         public bool HasBeenSet { get; set; }
+        public override RecordType EDID
+        {
+            get => base.EDID;
+            set => this.Set(value, true);
+        }
 
         public EDIDSetLink()
             : base()
@@ -24,13 +29,14 @@ namespace Mutagen.Bethesda
         public EDIDSetLink(RecordType unlinkedEDID)
             : this()
         {
-            this.EDID = unlinkedEDID;
+            base.EDID = unlinkedEDID;
+            this.HasBeenSet = true;
         }
 
         public void Set(RecordType value, bool hasBeenSet)
         {
             this.HasBeenSet = hasBeenSet;
-            this.EDID = value;
+            base.EDID = value;
         }
 
         public void Set(T value, bool hasBeenSet)
@@ -46,7 +52,7 @@ namespace Mutagen.Bethesda
         public override void Unset()
         {
             this.HasBeenSet = false;
-            this.EDID = UNLINKED;
+            base.EDID = UNLINKED;
         }
 
         public override bool Equals(object obj)

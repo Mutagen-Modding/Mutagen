@@ -50,31 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public bool Sound_IsSet
-        {
-            get => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound];
-            set => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound] = value;
-        }
-        bool ISoundItemGetter.Sound_IsSet => Sound_IsSet;
-        private IFormIDSetLink<Sound> _Sound;
+        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IFormIDSetLink<Sound> Sound
-        {
-            get => this._Sound;
-            set => Sound_Set(value);
-        }
+        public IFormIDSetLink<Sound> Sound => this._Sound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
-        public void Sound_Set(
-            IFormIDSetLink<Sound> value,
-            bool markSet = true)
-        {
-            _Sound = value;
-            _hasBeenSetTracker[(int)SoundItem_FieldIndex.Sound] = markSet;
-        }
-        public void Sound_Unset()
-        {
-            this.Sound_Set(default(IFormIDSetLink<Sound>), false);
-        }
         #endregion
         #region Chance
         public bool Chance_IsSet
@@ -395,11 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISoundItemGetter,
         ILoquiObjectSetter<ISoundItem>
     {
-        new IFormIDSetLink<Sound> Sound { get; set; }
-        new bool Sound_IsSet { get; set; }
-        void Sound_Set(IFormIDSetLink<Sound> value, bool hasBeenSet = true);
-        void Sound_Unset();
-
+        new IFormIDSetLink<Sound> Sound { get; }
         new Byte Chance { get; set; }
         new bool Chance_IsSet { get; set; }
         void Chance_Set(Byte value, bool hasBeenSet = true);
@@ -422,8 +398,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Sound
         IFormIDSetLinkGetter<ISoundGetter> Sound { get; }
-        bool Sound_IsSet { get; }
-
         #endregion
         #region Chance
         Byte Chance { get; }
@@ -1068,13 +1042,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out IFormIDSetLink<Sound> SoundParse))
+                        item: out FormKey SoundParse))
                     {
-                        item.Sound = SoundParse;
+                        item.Sound.FormKey = SoundParse;
                     }
                     else
                     {
-                        item.Sound = default(IFormIDSetLink<Sound>);
+                        item.Sound.FormKey = FormKey.NULL;
                     }
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 }
@@ -1198,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItemGetter item,
             SoundItem_Mask<bool?> checkMask)
         {
-            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_IsSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound.HasBeenSet) return false;
             if (checkMask.Chance.HasValue && checkMask.Chance.Value != item.Chance_IsSet) return false;
             return true;
         }
@@ -1207,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundItemGetter item,
             SoundItem_Mask<bool> mask)
         {
-            mask.Sound = item.Sound_IsSet;
+            mask.Sound = item.Sound.HasBeenSet;
             mask.Chance = item.Chance_IsSet;
         }
         
@@ -1218,8 +1192,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Sound_IsSet != rhs.Sound_IsSet) return false;
-            if (lhs.Sound_IsSet)
+            if (lhs.Sound.HasBeenSet != rhs.Sound.HasBeenSet) return false;
+            if (lhs.Sound.HasBeenSet)
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
@@ -1234,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(ISoundItemGetter item)
         {
             int ret = 0;
-            if (item.Sound_IsSet)
+            if (item.Sound.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(item.Sound).CombineHashCode(ret);
             }
@@ -1398,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask)
         {
-            if (item.Sound_IsSet
+            if (item.Sound.HasBeenSet
                 && (translationMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -1530,14 +1504,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDSetLink<Sound> SoundParse,
+                            item: out FormKey SoundParse,
                             errorMask: errorMask))
                         {
-                            item.Sound = SoundParse;
+                            item.Sound.FormKey = SoundParse;
                         }
                         else
                         {
-                            item.Sound = default(IFormIDSetLink<Sound>);
+                            item.Sound.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -2048,7 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
-            if (item.Sound_IsSet)
+            if (item.Sound.HasBeenSet)
             {
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,

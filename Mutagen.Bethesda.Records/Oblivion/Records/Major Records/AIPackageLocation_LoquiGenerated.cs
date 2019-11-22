@@ -53,7 +53,10 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; }
         #endregion
         #region LocationReference
-        public IFormIDLink<IPlaced> LocationReference { get; set; }
+        protected IFormIDLink<IPlaced> _LocationReference = new FormIDLink<IPlaced>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<IPlaced> LocationReference => this._LocationReference;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
@@ -355,8 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new AIPackageLocation.LocationType Type { get; set; }
 
-        new IFormIDLink<IPlaced> LocationReference { get; set; }
-
+        new IFormIDLink<IPlaced> LocationReference { get; }
         new Single Radius { get; set; }
 
     }
@@ -380,7 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocationReference
         IFormIDLinkGetter<IPlacedGetter> LocationReference { get; }
-
         #endregion
         #region Radius
         Single Radius { get; }
@@ -1016,13 +1017,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<IPlaced> LocationReferenceParse))
+                item: out FormKey LocationReferenceParse))
             {
-                item.LocationReference = LocationReferenceParse;
+                item.LocationReference.FormKey = LocationReferenceParse;
             }
             else
             {
-                item.LocationReference = default(IFormIDLink<IPlaced>);
+                item.LocationReference.FormKey = FormKey.NULL;
             }
             if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -1474,14 +1475,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<IPlaced> LocationReferenceParse,
+                            item: out FormKey LocationReferenceParse,
                             errorMask: errorMask))
                         {
-                            item.LocationReference = LocationReferenceParse;
+                            item.LocationReference.FormKey = LocationReferenceParse;
                         }
                         else
                         {
-                            item.LocationReference = default(IFormIDLink<IPlaced>);
+                            item.LocationReference.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

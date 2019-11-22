@@ -50,7 +50,10 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        public IFormIDLink<OblivionMajorRecord> Object { get; set; }
+        protected IFormIDLink<OblivionMajorRecord> _Object = new FormIDLink<OblivionMajorRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<OblivionMajorRecord> Object => this._Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
@@ -420,8 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataObjectGetter,
         ILoquiObjectSetter<IRegionDataObject>
     {
-        new IFormIDLink<OblivionMajorRecord> Object { get; set; }
-
+        new IFormIDLink<OblivionMajorRecord> Object { get; }
         new UInt16 ParentIndex { get; set; }
 
         new Byte[] Unknown1 { get; set; }
@@ -471,7 +473,6 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region Object
         IFormIDLinkGetter<IOblivionMajorRecordGetter> Object { get; }
-
         #endregion
         #region ParentIndex
         UInt16 ParentIndex { get; }
@@ -1337,13 +1338,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<OblivionMajorRecord> ObjectParse))
+                item: out FormKey ObjectParse))
             {
-                item.Object = ObjectParse;
+                item.Object.FormKey = ObjectParse;
             }
             else
             {
-                item.Object = default(IFormIDLink<OblivionMajorRecord>);
+                item.Object.FormKey = FormKey.NULL;
             }
             item.ParentIndex = frame.ReadUInt16();
             if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -2156,14 +2157,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Object);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<OblivionMajorRecord> ObjectParse,
+                            item: out FormKey ObjectParse,
                             errorMask: errorMask))
                         {
-                            item.Object = ObjectParse;
+                            item.Object.FormKey = ObjectParse;
                         }
                         else
                         {
-                            item.Object = default(IFormIDLink<OblivionMajorRecord>);
+                            item.Object.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

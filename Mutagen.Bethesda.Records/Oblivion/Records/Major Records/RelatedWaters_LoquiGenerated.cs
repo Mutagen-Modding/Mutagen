@@ -50,15 +50,24 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RelatedWaterDaytime
-        public IFormIDLink<Water> RelatedWaterDaytime { get; set; }
+        protected IFormIDLink<Water> _RelatedWaterDaytime = new FormIDLink<Water>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Water> RelatedWaterDaytime => this._RelatedWaterDaytime;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterDaytime => this.RelatedWaterDaytime;
         #endregion
         #region RelatedWaterNighttime
-        public IFormIDLink<Water> RelatedWaterNighttime { get; set; }
+        protected IFormIDLink<Water> _RelatedWaterNighttime = new FormIDLink<Water>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Water> RelatedWaterNighttime => this._RelatedWaterNighttime;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterNighttime => this.RelatedWaterNighttime;
         #endregion
         #region RelatedWaterUnderwater
-        public IFormIDLink<Water> RelatedWaterUnderwater { get; set; }
+        protected IFormIDLink<Water> _RelatedWaterUnderwater = new FormIDLink<Water>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Water> RelatedWaterUnderwater => this._RelatedWaterUnderwater;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IWaterGetter> IRelatedWatersGetter.RelatedWaterUnderwater => this.RelatedWaterUnderwater;
         #endregion
 
@@ -355,12 +364,9 @@ namespace Mutagen.Bethesda.Oblivion
         IRelatedWatersGetter,
         ILoquiObjectSetter<IRelatedWaters>
     {
-        new IFormIDLink<Water> RelatedWaterDaytime { get; set; }
-
-        new IFormIDLink<Water> RelatedWaterNighttime { get; set; }
-
-        new IFormIDLink<Water> RelatedWaterUnderwater { get; set; }
-
+        new IFormIDLink<Water> RelatedWaterDaytime { get; }
+        new IFormIDLink<Water> RelatedWaterNighttime { get; }
+        new IFormIDLink<Water> RelatedWaterUnderwater { get; }
     }
 
     public partial interface IRelatedWatersGetter :
@@ -378,15 +384,12 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         #region RelatedWaterDaytime
         IFormIDLinkGetter<IWaterGetter> RelatedWaterDaytime { get; }
-
         #endregion
         #region RelatedWaterNighttime
         IFormIDLinkGetter<IWaterGetter> RelatedWaterNighttime { get; }
-
         #endregion
         #region RelatedWaterUnderwater
         IFormIDLinkGetter<IWaterGetter> RelatedWaterUnderwater { get; }
-
         #endregion
 
     }
@@ -1008,35 +1011,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Water> RelatedWaterDaytimeParse))
+                item: out FormKey RelatedWaterDaytimeParse))
             {
-                item.RelatedWaterDaytime = RelatedWaterDaytimeParse;
+                item.RelatedWaterDaytime.FormKey = RelatedWaterDaytimeParse;
             }
             else
             {
-                item.RelatedWaterDaytime = default(IFormIDLink<Water>);
+                item.RelatedWaterDaytime.FormKey = FormKey.NULL;
             }
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Water> RelatedWaterNighttimeParse))
+                item: out FormKey RelatedWaterNighttimeParse))
             {
-                item.RelatedWaterNighttime = RelatedWaterNighttimeParse;
+                item.RelatedWaterNighttime.FormKey = RelatedWaterNighttimeParse;
             }
             else
             {
-                item.RelatedWaterNighttime = default(IFormIDLink<Water>);
+                item.RelatedWaterNighttime.FormKey = FormKey.NULL;
             }
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Water> RelatedWaterUnderwaterParse))
+                item: out FormKey RelatedWaterUnderwaterParse))
             {
-                item.RelatedWaterUnderwater = RelatedWaterUnderwaterParse;
+                item.RelatedWaterUnderwater.FormKey = RelatedWaterUnderwaterParse;
             }
             else
             {
-                item.RelatedWaterUnderwater = default(IFormIDLink<Water>);
+                item.RelatedWaterUnderwater.FormKey = FormKey.NULL;
             }
         }
         
@@ -1454,14 +1457,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Water> RelatedWaterDaytimeParse,
+                            item: out FormKey RelatedWaterDaytimeParse,
                             errorMask: errorMask))
                         {
-                            item.RelatedWaterDaytime = RelatedWaterDaytimeParse;
+                            item.RelatedWaterDaytime.FormKey = RelatedWaterDaytimeParse;
                         }
                         else
                         {
-                            item.RelatedWaterDaytime = default(IFormIDLink<Water>);
+                            item.RelatedWaterDaytime.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -1480,14 +1483,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Water> RelatedWaterNighttimeParse,
+                            item: out FormKey RelatedWaterNighttimeParse,
                             errorMask: errorMask))
                         {
-                            item.RelatedWaterNighttime = RelatedWaterNighttimeParse;
+                            item.RelatedWaterNighttime.FormKey = RelatedWaterNighttimeParse;
                         }
                         else
                         {
-                            item.RelatedWaterNighttime = default(IFormIDLink<Water>);
+                            item.RelatedWaterNighttime.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
@@ -1506,14 +1509,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Water> RelatedWaterUnderwaterParse,
+                            item: out FormKey RelatedWaterUnderwaterParse,
                             errorMask: errorMask))
                         {
-                            item.RelatedWaterUnderwater = RelatedWaterUnderwaterParse;
+                            item.RelatedWaterUnderwater.FormKey = RelatedWaterUnderwaterParse;
                         }
                         else
                         {
-                            item.RelatedWaterUnderwater = default(IFormIDLink<Water>);
+                            item.RelatedWaterUnderwater.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)

@@ -78,12 +78,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModStatsGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool TypeOffsets_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.TypeOffsets] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.TypeOffsets_IsSet => TypeOffsets_IsSet;
         protected Byte[] _TypeOffsets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,12 +107,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Deleted
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool Deleted_IsSet
         {
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Deleted] = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.Deleted_IsSet => Deleted_IsSet;
         protected Byte[] _Deleted;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

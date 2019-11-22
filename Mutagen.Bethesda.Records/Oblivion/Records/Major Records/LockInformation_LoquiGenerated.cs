@@ -62,7 +62,10 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlySpan<Byte> ILockInformationGetter.Fluff => this.Fluff;
         #endregion
         #region Key
-        public IFormIDLink<Key> Key { get; set; }
+        protected IFormIDLink<Key> _Key = new FormIDLink<Key>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IFormIDLink<Key> Key => this._Key;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
@@ -367,8 +370,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Byte[] Fluff { get; set; }
 
-        new IFormIDLink<Key> Key { get; set; }
-
+        new IFormIDLink<Key> Key { get; }
         new LockInformation.Flag Flags { get; set; }
 
     }
@@ -396,7 +398,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Key
         IFormIDLinkGetter<IKeyGetter> Key { get; }
-
         #endregion
         #region Flags
         LockInformation.Flag Flags { get; }
@@ -1046,13 +1047,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out IFormIDLink<Key> KeyParse))
+                item: out FormKey KeyParse))
             {
-                item.Key = KeyParse;
+                item.Key.FormKey = KeyParse;
             }
             else
             {
-                item.Key = default(IFormIDLink<Key>);
+                item.Key.FormKey = FormKey.NULL;
             }
             if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
                 frame: frame.SpawnWithLength(4),
@@ -1551,14 +1552,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
                         if (FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out IFormIDLink<Key> KeyParse,
+                            item: out FormKey KeyParse,
                             errorMask: errorMask))
                         {
-                            item.Key = KeyParse;
+                            item.Key.FormKey = KeyParse;
                         }
                         else
                         {
-                            item.Key = default(IFormIDLink<Key>);
+                            item.Key.FormKey = FormKey.NULL;
                         }
                     }
                     catch (Exception ex)
