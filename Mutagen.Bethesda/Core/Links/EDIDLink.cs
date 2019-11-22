@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool TryResolve<M>(LinkingPackage<M> package, out TMajor major)
+        public bool TryResolve<M>(ILinkingPackage<M> package, out TMajor major)
             where M : IModGetter
         {
             if (this.EDID == UNLINKED)
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool TryResolveFormKey<M>(LinkingPackage<M> package, out FormKey formKey)
+        public bool TryResolveFormKey<M>(ILinkingPackage<M> package, out FormKey formKey)
             where M : IModGetter
         {
             if (TryResolve(package, out var rec))
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolve<M>(LinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolve<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out TMajor rec))
             {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        TMajor ILinkGetter<TMajor>.Resolve<M>(LinkingPackage<M> package)
+        TMajor ILinkGetter<TMajor>.Resolve<M>(ILinkingPackage<M> package)
         {
             if (this.TryResolve(package, out var major))
             {

@@ -11,14 +11,14 @@ namespace Mutagen.Bethesda
     public interface ILinkGetter
     {
         Type TargetType { get; }
-        bool TryResolveFormKey<M>(LinkingPackage<M> package, out FormKey formKey) where M : IModGetter;
-        bool TryResolve<M>(LinkingPackage<M> package, out IMajorRecordCommonGetter formKey) where M : IModGetter;
+        bool TryResolveFormKey<M>(ILinkingPackage<M> package, out FormKey formKey) where M : IModGetter;
+        bool TryResolve<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey) where M : IModGetter;
     }
 
     public interface ILinkGetter<out TMajor> : ILinkGetter
         where TMajor : IMajorRecordCommonGetter
     {
-        TMajor Resolve<M>(LinkingPackage<M> package) where M : IModGetter;
+        TMajor Resolve<M>(ILinkingPackage<M> package) where M : IModGetter;
     }
 
     public interface ISetLinkGetter : ILinkGetter

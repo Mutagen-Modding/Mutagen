@@ -5,7 +5,17 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public class LinkingPackage<TMod>
+    public interface ILinkingPackage<TMod>
+        where TMod : IModGetter
+    {
+        TMod SourceMod { get; }
+        ModList<TMod> ModList { get; }
+        bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec);
+        bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
+            where TMajor : class, IMajorRecordCommonGetter;
+    }
+
+    public class LinkingPackage<TMod> : ILinkingPackage<TMod>
         where TMod : IModGetter
     {
         public TMod SourceMod { get; private set; }
@@ -28,7 +38,7 @@ namespace Mutagen.Bethesda
         {
         }
 
-        public bool TryGetMajorRecords(ModKey modKey, out IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> dict)
+        private bool TryGetMajorRecords(ModKey modKey, out IReadOnlyDictionary<FormKey, IMajorRecordCommonGetter> dict)
         {
             if (this.ModList != null && this.ModList.TryGetMod(modKey, out var mod))
             {
@@ -61,15 +71,7 @@ namespace Mutagen.Bethesda
         public bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            // ToDo
-            // Improve optimization logic to not import unrelated record types
-            if (!TryGetMajorRecord(formKey, out var rec))
-            {
-                majorRec = default;
-                return false;
-            }
-            majorRec = rec as TMajor;
-            return majorRec != null;
+            throw new NotImplementedException();
         }
 
         public void SetSourceMod(TMod sourceMod)
