@@ -1685,20 +1685,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
         {
-            if (obj.Road != null)
+            if (obj.Road_IsSet)
             {
-                yield return obj.Road;
-                foreach (var item in obj.Road.EnumerateMajorRecords())
+                var Roaditem = obj.Road;
+                if (Roaditem != null)
                 {
-                    yield return item;
+                    yield return Roaditem;
+                    foreach (var item in Roaditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.TopCell != null)
+            if (obj.TopCell_IsSet)
             {
-                yield return obj.TopCell;
-                foreach (var item in obj.TopCell.EnumerateMajorRecords())
+                var TopCellitem = obj.TopCell;
+                if (TopCellitem != null)
                 {
-                    yield return item;
+                    yield return TopCellitem;
+                    foreach (var item in TopCellitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
             foreach (var subItem in obj.SubCells)
@@ -2498,20 +2506,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
-            if (obj.Road != null)
+            if (obj.Road_IsSet)
             {
-                yield return obj.Road;
-                foreach (var item in obj.Road.EnumerateMajorRecords())
+                var Roaditem = obj.Road;
+                if (Roaditem != null)
                 {
-                    yield return item;
+                    yield return Roaditem;
+                    foreach (var item in Roaditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.TopCell != null)
+            if (obj.TopCell_IsSet)
             {
-                yield return obj.TopCell;
-                foreach (var item in obj.TopCell.EnumerateMajorRecords())
+                var TopCellitem = obj.TopCell;
+                if (TopCellitem != null)
                 {
-                    yield return item;
+                    yield return TopCellitem;
+                    foreach (var item in TopCellitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
             foreach (var subItem in obj.SubCells)

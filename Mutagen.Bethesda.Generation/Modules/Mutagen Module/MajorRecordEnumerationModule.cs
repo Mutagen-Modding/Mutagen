@@ -205,20 +205,41 @@ namespace Mutagen.Bethesda.Generation
                     if (field is LoquiType loqui)
                     {
                         var subFg = new FileGeneration();
-                        await LoquiTypeHandler(subFg, $"{accessor}.{loqui.Name}", loqui);
+                        var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                        await LoquiTypeHandler(subFg, fieldAccessor, loqui);
                         if (subFg.Count == 0) continue;
-                        var doBrace = true;
-                        if (loqui.SingletonType == SingletonLevel.None)
+                        switch (loqui.SingletonType)
                         {
-                            fg.AppendLine($"if ({accessor}.{loqui.Name} != null)");
-                        }
-                        else
-                        {
-                            doBrace = false;
-                        }
-                        using (new BraceWrapper(fg, doIt: doBrace))
-                        {
-                            fg.AppendLines(subFg);
+                            case SingletonLevel.None:
+                                if (loqui.HasBeenSet)
+                                {
+                                    fg.AppendLine($"if ({loqui.HasBeenSetAccessor($"{accessor}.{loqui.Name}")})");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        // Query item once, for binary wrapper optimization
+                                        fg.AppendLine($"var {loqui.Name}item = {accessor}.{loqui.Name};");
+                                        fg.AppendLine($"if ({loqui.Name}item != null)");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLines(subFg);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    fg.AppendLine($"if ({accessor}.{loqui.Name} != null)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLines(subFg);
+                                    }
+                                }
+                                break;
+                            case SingletonLevel.NotNull:
+                            case SingletonLevel.Singleton:
+                                fg.AppendLines(subFg);
+                                break;
+                            default:
+                                throw new NotImplementedException();
                         }
                     }
                     else if (field is ContainerType cont)

@@ -1816,20 +1816,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
-            if (obj.PathGrid != null)
+            if (obj.PathGrid_IsSet)
             {
-                yield return obj.PathGrid;
-                foreach (var item in obj.PathGrid.EnumerateMajorRecords())
+                var PathGriditem = obj.PathGrid;
+                if (PathGriditem != null)
                 {
-                    yield return item;
+                    yield return PathGriditem;
+                    foreach (var item in PathGriditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.Landscape != null)
+            if (obj.Landscape_IsSet)
             {
-                yield return obj.Landscape;
-                foreach (var item in obj.Landscape.EnumerateMajorRecords())
+                var Landscapeitem = obj.Landscape;
+                if (Landscapeitem != null)
                 {
-                    yield return item;
+                    yield return Landscapeitem;
+                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
             foreach (var subItem in obj.Persistent)
@@ -2770,20 +2778,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
         {
-            if (obj.PathGrid != null)
+            if (obj.PathGrid_IsSet)
             {
-                yield return obj.PathGrid;
-                foreach (var item in obj.PathGrid.EnumerateMajorRecords())
+                var PathGriditem = obj.PathGrid;
+                if (PathGriditem != null)
                 {
-                    yield return item;
+                    yield return PathGriditem;
+                    foreach (var item in PathGriditem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
-            if (obj.Landscape != null)
+            if (obj.Landscape_IsSet)
             {
-                yield return obj.Landscape;
-                foreach (var item in obj.Landscape.EnumerateMajorRecords())
+                var Landscapeitem = obj.Landscape;
+                if (Landscapeitem != null)
                 {
-                    yield return item;
+                    yield return Landscapeitem;
+                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
                 }
             }
             foreach (var subItem in obj.Persistent)
