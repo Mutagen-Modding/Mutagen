@@ -1688,9 +1688,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LandTexture_FieldIndex.PotentialGrass);
                 try
                 {
-                    item.PotentialGrass.SetTo(
-                        rhs.PotentialGrass,
-                        (r) => new FormIDLink<Grass>(r.FormKey));
+                    if (rhs.PotentialGrass.HasBeenSet)
+                    {
+                        item.PotentialGrass.SetTo(
+                            rhs.PotentialGrass,
+                            (r) => new FormIDLink<Grass>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.PotentialGrass.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -2936,9 +2936,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
                 try
                 {
-                    item.Regions.SetTo(
-                        rhs.Regions,
-                        (r) => new FormIDLink<Region>(r.FormKey));
+                    if (rhs.Regions.HasBeenSet)
+                    {
+                        item.Regions.SetTo(
+                            rhs.Regions,
+                            (r) => new FormIDLink<Region>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Regions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3165,12 +3172,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
                 try
                 {
-                    item.Persistent.SetTo(
-                        items: rhs.Persistent,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy() as IPlaced;
-                        });
+                    if (rhs.Persistent.HasBeenSet)
+                    {
+                        item.Persistent.SetTo(
+                            items: rhs.Persistent,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy() as IPlaced;
+                            });
+                    }
+                    else
+                    {
+                        item.Persistent.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3191,12 +3205,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
                 try
                 {
-                    item.Temporary.SetTo(
-                        items: rhs.Temporary,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy() as IPlaced;
-                        });
+                    if (rhs.Temporary.HasBeenSet)
+                    {
+                        item.Temporary.SetTo(
+                            items: rhs.Temporary,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy() as IPlaced;
+                            });
+                    }
+                    else
+                    {
+                        item.Temporary.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3217,12 +3238,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
                 try
                 {
-                    item.VisibleWhenDistant.SetTo(
-                        items: rhs.VisibleWhenDistant,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy() as IPlaced;
-                        });
+                    if (rhs.VisibleWhenDistant.HasBeenSet)
+                    {
+                        item.VisibleWhenDistant.SetTo(
+                            items: rhs.VisibleWhenDistant,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy() as IPlaced;
+                            });
+                    }
+                    else
+                    {
+                        item.VisibleWhenDistant.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

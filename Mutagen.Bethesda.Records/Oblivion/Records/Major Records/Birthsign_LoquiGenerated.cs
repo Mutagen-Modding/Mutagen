@@ -1680,9 +1680,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Birthsign_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetTo(
-                        rhs.Spells,
-                        (r) => new FormIDLink<Spell>(r.FormKey));
+                    if (rhs.Spells.HasBeenSet)
+                    {
+                        item.Spells.SetTo(
+                            rhs.Spells,
+                            (r) => new FormIDLink<Spell>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Spells.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

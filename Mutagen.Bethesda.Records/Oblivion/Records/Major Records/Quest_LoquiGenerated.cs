@@ -1982,14 +1982,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetTo(
-                        items: rhs.Conditions,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Conditions.HasBeenSet)
+                    {
+                        item.Conditions.SetTo(
+                            items: rhs.Conditions,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Conditions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2006,14 +2013,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
                 try
                 {
-                    item.Stages.SetTo(
-                        items: rhs.Stages,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Stages.HasBeenSet)
+                    {
+                        item.Stages.SetTo(
+                            items: rhs.Stages,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Stages.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2030,14 +2044,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Quest_FieldIndex.Targets);
                 try
                 {
-                    item.Targets.SetTo(
-                        items: rhs.Targets,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Targets.HasBeenSet)
+                    {
+                        item.Targets.SetTo(
+                            items: rhs.Targets,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Targets.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

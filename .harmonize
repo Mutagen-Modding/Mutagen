@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>088038e5b4a42e9b59d451dbb12c405a5a7e19ee</Sha>
+         <Sha>3479f777b36d311f3b58ae6d7cffecc0c2239a12</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-21-2019 21:58:07</CommitDate>
-         <Description>Bugfixes for ClassType</Description>
+         <CommitDate>11-21-2019 22:28:24</CommitDate>
+         <Description>Copies now are only blocked by default if derivative field</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

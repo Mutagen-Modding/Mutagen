@@ -3393,14 +3393,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.WeatherTypes);
                 try
                 {
-                    item.WeatherTypes.SetTo(
-                        items: rhs.WeatherTypes,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.WeatherTypes.HasBeenSet)
+                    {
+                        item.WeatherTypes.SetTo(
+                            items: rhs.WeatherTypes,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.WeatherTypes.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3541,14 +3548,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Weather_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetTo(
-                        items: rhs.Sounds,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Sounds.HasBeenSet)
+                    {
+                        item.Sounds.SetTo(
+                            items: rhs.Sounds,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Sounds.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -5003,14 +5003,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetTo(
-                        items: rhs.Factions,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Factions.HasBeenSet)
+                    {
+                        item.Factions.SetTo(
+                            items: rhs.Factions,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Factions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5061,9 +5068,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetTo(
-                        rhs.Spells,
-                        (r) => new FormIDLink<SpellAbstract>(r.FormKey));
+                    if (rhs.Spells.HasBeenSet)
+                    {
+                        item.Spells.SetTo(
+                            rhs.Spells,
+                            (r) => new FormIDLink<SpellAbstract>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Spells.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5097,14 +5111,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetTo(
-                        items: rhs.Items,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Items.HasBeenSet)
+                    {
+                        item.Items.SetTo(
+                            items: rhs.Items,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Items.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5153,9 +5174,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.AIPackages);
                 try
                 {
-                    item.AIPackages.SetTo(
-                        rhs.AIPackages,
-                        (r) => new FormIDLink<AIPackage>(r.FormKey));
+                    if (rhs.AIPackages.HasBeenSet)
+                    {
+                        item.AIPackages.SetTo(
+                            rhs.AIPackages,
+                            (r) => new FormIDLink<AIPackage>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.AIPackages.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5172,7 +5200,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Animations);
                 try
                 {
-                    item.Animations.SetTo(rhs.Animations);
+                    if (rhs.Animations.HasBeenSet)
+                    {
+                        item.Animations.SetTo(rhs.Animations);
+                    }
+                    else
+                    {
+                        item.Animations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5367,9 +5402,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)NPC_FieldIndex.Eyes);
                 try
                 {
-                    item.Eyes.SetTo(
-                        rhs.Eyes,
-                        (r) => new FormIDLink<Eye>(r.FormKey));
+                    if (rhs.Eyes.HasBeenSet)
+                    {
+                        item.Eyes.SetTo(
+                            rhs.Eyes,
+                            (r) => new FormIDLink<Eye>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Eyes.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

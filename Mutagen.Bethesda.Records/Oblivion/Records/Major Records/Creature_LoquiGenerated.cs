@@ -4373,14 +4373,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetTo(
-                        items: rhs.Items,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Items.HasBeenSet)
+                    {
+                        item.Items.SetTo(
+                            items: rhs.Items,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Items.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4397,9 +4404,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetTo(
-                        rhs.Spells,
-                        (r) => new FormIDLink<SpellAbstract>(r.FormKey));
+                    if (rhs.Spells.HasBeenSet)
+                    {
+                        item.Spells.SetTo(
+                            rhs.Spells,
+                            (r) => new FormIDLink<SpellAbstract>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Spells.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4416,7 +4430,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Models);
                 try
                 {
-                    item.Models.SetTo(rhs.Models);
+                    if (rhs.Models.HasBeenSet)
+                    {
+                        item.Models.SetTo(rhs.Models);
+                    }
+                    else
+                    {
+                        item.Models.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4485,14 +4506,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Factions);
                 try
                 {
-                    item.Factions.SetTo(
-                        items: rhs.Factions,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Factions.HasBeenSet)
+                    {
+                        item.Factions.SetTo(
+                            items: rhs.Factions,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Factions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4571,9 +4599,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.AIPackages);
                 try
                 {
-                    item.AIPackages.SetTo(
-                        rhs.AIPackages,
-                        (r) => new FormIDLink<AIPackage>(r.FormKey));
+                    if (rhs.AIPackages.HasBeenSet)
+                    {
+                        item.AIPackages.SetTo(
+                            rhs.AIPackages,
+                            (r) => new FormIDLink<AIPackage>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.AIPackages.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4590,7 +4625,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Animations);
                 try
                 {
-                    item.Animations.SetTo(rhs.Animations);
+                    if (rhs.Animations.HasBeenSet)
+                    {
+                        item.Animations.SetTo(rhs.Animations);
+                    }
+                    else
+                    {
+                        item.Animations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4845,14 +4887,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Creature_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetTo(
-                        items: rhs.Sounds,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Sounds.HasBeenSet)
+                    {
+                        item.Sounds.SetTo(
+                            items: rhs.Sounds,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Sounds.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

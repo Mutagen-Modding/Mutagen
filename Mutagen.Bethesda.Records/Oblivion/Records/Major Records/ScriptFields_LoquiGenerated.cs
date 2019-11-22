@@ -1626,14 +1626,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.LocalVariables);
                 try
                 {
-                    item.LocalVariables.SetTo(
-                        items: rhs.LocalVariables,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.LocalVariables.HasBeenSet)
+                    {
+                        item.LocalVariables.SetTo(
+                            items: rhs.LocalVariables,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.LocalVariables.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1650,14 +1657,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
                 try
                 {
-                    item.References.SetTo(
-                        items: rhs.References,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.References.HasBeenSet)
+                    {
+                        item.References.SetTo(
+                            items: rhs.References,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.References.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

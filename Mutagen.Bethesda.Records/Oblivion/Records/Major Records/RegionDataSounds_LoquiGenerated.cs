@@ -1408,14 +1408,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.Sounds);
                 try
                 {
-                    item.Sounds.SetTo(
-                        items: rhs.Sounds,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Sounds.HasBeenSet)
+                    {
+                        item.Sounds.SetTo(
+                            items: rhs.Sounds,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Sounds.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

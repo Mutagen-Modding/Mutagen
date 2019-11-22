@@ -1290,7 +1290,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionArea_FieldIndex.RegionPoints);
                 try
                 {
-                    item.RegionPoints.SetTo(rhs.RegionPoints);
+                    if (rhs.RegionPoints.HasBeenSet)
+                    {
+                        item.RegionPoints.SetTo(rhs.RegionPoints);
+                    }
+                    else
+                    {
+                        item.RegionPoints.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

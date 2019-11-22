@@ -1895,14 +1895,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Layers);
                 try
                 {
-                    item.Layers.SetTo(
-                        items: rhs.Layers,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Layers.HasBeenSet)
+                    {
+                        item.Layers.SetTo(
+                            items: rhs.Layers,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Layers.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1919,9 +1926,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Landscape_FieldIndex.Textures);
                 try
                 {
-                    item.Textures.SetTo(
-                        rhs.Textures,
-                        (r) => new FormIDLink<LandTexture>(r.FormKey));
+                    if (rhs.Textures.HasBeenSet)
+                    {
+                        item.Textures.SetTo(
+                            rhs.Textures,
+                            (r) => new FormIDLink<LandTexture>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Textures.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

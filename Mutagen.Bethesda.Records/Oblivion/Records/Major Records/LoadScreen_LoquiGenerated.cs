@@ -1580,14 +1580,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LoadScreen_FieldIndex.Locations);
                 try
                 {
-                    item.Locations.SetTo(
-                        items: rhs.Locations,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Locations.HasBeenSet)
+                    {
+                        item.Locations.SetTo(
+                            items: rhs.Locations,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Locations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -1279,9 +1279,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataGrasses_FieldIndex.Grasses);
                 try
                 {
-                    item.Grasses.SetTo(
-                        rhs.Grasses,
-                        (r) => new FormIDLink<Grass>(r.FormKey));
+                    if (rhs.Grasses.HasBeenSet)
+                    {
+                        item.Grasses.SetTo(
+                            rhs.Grasses,
+                            (r) => new FormIDLink<Grass>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Grasses.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

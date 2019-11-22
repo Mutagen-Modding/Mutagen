@@ -2416,9 +2416,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
                 try
                 {
-                    item.CounterEffects.SetTo(
-                        rhs.CounterEffects,
-                        (r) => new EDIDLink<MagicEffect>(r.EDID));
+                    if (rhs.CounterEffects.HasBeenSet)
+                    {
+                        item.CounterEffects.SetTo(
+                            rhs.CounterEffects,
+                            (r) => new EDIDLink<MagicEffect>(r.EDID));
+                    }
+                    else
+                    {
+                        item.CounterEffects.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

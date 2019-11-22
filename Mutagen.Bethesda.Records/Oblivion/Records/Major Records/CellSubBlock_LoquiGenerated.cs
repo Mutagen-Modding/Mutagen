@@ -1371,17 +1371,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetTo(
-                        items: rhs.Items,
-                        converter: (r) =>
-                        {
-                            var copyRet = new Cell(r.FormKey);
-                            copyRet.DeepCopyFieldsFrom(
-                                rhs: r,
-                                copyMask: default(TranslationCrystal),
-                                errorMask: errorMask);
-                            return copyRet;
-                        });
+                    if (rhs.Items.HasBeenSet)
+                    {
+                        item.Items.SetTo(
+                            items: rhs.Items,
+                            converter: (r) =>
+                            {
+                                var copyRet = new Cell(r.FormKey);
+                                copyRet.DeepCopyFieldsFrom(
+                                    rhs: r,
+                                    copyMask: default(TranslationCrystal),
+                                    errorMask: errorMask);
+                                return copyRet;
+                            });
+                    }
+                    else
+                    {
+                        item.Items.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

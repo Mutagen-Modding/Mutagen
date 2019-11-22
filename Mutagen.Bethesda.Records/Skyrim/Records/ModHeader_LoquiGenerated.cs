@@ -2169,9 +2169,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
                 try
                 {
-                    item.OverriddenForms.SetTo(
-                        rhs.OverriddenForms,
-                        (r) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
+                    if (rhs.OverriddenForms.HasBeenSet)
+                    {
+                        item.OverriddenForms.SetTo(
+                            rhs.OverriddenForms,
+                            (r) => new FormIDLink<SkyrimMajorRecord>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.OverriddenForms.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

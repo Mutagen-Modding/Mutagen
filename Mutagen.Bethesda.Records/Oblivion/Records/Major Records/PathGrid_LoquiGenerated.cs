@@ -1595,14 +1595,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToPointConnections);
                 try
                 {
-                    item.PointToPointConnections.SetTo(
-                        items: rhs.PointToPointConnections,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.PointToPointConnections.HasBeenSet)
+                    {
+                        item.PointToPointConnections.SetTo(
+                            items: rhs.PointToPointConnections,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.PointToPointConnections.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1643,14 +1650,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.InterCellConnections);
                 try
                 {
-                    item.InterCellConnections.SetTo(
-                        items: rhs.InterCellConnections,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.InterCellConnections.HasBeenSet)
+                    {
+                        item.InterCellConnections.SetTo(
+                            items: rhs.InterCellConnections,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.InterCellConnections.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1667,14 +1681,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 try
                 {
-                    item.PointToReferenceMappings.SetTo(
-                        items: rhs.PointToReferenceMappings,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.PointToReferenceMappings.HasBeenSet)
+                    {
+                        item.PointToReferenceMappings.SetTo(
+                            items: rhs.PointToReferenceMappings,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.PointToReferenceMappings.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

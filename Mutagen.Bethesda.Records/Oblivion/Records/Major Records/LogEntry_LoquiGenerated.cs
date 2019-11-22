@@ -1515,14 +1515,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LogEntry_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetTo(
-                        items: rhs.Conditions,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Conditions.HasBeenSet)
+                    {
+                        item.Conditions.SetTo(
+                            items: rhs.Conditions,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Conditions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

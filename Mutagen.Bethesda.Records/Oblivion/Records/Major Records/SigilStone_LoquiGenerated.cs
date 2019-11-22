@@ -2004,14 +2004,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)SigilStone_FieldIndex.Effects);
                 try
                 {
-                    item.Effects.SetTo(
-                        items: rhs.Effects,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Effects.HasBeenSet)
+                    {
+                        item.Effects.SetTo(
+                            items: rhs.Effects,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Effects.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

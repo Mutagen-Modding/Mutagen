@@ -1298,6 +1298,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
+            {
+                item.DataType = rhs.DataType;
+            }
             DeepCopyFieldsFrom(
                 (IRegionData)item,
                 (IRegionDataGetter)rhs,

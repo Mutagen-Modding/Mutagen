@@ -2174,7 +2174,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Tree_FieldIndex.SpeedTreeSeeds);
                 try
                 {
-                    item.SpeedTreeSeeds.SetTo(rhs.SpeedTreeSeeds);
+                    if (rhs.SpeedTreeSeeds.HasBeenSet)
+                    {
+                        item.SpeedTreeSeeds.SetTo(rhs.SpeedTreeSeeds);
+                    }
+                    else
+                    {
+                        item.SpeedTreeSeeds.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

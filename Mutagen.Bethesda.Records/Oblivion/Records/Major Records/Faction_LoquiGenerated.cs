@@ -1730,14 +1730,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetTo(
-                        items: rhs.Relations,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Relations.HasBeenSet)
+                    {
+                        item.Relations.SetTo(
+                            items: rhs.Relations,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Relations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1802,14 +1809,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
                 try
                 {
-                    item.Ranks.SetTo(
-                        items: rhs.Ranks,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Ranks.HasBeenSet)
+                    {
+                        item.Ranks.SetTo(
+                            items: rhs.Ranks,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Ranks.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

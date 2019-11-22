@@ -1358,6 +1358,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask,
             TranslationCrystal copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.LayerNumber) ?? true))
+            {
+                item.LayerNumber = rhs.LayerNumber;
+            }
             DeepCopyFieldsFrom(
                 (IBaseLayer)item,
                 (IBaseLayerGetter)rhs,

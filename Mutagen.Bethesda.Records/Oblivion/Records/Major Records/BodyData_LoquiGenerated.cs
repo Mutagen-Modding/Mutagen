@@ -1332,14 +1332,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)BodyData_FieldIndex.BodyParts);
                 try
                 {
-                    item.BodyParts.SetTo(
-                        items: rhs.BodyParts,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.BodyParts.HasBeenSet)
+                    {
+                        item.BodyParts.SetTo(
+                            items: rhs.BodyParts,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.BodyParts.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

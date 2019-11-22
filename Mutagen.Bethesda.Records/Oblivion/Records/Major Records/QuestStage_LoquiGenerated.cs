@@ -1254,14 +1254,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)QuestStage_FieldIndex.LogEntries);
                 try
                 {
-                    item.LogEntries.SetTo(
-                        items: rhs.LogEntries,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.LogEntries.HasBeenSet)
+                    {
+                        item.LogEntries.SetTo(
+                            items: rhs.LogEntries,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.LogEntries.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

@@ -1686,9 +1686,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Quests);
                 try
                 {
-                    item.Quests.SetTo(
-                        rhs.Quests,
-                        (r) => new FormIDLink<Quest>(r.FormKey));
+                    if (rhs.Quests.HasBeenSet)
+                    {
+                        item.Quests.SetTo(
+                            rhs.Quests,
+                            (r) => new FormIDLink<Quest>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Quests.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1757,17 +1764,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogTopic_FieldIndex.Items);
                 try
                 {
-                    item.Items.SetTo(
-                        items: rhs.Items,
-                        converter: (r) =>
-                        {
-                            var copyRet = new DialogItem(r.FormKey);
-                            copyRet.DeepCopyFieldsFrom(
-                                rhs: r,
-                                copyMask: default(TranslationCrystal),
-                                errorMask: errorMask);
-                            return copyRet;
-                        });
+                    if (rhs.Items.HasBeenSet)
+                    {
+                        item.Items.SetTo(
+                            items: rhs.Items,
+                            converter: (r) =>
+                            {
+                                var copyRet = new DialogItem(r.FormKey);
+                                copyRet.DeepCopyFieldsFrom(
+                                    rhs: r,
+                                    copyMask: default(TranslationCrystal),
+                                    errorMask: errorMask);
+                                return copyRet;
+                            });
+                    }
+                    else
+                    {
+                        item.Items.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

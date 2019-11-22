@@ -2090,9 +2090,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Topics);
                 try
                 {
-                    item.Topics.SetTo(
-                        rhs.Topics,
-                        (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    if (rhs.Topics.HasBeenSet)
+                    {
+                        item.Topics.SetTo(
+                            rhs.Topics,
+                            (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Topics.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2109,14 +2116,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Responses);
                 try
                 {
-                    item.Responses.SetTo(
-                        items: rhs.Responses,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Responses.HasBeenSet)
+                    {
+                        item.Responses.SetTo(
+                            items: rhs.Responses,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Responses.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2133,14 +2147,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetTo(
-                        items: rhs.Conditions,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Conditions.HasBeenSet)
+                    {
+                        item.Conditions.SetTo(
+                            items: rhs.Conditions,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Conditions.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2157,9 +2178,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.Choices);
                 try
                 {
-                    item.Choices.SetTo(
-                        rhs.Choices,
-                        (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    if (rhs.Choices.HasBeenSet)
+                    {
+                        item.Choices.SetTo(
+                            rhs.Choices,
+                            (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Choices.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2176,9 +2204,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)DialogItem_FieldIndex.LinkFrom);
                 try
                 {
-                    item.LinkFrom.SetTo(
-                        rhs.LinkFrom,
-                        (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    if (rhs.LinkFrom.HasBeenSet)
+                    {
+                        item.LinkFrom.SetTo(
+                            rhs.LinkFrom,
+                            (r) => new FormIDLink<DialogTopic>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.LinkFrom.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

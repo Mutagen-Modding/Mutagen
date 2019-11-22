@@ -1725,14 +1725,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                 try
                 {
-                    item.Entries.SetTo(
-                        items: rhs.Entries,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy<NPCSpawn, INPCSpawnGetter, NPCSpawn_TranslationMask>(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Entries.HasBeenSet)
+                    {
+                        item.Entries.SetTo(
+                            items: rhs.Entries,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy<NPCSpawn, INPCSpawnGetter, NPCSpawn_TranslationMask>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Entries.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

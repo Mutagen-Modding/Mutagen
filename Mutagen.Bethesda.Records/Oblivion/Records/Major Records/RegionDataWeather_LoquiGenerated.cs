@@ -1287,14 +1287,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)RegionDataWeather_FieldIndex.Weathers);
                 try
                 {
-                    item.Weathers.SetTo(
-                        items: rhs.Weathers,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Weathers.HasBeenSet)
+                    {
+                        item.Weathers.SetTo(
+                            items: rhs.Weathers,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Weathers.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

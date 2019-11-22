@@ -1415,7 +1415,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)MapMarker_FieldIndex.Types);
                 try
                 {
-                    item.Types.SetTo(rhs.Types);
+                    if (rhs.Types.HasBeenSet)
+                    {
+                        item.Types.SetTo(rhs.Types);
+                    }
+                    else
+                    {
+                        item.Types.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

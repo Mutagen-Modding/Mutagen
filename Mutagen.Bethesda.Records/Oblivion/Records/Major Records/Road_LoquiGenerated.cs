@@ -1334,14 +1334,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Road_FieldIndex.Points);
                 try
                 {
-                    item.Points.SetTo(
-                        items: rhs.Points,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Points.HasBeenSet)
+                    {
+                        item.Points.SetTo(
+                            items: rhs.Points,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Points.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

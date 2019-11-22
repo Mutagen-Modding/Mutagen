@@ -2002,9 +2002,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Door_FieldIndex.RandomTeleportDestinations);
                 try
                 {
-                    item.RandomTeleportDestinations.SetTo(
-                        rhs.RandomTeleportDestinations,
-                        (r) => new FormIDLink<Place>(r.FormKey));
+                    if (rhs.RandomTeleportDestinations.HasBeenSet)
+                    {
+                        item.RandomTeleportDestinations.SetTo(
+                            rhs.RandomTeleportDestinations,
+                            (r) => new FormIDLink<Place>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.RandomTeleportDestinations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

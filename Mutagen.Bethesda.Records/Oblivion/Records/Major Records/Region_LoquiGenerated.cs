@@ -2069,14 +2069,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
-                    item.Areas.SetTo(
-                        items: rhs.Areas,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Areas.HasBeenSet)
+                    {
+                        item.Areas.SetTo(
+                            items: rhs.Areas,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Areas.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

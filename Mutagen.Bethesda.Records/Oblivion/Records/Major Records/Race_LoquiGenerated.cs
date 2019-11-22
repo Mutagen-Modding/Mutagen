@@ -3140,9 +3140,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Spells);
                 try
                 {
-                    item.Spells.SetTo(
-                        rhs.Spells,
-                        (r) => new FormIDLink<Spell>(r.FormKey));
+                    if (rhs.Spells.HasBeenSet)
+                    {
+                        item.Spells.SetTo(
+                            rhs.Spells,
+                            (r) => new FormIDLink<Spell>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Spells.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3159,14 +3166,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Relations);
                 try
                 {
-                    item.Relations.SetTo(
-                        items: rhs.Relations,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.Relations.HasBeenSet)
+                    {
+                        item.Relations.SetTo(
+                            items: rhs.Relations,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.Relations.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3374,14 +3388,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.FaceData);
                 try
                 {
-                    item.FaceData.SetTo(
-                        items: rhs.FaceData,
-                        converter: (r) =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        });
+                    if (rhs.FaceData.HasBeenSet)
+                    {
+                        item.FaceData.SetTo(
+                            items: rhs.FaceData,
+                            converter: (r) =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            });
+                    }
+                    else
+                    {
+                        item.FaceData.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3426,9 +3447,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
                 try
                 {
-                    item.Hairs.SetTo(
-                        rhs.Hairs,
-                        (r) => new FormIDLink<Hair>(r.FormKey));
+                    if (rhs.Hairs.HasBeenSet)
+                    {
+                        item.Hairs.SetTo(
+                            rhs.Hairs,
+                            (r) => new FormIDLink<Hair>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Hairs.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3445,9 +3473,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                 try
                 {
-                    item.Eyes.SetTo(
-                        rhs.Eyes,
-                        (r) => new FormIDLink<Eye>(r.FormKey));
+                    if (rhs.Eyes.HasBeenSet)
+                    {
+                        item.Eyes.SetTo(
+                            rhs.Eyes,
+                            (r) => new FormIDLink<Eye>(r.FormKey));
+                    }
+                    else
+                    {
+                        item.Eyes.Unset();
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
