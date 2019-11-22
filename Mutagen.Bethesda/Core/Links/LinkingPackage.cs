@@ -48,6 +48,30 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        public bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec)
+        {
+            if (!TryGetMajorRecords(formKey.ModKey, out var dict))
+            {
+                majorRec = default;
+                return false;
+            }
+            return dict.TryGetValue(formKey, out majorRec);
+        }
+
+        public bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            // ToDo
+            // Improve optimization logic to not import unrelated record types
+            if (!TryGetMajorRecord(formKey, out var rec))
+            {
+                majorRec = default;
+                return false;
+            }
+            majorRec = rec as TMajor;
+            return majorRec != null;
+        }
+
         public void SetSourceMod(TMod sourceMod)
         {
             this.SourceMod = sourceMod;
