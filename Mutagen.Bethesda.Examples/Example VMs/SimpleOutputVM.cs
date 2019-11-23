@@ -44,15 +44,22 @@ namespace Mutagen.Bethesda.Examples
             LastTiming = "...";
             return Task.Run(async () =>
             {
-                Output.Clear();
+                try
+                {
+                    Output.Clear();
 
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                await ToDo();
-                sw.Stop();
-                LastTiming = sw.Elapsed.ToString(@"mm\:ss\.fff");
-                this.Output.AddRange(DelayedOutput);
-                DelayedOutput.Clear();
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                    await ToDo();
+                    sw.Stop();
+                    LastTiming = sw.Elapsed.ToString(@"mm\:ss\.fff");
+                    this.Output.Add(DelayedOutput);
+                    DelayedOutput.Clear();
+                }
+                catch (Exception ex)
+                {
+                    this.Output.Add($"Exception: {ex}");
+                }
             });
         }
 
