@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Examples
         public List<string> DelayedOutput { get; } = new List<string>();
 
         public IReactiveCommand RunCommand { get; }
+        public IReactiveCommand ClearCommand { get; }
 
         [Reactive]
         public string LastTiming { get; private set; }
@@ -29,6 +30,7 @@ namespace Mutagen.Bethesda.Examples
             : base(mvm)
         {
             this.RunCommand = ReactiveCommand.CreateFromTask(execute: Run);
+            this.ClearCommand = ReactiveCommand.Create(Output.Clear);
             this.Output.Connect()
                 .Buffer(TimeSpan.FromMilliseconds(100))
                 .Where(l => l.Count > 0)
