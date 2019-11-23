@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Examples
 
         protected override async Task ToDo()
         {
-            PrintContentCode.PrintContent(this.MainVM.ModFilePath, (s) => this.Output.Add(s));
+            PrintContentCode.PrintContent(this.MainVM.ModFilePath, DelayedOutput.Add);
         }
     }
 }

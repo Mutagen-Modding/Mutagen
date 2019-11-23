@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Examples
         {
         }
 
-        protected override Task ToDo()
+        protected override async Task ToDo()
         {
-            return RecordAccessThroughFormLinksCode.AccessRecords(this.MainVM.ModFilePath, (s) => this.Output.Add(s));
+            await RecordAccessThroughFormLinksCode.AccessRecords(this.MainVM.ModFilePath, DelayedOutput.Add);
         }
     }
 }

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
+using System.Diagnostics;
+using ReactiveUI.Fody.Helpers;
 
 namespace Mutagen.Bethesda.Examples
 {
@@ -16,11 +18,12 @@ namespace Mutagen.Bethesda.Examples
     {
         public ObservableCollectionExtended<string> OutputDisplay { get; } = new ObservableCollectionExtended<string>();
         public SourceList<string> Output { get; } = new SourceList<string>();
+        public List<string> DelayedOutput { get; } = new List<string>();
 
         public IReactiveCommand RunCommand { get; }
 
-        private readonly ObservableAsPropertyHelper<string> _LastTiming;
-        public string LastTiming => _LastTiming.Value;
+        [Reactive]
+        public string LastTiming { get; private set; }
 
         public SimpleOutputVM(MainVM mvm)
             : base(mvm)
@@ -34,23 +37,22 @@ namespace Mutagen.Bethesda.Examples
                 .Bind(this.OutputDisplay)
                 .Subscribe()
                 .DisposeWith(this.CompositeDisposable);
-
-            this._LastTiming = this.RunCommand.IsExecuting
-                .DistinctUntilChanged()
-                .TimeInterval()
-                .Select(timespan => timespan.Value ? "..." : timespan.Interval.ToString(@"mm\:ss\.fff"))
-                .Skip(1)
-                .StartWith(string.Empty)
-                .ToProperty(this, nameof(LastTiming));
         }
 
         protected Task Run()
         {
+            LastTiming = "...";
             return Task.Run(async () =>
             {
-                this.Output.Clear();
+                Output.Clear();
+
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 await ToDo();
-                GC.Collect();
+                sw.Stop();
+                LastTiming = sw.Elapsed.ToString(@"mm\:ss\.fff");
+                this.Output.AddRange(DelayedOutput);
+                DelayedOutput.Clear();
             });
         }
 
