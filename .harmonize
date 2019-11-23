@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0eca3e7dd5b491635096cc6991c8f03f3ce325e2</Sha>
+         <Sha>85e7d2d50cb7ef05afcc15d9ad24b1643b7e8499</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-19-2019 18:17:02</CommitDate>
-         <Description>Missing ISetList.SetTo override</Description>
+         <CommitDate>11-23-2019 17:13:58</CommitDate>
+         <Description>NuGet update.  .NET 4.8</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3479f777b36d311f3b58ae6d7cffecc0c2239a12</Sha>
+         <Sha>12827d368f27a3c77ca76a03cb22731c7ec0c55c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-21-2019 22:28:24</CommitDate>
-         <Description>Copies now are only blocked by default if derivative field</Description>
+         <CommitDate>11-23-2019 17:14:20</CommitDate>
+         <Description>Nuget update</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
