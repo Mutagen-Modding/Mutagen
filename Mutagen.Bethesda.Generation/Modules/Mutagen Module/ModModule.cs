@@ -37,41 +37,6 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);");
 
-            using (var args = new FunctionWrapper(fg,
-                "protected void SetMajorRecord"))
-            {
-                args.Add("FormKey id");
-                args.Add("IMajorRecord record");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("switch (record)");
-                using (new BraceWrapper(fg))
-                {
-                    foreach (var field in obj.IterateFields())
-                    {
-                        if (!(field is LoquiType loqui)) continue;
-                        if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                        if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
-                        {
-                            throw new ArgumentException();
-                        }
-                        if (!await subObj.IsMajorRecord()) continue;
-                        fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"{loqui.ProtectedName}.Items.Set({field.Name.ToLower()});");
-                            fg.AppendLine($"break;");
-                        }
-                    }
-                    fg.AppendLine("default:");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"throw new ArgumentException($\"Unknown settable MajorRecord type: {{record?.GetType()}}\");");
-                    }
-                }
-            }
-            fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
                 "public void AddRecords"))
@@ -196,35 +161,6 @@ namespace Mutagen.Bethesda.Generation
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             await base.GenerateInCtor(obj, fg);
-        }
-
-        private async Task GenerateObservableMajorRecordPopulation(ObjectGeneration obj, FileGeneration fg)
-        {
-            await obj.FieldCtorsGeneratedSignal;
-            using (var args = new ArgsWrapper(fg,
-                $"Observable.Merge")
-            {
-                SemiColon = false
-            })
-            {
-                foreach (var field in obj.IterateFields())
-                {
-                    if (!(field is LoquiType loqui)) continue;
-                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
-                    {
-                        throw new ArgumentException();
-                    }
-                    if (await subObj.IsMajorRecord())
-                    {
-                        args.Add($"{field.ProtectedName}.Items.Connect().Transform<IMajorRecord, {subObj.Name}, FormKey>((i) => i)");
-                    }
-                }
-            }
-            using (new DepthWrapper(fg))
-            {
-                fg.AppendLine(".PopulateInto(_majorRecords);");
-            }
         }
 
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)

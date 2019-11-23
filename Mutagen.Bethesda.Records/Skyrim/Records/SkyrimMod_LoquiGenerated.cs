@@ -321,38 +321,6 @@ namespace Mutagen.Bethesda.Skyrim
         void IModGetter.WriteToBinary(string path, ModKey? modKeyOverride) => this.WriteToBinary(path, modKeyOverride, importMask: null);
         Task IModGetter.WriteToBinaryAsync(string path, ModKey? modKeyOverride) => this.WriteToBinaryAsync(path, modKeyOverride);
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKeyOverride) => this.WriteToBinaryParallel(path, modKeyOverride);
-        protected void SetMajorRecord(
-            FormKey id,
-            IMajorRecord record)
-        {
-            switch (record)
-            {
-                case GameSetting gamesettings:
-                    _GameSettings_Object.Items.Set(gamesettings);
-                    break;
-                case Keyword keywords:
-                    _Keywords_Object.Items.Set(keywords);
-                    break;
-                case LocationReferenceType locationreferencetypes:
-                    _LocationReferenceTypes_Object.Items.Set(locationreferencetypes);
-                    break;
-                case ActionRecord actions:
-                    _Actions_Object.Items.Set(actions);
-                    break;
-                case TextureSet texturesets:
-                    _TextureSets_Object.Items.Set(texturesets);
-                    break;
-                case Global globals:
-                    _Globals_Object.Items.Set(globals);
-                    break;
-                case Class classes:
-                    _Classes_Object.Items.Set(classes);
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown settable MajorRecord type: {record?.GetType()}");
-            }
-        }
-
         public void AddRecords(
             SkyrimMod rhsMod,
             GroupMask mask = null)
