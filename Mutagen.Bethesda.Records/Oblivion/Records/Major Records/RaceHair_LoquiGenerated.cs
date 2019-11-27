@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RaceHair_Registration : ILoquiRegistration
+    public partial class RaceHair_Registration : ILoquiRegistration
     {
         public static readonly RaceHair_Registration Instance = new RaceHair_Registration();
 
@@ -1238,14 +1238,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceHairCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RaceHairSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceHairSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2032,10 +2038,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceHairCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceHairSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRaceHairGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

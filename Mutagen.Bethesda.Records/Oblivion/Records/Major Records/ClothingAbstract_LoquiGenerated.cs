@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ClothingAbstract_Registration : ILoquiRegistration
+    public partial class ClothingAbstract_Registration : ILoquiRegistration
     {
         public static readonly ClothingAbstract_Registration Instance = new ClothingAbstract_Registration();
 
@@ -2720,11 +2720,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
         public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingAbstractCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return ClothingAbstractSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ClothingAbstractSetterTranslationCommon.Instance;
 
         #endregion
@@ -4300,7 +4303,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
         public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ClothingAbstractCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ClothingAbstractSetterTranslationCommon.Instance;
 
         #endregion

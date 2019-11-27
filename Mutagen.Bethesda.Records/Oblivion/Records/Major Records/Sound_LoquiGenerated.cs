@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Sound_Registration : ILoquiRegistration
+    public partial class Sound_Registration : ILoquiRegistration
     {
         public static readonly Sound_Registration Instance = new Sound_Registration();
 
@@ -1629,11 +1629,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
         public new static Sound_Registration Registration => Sound_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return SoundSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SoundSetterTranslationCommon.Instance;
 
         #endregion
@@ -2369,7 +2372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
         public new static Sound_Registration Registration => Sound_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SoundSetterTranslationCommon.Instance;
 
         #endregion

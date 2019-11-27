@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Tree_Registration : ILoquiRegistration
+    public partial class Tree_Registration : ILoquiRegistration
     {
         public static readonly Tree_Registration Instance = new Tree_Registration();
 
@@ -2340,11 +2340,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
         public new static Tree_Registration Registration => Tree_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return TreeSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => TreeSetterTranslationCommon.Instance;
 
         #endregion
@@ -4010,7 +4013,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
         public new static Tree_Registration Registration => Tree_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => TreeSetterTranslationCommon.Instance;
 
         #endregion

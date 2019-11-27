@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AIPackageSchedule_Registration : ILoquiRegistration
+    public partial class AIPackageSchedule_Registration : ILoquiRegistration
     {
         public static readonly AIPackageSchedule_Registration Instance = new AIPackageSchedule_Registration();
 
@@ -1338,14 +1338,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
         public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return AIPackageScheduleSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageScheduleSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2315,10 +2321,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
         public static AIPackageSchedule_Registration Registration => AIPackageSchedule_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageScheduleSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IAIPackageScheduleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

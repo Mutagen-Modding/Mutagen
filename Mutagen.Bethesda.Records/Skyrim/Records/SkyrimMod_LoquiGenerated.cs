@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class SkyrimMod_Registration : ILoquiRegistration
+    public partial class SkyrimMod_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMod_Registration Instance = new SkyrimMod_Registration();
 
@@ -2696,14 +2696,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return SkyrimModSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -4155,10 +4161,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

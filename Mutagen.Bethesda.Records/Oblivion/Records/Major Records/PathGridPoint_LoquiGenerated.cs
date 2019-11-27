@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PathGridPoint_Registration : ILoquiRegistration
+    public partial class PathGridPoint_Registration : ILoquiRegistration
     {
         public static readonly PathGridPoint_Registration Instance = new PathGridPoint_Registration();
 
@@ -1338,14 +1338,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return PathGridPointSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => PathGridPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2325,10 +2331,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
         public static PathGridPoint_Registration Registration => PathGridPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => PathGridPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IPathGridPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

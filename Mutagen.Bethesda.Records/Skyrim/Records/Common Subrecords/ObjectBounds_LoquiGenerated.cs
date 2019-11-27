@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class ObjectBounds_Registration : ILoquiRegistration
+    public partial class ObjectBounds_Registration : ILoquiRegistration
     {
         public static readonly ObjectBounds_Registration Instance = new ObjectBounds_Registration();
 
@@ -1230,14 +1230,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
         public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ObjectBoundsSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ObjectBoundsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2022,10 +2028,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ObjectBounds_Registration.Instance;
         public static ObjectBounds_Registration Registration => ObjectBounds_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ObjectBoundsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ObjectBoundsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IObjectBoundsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

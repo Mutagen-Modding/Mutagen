@@ -835,7 +835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Armor_Registration : ILoquiRegistration
+    public partial class Armor_Registration : ILoquiRegistration
     {
         public static readonly Armor_Registration Instance = new Armor_Registration();
 
@@ -1785,11 +1785,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
         public new static Armor_Registration Registration => Armor_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return ArmorSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ArmorSetterTranslationCommon.Instance;
 
         #endregion
@@ -2801,7 +2804,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
         public new static Armor_Registration Registration => Armor_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ArmorSetterTranslationCommon.Instance;
 
         #endregion

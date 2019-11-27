@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Book_Registration : ILoquiRegistration
+    public partial class Book_Registration : ILoquiRegistration
     {
         public static readonly Book_Registration Instance = new Book_Registration();
 
@@ -2462,11 +2462,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => BookCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return BookSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
 
         #endregion
@@ -3916,7 +3919,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
         public new static Book_Registration Registration => Book_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => BookCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
 
         #endregion

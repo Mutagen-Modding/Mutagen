@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RaceStats_Registration : ILoquiRegistration
+    public partial class RaceStats_Registration : ILoquiRegistration
     {
         public static readonly RaceStats_Registration Instance = new RaceStats_Registration();
 
@@ -1419,14 +1419,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
         public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceStatsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RaceStatsSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceStatsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2567,10 +2573,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStats_Registration.Instance;
         public static RaceStats_Registration Registration => RaceStats_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceStatsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceStatsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRaceStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

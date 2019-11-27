@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Worldspace_Registration : ILoquiRegistration
+    public partial class Worldspace_Registration : ILoquiRegistration
     {
         public static readonly Worldspace_Registration Instance = new Worldspace_Registration();
 
@@ -3105,11 +3105,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return WorldspaceSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WorldspaceSetterTranslationCommon.Instance;
 
         #endregion
@@ -5038,7 +5041,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WorldspaceSetterTranslationCommon.Instance;
 
         #endregion

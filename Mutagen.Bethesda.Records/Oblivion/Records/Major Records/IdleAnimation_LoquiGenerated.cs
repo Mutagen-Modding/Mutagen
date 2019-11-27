@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class IdleAnimation_Registration : ILoquiRegistration
+    public partial class IdleAnimation_Registration : ILoquiRegistration
     {
         public static readonly IdleAnimation_Registration Instance = new IdleAnimation_Registration();
 
@@ -1818,11 +1818,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
         public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return IdleAnimationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => IdleAnimationSetterTranslationCommon.Instance;
 
         #endregion
@@ -2884,7 +2887,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IdleAnimation_Registration.Instance;
         public new static IdleAnimation_Registration Registration => IdleAnimation_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => IdleAnimationCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => IdleAnimationSetterTranslationCommon.Instance;
 
         #endregion

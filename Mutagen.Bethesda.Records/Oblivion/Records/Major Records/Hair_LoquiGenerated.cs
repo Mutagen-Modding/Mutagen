@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Hair_Registration : ILoquiRegistration
+    public partial class Hair_Registration : ILoquiRegistration
     {
         public static readonly Hair_Registration Instance = new Hair_Registration();
 
@@ -1822,11 +1822,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
         public new static Hair_Registration Registration => Hair_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return HairSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => HairSetterTranslationCommon.Instance;
 
         #endregion
@@ -2701,7 +2704,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
         public new static Hair_Registration Registration => Hair_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => HairCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => HairSetterTranslationCommon.Instance;
 
         #endregion

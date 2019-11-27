@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class BaseLayer_Registration : ILoquiRegistration
+    public partial class BaseLayer_Registration : ILoquiRegistration
     {
         public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
 
@@ -1445,14 +1445,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterInstance()
         {
             return BaseLayerSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2353,10 +2359,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
         public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

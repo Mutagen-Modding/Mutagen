@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RegionSound_Registration : ILoquiRegistration
+    public partial class RegionSound_Registration : ILoquiRegistration
     {
         public static readonly RegionSound_Registration Instance = new RegionSound_Registration();
 
@@ -1275,14 +1275,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
         public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RegionSoundSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RegionSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2126,10 +2132,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionSound_Registration.Instance;
         public static RegionSound_Registration Registration => RegionSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RegionSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RegionSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRegionSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

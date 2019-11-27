@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Ingredient_Registration : ILoquiRegistration
+    public partial class Ingredient_Registration : ILoquiRegistration
     {
         public static readonly Ingredient_Registration Instance = new Ingredient_Registration();
 
@@ -2259,11 +2259,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
         public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return IngredientSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => IngredientSetterTranslationCommon.Instance;
 
         #endregion
@@ -3615,7 +3618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
         public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => IngredientCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => IngredientSetterTranslationCommon.Instance;
 
         #endregion

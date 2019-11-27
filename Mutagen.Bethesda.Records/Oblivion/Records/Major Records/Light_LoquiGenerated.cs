@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Light_Registration : ILoquiRegistration
+    public partial class Light_Registration : ILoquiRegistration
     {
         public static readonly Light_Registration Instance = new Light_Registration();
 
@@ -2567,11 +2567,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return LightSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
 
         #endregion
@@ -4209,7 +4212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LightCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
 
         #endregion

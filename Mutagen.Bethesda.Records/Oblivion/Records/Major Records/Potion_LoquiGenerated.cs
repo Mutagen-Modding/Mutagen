@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Potion_Registration : ILoquiRegistration
+    public partial class Potion_Registration : ILoquiRegistration
     {
         public static readonly Potion_Registration Instance = new Potion_Registration();
 
@@ -2259,11 +2259,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
         public new static Potion_Registration Registration => Potion_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PotionCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return PotionSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PotionSetterTranslationCommon.Instance;
 
         #endregion
@@ -3615,7 +3618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Potion_Registration.Instance;
         public new static Potion_Registration Registration => Potion_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PotionCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PotionSetterTranslationCommon.Instance;
 
         #endregion

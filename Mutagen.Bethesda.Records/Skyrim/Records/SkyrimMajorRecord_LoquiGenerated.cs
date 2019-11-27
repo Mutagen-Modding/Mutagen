@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class SkyrimMajorRecord_Registration : ILoquiRegistration
+    public partial class SkyrimMajorRecord_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMajorRecord_Registration Instance = new SkyrimMajorRecord_Registration();
 
@@ -1348,11 +1348,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
         public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return SkyrimMajorRecordSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SkyrimMajorRecordSetterTranslationCommon.Instance;
 
         #endregion
@@ -2077,7 +2080,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
         public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SkyrimMajorRecordSetterTranslationCommon.Instance;
 
         #endregion

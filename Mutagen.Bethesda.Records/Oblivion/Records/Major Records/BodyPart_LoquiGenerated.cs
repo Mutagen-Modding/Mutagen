@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class BodyPart_Registration : ILoquiRegistration
+    public partial class BodyPart_Registration : ILoquiRegistration
     {
         public static readonly BodyPart_Registration Instance = new BodyPart_Registration();
 
@@ -1379,14 +1379,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
         public static BodyPart_Registration Registration => BodyPart_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return BodyPartSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => BodyPartSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2180,10 +2186,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
         public static BodyPart_Registration Registration => BodyPart_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => BodyPartSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IBodyPartGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

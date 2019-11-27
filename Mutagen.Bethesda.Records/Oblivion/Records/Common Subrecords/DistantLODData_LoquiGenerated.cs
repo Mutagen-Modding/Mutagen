@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DistantLODData_Registration : ILoquiRegistration
+    public partial class DistantLODData_Registration : ILoquiRegistration
     {
         public static readonly DistantLODData_Registration Instance = new DistantLODData_Registration();
 
@@ -1275,14 +1275,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return DistantLODDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DistantLODDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2130,10 +2136,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
         public static DistantLODData_Registration Registration => DistantLODData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DistantLODDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IDistantLODDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

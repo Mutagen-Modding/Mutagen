@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ContainerItem_Registration : ILoquiRegistration
+    public partial class ContainerItem_Registration : ILoquiRegistration
     {
         public static readonly ContainerItem_Registration Instance = new ContainerItem_Registration();
 
@@ -1226,14 +1226,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ContainerItemSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2017,10 +2023,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ContainerItemCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

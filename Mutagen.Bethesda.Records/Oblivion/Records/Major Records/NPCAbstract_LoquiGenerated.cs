@@ -672,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class NPCAbstract_Registration : ILoquiRegistration
+    public partial class NPCAbstract_Registration : ILoquiRegistration
     {
         public static readonly NPCAbstract_Registration Instance = new NPCAbstract_Registration();
 
@@ -1338,11 +1338,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
         public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => NPCAbstractCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return NPCAbstractSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => NPCAbstractSetterTranslationCommon.Instance;
 
         #endregion
@@ -1919,7 +1922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
         public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => NPCAbstractCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => NPCAbstractSetterTranslationCommon.Instance;
 
         #endregion

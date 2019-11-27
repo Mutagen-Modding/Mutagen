@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AIPackage_Registration : ILoquiRegistration
+    public partial class AIPackage_Registration : ILoquiRegistration
     {
         public static readonly AIPackage_Registration Instance = new AIPackage_Registration();
 
@@ -2025,11 +2025,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return AIPackageSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => AIPackageSetterTranslationCommon.Instance;
 
         #endregion
@@ -3327,7 +3330,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => AIPackageCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => AIPackageSetterTranslationCommon.Instance;
 
         #endregion

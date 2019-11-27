@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Grass_Registration : ILoquiRegistration
+    public partial class Grass_Registration : ILoquiRegistration
     {
         public static readonly Grass_Registration Instance = new Grass_Registration();
 
@@ -2147,11 +2147,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return GrassSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GrassSetterTranslationCommon.Instance;
 
         #endregion
@@ -3647,7 +3650,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GrassCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GrassSetterTranslationCommon.Instance;
 
         #endregion

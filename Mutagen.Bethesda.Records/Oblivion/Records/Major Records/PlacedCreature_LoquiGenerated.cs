@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PlacedCreature_Registration : ILoquiRegistration
+    public partial class PlacedCreature_Registration : ILoquiRegistration
     {
         public static readonly PlacedCreature_Registration Instance = new PlacedCreature_Registration();
 
@@ -2292,11 +2292,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
         public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return PlacedCreatureSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PlacedCreatureSetterTranslationCommon.Instance;
 
         #endregion
@@ -3589,7 +3592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedCreature_Registration.Instance;
         public new static PlacedCreature_Registration Registration => PlacedCreature_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedCreatureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PlacedCreatureSetterTranslationCommon.Instance;
 
         #endregion

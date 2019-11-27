@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class GlobalShort_Registration : ILoquiRegistration
+    public partial class GlobalShort_Registration : ILoquiRegistration
     {
         public static readonly GlobalShort_Registration Instance = new GlobalShort_Registration();
 
@@ -1546,11 +1546,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
         public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return GlobalShortSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GlobalShortSetterTranslationCommon.Instance;
 
         #endregion
@@ -2265,7 +2268,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
         public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GlobalShortSetterTranslationCommon.Instance;
 
         #endregion

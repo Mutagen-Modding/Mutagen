@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Registration
-    public class MasterReference_Registration : ILoquiRegistration
+    public partial class MasterReference_Registration : ILoquiRegistration
     {
         public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
 
@@ -1305,14 +1305,20 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return MasterReferenceSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MasterReferenceSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2101,10 +2107,15 @@ namespace Mutagen.Bethesda.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MasterReferenceCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MasterReferenceSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IMasterReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

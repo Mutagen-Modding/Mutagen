@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class TeleportDestination_Registration : ILoquiRegistration
+    public partial class TeleportDestination_Registration : ILoquiRegistration
     {
         public static readonly TeleportDestination_Registration Instance = new TeleportDestination_Registration();
 
@@ -1280,14 +1280,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return TeleportDestinationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => TeleportDestinationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2136,10 +2142,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
         public static TeleportDestination_Registration Registration => TeleportDestination_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => TeleportDestinationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ITeleportDestinationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

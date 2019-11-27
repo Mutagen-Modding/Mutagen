@@ -3287,7 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class OblivionMod_Registration : ILoquiRegistration
+    public partial class OblivionMod_Registration : ILoquiRegistration
     {
         public static readonly OblivionMod_Registration Instance = new OblivionMod_Registration();
 
@@ -9125,14 +9125,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return OblivionModSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -14583,10 +14589,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

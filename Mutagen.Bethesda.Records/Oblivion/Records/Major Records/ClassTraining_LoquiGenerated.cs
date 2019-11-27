@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ClassTraining_Registration : ILoquiRegistration
+    public partial class ClassTraining_Registration : ILoquiRegistration
     {
         public static readonly ClassTraining_Registration Instance = new ClassTraining_Registration();
 
@@ -1264,14 +1264,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ClassTrainingSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ClassTrainingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2112,10 +2118,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
         public static ClassTraining_Registration Registration => ClassTraining_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ClassTrainingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IClassTrainingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

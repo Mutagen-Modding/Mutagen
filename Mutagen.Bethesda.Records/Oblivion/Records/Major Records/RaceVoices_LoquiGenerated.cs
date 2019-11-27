@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RaceVoices_Registration : ILoquiRegistration
+    public partial class RaceVoices_Registration : ILoquiRegistration
     {
         public static readonly RaceVoices_Registration Instance = new RaceVoices_Registration();
 
@@ -1238,14 +1238,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceVoicesCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RaceVoicesSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceVoicesSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2032,10 +2038,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceVoicesCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceVoicesSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRaceVoicesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

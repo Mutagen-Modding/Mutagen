@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LandTexture_Registration : ILoquiRegistration
+    public partial class LandTexture_Registration : ILoquiRegistration
     {
         public static readonly LandTexture_Registration Instance = new LandTexture_Registration();
 
@@ -1808,11 +1808,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
         public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return LandTextureSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LandTextureSetterTranslationCommon.Instance;
 
         #endregion
@@ -2773,7 +2776,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
         public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LandTextureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LandTextureSetterTranslationCommon.Instance;
 
         #endregion

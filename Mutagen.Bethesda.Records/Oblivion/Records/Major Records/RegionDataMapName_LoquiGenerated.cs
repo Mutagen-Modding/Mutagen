@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RegionDataMapName_Registration : ILoquiRegistration
+    public partial class RegionDataMapName_Registration : ILoquiRegistration
     {
         public static readonly RegionDataMapName_Registration Instance = new RegionDataMapName_Registration();
 
@@ -1391,11 +1391,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
         public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => RegionDataMapNameCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return RegionDataMapNameSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => RegionDataMapNameSetterTranslationCommon.Instance;
 
         #endregion
@@ -2009,7 +2012,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataMapName_Registration.Instance;
         public new static RegionDataMapName_Registration Registration => RegionDataMapName_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => RegionDataMapNameCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => RegionDataMapNameSetterTranslationCommon.Instance;
 
         #endregion

@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class CellBlock_Registration : ILoquiRegistration
+    public partial class CellBlock_Registration : ILoquiRegistration
     {
         public static readonly CellBlock_Registration Instance = new CellBlock_Registration();
 
@@ -1442,14 +1442,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
         public static CellBlock_Registration Registration => CellBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return CellBlockSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CellBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2481,10 +2487,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellBlock_Registration.Instance;
         public static CellBlock_Registration Registration => CellBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CellBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CellBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ICellBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

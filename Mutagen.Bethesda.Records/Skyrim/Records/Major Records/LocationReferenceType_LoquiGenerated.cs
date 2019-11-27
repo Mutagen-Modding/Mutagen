@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class LocationReferenceType_Registration : ILoquiRegistration
+    public partial class LocationReferenceType_Registration : ILoquiRegistration
     {
         public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 
@@ -1487,11 +1487,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
         public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return LocationReferenceTypeSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion
@@ -2142,7 +2145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
         public new static LocationReferenceType_Registration Registration => LocationReferenceType_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion

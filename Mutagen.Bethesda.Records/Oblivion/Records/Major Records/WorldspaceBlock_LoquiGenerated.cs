@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class WorldspaceBlock_Registration : ILoquiRegistration
+    public partial class WorldspaceBlock_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceBlock_Registration Instance = new WorldspaceBlock_Registration();
 
@@ -1478,14 +1478,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
         public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WorldspaceBlockSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2578,10 +2584,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
         public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

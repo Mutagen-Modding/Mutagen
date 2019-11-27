@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Flora_Registration : ILoquiRegistration
+    public partial class Flora_Registration : ILoquiRegistration
     {
         public static readonly Flora_Registration Instance = new Flora_Registration();
 
@@ -2048,11 +2048,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
         public new static Flora_Registration Registration => Flora_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return FloraSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => FloraSetterTranslationCommon.Instance;
 
         #endregion
@@ -3255,7 +3258,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
         public new static Flora_Registration Registration => Flora_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => FloraCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => FloraSetterTranslationCommon.Instance;
 
         #endregion

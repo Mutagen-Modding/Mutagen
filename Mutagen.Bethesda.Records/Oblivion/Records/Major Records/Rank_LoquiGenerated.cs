@@ -873,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Rank_Registration : ILoquiRegistration
+    public partial class Rank_Registration : ILoquiRegistration
     {
         public static readonly Rank_Registration Instance = new Rank_Registration();
 
@@ -1590,14 +1590,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
         public static Rank_Registration Registration => Rank_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RankSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RankSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRankGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRankGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRankGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2528,10 +2534,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
         public static Rank_Registration Registration => Rank_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RankSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRankGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRankGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRankGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

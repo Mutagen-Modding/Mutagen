@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class InterCellPoint_Registration : ILoquiRegistration
+    public partial class InterCellPoint_Registration : ILoquiRegistration
     {
         public static readonly InterCellPoint_Registration Instance = new InterCellPoint_Registration();
 
@@ -1212,14 +1212,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
         public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return InterCellPointSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => InterCellPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -1996,10 +2002,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
         public static InterCellPoint_Registration Registration => InterCellPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => InterCellPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IInterCellPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

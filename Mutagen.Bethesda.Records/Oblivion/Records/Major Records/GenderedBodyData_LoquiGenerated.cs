@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class GenderedBodyData_Registration : ILoquiRegistration
+    public partial class GenderedBodyData_Registration : ILoquiRegistration
     {
         public static readonly GenderedBodyData_Registration Instance = new GenderedBodyData_Registration();
 
@@ -1419,14 +1419,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
         public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GenderedBodyDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return GenderedBodyDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GenderedBodyDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2255,10 +2261,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
         public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GenderedBodyDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GenderedBodyDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IGenderedBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

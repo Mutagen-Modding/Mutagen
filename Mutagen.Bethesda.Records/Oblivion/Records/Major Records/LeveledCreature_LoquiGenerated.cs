@@ -905,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LeveledCreature_Registration : ILoquiRegistration
+    public partial class LeveledCreature_Registration : ILoquiRegistration
     {
         public static readonly LeveledCreature_Registration Instance = new LeveledCreature_Registration();
 
@@ -1962,11 +1962,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return LeveledCreatureSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LeveledCreatureSetterTranslationCommon.Instance;
 
         #endregion
@@ -3026,7 +3029,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => LeveledCreatureSetterTranslationCommon.Instance;
 
         #endregion

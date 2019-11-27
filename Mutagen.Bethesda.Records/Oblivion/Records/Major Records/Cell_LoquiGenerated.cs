@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Cell_Registration : ILoquiRegistration
+    public partial class Cell_Registration : ILoquiRegistration
     {
         public static readonly Cell_Registration Instance = new Cell_Registration();
 
@@ -3470,11 +3470,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
         public new static Cell_Registration Registration => Cell_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return CellSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
@@ -5896,7 +5899,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
         public new static Cell_Registration Registration => Cell_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion

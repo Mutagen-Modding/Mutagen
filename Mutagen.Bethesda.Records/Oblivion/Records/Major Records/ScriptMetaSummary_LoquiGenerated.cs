@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ScriptMetaSummary_Registration : ILoquiRegistration
+    public partial class ScriptMetaSummary_Registration : ILoquiRegistration
     {
         public static readonly ScriptMetaSummary_Registration Instance = new ScriptMetaSummary_Registration();
 
@@ -1363,14 +1363,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
         public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ScriptMetaSummarySetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ScriptMetaSummarySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2346,10 +2352,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
         public static ScriptMetaSummary_Registration Registration => ScriptMetaSummary_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ScriptMetaSummarySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IScriptMetaSummaryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

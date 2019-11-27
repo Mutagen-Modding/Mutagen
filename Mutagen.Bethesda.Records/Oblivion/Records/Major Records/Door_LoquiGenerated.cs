@@ -1024,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Door_Registration : ILoquiRegistration
+    public partial class Door_Registration : ILoquiRegistration
     {
         public static readonly Door_Registration Instance = new Door_Registration();
 
@@ -2226,11 +2226,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
         public new static Door_Registration Registration => Door_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return DoorSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => DoorSetterTranslationCommon.Instance;
 
         #endregion
@@ -3472,7 +3475,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
         public new static Door_Registration Registration => Door_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => DoorSetterTranslationCommon.Instance;
 
         #endregion

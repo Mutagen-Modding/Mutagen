@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Weapon_Registration : ILoquiRegistration
+    public partial class Weapon_Registration : ILoquiRegistration
     {
         public static readonly Weapon_Registration Instance = new Weapon_Registration();
 
@@ -2543,11 +2543,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return WeaponSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WeaponSetterTranslationCommon.Instance;
 
         #endregion
@@ -4174,7 +4177,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WeaponCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WeaponSetterTranslationCommon.Instance;
 
         #endregion

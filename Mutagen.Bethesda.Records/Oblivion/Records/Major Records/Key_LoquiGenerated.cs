@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Key_Registration : ILoquiRegistration
+    public partial class Key_Registration : ILoquiRegistration
     {
         public static readonly Key_Registration Instance = new Key_Registration();
 
@@ -2037,11 +2037,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
         public new static Key_Registration Registration => Key_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => KeyCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return KeySetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => KeySetterTranslationCommon.Instance;
 
         #endregion
@@ -3153,7 +3156,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
         public new static Key_Registration Registration => Key_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => KeyCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => KeySetterTranslationCommon.Instance;
 
         #endregion

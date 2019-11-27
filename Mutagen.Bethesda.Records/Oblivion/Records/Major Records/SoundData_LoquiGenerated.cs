@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class SoundData_Registration : ILoquiRegistration
+    public partial class SoundData_Registration : ILoquiRegistration
     {
         public static readonly SoundData_Registration Instance = new SoundData_Registration();
 
@@ -1334,14 +1334,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterInstance()
         {
             return SoundDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => SoundDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2334,10 +2340,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => SoundDataCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => SoundDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ISoundDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

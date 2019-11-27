@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ListGroup_Registration : ILoquiRegistration
+    public partial class ListGroup_Registration : ILoquiRegistration
     {
         public static readonly ListGroup_Registration Instance = new ListGroup_Registration();
 
@@ -1487,14 +1487,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ListGroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ListGroupSetterCommon<T>.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2529,10 +2535,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ListGroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

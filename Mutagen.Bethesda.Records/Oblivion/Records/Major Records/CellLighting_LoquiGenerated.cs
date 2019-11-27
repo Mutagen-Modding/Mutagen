@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class CellLighting_Registration : ILoquiRegistration
+    public partial class CellLighting_Registration : ILoquiRegistration
     {
         public static readonly CellLighting_Registration Instance = new CellLighting_Registration();
 
@@ -1532,14 +1532,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
         public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return CellLightingSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CellLightingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2764,10 +2770,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellLighting_Registration.Instance;
         public static CellLighting_Registration Registration => CellLighting_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CellLightingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CellLightingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ICellLightingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

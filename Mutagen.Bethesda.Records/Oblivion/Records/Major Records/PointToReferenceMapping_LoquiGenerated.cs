@@ -755,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PointToReferenceMapping_Registration : ILoquiRegistration
+    public partial class PointToReferenceMapping_Registration : ILoquiRegistration
     {
         public static readonly PointToReferenceMapping_Registration Instance = new PointToReferenceMapping_Registration();
 
@@ -1269,14 +1269,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return PointToReferenceMappingSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => PointToReferenceMappingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2143,10 +2149,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
         public static PointToReferenceMapping_Registration Registration => PointToReferenceMapping_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => PointToReferenceMappingSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IPointToReferenceMappingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

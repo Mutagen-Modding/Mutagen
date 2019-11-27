@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Examples.Internals
     #endregion
 
     #region Registration
-    public class MainVM_Registration : ILoquiRegistration
+    public partial class MainVM_Registration : ILoquiRegistration
     {
         public static readonly MainVM_Registration Instance = new MainVM_Registration();
 
@@ -1028,14 +1028,20 @@ namespace Mutagen.Bethesda.Examples
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MainVM_Registration.Instance;
         public static MainVM_Registration Registration => MainVM_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MainVMCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return MainVMSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MainVMSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMainVMGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMainVMGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMainVMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

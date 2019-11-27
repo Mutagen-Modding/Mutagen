@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Registration
-    public class MajorRecord_Registration : ILoquiRegistration
+    public partial class MajorRecord_Registration : ILoquiRegistration
     {
         public static readonly MajorRecord_Registration Instance = new MajorRecord_Registration();
 
@@ -1621,14 +1621,20 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterInstance()
         {
             return MajorRecordSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2525,10 +2531,15 @@ namespace Mutagen.Bethesda.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

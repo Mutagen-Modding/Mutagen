@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Relation_Registration : ILoquiRegistration
+    public partial class Relation_Registration : ILoquiRegistration
     {
         public static readonly Relation_Registration Instance = new Relation_Registration();
 
@@ -1226,14 +1226,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
         public static Relation_Registration Registration => Relation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RelationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RelationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRelationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRelationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2017,10 +2023,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
         public static Relation_Registration Registration => Relation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RelationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRelationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRelationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

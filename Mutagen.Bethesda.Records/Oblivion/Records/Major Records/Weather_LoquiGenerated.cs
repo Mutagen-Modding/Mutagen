@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Weather_Registration : ILoquiRegistration
+    public partial class Weather_Registration : ILoquiRegistration
     {
         public static readonly Weather_Registration Instance = new Weather_Registration();
 
@@ -3678,11 +3678,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
         public new static Weather_Registration Registration => Weather_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return WeatherSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WeatherSetterTranslationCommon.Instance;
 
         #endregion
@@ -6985,7 +6988,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
         public new static Weather_Registration Registration => Weather_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => WeatherSetterTranslationCommon.Instance;
 
         #endregion

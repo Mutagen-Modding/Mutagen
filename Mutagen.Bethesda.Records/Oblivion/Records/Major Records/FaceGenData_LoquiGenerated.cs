@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class FaceGenData_Registration : ILoquiRegistration
+    public partial class FaceGenData_Registration : ILoquiRegistration
     {
         public static readonly FaceGenData_Registration Instance = new FaceGenData_Registration();
 
@@ -1493,14 +1493,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return FaceGenDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => FaceGenDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2362,10 +2368,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => FaceGenDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IFaceGenDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

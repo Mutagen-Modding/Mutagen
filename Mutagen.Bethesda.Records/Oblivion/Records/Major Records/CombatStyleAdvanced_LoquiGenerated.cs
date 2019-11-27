@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class CombatStyleAdvanced_Registration : ILoquiRegistration
+    public partial class CombatStyleAdvanced_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleAdvanced_Registration Instance = new CombatStyleAdvanced_Registration();
 
@@ -2085,14 +2085,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
         public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return CombatStyleAdvancedSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CombatStyleAdvancedSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -4074,10 +4080,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
         public static CombatStyleAdvanced_Registration Registration => CombatStyleAdvanced_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CombatStyleAdvancedSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ICombatStyleAdvancedGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

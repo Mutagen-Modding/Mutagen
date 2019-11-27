@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ScriptFields_Registration : ILoquiRegistration
+    public partial class ScriptFields_Registration : ILoquiRegistration
     {
         public static readonly ScriptFields_Registration Instance = new ScriptFields_Registration();
 
@@ -1723,14 +1723,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
         public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ScriptFieldsSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ScriptFieldsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2964,10 +2970,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptFields_Registration.Instance;
         public static ScriptFields_Registration Registration => ScriptFields_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ScriptFieldsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ScriptFieldsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IScriptFieldsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

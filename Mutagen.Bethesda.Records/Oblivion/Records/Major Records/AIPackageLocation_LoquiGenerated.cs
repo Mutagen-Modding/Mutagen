@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AIPackageLocation_Registration : ILoquiRegistration
+    public partial class AIPackageLocation_Registration : ILoquiRegistration
     {
         public static readonly AIPackageLocation_Registration Instance = new AIPackageLocation_Registration();
 
@@ -1280,14 +1280,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return AIPackageLocationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageLocationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2137,10 +2143,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageLocation_Registration.Instance;
         public static AIPackageLocation_Registration Registration => AIPackageLocation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageLocationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageLocationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IAIPackageLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

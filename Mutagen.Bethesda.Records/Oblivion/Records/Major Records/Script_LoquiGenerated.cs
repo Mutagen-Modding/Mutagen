@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Script_Registration : ILoquiRegistration
+    public partial class Script_Registration : ILoquiRegistration
     {
         public static readonly Script_Registration Instance = new Script_Registration();
 
@@ -1476,11 +1476,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
         public new static Script_Registration Registration => Script_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return ScriptSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ScriptSetterTranslationCommon.Instance;
 
         #endregion
@@ -2118,7 +2121,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
         public new static Script_Registration Registration => Script_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ScriptSetterTranslationCommon.Instance;
 
         #endregion

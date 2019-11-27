@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class GameSettingInt_Registration : ILoquiRegistration
+    public partial class GameSettingInt_Registration : ILoquiRegistration
     {
         public static readonly GameSettingInt_Registration Instance = new GameSettingInt_Registration();
 
@@ -1533,11 +1533,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
         public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingIntCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return GameSettingIntSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GameSettingIntSetterTranslationCommon.Instance;
 
         #endregion
@@ -2217,7 +2220,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingInt_Registration.Instance;
         public new static GameSettingInt_Registration Registration => GameSettingInt_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingIntCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GameSettingIntSetterTranslationCommon.Instance;
 
         #endregion

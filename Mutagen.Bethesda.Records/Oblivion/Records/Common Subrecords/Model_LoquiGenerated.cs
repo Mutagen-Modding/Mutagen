@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Model_Registration : ILoquiRegistration
+    public partial class Model_Registration : ILoquiRegistration
     {
         public static readonly Model_Registration Instance = new Model_Registration();
 
@@ -1369,14 +1369,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ModelSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IModelGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2230,10 +2236,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ModelCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ModelSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IModelGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IModelGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

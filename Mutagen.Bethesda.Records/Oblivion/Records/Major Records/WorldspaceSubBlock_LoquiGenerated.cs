@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class WorldspaceSubBlock_Registration : ILoquiRegistration
+    public partial class WorldspaceSubBlock_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceSubBlock_Registration Instance = new WorldspaceSubBlock_Registration();
 
@@ -1483,14 +1483,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
         public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WorldspaceSubBlockSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceSubBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2583,10 +2589,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceSubBlock_Registration.Instance;
         public static WorldspaceSubBlock_Registration Registration => WorldspaceSubBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceSubBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceSubBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWorldspaceSubBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

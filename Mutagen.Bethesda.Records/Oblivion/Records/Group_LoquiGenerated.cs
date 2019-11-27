@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Group_Registration : ILoquiRegistration
+    public partial class Group_Registration : ILoquiRegistration
     {
         public static readonly Group_Registration Instance = new Group_Registration();
 
@@ -1485,14 +1485,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return GroupSetterCommon<T>.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2510,10 +2516,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DialogResponse_Registration : ILoquiRegistration
+    public partial class DialogResponse_Registration : ILoquiRegistration
     {
         public static readonly DialogResponse_Registration Instance = new DialogResponse_Registration();
 
@@ -1670,14 +1670,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
         public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return DialogResponseSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DialogResponseSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2865,10 +2871,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
         public static DialogResponse_Registration Registration => DialogResponse_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DialogResponseSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IDialogResponseGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

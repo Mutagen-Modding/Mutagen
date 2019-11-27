@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class ModHeader_Registration : ILoquiRegistration
+    public partial class ModHeader_Registration : ILoquiRegistration
     {
         public static readonly ModHeader_Registration Instance = new ModHeader_Registration();
 
@@ -2285,14 +2285,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
         public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ModHeaderCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ModHeaderSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -4095,10 +4101,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
         public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ModHeaderCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

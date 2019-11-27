@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Condition_Registration : ILoquiRegistration
+    public partial class Condition_Registration : ILoquiRegistration
     {
         public static readonly Condition_Registration Instance = new Condition_Registration();
 
@@ -1488,14 +1488,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ConditionCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ConditionSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ConditionSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IConditionGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IConditionGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2690,10 +2696,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Condition_Registration.Instance;
         public static Condition_Registration Registration => Condition_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ConditionCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ConditionSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IConditionGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IConditionGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

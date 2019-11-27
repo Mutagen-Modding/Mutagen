@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LoadScreenLocation_Registration : ILoquiRegistration
+    public partial class LoadScreenLocation_Registration : ILoquiRegistration
     {
         public static readonly LoadScreenLocation_Registration Instance = new LoadScreenLocation_Registration();
 
@@ -1283,14 +1283,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
         public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return LoadScreenLocationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LoadScreenLocationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2140,10 +2146,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
         public static LoadScreenLocation_Registration Registration => LoadScreenLocation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LoadScreenLocationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ILoadScreenLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
