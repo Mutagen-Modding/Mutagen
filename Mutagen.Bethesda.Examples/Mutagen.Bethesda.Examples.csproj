@@ -68,14 +68,14 @@
     </Compile>
     <Compile Include="Example Code\RecordAccessThroughFormLinksCode.cs" />
     <Compile Include="Example Code\RecordOverrideOrDuplicationCode.cs" />
-    <Compile Include="Example VMs\RecordAccessThroughFormLinksVM.cs" />
-    <Compile Include="Example VMs\ExampleVM.cs" />
-    <Compile Include="Example VMs\ImportComparisonVM.cs" />
+    <Compile Include="Example GUI\RecordAccessThroughFormLinksVM.cs" />
+    <Compile Include="Example GUI\ExampleVM.cs" />
+    <Compile Include="Example GUI\ImportComparisonVM.cs" />
     <Compile Include="Example Code\ImportComparisonCode.cs" />
-    <Compile Include="Example VMs\PrintContentVM.cs" />
+    <Compile Include="Example GUI\PrintContentVM.cs" />
     <Compile Include="Example Code\PrintContentCode.cs" />
-    <Compile Include="Example VMs\SimpleOutputVM.cs" />
-    <Compile Include="Example VMs\SingleModProcessingVM.cs" />
+    <Compile Include="Example GUI\SimpleOutputVM.cs" />
+    <Compile Include="Example GUI\SingleModProcessingVM.cs" />
     <Compile Include="MainVM.cs">
       <DependentUpon>MainVM.xml</DependentUpon>
     </Compile>
@@ -83,7 +83,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Example VMs\SimpleOutputView.xaml">
+    <Page Include="Example GUI\SimpleOutputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -93,7 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Example VMs\SimpleOutputView.xaml.cs">
+    <Compile Include="Example GUI\SimpleOutputView.xaml.cs">
       <DependentUpon>SimpleOutputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
