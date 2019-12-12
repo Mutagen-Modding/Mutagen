@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="db110917-5be4-4ea2-b679-55c8ac5b6179" ID="27">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefList name="Relations" refName="Relation" />
+      <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" />
+      <FormIDLink name="PrisonMarker" recordType="JAIL" refName="PlacedObject" />
+      <FormIDLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
+      <FormIDLink name="EvidenceChest" recordType="STOL" refName="PlacedObject" />
+      <FormIDLink name="PlayerBelongingsChest" recordType="PLCN" refName="PlacedObject" />
+      <FormIDLink name="CrimeGroup" recordType="CRGR" refName="FormList" />
+      <FormIDLink name="JailOutfit" recordType="JOUT" refName="Outfit" />
+      <Data recordType="CRVA" >
+        <Fields>
+          <Bool name="ArrestCrimeValue" byteLength="1" />
+          <Bool name="AttackOnSightCrimeValue" byteLength="1" />
+          <UInt16 name="MurderCrimeValue" />
+          <UInt16 name="AssaultCrimeValue" />
+          <UInt16 name="TrespassCrimeValue" />
+          <UInt16 name="PickpocketCrimeValue" />
+          <UInt16 name="UnknownCrimeValue" />
+          <Break/>
+          <Float name="StealMultCrimeValue" />
+          <Break/>
+          <UInt16 name="EscapeCrimeValue" />
+          <UInt16 name="WerewolfCrimeValue" />
+        </Fields>
+      </Data>
+      <RefList name="Ranks" refName="Rank" />
+      <FormIDLink name="VendorList" recordType="VEND" refName="FormList" />
+      <FormIDLink name="VendorChest" recordType="VENC" refName="PlacedObject" />
+      <RefDirect name="VendorValues" refName="VendorValues" />
+      <RefDirect name="VendorLocation" refName="VendorLocation" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="VendorValues" objType="Subrecord" recordType="VENV" GUID="31dd7308-ffd1-4311-a69c-f6c0bed71382" ID="34">
+    <Fields>
+      <UInt16 name="StartHour" />
+      <UInt16 name="EndHour" />
+      <UInt32 name="Radius" />
+      <Bool name="OnlyBuysStolenItems" byteLength="1" />
+      <Bool name="NotSellBuy" byteLength="1" />
+      <UInt16 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="Rank" objType="Subrecord" GUID="168a7e1e-9304-4604-b927-7b61cfa16730" ID="32">
+    <Fields>
+      <UInt32 name="RankID" recordType="RNAM" />
+      <String name="MaleRankTitle" recordType="MNAM" />
+      <String name="FemaleRankTitle" recordType="FNAM" />
+    </Fields>
+  </Object>
+  <Object name="VendorLocation" objType="Subrecord" recordType="PLVD" GUID="5bd28818-6711-45ca-bed6-de977e414602" ID="35">
+    <Fields>
+      <Enum name="Type" enumName="VendorLocation.LocationType" byteLength="4" />
+      <FormIDLink name="Reference" refName="SkyrimMajorRecord" />
+      <UInt32 name="Radius" />
+    </Fields>
+  </Object>
+</Loqui>

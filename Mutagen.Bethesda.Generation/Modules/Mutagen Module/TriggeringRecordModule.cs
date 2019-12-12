@@ -123,15 +123,22 @@ namespace Mutagen.Bethesda.Generation
                 {
                     recordTypes.Add(data.MarkerType.Value);
                 }
-                foreach (var subType in data.SubLoquiTypes)
+                foreach (var subType in data.SubLoquiTypes.Keys)
                 {
-                    recordTypes.Add(subType.Key);
+                    recordTypes.Add(subType);
                 }
                 if (field is ContainerType contType)
                 {
                     if (!contType.SubTypeGeneration.TryGetFieldData(out var subData)) continue;
-                    if (!subData.HasTrigger) continue;
-                    recordTypes.Add(subData.TriggeringRecordTypes);
+                    if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterRecType)
+                        && !string.IsNullOrWhiteSpace((string)counterRecType))
+                    {
+                        recordTypes.Add(new RecordType((string)counterRecType));
+                    }
+                    if (subData.HasTrigger)
+                    {
+                        recordTypes.Add(subData.TriggeringRecordTypes);
+                    }
                 }
                 else if (field is DictType dict)
                 {
@@ -196,6 +203,12 @@ namespace Mutagen.Bethesda.Generation
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
                 var subData = contLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
+                if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterTypeObj)
+                    && counterTypeObj is string counterType)
+                {
+                    subData.TriggeringRecordTypes.Add(new RecordType(counterType));
+                    return;
+                }
                 await SetRecordTrigger(
                     obj,
                     contLoqui,
@@ -481,6 +494,16 @@ namespace Mutagen.Bethesda.Generation
                     {
                         data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(trigger));
                     }
+                }
+            }
+            if (field is ContainerType cont)
+            {
+                if (field.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
+                    && counterObj is string counterTypeStr)
+                {
+                    data.TriggeringRecordTypes.Clear();
+                    data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(new RecordType(counterTypeStr)));
+                    data.TriggeringRecordTypes.Add(new RecordType(counterTypeStr));
                 }
             }
             if (data.RecordType.HasValue

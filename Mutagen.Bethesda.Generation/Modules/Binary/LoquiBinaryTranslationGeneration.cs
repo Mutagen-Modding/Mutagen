@@ -416,6 +416,7 @@ namespace Mutagen.Bethesda.Generation
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             LoquiType loqui = typeGen as LoquiType;
+            if (loqui.TargetObjectGeneration == null) return null;
             var sum = 0;
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {

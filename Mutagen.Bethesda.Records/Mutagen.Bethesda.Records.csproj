@@ -1552,7 +1552,15 @@
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\ProtocolDefinition_Oblivion.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\Combat.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
+    <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
+    <Compile Include="Skyrim\Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Relation_LoquiGenerated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -1561,6 +1569,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Decal.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Faction_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FormList_LoquiGenerated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -1589,8 +1606,23 @@
     <Compile Include="Skyrim\Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Outfit_LoquiGenerated.cs">
+      <DependentUpon>Outfit.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Rank_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VendorLocation_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VendorValues_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\ModHeader.cs">
       <DependentUpon>ModHeader.xml</DependentUpon>
@@ -1665,5 +1697,23 @@
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\ProtocolDefinition_Skyrim.cs" />
+    <Compile Include="Skyrim\Records\Common Subrecords\ConditionGlobal_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ConditionFloat_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\FunctionConditionData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\GetEventData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ConditionData_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Condition_LoquiGenerated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

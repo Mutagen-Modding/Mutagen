@@ -1050,8 +1050,10 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1130,8 +1132,10 @@ namespace Mutagen.Bethesda.Internals
                         LVSP_HEADER,
                         SPEL_HEADER,
                         AACT_HEADER,
+                        FLST_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
+                        OTFT_HEADER,
                         TXST_HEADER
                     })
             );

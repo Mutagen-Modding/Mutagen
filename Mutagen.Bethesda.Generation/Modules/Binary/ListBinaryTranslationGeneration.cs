@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Generation
 
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
+        public const string CounterRecordType = "ListCounterRecordType";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -48,10 +49,10 @@ namespace Mutagen.Bethesda.Generation
 
         public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var asyncItem = node.GetAttribute<bool>("asyncItems", false);
-            var thread = node.GetAttribute<bool>("thread", false);
             var listType = field as ListType;
-            listType.CustomData[ThreadKey] = thread;
+            listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
+            listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
+            var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
             {
                 loqui.CustomData[LoquiBinaryTranslationGeneration.AsyncOverrideKey] = asyncItem;
@@ -117,6 +118,18 @@ namespace Mutagen.Bethesda.Generation
             if (list.SubTypeGeneration is LoquiType loqui)
             {
                 typeName = loqui.TypeName(getter: true, internalInterface: true);
+            }
+
+            if (list.CustomData.TryGetValue(CounterRecordType, out var counterRecTypeObj)
+                && counterRecTypeObj is string counterRecType
+                && !string.IsNullOrWhiteSpace(counterRecType))
+            {
+
+                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{counterRecType}_HEADER, {nameof(ObjectType)}.{nameof(ObjectType.Subrecord)}))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"writer.Write({itemAccessor.PropertyOrDirectAccess}.Count);");
+                }
             }
 
             using (var args = new ArgsWrapper(fg,
@@ -197,6 +210,12 @@ namespace Mutagen.Bethesda.Generation
             else if (listBinaryType == ListBinaryType.Trigger)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
+            }
+
+            if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
+                && counterRecObj is string counterRecType)
+            {
+                fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip counter");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)

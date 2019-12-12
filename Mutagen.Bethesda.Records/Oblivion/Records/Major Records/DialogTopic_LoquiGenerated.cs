@@ -3127,7 +3127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
             return ret;
         }

@@ -292,6 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         #endregion
@@ -399,6 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -1387,6 +1389,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IGroupGetter<T> obj)
         {
+            foreach (var item in obj.Items.Items.WhereCastable<T, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -2623,6 +2630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

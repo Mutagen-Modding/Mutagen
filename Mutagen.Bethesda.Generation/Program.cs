@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "j.Temporary.WhereCastable<IPlaced, ILinkContainer>()";
+            string testString = "CustomBinaryEndImport";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

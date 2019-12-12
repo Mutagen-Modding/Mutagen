@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="Core\Links\LinkingPackage.cs" />
     <Compile Include="Core\LoadOrder.cs" />
+    <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Records\ListGroupAbstract.cs" />

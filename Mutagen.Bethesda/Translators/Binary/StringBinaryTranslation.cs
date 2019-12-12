@@ -87,6 +87,14 @@ namespace Mutagen.Bethesda.Binary
             string item,
             bool nullTerminate)
         {
+            WriteString(writer, item, nullTerminate);
+        }
+
+        public static void WriteString(
+            MutagenWriter writer,
+            string item,
+            bool nullTerminate)
+        {
             writer.Write(item);
             if (nullTerminate)
             {
