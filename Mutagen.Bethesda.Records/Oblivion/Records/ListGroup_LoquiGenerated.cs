@@ -293,7 +293,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType T_RecordType;
         public IEnumerable<ILinkGetter> Links => ListGroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         #endregion
 
         #region Binary Translation
@@ -780,10 +782,24 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroupGetter<T> obj)
+            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IListGroup<T> obj)
             where T : class, ICellBlock, IXmlItem, IBinaryItem
         {
             return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroup<T> obj)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1112,14 +1128,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IListGroup<T> obj)
         {
-            foreach (var subItem in obj.Items)
+            foreach (var item in ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
-                foreach (var item in subItem.EnumerateMajorRecords())
-                {
-                    yield return item;
-                }
+                yield return item as IMajorRecordCommon;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IListGroup<T> obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in ListGroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1376,6 +1399,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     yield return item;
                 }
+            }
+        }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IListGroupGetter<T> obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
             }
         }
         #endregion
@@ -2543,6 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IEnumerable<ILinkGetter> Links => ListGroupCommon<T>.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

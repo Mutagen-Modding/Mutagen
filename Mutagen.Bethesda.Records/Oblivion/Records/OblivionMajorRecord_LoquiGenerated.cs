@@ -264,7 +264,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -629,9 +631,21 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMajorRecordInternal obj)
         {
             return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1099,8 +1113,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IOblivionMajorRecordInternal obj)
         {
-            yield break;
+            foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return item as IMajorRecordCommon;
+            }
         }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IOblivionMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1312,6 +1339,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             yield break;
         }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IOblivionMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -2046,6 +2092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override IEnumerable<ILinkGetter> Links => OblivionMajorRecordCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

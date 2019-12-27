@@ -285,7 +285,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)Cell.GRUP_RECORD_TYPE;
         public IEnumerable<ILinkGetter> Links => CellSubBlockCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -723,9 +725,21 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellSubBlockGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ICellSubBlock obj)
         {
             return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellSubBlock obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1054,15 +1068,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellSubBlock obj)
         {
-            foreach (var subItem in obj.Items)
+            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return subItem;
-                foreach (var item in subItem.EnumerateMajorRecords())
-                {
-                    yield return item;
-                }
+                yield return item as IMajorRecordCommon;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ICellSubBlock obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1340,6 +1360,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ICellSubBlockGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        yield return subItem as TMajor;
+                        foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
+                        {
+                            yield return item as TMajor;
+                        }
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -2507,6 +2559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IEnumerable<ILinkGetter> Links => CellSubBlockCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected object XmlWriteTranslator => CellSubBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

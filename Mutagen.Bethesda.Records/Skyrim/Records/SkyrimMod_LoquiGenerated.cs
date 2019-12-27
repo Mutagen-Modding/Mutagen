@@ -574,7 +574,9 @@ namespace Mutagen.Bethesda.Skyrim
             return null;
         }
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -1199,9 +1201,21 @@ namespace Mutagen.Bethesda.Skyrim
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimModGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMod obj)
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMod obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1752,35 +1766,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ISkyrimMod obj)
         {
-            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj))
             {
-                yield return item;
-            }
-            foreach (var item in obj.Keywords.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Actions.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.TextureSets.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Globals.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Classes.EnumerateMajorRecords())
-            {
-                yield return item;
+                yield return item as IMajorRecordCommon;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ISkyrimMod obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2436,6 +2436,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ISkyrimModGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<IGameSettingGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "Keyword":
+                case "IKeywordGetter":
+                case "IKeyword":
+                case "IKeywordInternal":
+                    foreach (var item in obj.Keywords.EnumerateMajorRecords<IKeywordGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "LocationReferenceType":
+                case "ILocationReferenceTypeGetter":
+                case "ILocationReferenceType":
+                case "ILocationReferenceTypeInternal":
+                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords<ILocationReferenceTypeGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "ActionRecord":
+                case "IActionRecordGetter":
+                case "IActionRecord":
+                case "IActionRecordInternal":
+                    foreach (var item in obj.Actions.EnumerateMajorRecords<IActionRecordGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords<ITextureSetGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "Global":
+                case "IGlobalGetter":
+                case "IGlobal":
+                case "IGlobalInternal":
+                    foreach (var item in obj.Globals.EnumerateMajorRecords<IGlobalGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    foreach (var item in obj.Classes.EnumerateMajorRecords<IClassGetter>())
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -4143,6 +4225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(

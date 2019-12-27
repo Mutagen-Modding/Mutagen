@@ -604,7 +604,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -1137,9 +1139,21 @@ namespace Mutagen.Bethesda.Oblivion
             return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IWorldspaceInternal obj)
         {
             return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1685,38 +1699,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IWorldspaceInternal obj)
         {
-            if (obj.Road_IsSet)
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj))
             {
-                var Roaditem = obj.Road;
-                if (Roaditem != null)
-                {
-                    yield return Roaditem;
-                    foreach (var item in Roaditem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
-                }
-            }
-            if (obj.TopCell_IsSet)
-            {
-                var TopCellitem = obj.TopCell;
-                if (TopCellitem != null)
-                {
-                    yield return TopCellitem;
-                    foreach (var item in TopCellitem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
-                }
-            }
-            foreach (var subItem in obj.SubCells)
-            {
-                foreach (var item in subItem.EnumerateMajorRecords())
-                {
-                    yield return item;
-                }
+                yield return item as IMajorRecordCommon;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2538,6 +2535,70 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
+                    if (obj.Road_IsSet)
+                    {
+                        var Roaditem = obj.Road;
+                        if (Roaditem != null)
+                        {
+                            yield return Roaditem as TMajor;
+                            foreach (var item in Roaditem.EnumerateMajorRecords<TMajor>())
+                            {
+                                yield return item as TMajor;
+                            }
+                        }
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    if (obj.TopCell_IsSet)
+                    {
+                        var TopCellitem = obj.TopCell;
+                        if (TopCellitem != null)
+                        {
+                            yield return TopCellitem as TMajor;
+                            foreach (var item in TopCellitem.EnumerateMajorRecords<TMajor>())
+                            {
+                                yield return item as TMajor;
+                            }
+                        }
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
+                        {
+                            yield return item as TMajor;
+                        }
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -4994,6 +5055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override IEnumerable<ILinkGetter> Links => WorldspaceCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Generation
 
                 if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
                 {
-                    MajorRecordEnumerationModule.GenerateClassImplementation(fg, onlyGetter: true);
+                    MajorRecordEnumerationModule.GenerateClassImplementation(obj, fg, onlyGetter: true);
                 }
 
                 foreach (var transl in obj.ProtoGen.Gen.GenerationModules

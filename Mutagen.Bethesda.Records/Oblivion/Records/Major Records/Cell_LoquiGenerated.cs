@@ -650,7 +650,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -1201,9 +1203,21 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellCommon)((ICellGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ICellInternal obj)
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1816,43 +1830,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(ICellInternal obj)
         {
-            if (obj.PathGrid_IsSet)
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
             {
-                var PathGriditem = obj.PathGrid;
-                if (PathGriditem != null)
-                {
-                    yield return PathGriditem;
-                    foreach (var item in PathGriditem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
-                }
-            }
-            if (obj.Landscape_IsSet)
-            {
-                var Landscapeitem = obj.Landscape;
-                if (Landscapeitem != null)
-                {
-                    yield return Landscapeitem;
-                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
-                    {
-                        yield return item;
-                    }
-                }
-            }
-            foreach (var subItem in obj.Persistent)
-            {
-                yield return subItem;
-            }
-            foreach (var subItem in obj.Temporary)
-            {
-                yield return subItem;
-            }
-            foreach (var subItem in obj.VisibleWhenDistant)
-            {
-                yield return subItem;
+                yield return item as IMajorRecordCommon;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ICellInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2815,6 +2807,74 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 yield return subItem;
             }
         }
+        
+        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(ICellGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    if (obj.PathGrid_IsSet)
+                    {
+                        var PathGriditem = obj.PathGrid;
+                        if (PathGriditem != null)
+                        {
+                            yield return PathGriditem as TMajor;
+                            foreach (var item in PathGriditem.EnumerateMajorRecords<TMajor>())
+                            {
+                                yield return item as TMajor;
+                            }
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    if (obj.Landscape_IsSet)
+                    {
+                        var Landscapeitem = obj.Landscape;
+                        if (Landscapeitem != null)
+                        {
+                            yield return Landscapeitem as TMajor;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords<TMajor>())
+                            {
+                                yield return item as TMajor;
+                            }
+                        }
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        yield return subItem as TMajor;
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        yield return subItem as TMajor;
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        yield return subItem as TMajor;
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -5847,6 +5907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override IEnumerable<ILinkGetter> Links => CellCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,

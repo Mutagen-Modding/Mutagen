@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>21ecf45758c9347773e7989eaff660f8e477d544</Sha>
+         <Sha>3f3e81b98ccb3f52001bb32e99212d82ca0b9be5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-27-2019 00:05:21</CommitDate>
-         <Description>Some missing new overrides</Description>
+         <CommitDate>12-27-2019 17:30:49</CommitDate>
+         <Description>LoquiType interface missing implementations</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

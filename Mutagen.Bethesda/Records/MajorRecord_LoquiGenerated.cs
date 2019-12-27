@@ -321,7 +321,9 @@ namespace Mutagen.Bethesda
         }
 
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
         #region Binary Translation
@@ -735,9 +737,21 @@ namespace Mutagen.Bethesda
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
+        }
+
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IMajorRecordInternal obj)
         {
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
+        }
+
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
         #endregion
@@ -1263,8 +1277,21 @@ namespace Mutagen.Bethesda.Internals
         #region Mutagen
         public virtual IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IMajorRecordInternal obj)
         {
-            yield break;
+            foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return item as IMajorRecordCommon;
+            }
         }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IMajorRecordInternal obj)
+            where TMajor : class, IMajorRecordCommon
+        {
+            foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            {
+                yield return item as TMajor;
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1504,6 +1531,25 @@ namespace Mutagen.Bethesda.Internals
         {
             yield break;
         }
+        
+        public virtual IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IMajorRecordGetter obj)
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            switch (typeof(TMajor).Name)
+            {
+                case "IMajorRecordCommon":
+                case "IMajorRecordCommonGetter":
+                case "MajorRecord":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item as TMajor;
+                    }
+                    yield break;
+                default:
+                    break;
+            }
+        }
+        
         #endregion
         
     }
@@ -2539,6 +2585,7 @@ namespace Mutagen.Bethesda.Internals
 
         public virtual IEnumerable<ILinkGetter> Links => MajorRecordCommon.Instance.GetLinks(this);
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
