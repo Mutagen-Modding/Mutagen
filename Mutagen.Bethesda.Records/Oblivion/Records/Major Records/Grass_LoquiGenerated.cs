@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Grass CreateFromXml(
+        public static new Grass CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Grass_TranslationMask translationMask = null)
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Grass CreateFromBinary(
+        public static new Grass CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GrassSetterCommon)((IGrassGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Grass GetNew()
+        internal static new Grass GetNew()
         {
             return new Grass();
         }
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGrassInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Grass_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGrassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGrassInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGrassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3375,7 +3375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Grass_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Grass_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Grass_ErrorMask();

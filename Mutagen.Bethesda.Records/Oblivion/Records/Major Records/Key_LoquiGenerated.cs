@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Key CreateFromXml(
+        public static new Key CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Key_TranslationMask translationMask = null)
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Key CreateFromBinary(
+        public static new Key CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((KeySetterCommon)((IKeyGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Key GetNew()
+        internal static new Key GetNew()
         {
             return new Key();
         }
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Key_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IKeyInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Key_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IKeyInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IKeyInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IKeyInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Key_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Key_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Key_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Key_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2858,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Key_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Key_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Key_ErrorMask();

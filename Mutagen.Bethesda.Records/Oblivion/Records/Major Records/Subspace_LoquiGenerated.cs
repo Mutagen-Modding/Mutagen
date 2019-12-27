@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Subspace CreateFromXml(
+        public static new Subspace CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Subspace_TranslationMask translationMask = null)
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Subspace CreateFromBinary(
+        public static new Subspace CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SubspaceSetterCommon)((ISubspaceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Subspace GetNew()
+        internal static new Subspace GetNew()
         {
             return new Subspace();
         }
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISubspaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Subspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISubspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISubspaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISubspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Subspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Subspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Subspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Subspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Subspace_ErrorMask();

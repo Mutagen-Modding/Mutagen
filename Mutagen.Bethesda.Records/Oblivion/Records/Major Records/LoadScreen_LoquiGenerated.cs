@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LoadScreen CreateFromXml(
+        public static new LoadScreen CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LoadScreen_TranslationMask translationMask = null)
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LoadScreen CreateFromBinary(
+        public static new LoadScreen CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LoadScreenSetterCommon)((ILoadScreenGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static LoadScreen GetNew()
+        internal static new LoadScreen GetNew()
         {
             return new LoadScreen();
         }
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILoadScreenInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LoadScreen_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILoadScreenInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILoadScreenInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILoadScreenInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static LoadScreen_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new LoadScreen_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static LoadScreen_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new LoadScreen_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new LoadScreen_ErrorMask();

@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LandTexture CreateFromXml(
+        public static new LandTexture CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LandTexture_TranslationMask translationMask = null)
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LandTexture CreateFromBinary(
+        public static new LandTexture CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LandTextureSetterCommon)((ILandTextureGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static LandTexture GetNew()
+        internal static new LandTexture GetNew()
         {
             return new LandTexture();
         }
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILandTextureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LandTexture_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILandTextureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILandTextureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILandTextureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static LandTexture_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new LandTexture_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2552,7 +2552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static LandTexture_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new LandTexture_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new LandTexture_ErrorMask();

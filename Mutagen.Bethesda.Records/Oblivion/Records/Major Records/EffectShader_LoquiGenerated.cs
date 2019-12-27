@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static EffectShader CreateFromXml(
+        public static new EffectShader CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             EffectShader_TranslationMask translationMask = null)
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static EffectShader CreateFromBinary(
+        public static new EffectShader CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((EffectShaderSetterCommon)((IEffectShaderGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static EffectShader GetNew()
+        internal static new EffectShader GetNew()
         {
             return new EffectShader();
         }
@@ -1739,7 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IEffectShaderInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = EffectShader_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2896,7 +2896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IEffectShaderInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IEffectShaderInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -4074,7 +4074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static EffectShader_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new EffectShader_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -8499,7 +8499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static EffectShader_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new EffectShader_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new EffectShader_ErrorMask();

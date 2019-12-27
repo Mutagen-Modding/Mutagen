@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Potion CreateFromXml(
+        public static new Potion CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Potion_TranslationMask translationMask = null)
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Potion CreateFromBinary(
+        public static new Potion CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PotionSetterCommon)((IPotionGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Potion GetNew()
+        internal static new Potion GetNew()
         {
             return new Potion();
         }
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IPotionInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Potion_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IPotionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IPotionInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IPotionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Potion_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Potion_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1745,7 +1745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Potion_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Potion_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3294,7 +3294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Potion_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Potion_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Potion_ErrorMask();

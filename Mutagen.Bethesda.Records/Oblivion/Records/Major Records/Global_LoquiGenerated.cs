@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Global CreateFromXml(
+        public static new Global CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Global_TranslationMask translationMask = null)
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GlobalSetterCommon)((IGlobalGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Global GetNew()
+        internal static new Global GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGlobalInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Global_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGlobalInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -873,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGlobalInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGlobalInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Global_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Global_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Global_ErrorMask();

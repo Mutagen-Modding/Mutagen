@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Tree CreateFromXml(
+        public static new Tree CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Tree_TranslationMask translationMask = null)
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Tree CreateFromBinary(
+        public static new Tree CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((TreeSetterCommon)((ITreeGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Tree GetNew()
+        internal static new Tree GetNew()
         {
             return new Tree();
         }
@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ITreeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Tree_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ITreeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ITreeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ITreeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Tree_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Tree_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3718,7 +3718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Tree_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Tree_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Tree_ErrorMask();

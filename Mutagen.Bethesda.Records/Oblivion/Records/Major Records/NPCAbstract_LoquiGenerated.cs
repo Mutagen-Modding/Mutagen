@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static NPCAbstract CreateFromXml(
+        public static new NPCAbstract CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             NPCAbstract_TranslationMask translationMask = null)
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((NPCAbstractSetterCommon)((INPCAbstractGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static NPCAbstract GetNew()
+        internal static new NPCAbstract GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this INPCAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPCAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this INPCAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             INPCAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         public override RecordType RecordType => throw new ArgumentException();
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             INPCAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static NPCAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new NPCAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static NPCAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new NPCAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static NPCAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new NPCAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new NPCAbstract_ErrorMask();

@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static RegionDataMapName CreateFromXml(
+        public static new RegionDataMapName CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             RegionDataMapName_TranslationMask translationMask = null)
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static RegionDataMapName CreateFromBinary(
+        public static new RegionDataMapName CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataMapNameSetterCommon)((IRegionDataMapNameGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static RegionDataMapName GetNew()
+        internal static new RegionDataMapName GetNew()
         {
             return new RegionDataMapName();
         }
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataMapName_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IRegionDataMapNameInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataMapName_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IRegionDataMapNameInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IRegionDataMapNameInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IRegionDataMapNameInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static RegionDataMapName_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new RegionDataMapName_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new RegionDataMapName_ErrorMask();

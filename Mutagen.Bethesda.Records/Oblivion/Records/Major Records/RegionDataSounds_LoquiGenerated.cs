@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static RegionDataSounds CreateFromXml(
+        public static new RegionDataSounds CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             RegionDataSounds_TranslationMask translationMask = null)
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static RegionDataSounds CreateFromBinary(
+        public static new RegionDataSounds CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataSoundsSetterCommon)((IRegionDataSoundsGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static RegionDataSounds GetNew()
+        internal static new RegionDataSounds GetNew()
         {
             return new RegionDataSounds();
         }
@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IRegionDataSoundsInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataSounds_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IRegionDataSoundsInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IRegionDataSoundsInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IRegionDataSoundsInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static RegionDataSounds_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new RegionDataSounds_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new RegionDataSounds_ErrorMask();

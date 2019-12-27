@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Keyword CreateFromXml(
+        public static new Keyword CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Keyword_TranslationMask translationMask = null)
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Keyword CreateFromBinary(
+        public static new Keyword CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((KeywordSetterCommon)((IKeywordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Keyword GetNew()
+        internal static new Keyword GetNew()
         {
             return new Keyword();
         }
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IKeywordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Keyword_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IKeywordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IKeywordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IKeywordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static Keyword_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Keyword_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static Keyword_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Keyword_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Keyword_ErrorMask();

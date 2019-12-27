@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Race CreateFromXml(
+        public static new Race CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Race_TranslationMask translationMask = null)
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Race CreateFromBinary(
+        public static new Race CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RaceSetterCommon)((IRaceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Race GetNew()
+        internal static new Race GetNew()
         {
             return new Race();
         }
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IRaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Race_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IRaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -6042,7 +6042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Race_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Race_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Race_ErrorMask();

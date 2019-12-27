@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static AIPackage CreateFromXml(
+        public static new AIPackage CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             AIPackage_TranslationMask translationMask = null)
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static AIPackage CreateFromBinary(
+        public static new AIPackage CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AIPackageSetterCommon)((IAIPackageGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static AIPackage GetNew()
+        internal static new AIPackage GetNew()
         {
             return new AIPackage();
         }
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IAIPackageInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AIPackage_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IAIPackageInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IAIPackageInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IAIPackageInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static AIPackage_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AIPackage_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2985,7 +2985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static AIPackage_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new AIPackage_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new AIPackage_ErrorMask();

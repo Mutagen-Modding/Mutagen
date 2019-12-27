@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Place CreateFromXml(
+        public static new Place CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Place_TranslationMask translationMask = null)
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PlaceSetterCommon)((IPlaceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Place GetNew()
+        internal static new Place GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IPlaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Place_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IPlaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IPlaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         public override RecordType RecordType => throw new ArgumentException();
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IPlaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Place_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Place_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1706,7 +1706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Place_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Place_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Place_ErrorMask();

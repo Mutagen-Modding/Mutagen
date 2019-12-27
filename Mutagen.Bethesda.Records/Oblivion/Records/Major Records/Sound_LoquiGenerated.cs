@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Sound CreateFromXml(
+        public static new Sound CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Sound_TranslationMask translationMask = null)
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Sound CreateFromBinary(
+        public static new Sound CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundSetterCommon)((ISoundGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Sound GetNew()
+        internal static new Sound GetNew()
         {
             return new Sound();
         }
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISoundInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Sound_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISoundInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISoundInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISoundInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Sound_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Sound_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Sound_ErrorMask();

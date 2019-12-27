@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Ammo CreateFromXml(
+        public static new Ammo CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Ammo_TranslationMask translationMask = null)
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Ammo CreateFromBinary(
+        public static new Ammo CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AmmoSetterCommon)((IAmmoGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Ammo GetNew()
+        internal static new Ammo GetNew()
         {
             return new Ammo();
         }
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IAmmoInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Ammo_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IAmmoInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1369,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IAmmoInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IAmmoInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1774,7 +1774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Ammo_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Ammo_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Ammo_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Ammo_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3338,7 +3338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Ammo_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Ammo_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Ammo_ErrorMask();

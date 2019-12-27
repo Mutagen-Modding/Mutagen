@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static GameSettingBool CreateFromXml(
+        public static new GameSettingBool CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GameSettingBool_TranslationMask translationMask = null)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static GameSettingBool CreateFromBinary(
+        public static new GameSettingBool CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GameSettingBoolSetterCommon)((IGameSettingBoolGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static GameSettingBool GetNew()
+        internal static new GameSettingBool GetNew()
         {
             return new GameSettingBool();
         }
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGameSettingBoolInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSettingBool_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGameSettingBoolInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGameSettingBoolInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGameSettingBoolInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static GameSettingBool_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static new GameSettingBool_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static GameSettingBool_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GameSettingBool_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static GameSettingBool_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new GameSettingBool_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new GameSettingBool_ErrorMask();

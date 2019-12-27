@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static TextureSet CreateFromXml(
+        public static new TextureSet CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             TextureSet_TranslationMask translationMask = null)
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static TextureSet CreateFromBinary(
+        public static new TextureSet CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((TextureSetSetterCommon)((ITextureSetGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static TextureSet GetNew()
+        internal static new TextureSet GetNew()
         {
             return new TextureSet();
         }
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ITextureSetInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = TextureSet_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ITextureSetInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ITextureSetInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ITextureSetInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static TextureSet_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new TextureSet_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static TextureSet_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new TextureSet_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new TextureSet_ErrorMask();

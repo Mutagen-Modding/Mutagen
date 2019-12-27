@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Road CreateFromXml(
+        public static new Road CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Road_TranslationMask translationMask = null)
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Road CreateFromBinary(
+        public static new Road CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RoadSetterCommon)((IRoadGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Road GetNew()
+        internal static new Road GetNew()
         {
             return new Road();
         }
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IRoadInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Road_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IRoadInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IRoadInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IRoadInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Road_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Road_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Road_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Road_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Road_ErrorMask();

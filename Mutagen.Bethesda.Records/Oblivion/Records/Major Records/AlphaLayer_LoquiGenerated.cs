@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static AlphaLayer CreateFromXml(
+        public static new AlphaLayer CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             AlphaLayer_TranslationMask translationMask = null)
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static AlphaLayer CreateFromBinary(
+        public static new AlphaLayer CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static AlphaLayer GetNew()
+        internal static new AlphaLayer GetNew()
         {
             return new AlphaLayer();
         }
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IAlphaLayerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AlphaLayer_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IAlphaLayerInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -972,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IAlphaLayerInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IAlphaLayerInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static AlphaLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new AlphaLayer_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new AlphaLayer_ErrorMask();

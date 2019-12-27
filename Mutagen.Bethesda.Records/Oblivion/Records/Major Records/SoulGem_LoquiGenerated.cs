@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static SoulGem CreateFromXml(
+        public static new SoulGem CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SoulGem_TranslationMask translationMask = null)
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static SoulGem CreateFromBinary(
+        public static new SoulGem CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoulGemSetterCommon)((ISoulGemGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static SoulGem GetNew()
+        internal static new SoulGem GetNew()
         {
             return new SoulGem();
         }
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISoulGemInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoulGem_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISoulGemInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISoulGemInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISoulGemInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new SoulGem_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SoulGem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new SoulGem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3188,7 +3188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new SoulGem_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new SoulGem_ErrorMask();

@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static ScriptObjectReference CreateFromXml(
+        public static new ScriptObjectReference CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ScriptObjectReference_TranslationMask translationMask = null)
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static ScriptObjectReference CreateFromBinary(
+        public static new ScriptObjectReference CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ScriptObjectReferenceSetterCommon)((IScriptObjectReferenceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static ScriptObjectReference GetNew()
+        internal static new ScriptObjectReference GetNew()
         {
             return new ScriptObjectReference();
         }
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IScriptObjectReference item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ScriptObjectReference_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IScriptObjectReference item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IScriptObjectReference item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IScriptObjectReference item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static ScriptObjectReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new ScriptObjectReference_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new ScriptObjectReference_ErrorMask();

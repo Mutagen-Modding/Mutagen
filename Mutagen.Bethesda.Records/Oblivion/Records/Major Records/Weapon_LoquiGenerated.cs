@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Weapon CreateFromXml(
+        public static new Weapon CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Weapon_TranslationMask translationMask = null)
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Weapon CreateFromBinary(
+        public static new Weapon CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WeaponSetterCommon)((IWeaponGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Weapon GetNew()
+        internal static new Weapon GetNew()
         {
             return new Weapon();
         }
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IWeaponInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Weapon_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IWeaponInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IWeaponInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IWeaponInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Weapon_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Weapon_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Weapon_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Weapon_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3796,7 +3796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Weapon_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Weapon_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Weapon_ErrorMask();

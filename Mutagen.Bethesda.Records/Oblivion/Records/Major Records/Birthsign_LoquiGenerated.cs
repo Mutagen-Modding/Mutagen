@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Birthsign CreateFromXml(
+        public static new Birthsign CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Birthsign_TranslationMask translationMask = null)
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Birthsign CreateFromBinary(
+        public static new Birthsign CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BirthsignSetterCommon)((IBirthsignGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Birthsign GetNew()
+        internal static new Birthsign GetNew()
         {
             return new Birthsign();
         }
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IBirthsignInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Birthsign_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IBirthsignInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IBirthsignInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IBirthsignInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Birthsign_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Birthsign_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2529,7 +2529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Birthsign_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Birthsign_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Birthsign_ErrorMask();

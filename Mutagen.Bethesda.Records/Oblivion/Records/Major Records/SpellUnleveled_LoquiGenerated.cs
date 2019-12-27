@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static SpellUnleveled CreateFromXml(
+        public static new SpellUnleveled CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SpellUnleveled_TranslationMask translationMask = null)
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static SpellUnleveled CreateFromBinary(
+        public static new SpellUnleveled CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SpellUnleveledSetterCommon)((ISpellUnleveledGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static SpellUnleveled GetNew()
+        internal static new SpellUnleveled GetNew()
         {
             return new SpellUnleveled();
         }
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISpellUnleveledInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SpellUnleveled_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISpellUnleveledInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISpellUnleveledInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISpellUnleveledInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SpellUnleveled_FieldIndex ConvertFieldIndex(SpellAbstract_FieldIndex index)
+        public static new SpellUnleveled_FieldIndex ConvertFieldIndex(SpellAbstract_FieldIndex index)
         {
             switch (index)
             {
@@ -1485,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SpellUnleveled_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new SpellUnleveled_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SpellUnleveled_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new SpellUnleveled_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2766,7 +2766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static SpellUnleveled_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new SpellUnleveled_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new SpellUnleveled_ErrorMask();

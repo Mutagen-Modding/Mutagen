@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static ClothingAbstract CreateFromXml(
+        public static new ClothingAbstract CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ClothingAbstract_TranslationMask translationMask = null)
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static ClothingAbstract GetNew()
+        internal static new ClothingAbstract GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IClothingAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IClothingAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IClothingAbstractInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IClothingAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static ClothingAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new ClothingAbstract_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static ClothingAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ClothingAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3908,7 +3908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static ClothingAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new ClothingAbstract_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new ClothingAbstract_ErrorMask();

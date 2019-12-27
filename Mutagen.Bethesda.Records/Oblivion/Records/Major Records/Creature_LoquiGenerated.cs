@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Creature CreateFromXml(
+        public static new Creature CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Creature_TranslationMask translationMask = null)
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Creature CreateFromBinary(
+        public static new Creature CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CreatureSetterCommon)((ICreatureGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Creature GetNew()
+        internal static new Creature GetNew()
         {
             return new Creature();
         }
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ICreatureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Creature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ICreatureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2775,7 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ICreatureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -3264,7 +3264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ICreatureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        public static new Creature_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
         {
             switch (index)
             {
@@ -3877,7 +3877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3896,7 +3896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Creature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -9127,7 +9127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Creature_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Creature_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Creature_ErrorMask();

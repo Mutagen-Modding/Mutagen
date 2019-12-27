@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LocationReferenceType CreateFromXml(
+        public static new LocationReferenceType CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LocationReferenceType_TranslationMask translationMask = null)
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LocationReferenceType CreateFromBinary(
+        public static new LocationReferenceType CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static LocationReferenceType GetNew()
+        internal static new LocationReferenceType GetNew()
         {
             return new LocationReferenceType();
         }
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILocationReferenceTypeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = LocationReferenceType_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILocationReferenceTypeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static LocationReferenceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new LocationReferenceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static LocationReferenceType_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new LocationReferenceType_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new LocationReferenceType_ErrorMask();

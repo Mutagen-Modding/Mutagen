@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static CombatStyle CreateFromXml(
+        public static new CombatStyle CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             CombatStyle_TranslationMask translationMask = null)
@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static CombatStyle CreateFromBinary(
+        public static new CombatStyle CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CombatStyleSetterCommon)((ICombatStyleGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static CombatStyle GetNew()
+        internal static new CombatStyle GetNew()
         {
             return new CombatStyle();
         }
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ICombatStyleInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = CombatStyle_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ICombatStyleInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ICombatStyleInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ICombatStyleInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2980,7 +2980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static CombatStyle_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new CombatStyle_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -6085,7 +6085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static CombatStyle_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new CombatStyle_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new CombatStyle_ErrorMask();

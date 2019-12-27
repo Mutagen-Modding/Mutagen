@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Worldspace CreateFromXml(
+        public static new Worldspace CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Worldspace_TranslationMask translationMask = null)
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<Worldspace> CreateFromBinary(
+        public static new async Task<Worldspace> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((WorldspaceSetterCommon)((IWorldspaceGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Worldspace GetNew()
+        internal static new Worldspace GetNew()
         {
             return new Worldspace();
         }
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IWorldspaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion
             return Worldspace_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static async Task CopyInFromBinary(
+        public static async Task CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IWorldspaceInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1938,7 +1938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new async Task CopyInFromBinary(
+        public async Task CopyInFromBinary(
             IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2235,7 +2235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Worldspace_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Worldspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Worldspace_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -4537,7 +4537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Worldspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Worldspace_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Worldspace_ErrorMask();

@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static GameSettingString CreateFromXml(
+        public static new GameSettingString CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GameSettingString_TranslationMask translationMask = null)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static GameSettingString CreateFromBinary(
+        public static new GameSettingString CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GameSettingStringSetterCommon)((IGameSettingStringGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static GameSettingString GetNew()
+        internal static new GameSettingString GetNew()
         {
             return new GameSettingString();
         }
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGameSettingStringInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GameSettingString_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGameSettingStringInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGameSettingStringInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGameSettingStringInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static GameSettingString_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new GameSettingString_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static GameSettingString_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GameSettingString_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static GameSettingString_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new GameSettingString_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new GameSettingString_ErrorMask();

@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static SoundDataExtended CreateFromXml(
+        public static new SoundDataExtended CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SoundDataExtended_TranslationMask translationMask = null)
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static SoundDataExtended CreateFromBinary(
+        public static new SoundDataExtended CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static SoundDataExtended GetNew()
+        internal static new SoundDataExtended GetNew()
         {
             return new SoundDataExtended();
         }
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISoundDataExtendedInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SoundDataExtended_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISoundDataExtendedInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Xml Translation
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISoundDataExtendedInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISoundDataExtendedInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static SoundDataExtended_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new SoundDataExtended_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new SoundDataExtended_ErrorMask();

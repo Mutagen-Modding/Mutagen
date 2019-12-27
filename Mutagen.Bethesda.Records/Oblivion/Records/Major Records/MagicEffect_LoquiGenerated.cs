@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static MagicEffect CreateFromXml(
+        public static new MagicEffect CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             MagicEffect_TranslationMask translationMask = null)
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static MagicEffect CreateFromBinary(
+        public static new MagicEffect CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MagicEffectSetterCommon)((IMagicEffectGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static MagicEffect GetNew()
+        internal static new MagicEffect GetNew()
         {
             return new MagicEffect();
         }
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IMagicEffectInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = MagicEffect_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IMagicEffectInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IMagicEffectInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IMagicEffectInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static MagicEffect_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MagicEffect_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3996,7 +3996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static MagicEffect_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new MagicEffect_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new MagicEffect_ErrorMask();

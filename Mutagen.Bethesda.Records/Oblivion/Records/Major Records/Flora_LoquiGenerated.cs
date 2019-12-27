@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Flora CreateFromXml(
+        public static new Flora CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Flora_TranslationMask translationMask = null)
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Flora CreateFromBinary(
+        public static new Flora CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((FloraSetterCommon)((IFloraGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Flora GetNew()
+        internal static new Flora GetNew()
         {
             return new Flora();
         }
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IFloraInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Flora_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IFloraInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IFloraInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IFloraInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Flora_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Flora_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2942,7 +2942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Flora_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Flora_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Flora_ErrorMask();

@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Light CreateFromXml(
+        public static new Light CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Light_TranslationMask translationMask = null)
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Light CreateFromBinary(
+        public static new Light CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LightSetterCommon)((ILightGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Light GetNew()
+        internal static new Light GetNew()
         {
             return new Light();
         }
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILightInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Light_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILightInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILightInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1743,7 +1743,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILightInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Light_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Light_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Light_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Light_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3828,7 +3828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Light_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Light_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Light_ErrorMask();

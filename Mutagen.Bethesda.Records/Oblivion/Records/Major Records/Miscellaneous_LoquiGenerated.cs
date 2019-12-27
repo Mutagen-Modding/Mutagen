@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Miscellaneous CreateFromXml(
+        public static new Miscellaneous CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Miscellaneous_TranslationMask translationMask = null)
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Miscellaneous CreateFromBinary(
+        public static new Miscellaneous CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((MiscellaneousSetterCommon)((IMiscellaneousGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Miscellaneous GetNew()
+        internal static new Miscellaneous GetNew()
         {
             return new Miscellaneous();
         }
@@ -732,7 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IMiscellaneousInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Miscellaneous_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IMiscellaneousInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IMiscellaneousInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IMiscellaneousInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Miscellaneous_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Miscellaneous_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Miscellaneous_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Miscellaneous_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2858,7 +2858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Miscellaneous_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Miscellaneous_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Miscellaneous_ErrorMask();

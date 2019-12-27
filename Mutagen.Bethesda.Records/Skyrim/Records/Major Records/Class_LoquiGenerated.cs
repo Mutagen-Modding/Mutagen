@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Class CreateFromXml(
+        public static new Class CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Class_TranslationMask translationMask = null)
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Class CreateFromBinary(
+        public static new Class CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ClassSetterCommon)((IClassGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Class GetNew()
+        internal static new Class GetNew()
         {
             return new Class();
         }
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IClassInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = Class_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IClassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IClassInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2164,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IClassInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2493,7 +2493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -5174,7 +5174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static Class_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Class_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Class_ErrorMask();

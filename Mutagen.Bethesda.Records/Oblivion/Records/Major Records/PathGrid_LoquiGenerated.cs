@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static PathGrid CreateFromXml(
+        public static new PathGrid CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             PathGrid_TranslationMask translationMask = null)
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static PathGrid CreateFromBinary(
+        public static new PathGrid CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((PathGridSetterCommon)((IPathGridGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static PathGrid GetNew()
+        internal static new PathGrid GetNew()
         {
             return new PathGrid();
         }
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IPathGridInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = PathGrid_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IPathGridInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IPathGridInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IPathGridInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static PathGrid_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new PathGrid_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2728,7 +2728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static PathGrid_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new PathGrid_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new PathGrid_ErrorMask();

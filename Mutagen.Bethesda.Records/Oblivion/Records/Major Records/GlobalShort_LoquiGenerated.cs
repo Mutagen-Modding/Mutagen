@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static GlobalShort CreateFromXml(
+        public static new GlobalShort CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GlobalShort_TranslationMask translationMask = null)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static GlobalShort CreateFromBinary(
+        public static new GlobalShort CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((GlobalShortSetterCommon)((IGlobalShortGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static GlobalShort GetNew()
+        internal static new GlobalShort GetNew()
         {
             return new GlobalShort();
         }
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGlobalShortInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = GlobalShort_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGlobalShortInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGlobalShortInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGlobalShortInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static GlobalShort_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new GlobalShort_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static GlobalShort_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GlobalShort_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static GlobalShort_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new GlobalShort_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new GlobalShort_ErrorMask();

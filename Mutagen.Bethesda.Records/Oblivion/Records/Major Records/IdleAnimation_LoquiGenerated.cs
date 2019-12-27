@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static IdleAnimation CreateFromXml(
+        public static new IdleAnimation CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             IdleAnimation_TranslationMask translationMask = null)
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static IdleAnimation CreateFromBinary(
+        public static new IdleAnimation CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((IdleAnimationSetterCommon)((IIdleAnimationGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static IdleAnimation GetNew()
+        internal static new IdleAnimation GetNew()
         {
             return new IdleAnimation();
         }
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IIdleAnimationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -807,7 +807,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = IdleAnimation_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IIdleAnimationInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IIdleAnimationInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IIdleAnimationInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static IdleAnimation_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new IdleAnimation_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2660,7 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static IdleAnimation_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new IdleAnimation_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new IdleAnimation_ErrorMask();

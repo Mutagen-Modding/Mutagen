@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Armor CreateFromXml(
+        public static new Armor CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Armor_TranslationMask translationMask = null)
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Armor CreateFromBinary(
+        public static new Armor CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ArmorSetterCommon)((IArmorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Armor GetNew()
+        internal static new Armor GetNew()
         {
             return new Armor();
         }
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IArmorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Armor_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IArmorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IArmorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IArmorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Armor_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
+        public static new Armor_FieldIndex ConvertFieldIndex(ItemAbstract_FieldIndex index)
         {
             switch (index)
             {
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Armor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Armor_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2514,7 +2514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Armor_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Armor_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Armor_ErrorMask();

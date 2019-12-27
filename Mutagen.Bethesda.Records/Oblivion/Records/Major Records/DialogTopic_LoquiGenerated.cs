@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static DialogTopic CreateFromXml(
+        public static new DialogTopic CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             DialogTopic_TranslationMask translationMask = null)
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static DialogTopic CreateFromBinary(
+        public static new DialogTopic CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DialogTopicSetterCommon)((IDialogTopicGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static DialogTopic GetNew()
+        internal static new DialogTopic GetNew()
         {
             return new DialogTopic();
         }
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IDialogTopicInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = DialogTopic_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IDialogTopicInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IDialogTopicInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IDialogTopicInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static DialogTopic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new DialogTopic_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static DialogTopic_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new DialogTopic_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new DialogTopic_ErrorMask();

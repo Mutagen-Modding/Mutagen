@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Hair CreateFromXml(
+        public static new Hair CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Hair_TranslationMask translationMask = null)
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Hair CreateFromBinary(
+        public static new Hair CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((HairSetterCommon)((IHairGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Hair GetNew()
+        internal static new Hair GetNew()
         {
             return new Hair();
         }
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IHairInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Hair_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IHairInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IHairInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IHairInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Hair_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Hair_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2479,7 +2479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Hair_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Hair_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Hair_ErrorMask();

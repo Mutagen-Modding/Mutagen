@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static AlchemicalApparatus CreateFromXml(
+        public static new AlchemicalApparatus CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             AlchemicalApparatus_TranslationMask translationMask = null)
@@ -437,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static AlchemicalApparatus CreateFromBinary(
+        public static new AlchemicalApparatus CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((AlchemicalApparatusSetterCommon)((IAlchemicalApparatusGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static AlchemicalApparatus GetNew()
+        internal static new AlchemicalApparatus GetNew()
         {
             return new AlchemicalApparatus();
         }
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IAlchemicalApparatusInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = AlchemicalApparatus_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IAlchemicalApparatusInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IAlchemicalApparatusInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1470,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new AlchemicalApparatus_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AlchemicalApparatus_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3081,7 +3081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static AlchemicalApparatus_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new AlchemicalApparatus_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new AlchemicalApparatus_ErrorMask();

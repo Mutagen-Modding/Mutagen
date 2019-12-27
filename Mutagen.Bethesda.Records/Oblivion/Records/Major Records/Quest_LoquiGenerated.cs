@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Quest CreateFromXml(
+        public static new Quest CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Quest_TranslationMask translationMask = null)
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Quest CreateFromBinary(
+        public static new Quest CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -482,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((QuestSetterCommon)((IQuestGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Quest GetNew()
+        internal static new Quest GetNew()
         {
             return new Quest();
         }
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IQuestInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Quest_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IQuestInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IQuestInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IQuestInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1710,7 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Quest_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Quest_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3386,7 +3386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Quest_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Quest_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Quest_ErrorMask();

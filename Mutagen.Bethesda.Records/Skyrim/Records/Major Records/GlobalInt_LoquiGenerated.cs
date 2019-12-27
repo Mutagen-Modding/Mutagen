@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static GlobalInt CreateFromXml(
+        public static new GlobalInt CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GlobalInt_TranslationMask translationMask = null)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static GlobalInt CreateFromBinary(
+        public static new GlobalInt CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GlobalIntSetterCommon)((IGlobalIntGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static GlobalInt GetNew()
+        internal static new GlobalInt GetNew()
         {
             return new GlobalInt();
         }
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGlobalIntInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GlobalInt_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGlobalIntInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGlobalIntInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGlobalIntInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static GlobalInt_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static new GlobalInt_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static GlobalInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GlobalInt_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static GlobalInt_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new GlobalInt_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new GlobalInt_ErrorMask();

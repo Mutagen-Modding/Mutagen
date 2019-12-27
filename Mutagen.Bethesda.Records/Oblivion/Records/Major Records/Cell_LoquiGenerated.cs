@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Cell CreateFromXml(
+        public static new Cell CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Cell_TranslationMask translationMask = null)
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static async Task<Cell> CreateFromBinary(
+        public static new async Task<Cell> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((CellSetterCommon)((ICellGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Cell GetNew()
+        internal static new Cell GetNew()
         {
             return new Cell();
         }
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Cell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ICellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion
             return Cell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static async Task CopyInFromBinary(
+        public static async Task CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ICellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new async Task CopyInFromBinary(
+        public async Task CopyInFromBinary(
             ICellInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -2453,7 +2453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Cell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2472,7 +2472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -5438,7 +5438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Cell_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Cell_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Cell_ErrorMask();

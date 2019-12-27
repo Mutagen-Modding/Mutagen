@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static ActionRecord CreateFromXml(
+        public static new ActionRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             ActionRecord_TranslationMask translationMask = null)
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static ActionRecord CreateFromBinary(
+        public static new ActionRecord CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((ActionRecordSetterCommon)((IActionRecordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static ActionRecord GetNew()
+        internal static new ActionRecord GetNew()
         {
             return new ActionRecord();
         }
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IActionRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = ActionRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IActionRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IActionRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IActionRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static ActionRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ActionRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static ActionRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new ActionRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new ActionRecord_ErrorMask();

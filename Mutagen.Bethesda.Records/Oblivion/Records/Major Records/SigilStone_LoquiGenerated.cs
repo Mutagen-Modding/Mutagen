@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static SigilStone CreateFromXml(
+        public static new SigilStone CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SigilStone_TranslationMask translationMask = null)
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static SigilStone CreateFromBinary(
+        public static new SigilStone CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SigilStoneSetterCommon)((ISigilStoneGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static SigilStone GetNew()
+        internal static new SigilStone GetNew()
         {
             return new SigilStone();
         }
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISigilStoneInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = SigilStone_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISigilStoneInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISigilStoneInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISigilStoneInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1691,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SigilStone_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new SigilStone_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1710,7 +1710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SigilStone_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new SigilStone_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3231,7 +3231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static SigilStone_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new SigilStone_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new SigilStone_ErrorMask();

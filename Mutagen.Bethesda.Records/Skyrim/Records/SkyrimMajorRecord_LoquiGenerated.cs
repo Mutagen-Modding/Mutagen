@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static SkyrimMajorRecord CreateFromXml(
+        public static new SkyrimMajorRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             SkyrimMajorRecord_TranslationMask translationMask = null)
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static SkyrimMajorRecord GetNew()
+        internal static new SkyrimMajorRecord GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = SkyrimMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Version2 = frame.ReadUInt16();
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static SkyrimMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new SkyrimMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new SkyrimMajorRecord_ErrorMask();

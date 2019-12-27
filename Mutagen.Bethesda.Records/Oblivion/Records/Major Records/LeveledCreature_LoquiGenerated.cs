@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LeveledCreature CreateFromXml(
+        public static new LeveledCreature CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             LeveledCreature_TranslationMask translationMask = null)
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LeveledCreature CreateFromBinary(
+        public static new LeveledCreature CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static LeveledCreature GetNew()
+        internal static new LeveledCreature GetNew()
         {
             return new LeveledCreature();
         }
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILeveledCreatureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = LeveledCreature_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILeveledCreatureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILeveledCreatureInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILeveledCreatureInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new LeveledCreature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new LeveledCreature_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static LeveledCreature_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new LeveledCreature_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new LeveledCreature_ErrorMask();

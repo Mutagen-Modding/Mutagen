@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3f763baa8d09b4fbe784ca9d44ba853e41cbde21</Sha>
+         <Sha>21ecf45758c9347773e7989eaff660f8e477d544</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-11-2019 19:54:56</CommitDate>
-         <Description>LoquiRegistration.SpinUp()</Description>
+         <CommitDate>12-27-2019 00:05:21</CommitDate>
+         <Description>Some missing new overrides</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Book CreateFromXml(
+        public static new Book CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Book_TranslationMask translationMask = null)
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Book CreateFromBinary(
+        public static new Book CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((BookSetterCommon)((IBookGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Book GetNew()
+        internal static new Book GetNew()
         {
             return new Book();
         }
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IBookInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1000,7 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Book_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IBookInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IBookInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IBookInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Book_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3545,7 +3545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Book_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Book_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Book_ErrorMask();

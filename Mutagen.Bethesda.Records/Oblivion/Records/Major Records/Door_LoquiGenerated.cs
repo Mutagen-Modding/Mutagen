@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Door CreateFromXml(
+        public static new Door CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Door_TranslationMask translationMask = null)
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Door CreateFromBinary(
+        public static new Door CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((DoorSetterCommon)((IDoorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Door GetNew()
+        internal static new Door GetNew()
         {
             return new Door();
         }
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IDoorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Door_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IDoorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IDoorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IDoorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1649,7 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Door_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Door_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -3098,7 +3098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Door_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Door_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Door_ErrorMask();

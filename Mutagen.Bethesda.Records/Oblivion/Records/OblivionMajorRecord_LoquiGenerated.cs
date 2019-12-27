@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static OblivionMajorRecord CreateFromXml(
+        public static new OblivionMajorRecord CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             OblivionMajorRecord_TranslationMask translationMask = null)
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static OblivionMajorRecord GetNew()
+        internal static new OblivionMajorRecord GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IOblivionMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = OblivionMajorRecord_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IOblivionMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static OblivionMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new OblivionMajorRecord_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new OblivionMajorRecord_ErrorMask();

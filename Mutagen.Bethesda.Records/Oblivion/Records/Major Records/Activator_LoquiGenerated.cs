@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Activator CreateFromXml(
+        public static new Activator CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Activator_TranslationMask translationMask = null)
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Activator CreateFromBinary(
+        public static new Activator CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((ActivatorSetterCommon)((IActivatorGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Activator GetNew()
+        internal static new Activator GetNew()
         {
             return new Activator();
         }
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IActivatorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Activator_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IActivatorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IActivatorInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IActivatorInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Activator_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Activator_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2418,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Activator_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Activator_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Activator_ErrorMask();

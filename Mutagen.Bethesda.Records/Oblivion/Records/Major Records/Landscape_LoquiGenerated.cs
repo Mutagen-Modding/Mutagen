@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Landscape CreateFromXml(
+        public static new Landscape CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Landscape_TranslationMask translationMask = null)
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Landscape CreateFromBinary(
+        public static new Landscape CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((LandscapeSetterCommon)((ILandscapeGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Landscape GetNew()
+        internal static new Landscape GetNew()
         {
             return new Landscape();
         }
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ILandscapeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Landscape_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ILandscapeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ILandscapeInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ILandscapeInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Landscape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Landscape_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2982,7 +2982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Landscape_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Landscape_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Landscape_ErrorMask();

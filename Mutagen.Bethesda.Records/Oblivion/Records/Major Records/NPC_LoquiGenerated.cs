@@ -989,7 +989,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static NPC CreateFromXml(
+        public static new NPC CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             NPC_TranslationMask translationMask = null)
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static NPC CreateFromBinary(
+        public static new NPC CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((NPCSetterCommon)((INPCGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static NPC GetNew()
+        internal static new NPC GetNew()
         {
             return new NPC();
         }
@@ -1947,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this INPCInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = NPC_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this INPCInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -3259,7 +3259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             INPCInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -3753,7 +3753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             INPCInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -4426,7 +4426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static NPC_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
+        public static new NPC_FieldIndex ConvertFieldIndex(NPCSpawn_FieldIndex index)
         {
             switch (index)
             {
@@ -4445,7 +4445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new NPC_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -4464,7 +4464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new NPC_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -10595,7 +10595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static NPC_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new NPC_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new NPC_ErrorMask();

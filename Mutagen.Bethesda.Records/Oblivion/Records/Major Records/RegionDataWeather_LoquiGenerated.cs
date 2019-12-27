@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static RegionDataWeather CreateFromXml(
+        public static new RegionDataWeather CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             RegionDataWeather_TranslationMask translationMask = null)
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static RegionDataWeather CreateFromBinary(
+        public static new RegionDataWeather CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((RegionDataWeatherSetterCommon)((IRegionDataWeatherGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static RegionDataWeather GetNew()
+        internal static new RegionDataWeather GetNew()
         {
             return new RegionDataWeather();
         }
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IRegionDataWeatherInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = RegionDataWeather_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IRegionDataWeatherInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IRegionDataWeatherInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IRegionDataWeatherInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static RegionDataWeather_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new RegionDataWeather_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new RegionDataWeather_ErrorMask();

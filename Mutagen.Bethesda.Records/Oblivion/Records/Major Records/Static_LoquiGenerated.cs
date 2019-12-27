@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Static CreateFromXml(
+        public static new Static CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Static_TranslationMask translationMask = null)
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static Static CreateFromBinary(
+        public static new Static CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences)
         {
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((StaticSetterCommon)((IStaticGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Static GetNew()
+        internal static new Static GetNew()
         {
             return new Static();
         }
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Static_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IStaticInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Static_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IStaticInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IStaticInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1080,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IStaticInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Static_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Static_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Static_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Static_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Static_ErrorMask();

@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static GameSetting CreateFromXml(
+        public static new GameSetting CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             GameSetting_TranslationMask translationMask = null)
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
             ((GameSettingSetterCommon)((IGameSettingGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static GameSetting GetNew()
+        internal static new GameSetting GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this IGameSettingInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Skyrim
             errorMask = GameSetting_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this IGameSettingInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             IGameSettingInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public override RecordType RecordType => throw new ArgumentException();
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             IGameSettingInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static GameSetting_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GameSetting_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1671,7 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
 
         #region Factory
-        public static GameSetting_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new GameSetting_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new GameSetting_ErrorMask();

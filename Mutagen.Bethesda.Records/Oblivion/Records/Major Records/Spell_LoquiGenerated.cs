@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static Spell CreateFromXml(
+        public static new Spell CreateFromXml(
             XElement node,
             MissingCreate missing = MissingCreate.New,
             Spell_TranslationMask translationMask = null)
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
             ((SpellSetterCommon)((ISpellGetter)this).CommonSetterInstance()).Clear(this);
         }
 
-        internal static Spell GetNew()
+        internal static new Spell GetNew()
         {
             throw new ArgumentException("New called on an abstract class.");
         }
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Spell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromXml(
+        public static void CopyInFromXml(
             this ISpellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             errorMask = Spell_ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public new static void CopyInFromBinary(
+        public static void CopyInFromBinary(
             this ISpellInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromXml(
+        public void CopyInFromXml(
             ISpellInternal item,
             XElement node,
             ErrorMaskBuilder errorMask,
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public new void CopyInFromBinary(
+        public void CopyInFromBinary(
             ISpellInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Spell_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Factory
-        public static Spell_ErrorMask Factory(ErrorMaskBuilder errorMask)
+        public static new Spell_ErrorMask Factory(ErrorMaskBuilder errorMask)
         {
             if (errorMask?.Empty ?? true) return null;
             return new Spell_ErrorMask();
