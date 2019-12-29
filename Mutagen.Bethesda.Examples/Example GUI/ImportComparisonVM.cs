@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Examples
             sw.Start();
             var mod = await toDo(this.MainVM.ModFilePath);
             sw.Stop();
-            this.Output.Add($"{jobName} has {mod.NPCs.Items.Count} NPCs. Took: {sw.ElapsedMilliseconds}ms");
+            this.Output.Add($"{jobName} has {mod.NPCs.RecordCache.Count} NPCs. Took: {sw.ElapsedMilliseconds}ms");
         }
     }
 }

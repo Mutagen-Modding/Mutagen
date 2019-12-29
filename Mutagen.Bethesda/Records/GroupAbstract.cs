@@ -16,8 +16,8 @@ namespace Mutagen.Bethesda
     public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        protected abstract ICache<T, FormKey> InternalItems { get; }
-        public IEnumerable<T> Records => InternalItems.Items;
+        protected abstract ICache<T, FormKey> InternalCache { get; }
+        public IEnumerable<T> Records => InternalCache.Items;
 
         public IMod SourceMod { get; private set; }
 
@@ -36,17 +36,17 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return $"Group<{typeof(T).Name}>({this.InternalItems.Count})";
+            return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return InternalItems.Items.GetEnumerator();
+            return InternalCache.Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return InternalItems.GetEnumerator();
+            return InternalCache.GetEnumerator();
         }
     }
 

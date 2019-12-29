@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Tests
             OblivionMod ret = new OblivionMod(new ModKey("Test", master: false));
             foreach (var mod in modList)
             {
-                ret.NPCs.Items.Set(mod.Mod.NPCs.Items.Items);
+                ret.NPCs.RecordCache.Set(mod.Mod.NPCs.Records);
             }
         }
     }

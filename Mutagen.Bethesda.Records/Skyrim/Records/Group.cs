@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
 
-        protected override ICache<T, FormKey> InternalItems => this.Items;
+        protected override ICache<T, FormKey> InternalCache => this.RecordCache;
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>
@@ -88,17 +88,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T> _Items;
-            public IReadOnlyCache<T, FormKey> Items => _Items;
+            private GroupMajorRecordCacheWrapper<T> _Cache;
+            public IReadOnlyCache<T, FormKey> RecordCache => _Cache;
             public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => Items.Items;
+            public IEnumerable<T> Records => RecordCache.Items;
 
             partial void CustomCtor(
                 IBinaryReadStream stream,
                 int finalPos,
                 int offset)
             {
-                _Items = GroupMajorRecordCacheWrapper<T>.Factory(
+                _Cache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

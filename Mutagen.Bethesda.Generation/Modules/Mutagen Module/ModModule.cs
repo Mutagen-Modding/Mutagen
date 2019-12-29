@@ -55,11 +55,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (loqui.TargetObjectGeneration.Name == "Group")
                         {
-                            fg.AppendLine($"this.{field.Name}.Items.Set(rhsMod.{field.Name}.Items.Items);");
+                            fg.AppendLine($"this.{field.Name}.RecordCache.Set(rhsMod.{field.Name}.RecordCache.Items);");
                         }
                         else
                         {
-                            fg.AppendLine($"if (rhsMod.{field.Name}.Items.Count > 0)");
+                            fg.AppendLine($"if (rhsMod.{field.Name}.Records.Count > 0)");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine("throw new NotImplementedException(\"Cell additions need implementing\");");
@@ -87,10 +87,10 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (mask?.{field.Name} ?? true)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"this.{field.Name}.Items.{(dictGroup ? "Set" : "AddRange")}(");
+                        fg.AppendLine($"this.{field.Name}.{(dictGroup ? "RecordCache" : "Records")}.{(dictGroup ? "Set" : "AddRange")}(");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"rhs.{field.Name}.Items{(dictGroup ? ".Items" : null)}");
+                            fg.AppendLine($"rhs.{field.Name}.Records");
                             using (new DepthWrapper(fg))
                             {
                                 fg.AppendLine($".Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))");
@@ -144,7 +144,14 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                    fg.AppendLine($"count += {field.Name}.Items.Count > 0 ? 1 : 0;");
+                    if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                    {
+                        fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : 0;");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : 0;");
+                    }
                 }
                 fg.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
                 fg.AppendLine("return count;");
@@ -365,7 +372,14 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"return obj.{field.Name}.Items;");
+                            if (loqui.TargetObjectGeneration.Name == "ListGroup")
+                            {
+                                fg.AppendLine($"return obj.{field.Name}.Records;");
+                            }
+                            else
+                            {
+                                fg.AppendLine($"return obj.{field.Name}.RecordCache;");
+                            }
                         }
                     }
                     fg.AppendLine("default:");
@@ -454,8 +468,8 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("if (group.Items.Count == 0) return;");
-                    fg.AppendLine($"var cuts = group.Items.Items.Cut(CutCount).ToArray();");
+                    fg.AppendLine("if (group.RecordCache.Count == 0) return;");
+                    fg.AppendLine($"var cuts = group.Records.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
                     fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.{obj.GetObjectData().GameMode}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
@@ -552,7 +566,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;");
+                    fg.AppendLine("if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;");
                     fg.AppendLine($"List<Task<Stream>> streams = new List<Task<Stream>>();");
                     fg.AppendLine($"byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);");
@@ -563,7 +577,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);");
                     }
                     fg.AppendLine($"streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));");
-                    fg.AppendLine($"foreach (var cutItems in group.Items.Cut(CutCount))");
+                    fg.AppendLine($"foreach (var cutItems in group.Records.Cut(CutCount))");
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
@@ -581,7 +595,7 @@ namespace Mutagen.Bethesda.Generation
                                         subFg.AppendLine($"foreach (var item in cutItems)");
                                         using (new BraceWrapper(subFg))
                                         {
-                                            subFg.AppendLine($"item.Value.WriteToBinary(stream, masters);");
+                                            subFg.AppendLine($"item.WriteToBinary(stream, masters);");
                                         }
                                     }
                                     subFg.AppendLine($"return trib;");

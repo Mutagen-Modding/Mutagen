@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Examples
                     Classes = true,
                 });
             var links = new LinkingPackage<IOblivionModGetter>(mod, null);
-            foreach (var npc in mod.NPCs.Items.Items)
+            foreach (var npc in mod.NPCs.Records)
             {
                 // Not all NPCs have classes, so skip any that don't have one
                 if (npc.Class == null) continue;

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             Group_ErrorMask<NPC_ErrorMask> group_ErrorMask = new Group_ErrorMask<NPC_ErrorMask>();
             group_ErrorMask.SetNthMask(
-                (int)Group_FieldIndex.Items,
+                (int)Group_FieldIndex.RecordCache,
                 new MaskItem<Exception, IEnumerable<MaskItem<Exception, NPC_ErrorMask>>>(null, null));
         }
     }

@@ -327,31 +327,31 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (mask?.GameSettings ?? true)
             {
-                this.GameSettings.Items.Set(rhsMod.GameSettings.Items.Items);
+                this.GameSettings.RecordCache.Set(rhsMod.GameSettings.RecordCache.Items);
             }
             if (mask?.Keywords ?? true)
             {
-                this.Keywords.Items.Set(rhsMod.Keywords.Items.Items);
+                this.Keywords.RecordCache.Set(rhsMod.Keywords.RecordCache.Items);
             }
             if (mask?.LocationReferenceTypes ?? true)
             {
-                this.LocationReferenceTypes.Items.Set(rhsMod.LocationReferenceTypes.Items.Items);
+                this.LocationReferenceTypes.RecordCache.Set(rhsMod.LocationReferenceTypes.RecordCache.Items);
             }
             if (mask?.Actions ?? true)
             {
-                this.Actions.Items.Set(rhsMod.Actions.Items.Items);
+                this.Actions.RecordCache.Set(rhsMod.Actions.RecordCache.Items);
             }
             if (mask?.TextureSets ?? true)
             {
-                this.TextureSets.Items.Set(rhsMod.TextureSets.Items.Items);
+                this.TextureSets.RecordCache.Set(rhsMod.TextureSets.RecordCache.Items);
             }
             if (mask?.Globals ?? true)
             {
-                this.Globals.Items.Set(rhsMod.Globals.Items.Items);
+                this.Globals.RecordCache.Set(rhsMod.Globals.RecordCache.Items);
             }
             if (mask?.Classes ?? true)
             {
-                this.Classes.Items.Set(rhsMod.Classes.Items.Items);
+                this.Classes.RecordCache.Set(rhsMod.Classes.RecordCache.Items);
             }
         }
 
@@ -362,50 +362,50 @@ namespace Mutagen.Bethesda.Skyrim
             var duppedRecords = new List<(IMajorRecordCommon Record, FormKey OriginalFormKey)>();
             if (mask?.GameSettings ?? true)
             {
-                this.GameSettings.Items.Set(
-                    rhs.GameSettings.Items.Items
+                this.GameSettings.RecordCache.Set(
+                    rhs.GameSettings.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<GameSetting>());
             }
             if (mask?.Keywords ?? true)
             {
-                this.Keywords.Items.Set(
-                    rhs.Keywords.Items.Items
+                this.Keywords.RecordCache.Set(
+                    rhs.Keywords.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Keyword>());
             }
             if (mask?.LocationReferenceTypes ?? true)
             {
-                this.LocationReferenceTypes.Items.Set(
-                    rhs.LocationReferenceTypes.Items.Items
+                this.LocationReferenceTypes.RecordCache.Set(
+                    rhs.LocationReferenceTypes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LocationReferenceType>());
             }
             if (mask?.Actions ?? true)
             {
-                this.Actions.Items.Set(
-                    rhs.Actions.Items.Items
+                this.Actions.RecordCache.Set(
+                    rhs.Actions.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<ActionRecord>());
             }
             if (mask?.TextureSets ?? true)
             {
-                this.TextureSets.Items.Set(
-                    rhs.TextureSets.Items.Items
+                this.TextureSets.RecordCache.Set(
+                    rhs.TextureSets.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<TextureSet>());
             }
             if (mask?.Globals ?? true)
             {
-                this.Globals.Items.Set(
-                    rhs.Globals.Items.Items
+                this.Globals.RecordCache.Set(
+                    rhs.Globals.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Global>());
             }
             if (mask?.Classes ?? true)
             {
-                this.Classes.Items.Set(
-                    rhs.Classes.Items.Items
+                this.Classes.RecordCache.Set(
+                    rhs.Classes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Class>());
             }
@@ -434,13 +434,13 @@ namespace Mutagen.Bethesda.Skyrim
         public int GetRecordCount()
         {
             int count = this.EnumerateMajorRecords().Count();
-            count += GameSettings.Items.Count > 0 ? 1 : 0;
-            count += Keywords.Items.Count > 0 ? 1 : 0;
-            count += LocationReferenceTypes.Items.Count > 0 ? 1 : 0;
-            count += Actions.Items.Count > 0 ? 1 : 0;
-            count += TextureSets.Items.Count > 0 ? 1 : 0;
-            count += Globals.Items.Count > 0 ? 1 : 0;
-            count += Classes.Items.Count > 0 ? 1 : 0;
+            count += GameSettings.RecordCache.Count > 0 ? 1 : 0;
+            count += Keywords.RecordCache.Count > 0 ? 1 : 0;
+            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += Actions.RecordCache.Count > 0 ? 1 : 0;
+            count += TextureSets.RecordCache.Count > 0 ? 1 : 0;
+            count += Globals.RecordCache.Count > 0 ? 1 : 0;
+            count += Classes.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2252,37 +2252,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    return obj.GameSettings.Items;
+                    return obj.GameSettings.RecordCache;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    return obj.Keywords.Items;
+                    return obj.Keywords.RecordCache;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    return obj.LocationReferenceTypes.Items;
+                    return obj.LocationReferenceTypes.RecordCache;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    return obj.Actions.Items;
+                    return obj.Actions.RecordCache;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    return obj.TextureSets.Items;
+                    return obj.TextureSets.RecordCache;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    return obj.Globals.Items;
+                    return obj.Globals.RecordCache;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    return obj.Classes.Items;
+                    return obj.Classes.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2320,8 +2320,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Stream[] streamDepositArray)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if (group.Items.Count == 0) return;
-            var cuts = group.Items.Items.Cut(CutCount).ToArray();
+            if (group.RecordCache.Count == 0) return;
+            var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
             byte[] groupBytes = new byte[MetaDataConstants.Skyrim.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masters)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;
+            if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();
             byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -2385,7 +2385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
             }
             streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
-            foreach (var cutItems in group.Items.Cut(CutCount))
+            foreach (var cutItems in group.Records.Cut(CutCount))
             {
                 streams.Add(
                     Task.Run<Stream>(() =>
@@ -2395,7 +2395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             foreach (var item in cutItems)
                             {
-                                item.Value.WriteToBinary(stream, masters);
+                                item.WriteToBinary(stream, masters);
                             }
                         }
                         return trib;
@@ -3876,7 +3876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.GameSettings ?? true)
             {
-                if (item.GameSettings.Items.Count > 0)
+                if (item.GameSettings.RecordCache.Count > 0)
                 {
                     var loquiItem = item.GameSettings;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
@@ -3889,7 +3889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Keywords ?? true)
             {
-                if (item.Keywords.Items.Count > 0)
+                if (item.Keywords.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Keywords;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeywordGetter>(
@@ -3902,7 +3902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.LocationReferenceTypes ?? true)
             {
-                if (item.LocationReferenceTypes.Items.Count > 0)
+                if (item.LocationReferenceTypes.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LocationReferenceTypes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
@@ -3915,7 +3915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Actions ?? true)
             {
-                if (item.Actions.Items.Count > 0)
+                if (item.Actions.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Actions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
@@ -3928,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.TextureSets ?? true)
             {
-                if (item.TextureSets.Items.Count > 0)
+                if (item.TextureSets.RecordCache.Count > 0)
                 {
                     var loquiItem = item.TextureSets;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
@@ -3941,7 +3941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Globals ?? true)
             {
-                if (item.Globals.Items.Count > 0)
+                if (item.Globals.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Globals;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalGetter>(
@@ -3954,7 +3954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (importMask?.Classes ?? true)
             {
-                if (item.Classes.Items.Count > 0)
+                if (item.Classes.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Classes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClassGetter>(

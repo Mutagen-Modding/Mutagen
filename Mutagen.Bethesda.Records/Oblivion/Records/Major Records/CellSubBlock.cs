@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static CellSubBlock_TranslationMask duplicateMask = new CellSubBlock_TranslationMask(true)
         {
-            Items = new Loqui.MaskItem<bool, Cell_TranslationMask>(false, default)
+            Cells = new Loqui.MaskItem<bool, Cell_TranslationMask>(false, default)
         };
 
         public void WriteToXmlFolder(
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new CellSubBlock();
             ret.DeepCopyFieldsFrom(this, duplicateMask);
-            ret.Items.SetTo(this.Items.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            ret.Cells.SetTo(this.Cells.Select(i => (Cell)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
         }
     }
@@ -48,11 +48,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         partial class CellSubBlockBinaryOverlay
         {
-            public IReadOnlySetList<ICellGetter> Items { get; private set; } = EmptySetList<CellBinaryOverlay>.Instance;
+            public IReadOnlySetList<ICellGetter> Cells { get; private set; } = EmptySetList<CellBinaryOverlay>.Instance;
 
-            partial void ItemsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void CellsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
-                this.Items = BinaryOverlaySetList<CellBinaryOverlay>.FactoryByArray(
+                this.Cells = BinaryOverlaySetList<CellBinaryOverlay>.FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: _package,
                     recordTypeConverter: null,

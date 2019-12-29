@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected override ICache<T, FormKey> InternalItems => this.Items;
+        protected override ICache<T, FormKey> InternalCache => this.RecordCache;
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly Group_TranslationMask<OblivionMajorRecord_TranslationMask> XmlFolderTranslationMask = new Group_TranslationMask<OblivionMajorRecord_TranslationMask>(true)
         {
-            Items = new MaskItem<bool, OblivionMajorRecord_TranslationMask>(false, default)
+            RecordCache = new MaskItem<bool, OblivionMajorRecord_TranslationMask>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (errorMask?.PushIndex(index))
             {
-                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                using (errorMask?.PushIndex((int)Group_FieldIndex.RecordCache))
                 {
                     try
                     {
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
                                         translationMask: null));
                             }
                             var items = await Task.WhenAll(tasks).ConfigureAwait(false);
-                            group.Items.Set(items);
+                            group.RecordCache.Set(items);
                         }
                     }
                     catch (Exception ex)
@@ -112,9 +112,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (errorMask?.PushIndex(index))
             {
-                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                using (errorMask?.PushIndex((int)Group_FieldIndex.RecordCache))
                 {
-                    if (group.Items.Count == 0) return;
+                    if (group.RecordCache.Count == 0) return;
                     XElement topNode = new XElement("Group");
                     GroupXmlWriteTranslation.WriteToNodeXml(
                         group,
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
                     int counter = 0;
                     XElement items = new XElement("Items");
                     List<Task> tasks = new List<Task>();
-                    foreach (var item in group.Items.Items)
+                    foreach (var item in group.RecordCache.Items)
                     {
                         tasks.Add(
                             item.WriteToXmlFolder(
@@ -180,14 +180,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class GroupBinaryOverlay<T>
         {
-            private GroupMajorRecordCacheWrapper<T> _Items;
-            public IReadOnlyCache<T, FormKey> Items => _Items;
+            private GroupMajorRecordCacheWrapper<T> _RecordCache;
+            public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache;
             public IMod SourceMod => throw new NotImplementedException();
-            public IEnumerable<T> Records => Items.Items;
+            public IEnumerable<T> Records => RecordCache.Items;
 
             partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
             {
-                _Items = GroupMajorRecordCacheWrapper<T>.Factory(
+                _RecordCache = GroupMajorRecordCacheWrapper<T>.Factory(
                     stream,
                     _data,
                     _package,

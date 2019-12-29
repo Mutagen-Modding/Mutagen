@@ -66,12 +66,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         public Int32 Unknown { get; set; }
         #endregion
-        #region Items
-        private readonly ICache<T, FormKey> _Items = new Cache<T, FormKey>((item) => item.FormKey);
-        public ICache<T, FormKey> Items => _Items;
+        #region RecordCache
+        private readonly ICache<T, FormKey> _RecordCache = new Cache<T, FormKey>((item) => item.FormKey);
+        public ICache<T, FormKey> RecordCache => _RecordCache;
         #region Interface Members
-        ICache<T, FormKey> IGroup<T>.Items => _Items;
-        IReadOnlyCache<T, FormKey> IGroupGetter<T>.Items => _Items;
+        ICache<T, FormKey> IGroup<T>.RecordCache => _RecordCache;
+        IReadOnlyCache<T, FormKey> IGroupGetter<T>.RecordCache => _RecordCache;
         #endregion
 
         #endregion
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         new Int32 Unknown { get; set; }
 
-        new ICache<T, FormKey> Items { get; }
+        new ICache<T, FormKey> RecordCache { get; }
     }
 
     public partial interface IGroupGetter<out T> :
@@ -426,8 +426,8 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Unknown { get; }
 
         #endregion
-        #region Items
-        IReadOnlyCache<T, FormKey> Items { get; }
+        #region RecordCache
+        IReadOnlyCache<T, FormKey> RecordCache { get; }
         #endregion
 
     }
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         GroupType = 0,
         LastModified = 1,
         Unknown = 2,
-        Items = 3,
+        RecordCache = 3,
     }
     #endregion
 
@@ -939,8 +939,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Group_FieldIndex.LastModified;
                 case "UNKNOWN":
                     return (ushort)Group_FieldIndex.Unknown;
-                case "ITEMS":
-                    return (ushort)Group_FieldIndex.Items;
+                case "RECORDCACHE":
+                    return (ushort)Group_FieldIndex.RecordCache;
                 default:
                     return null;
             }
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1002,8 +1002,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "LastModified";
                 case Group_FieldIndex.Unknown:
                     return "Unknown";
-                case Group_FieldIndex.Items:
-                    return "Items";
+                case Group_FieldIndex.RecordCache:
+                    return "RecordCache";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Unknown:
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Int32);
                 case Group_FieldIndex.Unknown:
                     return typeof(Int32);
-                case Group_FieldIndex.Items:
+                case Group_FieldIndex.RecordCache:
                     return typeof(SourceSetCache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Int32);
             item.Unknown = default(Int32);
-            item.Items.Clear();
+            item.RecordCache.Clear();
         }
         
         #region Xml Translation
@@ -1213,8 +1213,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         await Mutagen.Bethesda.Binary.ListAsyncBinaryTranslation<T>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
-                            item: item.Items,
-                            fieldIndex: (int)Group_FieldIndex.Items,
+                            item: item.RecordCache,
+                            fieldIndex: (int)Group_FieldIndex.RecordCache,
                             lengthLength: 4,
                             errorMask: errorMask,
                             transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
@@ -1281,9 +1281,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Items = EqualsMaskHelper.CacheEqualsHelper(
-                lhs: item.Items,
-                rhs: rhs.Items,
+            ret.RecordCache = EqualsMaskHelper.CacheEqualsHelper(
+                lhs: item.RecordCache,
+                rhs: rhs.RecordCache,
                 maskGetter: (k, l, r) => l.GetEqualsMask(r, include),
                 include: include);
         }
@@ -1344,13 +1344,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unknown => {item.Unknown}");
             }
-            if (printMask?.Items?.Overall ?? true)
+            if (printMask?.RecordCache?.Overall ?? true)
             {
-                fg.AppendLine("Items =>");
+                fg.AppendLine("RecordCache =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in item.Items)
+                    foreach (var subItem in item.RecordCache)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.GroupType = true;
             mask.LastModified = true;
             mask.Unknown = true;
-            mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>>>(true, item.Items.Items.Select((i) => new MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
+            mask.RecordCache = new MaskItem<bool, IEnumerable<MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>>>(true, item.RecordCache.Items.Select((i) => new MaskItemIndexed<FormKey, bool, SkyrimMajorRecord_Mask<bool>>(i.FormKey, true, i.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.GroupType != rhs.GroupType) return false;
             if (lhs.LastModified != rhs.LastModified) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
+            if (!lhs.RecordCache.SequenceEqual(rhs.RecordCache)) return false;
             return true;
         }
         
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.LastModified).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Unknown).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.Items).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.RecordCache).CombineHashCode(ret);
             return ret;
         }
         
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IGroupGetter<T> obj)
         {
-            foreach (var subItem in obj.Items.Items)
+            foreach (var subItem in obj.RecordCache.Items)
             {
                 yield return subItem;
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1475,13 +1475,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.Items) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
             {
-                errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                 try
                 {
-                    item.Items.SetTo(
-                        rhs.Items.Items
+                    item.RecordCache.SetTo(
+                        rhs.RecordCache.Items
                             .Select((r) =>
                             {
                                 return r.DeepCopy() as T;
@@ -1623,15 +1623,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Group_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.Items) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
             {
                 try
                 {
-                    errorMask?.PushIndex((int)Group_FieldIndex.Items);
+                    errorMask?.PushIndex((int)Group_FieldIndex.RecordCache);
                     KeyedDictXmlTranslation<FormKey, T>.Instance.Write(
                         node: node,
-                        name: nameof(item.Items),
-                        items: item.Items.Items,
+                        name: nameof(item.RecordCache),
+                        items: item.RecordCache.Items,
                         translationMask: translationMask,
                         errorMask: errorMask,
                         valTransl: (XElement subNode, T subItem, ErrorMaskBuilder dictSubMask, TranslationCrystal dictTranslMask) =>
@@ -1837,11 +1837,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Items":
+                case "RecordCache":
                     KeyedDictXmlTranslation<FormKey, T>.Instance.ParseInto(
                         node: node,
-                        item: item.Items,
-                        fieldIndex: (int)Group_FieldIndex.Items,
+                        item: item.RecordCache,
+                        fieldIndex: (int)Group_FieldIndex.RecordCache,
                         errorMask: errorMask,
                         translationMask: translationMask,
                         valTransl: LoquiXmlTranslation<T>.Instance.Parse);
@@ -2051,7 +2051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.GroupType = initialValue;
             this.LastModified = initialValue;
             this.Unknown = initialValue;
-            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>>(initialValue, null);
+            this.RecordCache = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public T GroupType;
         public T LastModified;
         public T Unknown;
-        public MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>> Items;
+        public MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>> RecordCache;
         #endregion
 
         #region Equals
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
             if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-            if (!object.Equals(this.Items, rhs.Items)) return false;
+            if (!object.Equals(this.RecordCache, rhs.RecordCache)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2084,7 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
             ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
-            ret = ret.CombineHashCode(this.Items?.GetHashCode());
+            ret = ret.CombineHashCode(this.RecordCache?.GetHashCode());
             return ret;
         }
 
@@ -2096,12 +2096,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
             if (!eval(this.Unknown)) return false;
-            if (this.Items != null)
+            if (this.RecordCache != null)
             {
-                if (!eval(this.Items.Overall)) return false;
-                if (this.Items.Specific != null)
+                if (!eval(this.RecordCache.Overall)) return false;
+                if (this.RecordCache.Specific != null)
                 {
-                    foreach (var item in this.Items.Specific)
+                    foreach (var item in this.RecordCache.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (!item.Specific?.AllEqual(eval) ?? false) return false;
@@ -2125,15 +2125,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.GroupType = eval(this.GroupType);
             obj.LastModified = eval(this.LastModified);
             obj.Unknown = eval(this.Unknown);
-            if (Items != null)
+            if (RecordCache != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>>();
-                obj.Items.Overall = eval(this.Items.Overall);
-                if (Items.Specific != null)
+                obj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>>();
+                obj.RecordCache.Overall = eval(this.RecordCache.Overall);
+                if (RecordCache.Specific != null)
                 {
                     List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>> l = new List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>();
-                    obj.Items.Specific = l;
-                    foreach (var item in Items.Specific)
+                    obj.RecordCache.Specific = l;
+                    foreach (var item in RecordCache.Specific)
                     {
                         MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>> mask = default(MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>);
                         throw new NotImplementedException();
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Clear Enumerables
         public void ClearEnumerables()
         {
-            this.Items.Specific = null;
+            this.RecordCache.Specific = null;
         }
         #endregion
 
@@ -2181,19 +2181,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     fg.AppendLine($"Unknown => {Unknown}");
                 }
-                if (printMask?.Items?.Overall ?? true)
+                if (printMask?.RecordCache?.Overall ?? true)
                 {
-                    fg.AppendLine("Items =>");
+                    fg.AppendLine("RecordCache =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Items.Overall != null)
+                        if (RecordCache.Overall != null)
                         {
-                            fg.AppendLine(Items.Overall.ToString());
+                            fg.AppendLine(RecordCache.Overall.ToString());
                         }
-                        if (Items.Specific != null)
+                        if (RecordCache.Specific != null)
                         {
-                            foreach (var subItem in Items.Specific)
+                            foreach (var subItem in RecordCache.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Exception GroupType;
         public Exception LastModified;
         public Exception Unknown;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> Items;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> RecordCache;
         #endregion
 
         #region IErrorMask
@@ -2248,8 +2248,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return LastModified;
                 case Group_FieldIndex.Unknown:
                     return Unknown;
-                case Group_FieldIndex.Items:
-                    return Items;
+                case Group_FieldIndex.RecordCache:
+                    return RecordCache;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2269,8 +2269,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.Unknown:
                     this.Unknown = ex;
                     break;
-                case Group_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(ex, null);
+                case Group_FieldIndex.RecordCache:
+                    this.RecordCache = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2291,8 +2291,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.Unknown:
                     this.Unknown = (Exception)obj;
                     break;
-                case Group_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>)obj;
+                case Group_FieldIndex.RecordCache:
+                    this.RecordCache = (MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2305,7 +2305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (GroupType != null) return true;
             if (LastModified != null) return true;
             if (Unknown != null) return true;
-            if (Items != null) return true;
+            if (RecordCache != null) return true;
             return false;
         }
         #endregion
@@ -2343,17 +2343,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             fg.AppendLine($"GroupType => {GroupType}");
             fg.AppendLine($"LastModified => {LastModified}");
             fg.AppendLine($"Unknown => {Unknown}");
-            fg.AppendLine("Items =>");
+            fg.AppendLine("RecordCache =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Items.Overall != null)
+                if (RecordCache.Overall != null)
                 {
-                    fg.AppendLine(Items.Overall.ToString());
+                    fg.AppendLine(RecordCache.Overall.ToString());
                 }
-                if (Items.Specific != null)
+                if (RecordCache.Specific != null)
                 {
-                    foreach (var subItem in Items.Specific)
+                    foreach (var subItem in RecordCache.Specific)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
             ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
+            ret.RecordCache = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.RecordCache.Overall.Combine(rhs.RecordCache.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.RecordCache.Specific.And(rhs.RecordCache.Specific)));
             return ret;
         }
         public static Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> lhs, Group_ErrorMask<T_ErrMask> rhs)
@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool GroupType;
         public bool LastModified;
         public bool Unknown;
-        public MaskItem<bool, T_TranslMask> Items;
+        public MaskItem<bool, T_TranslMask> RecordCache;
         #endregion
 
         #region Ctors
@@ -2415,7 +2415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.GroupType = defaultOn;
             this.LastModified = defaultOn;
             this.Unknown = defaultOn;
-            this.Items = new MaskItem<bool, T_TranslMask>(defaultOn, null);
+            this.RecordCache = new MaskItem<bool, T_TranslMask>(defaultOn, null);
         }
 
         #endregion
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((GroupType, null));
             ret.Add((LastModified, null));
             ret.Add((Unknown, null));
-            ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
+            ret.Add((RecordCache?.Overall ?? true, RecordCache?.Specific?.GetCrystal()));
         }
     }
 }
@@ -2501,8 +2501,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
-                items: item.Items.Items,
-                fieldIndex: (int)Group_FieldIndex.Items,
+                items: item.RecordCache.Items,
+                fieldIndex: (int)Group_FieldIndex.RecordCache,
                 errorMask: errorMask,
                 transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
                 {

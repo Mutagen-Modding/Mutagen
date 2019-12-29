@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Examples
         public static void DoSomeModifications(string pathToMod, string pathToExport, Action<string> output)
         {
             IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
-            var sourceArmor = mod.Armors.Items.Items.FirstOrDefault();
+            var sourceArmor = mod.Armors.Records.FirstOrDefault();
             if (sourceArmor == null) return;
 
             OblivionMod outgoingMod = new OblivionMod(new ModKey("Outgoing", master: false));

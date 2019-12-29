@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly ListGroup_TranslationMask<CellBlock_TranslationMask> XmlFolderTranslationMask = new ListGroup_TranslationMask<CellBlock_TranslationMask>(true)
         {
-            Items = new MaskItem<bool, CellBlock_TranslationMask>(false, default)
+            Records = new MaskItem<bool, CellBlock_TranslationMask>(false, default)
         };
 
         public static async Task CreateFromXmlFolder<T>(
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (errorMask?.PushIndex(index))
             {
-                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                using (errorMask?.PushIndex((int)ListGroup_FieldIndex.Records))
                 {
                     try
                     {
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
                             }));
                         }
                         var items = await Task.WhenAll(tasks).ConfigureAwait(false);
-                        group.Items.AddRange(items);
+                        group.Records.AddRange(items);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (errorMask?.PushIndex(index))
             {
-                using (errorMask?.PushIndex((int)Group_FieldIndex.Items))
+                using (errorMask?.PushIndex((int)ListGroup_FieldIndex.Records))
                 {
                     try
                     {
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
                             translationMask: XmlFolderTranslationMask.GetCrystal());
                         List<Task> tasks = new List<Task>();
                         int counter = 0;
-                        foreach (var item in list.Items)
+                        foreach (var item in list.Records)
                         {
                             int stampedCounter = counter++;
                             tasks.Add(Task.Run(() =>
@@ -173,15 +173,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ListGroupBinaryOverlay<T>
         {
-            private ListGroupAbstract.GroupListOverlay<T> _Items;
-            public IReadOnlyList<T> Items => _Items;
+            private ListGroupAbstract.GroupListOverlay<T> _Records;
+            public IReadOnlyList<T> Records => _Records;
 
             partial void CustomCtor(
                 IBinaryReadStream stream,
                 int finalPos,
                 int offset)
             {
-                _Items = ListGroupAbstract.GroupListOverlay<T>.Factory(
+                _Records = ListGroupAbstract.GroupListOverlay<T>.Factory(
                     stream,
                     _data,
                     _package,

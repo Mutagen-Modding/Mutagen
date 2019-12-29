@@ -17,13 +17,13 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public static readonly CellBlock_TranslationMask XmlFolderTranslationMask = new CellBlock_TranslationMask(true)
         {
-            Items = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
         };
         public static readonly TranslationCrystal XmlFolderTranslationCrystal = XmlFolderTranslationMask.GetCrystal();
 
         public static CellBlock_TranslationMask duplicateMask = new CellBlock_TranslationMask(true)
         {
-            Items = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
+            SubBlocks = new MaskItem<bool, CellSubBlock_TranslationMask>(false, default)
         };
 
         public async Task WriteToXmlFolder(
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: XmlFolderTranslationCrystal);
             int blockCounter = 0;
             List<Task> tasks = new List<Task>();
-            foreach (var item in this.Items)
+            foreach (var item in this.SubBlocks)
             {
                 int stampedCounter = blockCounter++;
                 tasks.Add(Task.Run(() =>
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = new CellBlock();
             ret.DeepCopyFieldsFrom(this, duplicateMask);
-            ret.Items.SetTo(this.Items.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
+            ret.SubBlocks.SetTo(this.SubBlocks.Select(i => (CellSubBlock)i.Duplicate(getNextFormKey, duplicatedRecordTracker)));
             return ret;
         }
 
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
                 tasks.Add(Task.Run(() => CellSubBlock.CreateFromXmlFolder(f.File, f.Index)));
             }
             var subBlocks = await Task.WhenAll(tasks).ConfigureAwait(false);
-            ret.Items.AddRange(subBlocks);
+            ret.SubBlocks.AddRange(subBlocks);
             return ret;
         }
     }

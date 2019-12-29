@@ -79,7 +79,8 @@ namespace Mutagen.Bethesda.Generation
                 && loquiGen.TargetObjectGeneration.GetObjectData().ObjectType == ObjectType.Group;
             if (isGroup)
             {
-                fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.Items.Count > 0)");
+                var dictGroup = loquiGen.TargetObjectGeneration.Name == "Group";
+                fg.AppendLine($"if ({itemAccessor.PropertyOrDirectAccess}.{(dictGroup ? "RecordCache" : "Records")}.Count > 0)");
             }
             using (new BraceWrapper(fg, doIt: isGroup || (!this.Module.TranslationMaskParameter && !typeGen.HasBeenSet)))
             {

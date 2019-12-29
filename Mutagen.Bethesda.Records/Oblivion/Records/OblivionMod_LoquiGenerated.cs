@@ -718,230 +718,230 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (mask?.GameSettings ?? true)
             {
-                this.GameSettings.Items.Set(rhsMod.GameSettings.Items.Items);
+                this.GameSettings.RecordCache.Set(rhsMod.GameSettings.RecordCache.Items);
             }
             if (mask?.Globals ?? true)
             {
-                this.Globals.Items.Set(rhsMod.Globals.Items.Items);
+                this.Globals.RecordCache.Set(rhsMod.Globals.RecordCache.Items);
             }
             if (mask?.Classes ?? true)
             {
-                this.Classes.Items.Set(rhsMod.Classes.Items.Items);
+                this.Classes.RecordCache.Set(rhsMod.Classes.RecordCache.Items);
             }
             if (mask?.Factions ?? true)
             {
-                this.Factions.Items.Set(rhsMod.Factions.Items.Items);
+                this.Factions.RecordCache.Set(rhsMod.Factions.RecordCache.Items);
             }
             if (mask?.Hairs ?? true)
             {
-                this.Hairs.Items.Set(rhsMod.Hairs.Items.Items);
+                this.Hairs.RecordCache.Set(rhsMod.Hairs.RecordCache.Items);
             }
             if (mask?.Eyes ?? true)
             {
-                this.Eyes.Items.Set(rhsMod.Eyes.Items.Items);
+                this.Eyes.RecordCache.Set(rhsMod.Eyes.RecordCache.Items);
             }
             if (mask?.Races ?? true)
             {
-                this.Races.Items.Set(rhsMod.Races.Items.Items);
+                this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
             }
             if (mask?.Sounds ?? true)
             {
-                this.Sounds.Items.Set(rhsMod.Sounds.Items.Items);
+                this.Sounds.RecordCache.Set(rhsMod.Sounds.RecordCache.Items);
             }
             if (mask?.Skills ?? true)
             {
-                this.Skills.Items.Set(rhsMod.Skills.Items.Items);
+                this.Skills.RecordCache.Set(rhsMod.Skills.RecordCache.Items);
             }
             if (mask?.MagicEffects ?? true)
             {
-                this.MagicEffects.Items.Set(rhsMod.MagicEffects.Items.Items);
+                this.MagicEffects.RecordCache.Set(rhsMod.MagicEffects.RecordCache.Items);
             }
             if (mask?.Scripts ?? true)
             {
-                this.Scripts.Items.Set(rhsMod.Scripts.Items.Items);
+                this.Scripts.RecordCache.Set(rhsMod.Scripts.RecordCache.Items);
             }
             if (mask?.LandTextures ?? true)
             {
-                this.LandTextures.Items.Set(rhsMod.LandTextures.Items.Items);
+                this.LandTextures.RecordCache.Set(rhsMod.LandTextures.RecordCache.Items);
             }
             if (mask?.Enchantments ?? true)
             {
-                this.Enchantments.Items.Set(rhsMod.Enchantments.Items.Items);
+                this.Enchantments.RecordCache.Set(rhsMod.Enchantments.RecordCache.Items);
             }
             if (mask?.Spells ?? true)
             {
-                this.Spells.Items.Set(rhsMod.Spells.Items.Items);
+                this.Spells.RecordCache.Set(rhsMod.Spells.RecordCache.Items);
             }
             if (mask?.Birthsigns ?? true)
             {
-                this.Birthsigns.Items.Set(rhsMod.Birthsigns.Items.Items);
+                this.Birthsigns.RecordCache.Set(rhsMod.Birthsigns.RecordCache.Items);
             }
             if (mask?.Activators ?? true)
             {
-                this.Activators.Items.Set(rhsMod.Activators.Items.Items);
+                this.Activators.RecordCache.Set(rhsMod.Activators.RecordCache.Items);
             }
             if (mask?.AlchemicalApparatus ?? true)
             {
-                this.AlchemicalApparatus.Items.Set(rhsMod.AlchemicalApparatus.Items.Items);
+                this.AlchemicalApparatus.RecordCache.Set(rhsMod.AlchemicalApparatus.RecordCache.Items);
             }
             if (mask?.Armors ?? true)
             {
-                this.Armors.Items.Set(rhsMod.Armors.Items.Items);
+                this.Armors.RecordCache.Set(rhsMod.Armors.RecordCache.Items);
             }
             if (mask?.Books ?? true)
             {
-                this.Books.Items.Set(rhsMod.Books.Items.Items);
+                this.Books.RecordCache.Set(rhsMod.Books.RecordCache.Items);
             }
             if (mask?.Clothes ?? true)
             {
-                this.Clothes.Items.Set(rhsMod.Clothes.Items.Items);
+                this.Clothes.RecordCache.Set(rhsMod.Clothes.RecordCache.Items);
             }
             if (mask?.Containers ?? true)
             {
-                this.Containers.Items.Set(rhsMod.Containers.Items.Items);
+                this.Containers.RecordCache.Set(rhsMod.Containers.RecordCache.Items);
             }
             if (mask?.Doors ?? true)
             {
-                this.Doors.Items.Set(rhsMod.Doors.Items.Items);
+                this.Doors.RecordCache.Set(rhsMod.Doors.RecordCache.Items);
             }
             if (mask?.Ingredients ?? true)
             {
-                this.Ingredients.Items.Set(rhsMod.Ingredients.Items.Items);
+                this.Ingredients.RecordCache.Set(rhsMod.Ingredients.RecordCache.Items);
             }
             if (mask?.Lights ?? true)
             {
-                this.Lights.Items.Set(rhsMod.Lights.Items.Items);
+                this.Lights.RecordCache.Set(rhsMod.Lights.RecordCache.Items);
             }
             if (mask?.Miscellaneous ?? true)
             {
-                this.Miscellaneous.Items.Set(rhsMod.Miscellaneous.Items.Items);
+                this.Miscellaneous.RecordCache.Set(rhsMod.Miscellaneous.RecordCache.Items);
             }
             if (mask?.Statics ?? true)
             {
-                this.Statics.Items.Set(rhsMod.Statics.Items.Items);
+                this.Statics.RecordCache.Set(rhsMod.Statics.RecordCache.Items);
             }
             if (mask?.Grasses ?? true)
             {
-                this.Grasses.Items.Set(rhsMod.Grasses.Items.Items);
+                this.Grasses.RecordCache.Set(rhsMod.Grasses.RecordCache.Items);
             }
             if (mask?.Trees ?? true)
             {
-                this.Trees.Items.Set(rhsMod.Trees.Items.Items);
+                this.Trees.RecordCache.Set(rhsMod.Trees.RecordCache.Items);
             }
             if (mask?.Flora ?? true)
             {
-                this.Flora.Items.Set(rhsMod.Flora.Items.Items);
+                this.Flora.RecordCache.Set(rhsMod.Flora.RecordCache.Items);
             }
             if (mask?.Furnature ?? true)
             {
-                this.Furnature.Items.Set(rhsMod.Furnature.Items.Items);
+                this.Furnature.RecordCache.Set(rhsMod.Furnature.RecordCache.Items);
             }
             if (mask?.Weapons ?? true)
             {
-                this.Weapons.Items.Set(rhsMod.Weapons.Items.Items);
+                this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
             }
             if (mask?.Ammo ?? true)
             {
-                this.Ammo.Items.Set(rhsMod.Ammo.Items.Items);
+                this.Ammo.RecordCache.Set(rhsMod.Ammo.RecordCache.Items);
             }
             if (mask?.NPCs ?? true)
             {
-                this.NPCs.Items.Set(rhsMod.NPCs.Items.Items);
+                this.NPCs.RecordCache.Set(rhsMod.NPCs.RecordCache.Items);
             }
             if (mask?.Creatures ?? true)
             {
-                this.Creatures.Items.Set(rhsMod.Creatures.Items.Items);
+                this.Creatures.RecordCache.Set(rhsMod.Creatures.RecordCache.Items);
             }
             if (mask?.LeveledCreatures ?? true)
             {
-                this.LeveledCreatures.Items.Set(rhsMod.LeveledCreatures.Items.Items);
+                this.LeveledCreatures.RecordCache.Set(rhsMod.LeveledCreatures.RecordCache.Items);
             }
             if (mask?.SoulGems ?? true)
             {
-                this.SoulGems.Items.Set(rhsMod.SoulGems.Items.Items);
+                this.SoulGems.RecordCache.Set(rhsMod.SoulGems.RecordCache.Items);
             }
             if (mask?.Keys ?? true)
             {
-                this.Keys.Items.Set(rhsMod.Keys.Items.Items);
+                this.Keys.RecordCache.Set(rhsMod.Keys.RecordCache.Items);
             }
             if (mask?.Potions ?? true)
             {
-                this.Potions.Items.Set(rhsMod.Potions.Items.Items);
+                this.Potions.RecordCache.Set(rhsMod.Potions.RecordCache.Items);
             }
             if (mask?.Subspaces ?? true)
             {
-                this.Subspaces.Items.Set(rhsMod.Subspaces.Items.Items);
+                this.Subspaces.RecordCache.Set(rhsMod.Subspaces.RecordCache.Items);
             }
             if (mask?.SigilStones ?? true)
             {
-                this.SigilStones.Items.Set(rhsMod.SigilStones.Items.Items);
+                this.SigilStones.RecordCache.Set(rhsMod.SigilStones.RecordCache.Items);
             }
             if (mask?.LeveledItems ?? true)
             {
-                this.LeveledItems.Items.Set(rhsMod.LeveledItems.Items.Items);
+                this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
             }
             if (mask?.Weathers ?? true)
             {
-                this.Weathers.Items.Set(rhsMod.Weathers.Items.Items);
+                this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
             }
             if (mask?.Climates ?? true)
             {
-                this.Climates.Items.Set(rhsMod.Climates.Items.Items);
+                this.Climates.RecordCache.Set(rhsMod.Climates.RecordCache.Items);
             }
             if (mask?.Regions ?? true)
             {
-                this.Regions.Items.Set(rhsMod.Regions.Items.Items);
+                this.Regions.RecordCache.Set(rhsMod.Regions.RecordCache.Items);
             }
             if (mask?.Cells ?? true)
             {
-                if (rhsMod.Cells.Items.Count > 0)
+                if (rhsMod.Cells.Records.Count > 0)
                 {
                     throw new NotImplementedException("Cell additions need implementing");
                 }
             }
             if (mask?.Worldspaces ?? true)
             {
-                this.Worldspaces.Items.Set(rhsMod.Worldspaces.Items.Items);
+                this.Worldspaces.RecordCache.Set(rhsMod.Worldspaces.RecordCache.Items);
             }
             if (mask?.DialogTopics ?? true)
             {
-                this.DialogTopics.Items.Set(rhsMod.DialogTopics.Items.Items);
+                this.DialogTopics.RecordCache.Set(rhsMod.DialogTopics.RecordCache.Items);
             }
             if (mask?.Quests ?? true)
             {
-                this.Quests.Items.Set(rhsMod.Quests.Items.Items);
+                this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
             }
             if (mask?.IdleAnimations ?? true)
             {
-                this.IdleAnimations.Items.Set(rhsMod.IdleAnimations.Items.Items);
+                this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
             }
             if (mask?.AIPackages ?? true)
             {
-                this.AIPackages.Items.Set(rhsMod.AIPackages.Items.Items);
+                this.AIPackages.RecordCache.Set(rhsMod.AIPackages.RecordCache.Items);
             }
             if (mask?.CombatStyles ?? true)
             {
-                this.CombatStyles.Items.Set(rhsMod.CombatStyles.Items.Items);
+                this.CombatStyles.RecordCache.Set(rhsMod.CombatStyles.RecordCache.Items);
             }
             if (mask?.LoadScreens ?? true)
             {
-                this.LoadScreens.Items.Set(rhsMod.LoadScreens.Items.Items);
+                this.LoadScreens.RecordCache.Set(rhsMod.LoadScreens.RecordCache.Items);
             }
             if (mask?.LeveledSpells ?? true)
             {
-                this.LeveledSpells.Items.Set(rhsMod.LeveledSpells.Items.Items);
+                this.LeveledSpells.RecordCache.Set(rhsMod.LeveledSpells.RecordCache.Items);
             }
             if (mask?.AnimatedObjects ?? true)
             {
-                this.AnimatedObjects.Items.Set(rhsMod.AnimatedObjects.Items.Items);
+                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
             }
             if (mask?.Waters ?? true)
             {
-                this.Waters.Items.Set(rhsMod.Waters.Items.Items);
+                this.Waters.RecordCache.Set(rhsMod.Waters.RecordCache.Items);
             }
             if (mask?.EffectShaders ?? true)
             {
-                this.EffectShaders.Items.Set(rhsMod.EffectShaders.Items.Items);
+                this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
             }
         }
 
@@ -952,393 +952,393 @@ namespace Mutagen.Bethesda.Oblivion
             var duppedRecords = new List<(IMajorRecordCommon Record, FormKey OriginalFormKey)>();
             if (mask?.GameSettings ?? true)
             {
-                this.GameSettings.Items.Set(
-                    rhs.GameSettings.Items.Items
+                this.GameSettings.RecordCache.Set(
+                    rhs.GameSettings.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<GameSetting>());
             }
             if (mask?.Globals ?? true)
             {
-                this.Globals.Items.Set(
-                    rhs.Globals.Items.Items
+                this.Globals.RecordCache.Set(
+                    rhs.Globals.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Global>());
             }
             if (mask?.Classes ?? true)
             {
-                this.Classes.Items.Set(
-                    rhs.Classes.Items.Items
+                this.Classes.RecordCache.Set(
+                    rhs.Classes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Class>());
             }
             if (mask?.Factions ?? true)
             {
-                this.Factions.Items.Set(
-                    rhs.Factions.Items.Items
+                this.Factions.RecordCache.Set(
+                    rhs.Factions.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Faction>());
             }
             if (mask?.Hairs ?? true)
             {
-                this.Hairs.Items.Set(
-                    rhs.Hairs.Items.Items
+                this.Hairs.RecordCache.Set(
+                    rhs.Hairs.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Hair>());
             }
             if (mask?.Eyes ?? true)
             {
-                this.Eyes.Items.Set(
-                    rhs.Eyes.Items.Items
+                this.Eyes.RecordCache.Set(
+                    rhs.Eyes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Eye>());
             }
             if (mask?.Races ?? true)
             {
-                this.Races.Items.Set(
-                    rhs.Races.Items.Items
+                this.Races.RecordCache.Set(
+                    rhs.Races.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Race>());
             }
             if (mask?.Sounds ?? true)
             {
-                this.Sounds.Items.Set(
-                    rhs.Sounds.Items.Items
+                this.Sounds.RecordCache.Set(
+                    rhs.Sounds.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Sound>());
             }
             if (mask?.Skills ?? true)
             {
-                this.Skills.Items.Set(
-                    rhs.Skills.Items.Items
+                this.Skills.RecordCache.Set(
+                    rhs.Skills.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SkillRecord>());
             }
             if (mask?.MagicEffects ?? true)
             {
-                this.MagicEffects.Items.Set(
-                    rhs.MagicEffects.Items.Items
+                this.MagicEffects.RecordCache.Set(
+                    rhs.MagicEffects.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<MagicEffect>());
             }
             if (mask?.Scripts ?? true)
             {
-                this.Scripts.Items.Set(
-                    rhs.Scripts.Items.Items
+                this.Scripts.RecordCache.Set(
+                    rhs.Scripts.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Script>());
             }
             if (mask?.LandTextures ?? true)
             {
-                this.LandTextures.Items.Set(
-                    rhs.LandTextures.Items.Items
+                this.LandTextures.RecordCache.Set(
+                    rhs.LandTextures.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LandTexture>());
             }
             if (mask?.Enchantments ?? true)
             {
-                this.Enchantments.Items.Set(
-                    rhs.Enchantments.Items.Items
+                this.Enchantments.RecordCache.Set(
+                    rhs.Enchantments.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Enchantment>());
             }
             if (mask?.Spells ?? true)
             {
-                this.Spells.Items.Set(
-                    rhs.Spells.Items.Items
+                this.Spells.RecordCache.Set(
+                    rhs.Spells.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SpellUnleveled>());
             }
             if (mask?.Birthsigns ?? true)
             {
-                this.Birthsigns.Items.Set(
-                    rhs.Birthsigns.Items.Items
+                this.Birthsigns.RecordCache.Set(
+                    rhs.Birthsigns.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Birthsign>());
             }
             if (mask?.Activators ?? true)
             {
-                this.Activators.Items.Set(
-                    rhs.Activators.Items.Items
+                this.Activators.RecordCache.Set(
+                    rhs.Activators.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Activator>());
             }
             if (mask?.AlchemicalApparatus ?? true)
             {
-                this.AlchemicalApparatus.Items.Set(
-                    rhs.AlchemicalApparatus.Items.Items
+                this.AlchemicalApparatus.RecordCache.Set(
+                    rhs.AlchemicalApparatus.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AlchemicalApparatus>());
             }
             if (mask?.Armors ?? true)
             {
-                this.Armors.Items.Set(
-                    rhs.Armors.Items.Items
+                this.Armors.RecordCache.Set(
+                    rhs.Armors.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Armor>());
             }
             if (mask?.Books ?? true)
             {
-                this.Books.Items.Set(
-                    rhs.Books.Items.Items
+                this.Books.RecordCache.Set(
+                    rhs.Books.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Book>());
             }
             if (mask?.Clothes ?? true)
             {
-                this.Clothes.Items.Set(
-                    rhs.Clothes.Items.Items
+                this.Clothes.RecordCache.Set(
+                    rhs.Clothes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Clothing>());
             }
             if (mask?.Containers ?? true)
             {
-                this.Containers.Items.Set(
-                    rhs.Containers.Items.Items
+                this.Containers.RecordCache.Set(
+                    rhs.Containers.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Container>());
             }
             if (mask?.Doors ?? true)
             {
-                this.Doors.Items.Set(
-                    rhs.Doors.Items.Items
+                this.Doors.RecordCache.Set(
+                    rhs.Doors.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Door>());
             }
             if (mask?.Ingredients ?? true)
             {
-                this.Ingredients.Items.Set(
-                    rhs.Ingredients.Items.Items
+                this.Ingredients.RecordCache.Set(
+                    rhs.Ingredients.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Ingredient>());
             }
             if (mask?.Lights ?? true)
             {
-                this.Lights.Items.Set(
-                    rhs.Lights.Items.Items
+                this.Lights.RecordCache.Set(
+                    rhs.Lights.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Light>());
             }
             if (mask?.Miscellaneous ?? true)
             {
-                this.Miscellaneous.Items.Set(
-                    rhs.Miscellaneous.Items.Items
+                this.Miscellaneous.RecordCache.Set(
+                    rhs.Miscellaneous.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Miscellaneous>());
             }
             if (mask?.Statics ?? true)
             {
-                this.Statics.Items.Set(
-                    rhs.Statics.Items.Items
+                this.Statics.RecordCache.Set(
+                    rhs.Statics.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Static>());
             }
             if (mask?.Grasses ?? true)
             {
-                this.Grasses.Items.Set(
-                    rhs.Grasses.Items.Items
+                this.Grasses.RecordCache.Set(
+                    rhs.Grasses.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Grass>());
             }
             if (mask?.Trees ?? true)
             {
-                this.Trees.Items.Set(
-                    rhs.Trees.Items.Items
+                this.Trees.RecordCache.Set(
+                    rhs.Trees.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Tree>());
             }
             if (mask?.Flora ?? true)
             {
-                this.Flora.Items.Set(
-                    rhs.Flora.Items.Items
+                this.Flora.RecordCache.Set(
+                    rhs.Flora.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Flora>());
             }
             if (mask?.Furnature ?? true)
             {
-                this.Furnature.Items.Set(
-                    rhs.Furnature.Items.Items
+                this.Furnature.RecordCache.Set(
+                    rhs.Furnature.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Furnature>());
             }
             if (mask?.Weapons ?? true)
             {
-                this.Weapons.Items.Set(
-                    rhs.Weapons.Items.Items
+                this.Weapons.RecordCache.Set(
+                    rhs.Weapons.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weapon>());
             }
             if (mask?.Ammo ?? true)
             {
-                this.Ammo.Items.Set(
-                    rhs.Ammo.Items.Items
+                this.Ammo.RecordCache.Set(
+                    rhs.Ammo.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Ammo>());
             }
             if (mask?.NPCs ?? true)
             {
-                this.NPCs.Items.Set(
-                    rhs.NPCs.Items.Items
+                this.NPCs.RecordCache.Set(
+                    rhs.NPCs.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<NPC>());
             }
             if (mask?.Creatures ?? true)
             {
-                this.Creatures.Items.Set(
-                    rhs.Creatures.Items.Items
+                this.Creatures.RecordCache.Set(
+                    rhs.Creatures.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Creature>());
             }
             if (mask?.LeveledCreatures ?? true)
             {
-                this.LeveledCreatures.Items.Set(
-                    rhs.LeveledCreatures.Items.Items
+                this.LeveledCreatures.RecordCache.Set(
+                    rhs.LeveledCreatures.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledCreature>());
             }
             if (mask?.SoulGems ?? true)
             {
-                this.SoulGems.Items.Set(
-                    rhs.SoulGems.Items.Items
+                this.SoulGems.RecordCache.Set(
+                    rhs.SoulGems.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SoulGem>());
             }
             if (mask?.Keys ?? true)
             {
-                this.Keys.Items.Set(
-                    rhs.Keys.Items.Items
+                this.Keys.RecordCache.Set(
+                    rhs.Keys.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Key>());
             }
             if (mask?.Potions ?? true)
             {
-                this.Potions.Items.Set(
-                    rhs.Potions.Items.Items
+                this.Potions.RecordCache.Set(
+                    rhs.Potions.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Potion>());
             }
             if (mask?.Subspaces ?? true)
             {
-                this.Subspaces.Items.Set(
-                    rhs.Subspaces.Items.Items
+                this.Subspaces.RecordCache.Set(
+                    rhs.Subspaces.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Subspace>());
             }
             if (mask?.SigilStones ?? true)
             {
-                this.SigilStones.Items.Set(
-                    rhs.SigilStones.Items.Items
+                this.SigilStones.RecordCache.Set(
+                    rhs.SigilStones.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SigilStone>());
             }
             if (mask?.LeveledItems ?? true)
             {
-                this.LeveledItems.Items.Set(
-                    rhs.LeveledItems.Items.Items
+                this.LeveledItems.RecordCache.Set(
+                    rhs.LeveledItems.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledItem>());
             }
             if (mask?.Weathers ?? true)
             {
-                this.Weathers.Items.Set(
-                    rhs.Weathers.Items.Items
+                this.Weathers.RecordCache.Set(
+                    rhs.Weathers.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weather>());
             }
             if (mask?.Climates ?? true)
             {
-                this.Climates.Items.Set(
-                    rhs.Climates.Items.Items
+                this.Climates.RecordCache.Set(
+                    rhs.Climates.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Climate>());
             }
             if (mask?.Regions ?? true)
             {
-                this.Regions.Items.Set(
-                    rhs.Regions.Items.Items
+                this.Regions.RecordCache.Set(
+                    rhs.Regions.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Region>());
             }
             if (mask?.Cells ?? true)
             {
-                this.Cells.Items.AddRange(
-                    rhs.Cells.Items
+                this.Cells.Records.AddRange(
+                    rhs.Cells.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<CellBlock>());
             }
             if (mask?.Worldspaces ?? true)
             {
-                this.Worldspaces.Items.Set(
-                    rhs.Worldspaces.Items.Items
+                this.Worldspaces.RecordCache.Set(
+                    rhs.Worldspaces.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Worldspace>());
             }
             if (mask?.DialogTopics ?? true)
             {
-                this.DialogTopics.Items.Set(
-                    rhs.DialogTopics.Items.Items
+                this.DialogTopics.RecordCache.Set(
+                    rhs.DialogTopics.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<DialogTopic>());
             }
             if (mask?.Quests ?? true)
             {
-                this.Quests.Items.Set(
-                    rhs.Quests.Items.Items
+                this.Quests.RecordCache.Set(
+                    rhs.Quests.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Quest>());
             }
             if (mask?.IdleAnimations ?? true)
             {
-                this.IdleAnimations.Items.Set(
-                    rhs.IdleAnimations.Items.Items
+                this.IdleAnimations.RecordCache.Set(
+                    rhs.IdleAnimations.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<IdleAnimation>());
             }
             if (mask?.AIPackages ?? true)
             {
-                this.AIPackages.Items.Set(
-                    rhs.AIPackages.Items.Items
+                this.AIPackages.RecordCache.Set(
+                    rhs.AIPackages.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AIPackage>());
             }
             if (mask?.CombatStyles ?? true)
             {
-                this.CombatStyles.Items.Set(
-                    rhs.CombatStyles.Items.Items
+                this.CombatStyles.RecordCache.Set(
+                    rhs.CombatStyles.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<CombatStyle>());
             }
             if (mask?.LoadScreens ?? true)
             {
-                this.LoadScreens.Items.Set(
-                    rhs.LoadScreens.Items.Items
+                this.LoadScreens.RecordCache.Set(
+                    rhs.LoadScreens.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LoadScreen>());
             }
             if (mask?.LeveledSpells ?? true)
             {
-                this.LeveledSpells.Items.Set(
-                    rhs.LeveledSpells.Items.Items
+                this.LeveledSpells.RecordCache.Set(
+                    rhs.LeveledSpells.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledSpell>());
             }
             if (mask?.AnimatedObjects ?? true)
             {
-                this.AnimatedObjects.Items.Set(
-                    rhs.AnimatedObjects.Items.Items
+                this.AnimatedObjects.RecordCache.Set(
+                    rhs.AnimatedObjects.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<AnimatedObject>());
             }
             if (mask?.Waters ?? true)
             {
-                this.Waters.Items.Set(
-                    rhs.Waters.Items.Items
+                this.Waters.RecordCache.Set(
+                    rhs.Waters.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Water>());
             }
             if (mask?.EffectShaders ?? true)
             {
-                this.EffectShaders.Items.Set(
-                    rhs.EffectShaders.Items.Items
+                this.EffectShaders.RecordCache.Set(
+                    rhs.EffectShaders.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<EffectShader>());
             }
@@ -1367,62 +1367,62 @@ namespace Mutagen.Bethesda.Oblivion
         public int GetRecordCount()
         {
             int count = this.EnumerateMajorRecords().Count();
-            count += GameSettings.Items.Count > 0 ? 1 : 0;
-            count += Globals.Items.Count > 0 ? 1 : 0;
-            count += Classes.Items.Count > 0 ? 1 : 0;
-            count += Factions.Items.Count > 0 ? 1 : 0;
-            count += Hairs.Items.Count > 0 ? 1 : 0;
-            count += Eyes.Items.Count > 0 ? 1 : 0;
-            count += Races.Items.Count > 0 ? 1 : 0;
-            count += Sounds.Items.Count > 0 ? 1 : 0;
-            count += Skills.Items.Count > 0 ? 1 : 0;
-            count += MagicEffects.Items.Count > 0 ? 1 : 0;
-            count += Scripts.Items.Count > 0 ? 1 : 0;
-            count += LandTextures.Items.Count > 0 ? 1 : 0;
-            count += Enchantments.Items.Count > 0 ? 1 : 0;
-            count += Spells.Items.Count > 0 ? 1 : 0;
-            count += Birthsigns.Items.Count > 0 ? 1 : 0;
-            count += Activators.Items.Count > 0 ? 1 : 0;
-            count += AlchemicalApparatus.Items.Count > 0 ? 1 : 0;
-            count += Armors.Items.Count > 0 ? 1 : 0;
-            count += Books.Items.Count > 0 ? 1 : 0;
-            count += Clothes.Items.Count > 0 ? 1 : 0;
-            count += Containers.Items.Count > 0 ? 1 : 0;
-            count += Doors.Items.Count > 0 ? 1 : 0;
-            count += Ingredients.Items.Count > 0 ? 1 : 0;
-            count += Lights.Items.Count > 0 ? 1 : 0;
-            count += Miscellaneous.Items.Count > 0 ? 1 : 0;
-            count += Statics.Items.Count > 0 ? 1 : 0;
-            count += Grasses.Items.Count > 0 ? 1 : 0;
-            count += Trees.Items.Count > 0 ? 1 : 0;
-            count += Flora.Items.Count > 0 ? 1 : 0;
-            count += Furnature.Items.Count > 0 ? 1 : 0;
-            count += Weapons.Items.Count > 0 ? 1 : 0;
-            count += Ammo.Items.Count > 0 ? 1 : 0;
-            count += NPCs.Items.Count > 0 ? 1 : 0;
-            count += Creatures.Items.Count > 0 ? 1 : 0;
-            count += LeveledCreatures.Items.Count > 0 ? 1 : 0;
-            count += SoulGems.Items.Count > 0 ? 1 : 0;
-            count += Keys.Items.Count > 0 ? 1 : 0;
-            count += Potions.Items.Count > 0 ? 1 : 0;
-            count += Subspaces.Items.Count > 0 ? 1 : 0;
-            count += SigilStones.Items.Count > 0 ? 1 : 0;
-            count += LeveledItems.Items.Count > 0 ? 1 : 0;
-            count += Weathers.Items.Count > 0 ? 1 : 0;
-            count += Climates.Items.Count > 0 ? 1 : 0;
-            count += Regions.Items.Count > 0 ? 1 : 0;
-            count += Cells.Items.Count > 0 ? 1 : 0;
-            count += Worldspaces.Items.Count > 0 ? 1 : 0;
-            count += DialogTopics.Items.Count > 0 ? 1 : 0;
-            count += Quests.Items.Count > 0 ? 1 : 0;
-            count += IdleAnimations.Items.Count > 0 ? 1 : 0;
-            count += AIPackages.Items.Count > 0 ? 1 : 0;
-            count += CombatStyles.Items.Count > 0 ? 1 : 0;
-            count += LoadScreens.Items.Count > 0 ? 1 : 0;
-            count += LeveledSpells.Items.Count > 0 ? 1 : 0;
-            count += AnimatedObjects.Items.Count > 0 ? 1 : 0;
-            count += Waters.Items.Count > 0 ? 1 : 0;
-            count += EffectShaders.Items.Count > 0 ? 1 : 0;
+            count += GameSettings.RecordCache.Count > 0 ? 1 : 0;
+            count += Globals.RecordCache.Count > 0 ? 1 : 0;
+            count += Classes.RecordCache.Count > 0 ? 1 : 0;
+            count += Factions.RecordCache.Count > 0 ? 1 : 0;
+            count += Hairs.RecordCache.Count > 0 ? 1 : 0;
+            count += Eyes.RecordCache.Count > 0 ? 1 : 0;
+            count += Races.RecordCache.Count > 0 ? 1 : 0;
+            count += Sounds.RecordCache.Count > 0 ? 1 : 0;
+            count += Skills.RecordCache.Count > 0 ? 1 : 0;
+            count += MagicEffects.RecordCache.Count > 0 ? 1 : 0;
+            count += Scripts.RecordCache.Count > 0 ? 1 : 0;
+            count += LandTextures.RecordCache.Count > 0 ? 1 : 0;
+            count += Enchantments.RecordCache.Count > 0 ? 1 : 0;
+            count += Spells.RecordCache.Count > 0 ? 1 : 0;
+            count += Birthsigns.RecordCache.Count > 0 ? 1 : 0;
+            count += Activators.RecordCache.Count > 0 ? 1 : 0;
+            count += AlchemicalApparatus.RecordCache.Count > 0 ? 1 : 0;
+            count += Armors.RecordCache.Count > 0 ? 1 : 0;
+            count += Books.RecordCache.Count > 0 ? 1 : 0;
+            count += Clothes.RecordCache.Count > 0 ? 1 : 0;
+            count += Containers.RecordCache.Count > 0 ? 1 : 0;
+            count += Doors.RecordCache.Count > 0 ? 1 : 0;
+            count += Ingredients.RecordCache.Count > 0 ? 1 : 0;
+            count += Lights.RecordCache.Count > 0 ? 1 : 0;
+            count += Miscellaneous.RecordCache.Count > 0 ? 1 : 0;
+            count += Statics.RecordCache.Count > 0 ? 1 : 0;
+            count += Grasses.RecordCache.Count > 0 ? 1 : 0;
+            count += Trees.RecordCache.Count > 0 ? 1 : 0;
+            count += Flora.RecordCache.Count > 0 ? 1 : 0;
+            count += Furnature.RecordCache.Count > 0 ? 1 : 0;
+            count += Weapons.RecordCache.Count > 0 ? 1 : 0;
+            count += Ammo.RecordCache.Count > 0 ? 1 : 0;
+            count += NPCs.RecordCache.Count > 0 ? 1 : 0;
+            count += Creatures.RecordCache.Count > 0 ? 1 : 0;
+            count += LeveledCreatures.RecordCache.Count > 0 ? 1 : 0;
+            count += SoulGems.RecordCache.Count > 0 ? 1 : 0;
+            count += Keys.RecordCache.Count > 0 ? 1 : 0;
+            count += Potions.RecordCache.Count > 0 ? 1 : 0;
+            count += Subspaces.RecordCache.Count > 0 ? 1 : 0;
+            count += SigilStones.RecordCache.Count > 0 ? 1 : 0;
+            count += LeveledItems.RecordCache.Count > 0 ? 1 : 0;
+            count += Weathers.RecordCache.Count > 0 ? 1 : 0;
+            count += Climates.RecordCache.Count > 0 ? 1 : 0;
+            count += Regions.RecordCache.Count > 0 ? 1 : 0;
+            count += Cells.Records.Count > 0 ? 1 : 0;
+            count += Worldspaces.RecordCache.Count > 0 ? 1 : 0;
+            count += DialogTopics.RecordCache.Count > 0 ? 1 : 0;
+            count += Quests.RecordCache.Count > 0 ? 1 : 0;
+            count += IdleAnimations.RecordCache.Count > 0 ? 1 : 0;
+            count += AIPackages.RecordCache.Count > 0 ? 1 : 0;
+            count += CombatStyles.RecordCache.Count > 0 ? 1 : 0;
+            count += LoadScreens.RecordCache.Count > 0 ? 1 : 0;
+            count += LeveledSpells.RecordCache.Count > 0 ? 1 : 0;
+            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : 0;
+            count += Waters.RecordCache.Count > 0 ? 1 : 0;
+            count += EffectShaders.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6438,281 +6438,281 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    return obj.GameSettings.Items;
+                    return obj.GameSettings.RecordCache;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    return obj.Globals.Items;
+                    return obj.Globals.RecordCache;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    return obj.Classes.Items;
+                    return obj.Classes.RecordCache;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    return obj.Factions.Items;
+                    return obj.Factions.RecordCache;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    return obj.Hairs.Items;
+                    return obj.Hairs.RecordCache;
                 case "Eye":
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    return obj.Eyes.Items;
+                    return obj.Eyes.RecordCache;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    return obj.Races.Items;
+                    return obj.Races.RecordCache;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    return obj.Sounds.Items;
+                    return obj.Sounds.RecordCache;
                 case "SkillRecord":
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    return obj.Skills.Items;
+                    return obj.Skills.RecordCache;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    return obj.MagicEffects.Items;
+                    return obj.MagicEffects.RecordCache;
                 case "Script":
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    return obj.Scripts.Items;
+                    return obj.Scripts.RecordCache;
                 case "LandTexture":
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    return obj.LandTextures.Items;
+                    return obj.LandTextures.RecordCache;
                 case "Enchantment":
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    return obj.Enchantments.Items;
+                    return obj.Enchantments.RecordCache;
                 case "SpellUnleveled":
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    return obj.Spells.Items;
+                    return obj.Spells.RecordCache;
                 case "Birthsign":
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    return obj.Birthsigns.Items;
+                    return obj.Birthsigns.RecordCache;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    return obj.Activators.Items;
+                    return obj.Activators.RecordCache;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    return obj.AlchemicalApparatus.Items;
+                    return obj.AlchemicalApparatus.RecordCache;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    return obj.Armors.Items;
+                    return obj.Armors.RecordCache;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    return obj.Books.Items;
+                    return obj.Books.RecordCache;
                 case "Clothing":
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    return obj.Clothes.Items;
+                    return obj.Clothes.RecordCache;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    return obj.Containers.Items;
+                    return obj.Containers.RecordCache;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    return obj.Doors.Items;
+                    return obj.Doors.RecordCache;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    return obj.Ingredients.Items;
+                    return obj.Ingredients.RecordCache;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    return obj.Lights.Items;
+                    return obj.Lights.RecordCache;
                 case "Miscellaneous":
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    return obj.Miscellaneous.Items;
+                    return obj.Miscellaneous.RecordCache;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    return obj.Statics.Items;
+                    return obj.Statics.RecordCache;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    return obj.Grasses.Items;
+                    return obj.Grasses.RecordCache;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    return obj.Trees.Items;
+                    return obj.Trees.RecordCache;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    return obj.Flora.Items;
+                    return obj.Flora.RecordCache;
                 case "Furnature":
                 case "IFurnatureGetter":
                 case "IFurnature":
                 case "IFurnatureInternal":
-                    return obj.Furnature.Items;
+                    return obj.Furnature.RecordCache;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    return obj.Weapons.Items;
+                    return obj.Weapons.RecordCache;
                 case "Ammo":
                 case "IAmmoGetter":
                 case "IAmmo":
                 case "IAmmoInternal":
-                    return obj.Ammo.Items;
+                    return obj.Ammo.RecordCache;
                 case "NPC":
                 case "INPCGetter":
                 case "INPC":
                 case "INPCInternal":
-                    return obj.NPCs.Items;
+                    return obj.NPCs.RecordCache;
                 case "Creature":
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    return obj.Creatures.Items;
+                    return obj.Creatures.RecordCache;
                 case "LeveledCreature":
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    return obj.LeveledCreatures.Items;
+                    return obj.LeveledCreatures.RecordCache;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    return obj.SoulGems.Items;
+                    return obj.SoulGems.RecordCache;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    return obj.Keys.Items;
+                    return obj.Keys.RecordCache;
                 case "Potion":
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    return obj.Potions.Items;
+                    return obj.Potions.RecordCache;
                 case "Subspace":
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    return obj.Subspaces.Items;
+                    return obj.Subspaces.RecordCache;
                 case "SigilStone":
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    return obj.SigilStones.Items;
+                    return obj.SigilStones.RecordCache;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    return obj.LeveledItems.Items;
+                    return obj.LeveledItems.RecordCache;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    return obj.Weathers.Items;
+                    return obj.Weathers.RecordCache;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    return obj.Climates.Items;
+                    return obj.Climates.RecordCache;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    return obj.Regions.Items;
+                    return obj.Regions.RecordCache;
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
-                    return obj.Cells.Items;
+                    return obj.Cells.Records;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    return obj.Worldspaces.Items;
+                    return obj.Worldspaces.RecordCache;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    return obj.DialogTopics.Items;
+                    return obj.DialogTopics.RecordCache;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    return obj.Quests.Items;
+                    return obj.Quests.RecordCache;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    return obj.IdleAnimations.Items;
+                    return obj.IdleAnimations.RecordCache;
                 case "AIPackage":
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    return obj.AIPackages.Items;
+                    return obj.AIPackages.RecordCache;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    return obj.CombatStyles.Items;
+                    return obj.CombatStyles.RecordCache;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    return obj.LoadScreens.Items;
+                    return obj.LoadScreens.RecordCache;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    return obj.LeveledSpells.Items;
+                    return obj.LeveledSpells.RecordCache;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    return obj.AnimatedObjects.Items;
+                    return obj.AnimatedObjects.RecordCache;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    return obj.Waters.Items;
+                    return obj.Waters.RecordCache;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    return obj.EffectShaders.Items;
+                    return obj.EffectShaders.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -6799,8 +6799,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Stream[] streamDepositArray)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if (group.Items.Count == 0) return;
-            var cuts = group.Items.Items.Cut(CutCount).ToArray();
+            if (group.RecordCache.Count == 0) return;
+            var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
             byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -6903,7 +6903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masters)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
-            if (group.Items.Count == 0) return EnumerableExt<Stream>.Empty;
+            if (group.RecordCache.Count == 0) return EnumerableExt<Stream>.Empty;
             List<Task<Stream>> streams = new List<Task<Stream>>();
             byte[] groupBytes = new byte[MetaDataConstants.Oblivion.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), Group_Registration.GRUP_HEADER.TypeInt);
@@ -6913,7 +6913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
             }
             streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
-            foreach (var cutItems in group.Items.Cut(CutCount))
+            foreach (var cutItems in group.Records.Cut(CutCount))
             {
                 streams.Add(
                     Task.Run<Stream>(() =>
@@ -6923,7 +6923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             foreach (var item in cutItems)
                             {
-                                item.Value.WriteToBinary(stream, masters);
+                                item.WriteToBinary(stream, masters);
                             }
                         }
                         return trib;
@@ -13767,7 +13767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.GameSettings ?? true)
             {
-                if (item.GameSettings.Items.Count > 0)
+                if (item.GameSettings.RecordCache.Count > 0)
                 {
                     var loquiItem = item.GameSettings;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
@@ -13780,7 +13780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Globals ?? true)
             {
-                if (item.Globals.Items.Count > 0)
+                if (item.Globals.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Globals;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalGetter>(
@@ -13793,7 +13793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Classes ?? true)
             {
-                if (item.Classes.Items.Count > 0)
+                if (item.Classes.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Classes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClassGetter>(
@@ -13806,7 +13806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Factions ?? true)
             {
-                if (item.Factions.Items.Count > 0)
+                if (item.Factions.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Factions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFactionGetter>(
@@ -13819,7 +13819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Hairs ?? true)
             {
-                if (item.Hairs.Items.Count > 0)
+                if (item.Hairs.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Hairs;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHairGetter>(
@@ -13832,7 +13832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Eyes ?? true)
             {
-                if (item.Eyes.Items.Count > 0)
+                if (item.Eyes.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Eyes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEyeGetter>(
@@ -13845,7 +13845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Races ?? true)
             {
-                if (item.Races.Items.Count > 0)
+                if (item.Races.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Races;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IRaceGetter>(
@@ -13858,7 +13858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Sounds ?? true)
             {
-                if (item.Sounds.Items.Count > 0)
+                if (item.Sounds.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Sounds;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISoundGetter>(
@@ -13871,7 +13871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Skills ?? true)
             {
-                if (item.Skills.Items.Count > 0)
+                if (item.Skills.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Skills;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISkillRecordGetter>(
@@ -13884,7 +13884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.MagicEffects ?? true)
             {
-                if (item.MagicEffects.Items.Count > 0)
+                if (item.MagicEffects.RecordCache.Count > 0)
                 {
                     var loquiItem = item.MagicEffects;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
@@ -13897,7 +13897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Scripts ?? true)
             {
-                if (item.Scripts.Items.Count > 0)
+                if (item.Scripts.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Scripts;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IScriptGetter>(
@@ -13910,7 +13910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.LandTextures ?? true)
             {
-                if (item.LandTextures.Items.Count > 0)
+                if (item.LandTextures.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LandTextures;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
@@ -13923,7 +13923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Enchantments ?? true)
             {
-                if (item.Enchantments.Items.Count > 0)
+                if (item.Enchantments.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Enchantments;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEnchantmentGetter>(
@@ -13936,7 +13936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Spells ?? true)
             {
-                if (item.Spells.Items.Count > 0)
+                if (item.Spells.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Spells;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISpellUnleveledGetter>(
@@ -13949,7 +13949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Birthsigns ?? true)
             {
-                if (item.Birthsigns.Items.Count > 0)
+                if (item.Birthsigns.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Birthsigns;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IBirthsignGetter>(
@@ -13962,7 +13962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Activators ?? true)
             {
-                if (item.Activators.Items.Count > 0)
+                if (item.Activators.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Activators;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActivatorGetter>(
@@ -13975,7 +13975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.AlchemicalApparatus ?? true)
             {
-                if (item.AlchemicalApparatus.Items.Count > 0)
+                if (item.AlchemicalApparatus.RecordCache.Count > 0)
                 {
                     var loquiItem = item.AlchemicalApparatus;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
@@ -13988,7 +13988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Armors ?? true)
             {
-                if (item.Armors.Items.Count > 0)
+                if (item.Armors.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Armors;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IArmorGetter>(
@@ -14001,7 +14001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Books ?? true)
             {
-                if (item.Books.Items.Count > 0)
+                if (item.Books.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Books;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IBookGetter>(
@@ -14014,7 +14014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Clothes ?? true)
             {
-                if (item.Clothes.Items.Count > 0)
+                if (item.Clothes.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Clothes;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClothingGetter>(
@@ -14027,7 +14027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Containers ?? true)
             {
-                if (item.Containers.Items.Count > 0)
+                if (item.Containers.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Containers;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IContainerGetter>(
@@ -14040,7 +14040,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Doors ?? true)
             {
-                if (item.Doors.Items.Count > 0)
+                if (item.Doors.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Doors;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IDoorGetter>(
@@ -14053,7 +14053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Ingredients ?? true)
             {
-                if (item.Ingredients.Items.Count > 0)
+                if (item.Ingredients.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Ingredients;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IIngredientGetter>(
@@ -14066,7 +14066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Lights ?? true)
             {
-                if (item.Lights.Items.Count > 0)
+                if (item.Lights.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Lights;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILightGetter>(
@@ -14079,7 +14079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Miscellaneous ?? true)
             {
-                if (item.Miscellaneous.Items.Count > 0)
+                if (item.Miscellaneous.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Miscellaneous;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IMiscellaneousGetter>(
@@ -14092,7 +14092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Statics ?? true)
             {
-                if (item.Statics.Items.Count > 0)
+                if (item.Statics.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Statics;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IStaticGetter>(
@@ -14105,7 +14105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Grasses ?? true)
             {
-                if (item.Grasses.Items.Count > 0)
+                if (item.Grasses.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Grasses;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGrassGetter>(
@@ -14118,7 +14118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Trees ?? true)
             {
-                if (item.Trees.Items.Count > 0)
+                if (item.Trees.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Trees;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITreeGetter>(
@@ -14131,7 +14131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Flora ?? true)
             {
-                if (item.Flora.Items.Count > 0)
+                if (item.Flora.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Flora;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFloraGetter>(
@@ -14144,7 +14144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Furnature ?? true)
             {
-                if (item.Furnature.Items.Count > 0)
+                if (item.Furnature.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Furnature;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFurnatureGetter>(
@@ -14157,7 +14157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Weapons ?? true)
             {
-                if (item.Weapons.Items.Count > 0)
+                if (item.Weapons.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Weapons;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWeaponGetter>(
@@ -14170,7 +14170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Ammo ?? true)
             {
-                if (item.Ammo.Items.Count > 0)
+                if (item.Ammo.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Ammo;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAmmoGetter>(
@@ -14183,7 +14183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.NPCs ?? true)
             {
-                if (item.NPCs.Items.Count > 0)
+                if (item.NPCs.RecordCache.Count > 0)
                 {
                     var loquiItem = item.NPCs;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<INPCGetter>(
@@ -14196,7 +14196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Creatures ?? true)
             {
-                if (item.Creatures.Items.Count > 0)
+                if (item.Creatures.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Creatures;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICreatureGetter>(
@@ -14209,7 +14209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.LeveledCreatures ?? true)
             {
-                if (item.LeveledCreatures.Items.Count > 0)
+                if (item.LeveledCreatures.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LeveledCreatures;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledCreatureGetter>(
@@ -14222,7 +14222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.SoulGems ?? true)
             {
-                if (item.SoulGems.Items.Count > 0)
+                if (item.SoulGems.RecordCache.Count > 0)
                 {
                     var loquiItem = item.SoulGems;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
@@ -14235,7 +14235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Keys ?? true)
             {
-                if (item.Keys.Items.Count > 0)
+                if (item.Keys.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Keys;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeyGetter>(
@@ -14248,7 +14248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Potions ?? true)
             {
-                if (item.Potions.Items.Count > 0)
+                if (item.Potions.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Potions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IPotionGetter>(
@@ -14261,7 +14261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Subspaces ?? true)
             {
-                if (item.Subspaces.Items.Count > 0)
+                if (item.Subspaces.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Subspaces;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISubspaceGetter>(
@@ -14274,7 +14274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.SigilStones ?? true)
             {
-                if (item.SigilStones.Items.Count > 0)
+                if (item.SigilStones.RecordCache.Count > 0)
                 {
                     var loquiItem = item.SigilStones;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ISigilStoneGetter>(
@@ -14287,7 +14287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.LeveledItems ?? true)
             {
-                if (item.LeveledItems.Items.Count > 0)
+                if (item.LeveledItems.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LeveledItems;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
@@ -14300,7 +14300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Weathers ?? true)
             {
-                if (item.Weathers.Items.Count > 0)
+                if (item.Weathers.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Weathers;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWeatherGetter>(
@@ -14313,7 +14313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Climates ?? true)
             {
-                if (item.Climates.Items.Count > 0)
+                if (item.Climates.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Climates;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClimateGetter>(
@@ -14326,7 +14326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Regions ?? true)
             {
-                if (item.Regions.Items.Count > 0)
+                if (item.Regions.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Regions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IRegionGetter>(
@@ -14339,7 +14339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Cells ?? true)
             {
-                if (item.Cells.Items.Count > 0)
+                if (item.Cells.Records.Count > 0)
                 {
                     var loquiItem = item.Cells;
                     ((ListGroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
@@ -14352,7 +14352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Worldspaces ?? true)
             {
-                if (item.Worldspaces.Items.Count > 0)
+                if (item.Worldspaces.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Worldspaces;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
@@ -14365,7 +14365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.DialogTopics ?? true)
             {
-                if (item.DialogTopics.Items.Count > 0)
+                if (item.DialogTopics.RecordCache.Count > 0)
                 {
                     var loquiItem = item.DialogTopics;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
@@ -14378,7 +14378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Quests ?? true)
             {
-                if (item.Quests.Items.Count > 0)
+                if (item.Quests.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Quests;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IQuestGetter>(
@@ -14391,7 +14391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.IdleAnimations ?? true)
             {
-                if (item.IdleAnimations.Items.Count > 0)
+                if (item.IdleAnimations.RecordCache.Count > 0)
                 {
                     var loquiItem = item.IdleAnimations;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
@@ -14404,7 +14404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.AIPackages ?? true)
             {
-                if (item.AIPackages.Items.Count > 0)
+                if (item.AIPackages.RecordCache.Count > 0)
                 {
                     var loquiItem = item.AIPackages;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAIPackageGetter>(
@@ -14417,7 +14417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.CombatStyles ?? true)
             {
-                if (item.CombatStyles.Items.Count > 0)
+                if (item.CombatStyles.RecordCache.Count > 0)
                 {
                     var loquiItem = item.CombatStyles;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
@@ -14430,7 +14430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.LoadScreens ?? true)
             {
-                if (item.LoadScreens.Items.Count > 0)
+                if (item.LoadScreens.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LoadScreens;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
@@ -14443,7 +14443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.LeveledSpells ?? true)
             {
-                if (item.LeveledSpells.Items.Count > 0)
+                if (item.LeveledSpells.RecordCache.Count > 0)
                 {
                     var loquiItem = item.LeveledSpells;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILeveledSpellGetter>(
@@ -14456,7 +14456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.AnimatedObjects ?? true)
             {
-                if (item.AnimatedObjects.Items.Count > 0)
+                if (item.AnimatedObjects.RecordCache.Count > 0)
                 {
                     var loquiItem = item.AnimatedObjects;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
@@ -14469,7 +14469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.Waters ?? true)
             {
-                if (item.Waters.Items.Count > 0)
+                if (item.Waters.RecordCache.Count > 0)
                 {
                     var loquiItem = item.Waters;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IWaterGetter>(
@@ -14482,7 +14482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (importMask?.EffectShaders ?? true)
             {
-                if (item.EffectShaders.Items.Count > 0)
+                if (item.EffectShaders.RecordCache.Count > 0)
                 {
                     var loquiItem = item.EffectShaders;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
