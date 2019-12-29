@@ -1306,14 +1306,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
         public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RoadPointSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RoadPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2236,10 +2242,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
         public static RoadPoint_Registration Registration => RoadPoint_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RoadPointSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRoadPointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

@@ -2178,11 +2178,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
         public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return SigilStoneSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SigilStoneSetterTranslationCommon.Instance;
 
         #endregion
@@ -3525,7 +3528,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStone_Registration.Instance;
         public new static SigilStone_Registration Registration => SigilStone_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SigilStoneCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SigilStoneSetterTranslationCommon.Instance;
 
         #endregion

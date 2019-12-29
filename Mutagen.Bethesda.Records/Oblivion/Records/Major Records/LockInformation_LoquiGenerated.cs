@@ -1323,14 +1323,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return LockInformationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LockInformationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2241,10 +2247,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
         public static LockInformation_Registration Registration => LockInformation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LockInformationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ILockInformationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

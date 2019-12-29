@@ -288,9 +288,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)WorldspaceSubBlock.GRUP_RECORD_TYPE;
         public IEnumerable<ILinkGetter> Links => WorldspaceBlockCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -730,22 +734,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IWorldspaceBlockGetter obj)
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceBlockGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IWorldspaceBlock obj)
         {
             return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceBlock obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -1536,14 +1544,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
         public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WorldspaceBlockSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2636,10 +2650,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
         public static WorldspaceBlock_Registration Registration => WorldspaceBlock_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WorldspaceBlockSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWorldspaceBlockGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2649,7 +2668,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWorldspaceBlockGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => WorldspaceBlockCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected object XmlWriteTranslator => WorldspaceBlockXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

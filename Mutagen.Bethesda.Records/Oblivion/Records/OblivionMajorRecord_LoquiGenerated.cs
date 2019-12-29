@@ -263,9 +263,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -626,22 +630,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionMajorRecordGetter obj)
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMajorRecordGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMajorRecordInternal obj)
         {
             return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMajorRecordInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -1474,11 +1482,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
         public new static OblivionMajorRecord_Registration Registration => OblivionMajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => OblivionMajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return OblivionMajorRecordSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => OblivionMajorRecordSetterTranslationCommon.Instance;
 
         #endregion
@@ -2081,7 +2092,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMajorRecord_Registration.Instance;
         public new static OblivionMajorRecord_Registration Registration => OblivionMajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => OblivionMajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => OblivionMajorRecordSetterTranslationCommon.Instance;
 
         #endregion
@@ -2091,7 +2104,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IOblivionMajorRecordGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => OblivionMajorRecordCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

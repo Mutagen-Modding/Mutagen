@@ -1402,14 +1402,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
         public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return CreatureSoundSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CreatureSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2304,10 +2310,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
         public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => CreatureSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => CreatureSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ICreatureSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

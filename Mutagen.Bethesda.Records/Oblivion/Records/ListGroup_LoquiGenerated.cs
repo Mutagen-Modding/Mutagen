@@ -292,9 +292,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType T_RecordType;
         public IEnumerable<ILinkGetter> Links => ListGroupCommon<T>.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         #endregion
 
@@ -776,12 +780,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IListGroupGetter<T> obj)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroupGetter<T> obj)
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
@@ -789,12 +795,14 @@ namespace Mutagen.Bethesda.Oblivion
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IListGroup<T> obj)
             where T : class, ICellBlock, IXmlItem, IBinaryItem
         {
             return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IListGroup<T> obj)
             where T : class, ICellBlock, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommon
@@ -1526,14 +1534,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ListGroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return ListGroupSetterCommon<T>.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2568,10 +2582,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ListGroup_Registration.Instance;
         public static ListGroup_Registration Registration => ListGroup_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => ListGroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => ListGroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IListGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2581,7 +2600,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IListGroupGetter<T>)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => ListGroupCommon<T>.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

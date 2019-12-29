@@ -1343,14 +1343,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
         public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return SoundItemSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SoundItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2144,10 +2150,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
         public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SoundItemCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SoundItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ISoundItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

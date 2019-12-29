@@ -2547,11 +2547,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
         public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return MagicEffectSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => MagicEffectSetterTranslationCommon.Instance;
 
         #endregion
@@ -4327,7 +4330,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
         public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => MagicEffectSetterTranslationCommon.Instance;
 
         #endregion

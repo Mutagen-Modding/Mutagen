@@ -1221,14 +1221,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherChanceCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WeatherChanceSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherChanceSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2006,10 +2012,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherChance_Registration.Instance;
         public static WeatherChance_Registration Registration => WeatherChance_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherChanceCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherChanceSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWeatherChanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

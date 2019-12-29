@@ -2122,11 +2122,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
         public new static Container_Registration Registration => Container_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return ContainerSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ContainerSetterTranslationCommon.Instance;
 
         #endregion
@@ -3452,7 +3455,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
         public new static Container_Registration Registration => Container_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ContainerCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ContainerSetterTranslationCommon.Instance;
 
         #endregion

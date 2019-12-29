@@ -1471,14 +1471,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
         public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return MagicEffectSubDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MagicEffectSubDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2577,10 +2583,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
         public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MagicEffectSubDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IMagicEffectSubDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

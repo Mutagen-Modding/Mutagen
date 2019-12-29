@@ -29,11 +29,15 @@ namespace Mutagen.Bethesda.Generation
 
         public static void GenerateClassImplementation(ObjectGeneration obj, FileGeneration fg, bool onlyGetter = false)
         {
+            fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
+            fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
             if (!onlyGetter)
             {
+                fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
+                fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
             }
         }
@@ -115,6 +119,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInCommonMixin(ObjectGeneration obj, FileGeneration fg)
         {
             if (await HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
+            fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
                 $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
@@ -131,6 +136,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
+            fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {
@@ -148,6 +154,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
+            fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
                 $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
@@ -164,6 +171,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
+            fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
                 $"public static IEnumerable<TMajor> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}"))
             {

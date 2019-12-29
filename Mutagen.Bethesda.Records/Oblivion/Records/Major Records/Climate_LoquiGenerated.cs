@@ -2232,11 +2232,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
         public new static Climate_Registration Registration => Climate_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return ClimateSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ClimateSetterTranslationCommon.Instance;
 
         #endregion
@@ -3976,7 +3979,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
         public new static Climate_Registration Registration => Climate_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => ClimateSetterTranslationCommon.Instance;
 
         #endregion

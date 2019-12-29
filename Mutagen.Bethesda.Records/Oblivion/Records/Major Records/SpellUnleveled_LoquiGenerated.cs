@@ -1888,11 +1888,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
         public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return SpellUnleveledSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SpellUnleveledSetterTranslationCommon.Instance;
 
         #endregion
@@ -3039,7 +3042,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
         public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => SpellUnleveledCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => SpellUnleveledSetterTranslationCommon.Instance;
 
         #endregion

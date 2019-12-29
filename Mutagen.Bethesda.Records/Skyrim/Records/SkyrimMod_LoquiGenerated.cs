@@ -573,9 +573,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             return null;
         }
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -1196,22 +1200,26 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimModGetter obj)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimModGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMod obj)
         {
             return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMod obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -2746,14 +2754,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return SkyrimModSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -4205,10 +4219,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
         public static SkyrimMod_Registration Registration => SkyrimMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkyrimModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ISkyrimModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -4224,7 +4243,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

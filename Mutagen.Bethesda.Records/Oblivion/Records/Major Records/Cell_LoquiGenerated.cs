@@ -649,9 +649,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -1198,22 +1202,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ICellGetter obj)
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ICellInternal obj)
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -3470,11 +3478,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
         public new static Cell_Registration Registration => Cell_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return CellSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
@@ -5896,7 +5907,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
         public new static Cell_Registration Registration => Cell_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
@@ -5906,7 +5919,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICellGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => CellCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

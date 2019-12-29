@@ -320,9 +320,13 @@ namespace Mutagen.Bethesda
         {
         }
 
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -732,22 +736,26 @@ namespace Mutagen.Bethesda
                 getNextFormKey: getNextFormKey,
                 duplicatedRecords: duplicatedRecords);
         }
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IMajorRecordGetter obj)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IMajorRecordInternal obj)
         {
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -1667,14 +1675,20 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterInstance()
         {
             return MajorRecordSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2571,10 +2585,15 @@ namespace Mutagen.Bethesda.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
+        [DebuggerStepThrough]
         protected virtual object CommonSetterTranslationInstance() => MajorRecordSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IMajorRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2584,7 +2603,9 @@ namespace Mutagen.Bethesda.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMajorRecordGetter)rhs, include);
 
         public virtual IEnumerable<ILinkGetter> Links => MajorRecordCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

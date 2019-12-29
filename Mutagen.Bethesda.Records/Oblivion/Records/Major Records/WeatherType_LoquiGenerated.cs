@@ -1317,14 +1317,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
         public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WeatherTypeSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherTypeSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2233,10 +2239,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherType_Registration.Instance;
         public static WeatherType_Registration Registration => WeatherType_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherTypeCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherTypeSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWeatherTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

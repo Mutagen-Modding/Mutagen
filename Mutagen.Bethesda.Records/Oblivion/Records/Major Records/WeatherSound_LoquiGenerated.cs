@@ -1236,14 +1236,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
         public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return WeatherSoundSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2030,10 +2036,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherSound_Registration.Instance;
         public static WeatherSound_Registration Registration => WeatherSound_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => WeatherSoundCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => WeatherSoundSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IWeatherSoundGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

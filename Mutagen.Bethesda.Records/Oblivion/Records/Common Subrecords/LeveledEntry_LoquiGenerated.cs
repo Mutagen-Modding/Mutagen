@@ -1571,14 +1571,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return LeveledEntrySetterCommon<T>.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2581,10 +2587,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LeveledEntryCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LeveledEntrySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ILeveledEntryGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

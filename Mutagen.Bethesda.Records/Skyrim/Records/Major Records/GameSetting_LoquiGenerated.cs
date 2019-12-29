@@ -1267,11 +1267,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
         public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return GameSettingSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GameSettingSetterTranslationCommon.Instance;
 
         #endregion
@@ -1824,7 +1827,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
         public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => GameSettingSetterTranslationCommon.Instance;
 
         #endregion

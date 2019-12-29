@@ -1863,14 +1863,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
         public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RegionDataObjectCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RegionDataObjectSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RegionDataObjectSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -3584,10 +3590,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataObject_Registration.Instance;
         public static RegionDataObject_Registration Registration => RegionDataObject_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RegionDataObjectCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RegionDataObjectSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRegionDataObjectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

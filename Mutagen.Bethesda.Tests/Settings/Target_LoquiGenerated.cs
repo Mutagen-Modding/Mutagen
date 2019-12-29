@@ -1266,14 +1266,20 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Target_Registration.Instance;
         public static Target_Registration Registration => Target_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => TargetCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return TargetSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => TargetSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ITargetGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ITargetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ITargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

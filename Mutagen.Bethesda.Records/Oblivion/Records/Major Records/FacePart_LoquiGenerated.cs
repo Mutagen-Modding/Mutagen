@@ -1509,14 +1509,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
         public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return FacePartSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => FacePartSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2396,10 +2402,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FacePart_Registration.Instance;
         public static FacePart_Registration Registration => FacePart_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => FacePartCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => FacePartSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IFacePartGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

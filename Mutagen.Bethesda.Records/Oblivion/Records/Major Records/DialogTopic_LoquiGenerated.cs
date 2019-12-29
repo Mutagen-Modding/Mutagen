@@ -359,9 +359,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -798,22 +802,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IDialogTopicGetter obj)
         {
             return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IDialogTopicInternal obj)
         {
             return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -1951,11 +1959,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => DialogTopicCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return DialogTopicSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => DialogTopicSetterTranslationCommon.Instance;
 
         #endregion
@@ -3095,7 +3106,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogTopic_Registration.Instance;
         public new static DialogTopic_Registration Registration => DialogTopic_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => DialogTopicCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => DialogTopicSetterTranslationCommon.Instance;
 
         #endregion
@@ -3105,7 +3118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

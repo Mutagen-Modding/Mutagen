@@ -1042,14 +1042,20 @@ namespace Mutagen.Bethesda.Tests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DataFolderLocations_Registration.Instance;
         public static DataFolderLocations_Registration Registration => DataFolderLocations_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DataFolderLocationsCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return DataFolderLocationsSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DataFolderLocationsSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDataFolderLocationsGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDataFolderLocationsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IDataFolderLocationsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

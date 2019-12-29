@@ -1488,14 +1488,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
         public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return MapMarkerSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MapMarkerSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2444,10 +2450,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
         public static MapMarker_Registration Registration => MapMarker_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => MapMarkerSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IMapMarkerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

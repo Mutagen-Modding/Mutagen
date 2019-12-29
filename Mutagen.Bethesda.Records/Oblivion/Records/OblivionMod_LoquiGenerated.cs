@@ -2045,9 +2045,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
             return null;
         }
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         #endregion
 
@@ -2864,22 +2868,26 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionModGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IOblivionMod obj)
         {
             return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMod obj)
             where TMajor : class, IMajorRecordCommon
         {
@@ -9275,14 +9283,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return OblivionModSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -14733,10 +14747,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => OblivionModSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IOblivionModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -14752,7 +14771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IModGetter.WriteToBinaryParallel(string path, ModKey? modKey) => this.WriteToBinaryParallel(path, modKey);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public IEnumerable<ILinkGetter> Links => OblivionModCommon.Instance.GetLinks(this);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

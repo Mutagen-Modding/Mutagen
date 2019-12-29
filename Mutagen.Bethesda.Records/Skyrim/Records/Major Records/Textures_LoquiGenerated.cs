@@ -2040,14 +2040,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Textures_Registration.Instance;
         public static Textures_Registration Registration => Textures_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => TexturesCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return TexturesSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => TexturesSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -3254,10 +3260,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Textures_Registration.Instance;
         public static Textures_Registration Registration => Textures_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => TexturesCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => TexturesSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ITexturesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

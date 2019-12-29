@@ -1412,14 +1412,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => BodyDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return BodyDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2330,10 +2336,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => BodyDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

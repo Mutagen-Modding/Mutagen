@@ -2120,11 +2120,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
         public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return AlchemicalApparatusSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => AlchemicalApparatusSetterTranslationCommon.Instance;
 
         #endregion
@@ -3363,7 +3366,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
         public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => AlchemicalApparatusCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => AlchemicalApparatusSetterTranslationCommon.Instance;
 
         #endregion

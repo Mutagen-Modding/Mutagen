@@ -1257,14 +1257,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
         public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return AIPackageTargetSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageTargetSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2109,10 +2115,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
         public static AIPackageTarget_Registration Registration => AIPackageTarget_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => AIPackageTargetSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IAIPackageTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

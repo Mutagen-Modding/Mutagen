@@ -1647,14 +1647,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return LogEntrySetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LogEntrySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2704,10 +2710,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
         public static LogEntry_Registration Registration => LogEntry_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => LogEntrySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ILogEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

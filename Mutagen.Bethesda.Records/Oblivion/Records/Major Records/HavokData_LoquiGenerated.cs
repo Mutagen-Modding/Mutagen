@@ -1257,14 +1257,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return HavokDataSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => HavokDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2109,10 +2115,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => HavokDataCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => HavokDataSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IHavokDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

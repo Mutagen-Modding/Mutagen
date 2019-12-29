@@ -1620,14 +1620,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
         public static Decal_Registration Registration => Decal_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return DecalSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DecalSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDecalGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDecalGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IDecalGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2977,10 +2983,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
         public static Decal_Registration Registration => Decal_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => DecalSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IDecalGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IDecalGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IDecalGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

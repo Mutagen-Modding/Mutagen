@@ -1227,14 +1227,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
         public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceRelationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return RaceRelationSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceRelationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2018,10 +2024,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceRelation_Registration.Instance;
         public static RaceRelation_Registration Registration => RaceRelation_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => RaceRelationCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => RaceRelationSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IRaceRelationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

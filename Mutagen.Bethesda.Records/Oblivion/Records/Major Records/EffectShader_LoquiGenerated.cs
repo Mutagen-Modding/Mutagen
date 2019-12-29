@@ -4712,11 +4712,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
         public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return EffectShaderSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => EffectShaderSetterTranslationCommon.Instance;
 
         #endregion
@@ -9071,7 +9074,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
         public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => EffectShaderSetterTranslationCommon.Instance;
 
         #endregion

@@ -1433,14 +1433,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
         public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return QuestTargetSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2476,10 +2482,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
         public static QuestTarget_Registration Registration => QuestTarget_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => QuestTargetSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IQuestTargetGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

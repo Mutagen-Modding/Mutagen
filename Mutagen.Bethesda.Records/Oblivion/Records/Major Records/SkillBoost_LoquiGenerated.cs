@@ -1212,14 +1212,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return SkillBoostSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkillBoostSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -1997,10 +2003,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => SkillBoostCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => SkillBoostSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object ISkillBoostGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion

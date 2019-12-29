@@ -2460,11 +2460,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
         public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNPCCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return PlacedNPCSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PlacedNPCSetterTranslationCommon.Instance;
 
         #endregion
@@ -3912,7 +3915,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNPC_Registration.Instance;
         public new static PlacedNPC_Registration Registration => PlacedNPC_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNPCCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => PlacedNPCSetterTranslationCommon.Instance;
 
         #endregion

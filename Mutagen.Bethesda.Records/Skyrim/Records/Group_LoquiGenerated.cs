@@ -292,9 +292,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         #endregion
 
@@ -781,12 +785,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(this IGroupGetter<T> obj)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroupGetter<T> obj)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
@@ -794,12 +800,14 @@ namespace Mutagen.Bethesda.Skyrim
             return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()).EnumerateMajorRecords<TMajor>(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(this IGroup<T> obj)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
             return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()).EnumerateMajorRecords(obj: obj);
         }
 
+        [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IGroup<T> obj)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommon
@@ -1552,14 +1560,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return GroupSetterCommon<T>.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2638,10 +2652,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => GroupCommon<T>.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => GroupSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IGroupGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2650,7 +2669,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;

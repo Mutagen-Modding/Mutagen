@@ -1514,11 +1514,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataSounds_Registration.Instance;
         public new static RegionDataSounds_Registration Registration => RegionDataSounds_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => RegionDataSoundsCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
             return RegionDataSoundsSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => RegionDataSoundsSetterTranslationCommon.Instance;
 
         #endregion
@@ -2306,7 +2309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionDataSounds_Registration.Instance;
         public new static RegionDataSounds_Registration Registration => RegionDataSounds_Registration.Instance;
+        [DebuggerStepThrough]
         protected override object CommonInstance() => RegionDataSoundsCommon.Instance;
+        [DebuggerStepThrough]
         protected override object CommonSetterTranslationInstance() => RegionDataSoundsSetterTranslationCommon.Instance;
 
         #endregion

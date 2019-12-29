@@ -1646,14 +1646,20 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
         public static Effect_Registration Registration => Effect_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
             return EffectSetterCommon.Instance;
         }
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => EffectSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IEffectGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IEffectGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
         object IEffectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
@@ -2894,10 +2900,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
         public static Effect_Registration Registration => Effect_Registration.Instance;
+        [DebuggerStepThrough]
         protected object CommonInstance() => EffectCommon.Instance;
+        [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => EffectSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
         object IEffectGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
         object IEffectGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
         object IEffectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
