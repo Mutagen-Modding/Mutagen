@@ -2522,7 +2522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 default:
-                    break;
+                    throw new ArgumentException();
             }
         }
         

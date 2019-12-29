@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
-                    break;
+                    throw new ArgumentException();
             }
         }
         

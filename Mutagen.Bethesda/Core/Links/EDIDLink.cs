@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolve<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out TMajor rec))
             {
@@ -134,13 +134,14 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        TMajor ILinkGetter<TMajor>.Resolve<M>(ILinkingPackage<M> package)
+        public ITryGetter<TMajor> TryResolve<TMod>(ILinkingPackage<TMod> package) 
+            where TMod : IModGetter
         {
-            if (this.TryResolve(package, out var major))
+            if (TryResolve(package, out TMajor rec))
             {
-                return major;
+                return TryGet<TMajor>.Succeed(rec);
             }
-            return default;
+            return TryGet<TMajor>.Failure;
         }
 
         public virtual void Unset()

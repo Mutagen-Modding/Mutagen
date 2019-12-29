@@ -12,13 +12,13 @@ namespace Mutagen.Bethesda
     {
         Type TargetType { get; }
         bool TryResolveFormKey<M>(ILinkingPackage<M> package, out FormKey formKey) where M : IModGetter;
-        bool TryResolve<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey) where M : IModGetter;
+        bool TryResolveCommon<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter majorRecord) where M : IModGetter;
     }
 
     public interface ILinkGetter<out TMajor> : ILinkGetter
         where TMajor : IMajorRecordCommonGetter
     {
-        TMajor Resolve<M>(ILinkingPackage<M> package) where M : IModGetter;
+        ITryGetter<TMajor> TryResolve<TMod>(ILinkingPackage<TMod> package) where TMod : IModGetter;
     }
 
     public interface ISetLinkGetter : ILinkGetter
@@ -51,6 +51,27 @@ namespace Mutagen.Bethesda
             {
                 link.Unset();
             }
+        }
+
+        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkingPackage<TMod> package, out TMajor majorRecord)
+            where TMod : IModGetter
+            where TMajor : IMajorRecordCommonGetter
+        {
+            var ret = link.TryResolve<TMod>(package);
+            if (ret.Succeeded)
+            {
+                majorRecord = ret.Value;
+                return true;
+            }
+            majorRecord = default;
+            return false;
+        }
+
+        public static TMajor Resolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkingPackage<TMod> package)
+            where TMod : IModGetter
+            where TMajor : IMajorRecordCommonGetter
+        {
+            return link.TryResolve<TMod>(package).Value;
         }
     }
 }

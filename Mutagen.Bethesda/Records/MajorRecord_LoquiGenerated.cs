@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Internals
                     }
                     yield break;
                 default:
-                    break;
+                    throw new ArgumentException();
             }
         }
         

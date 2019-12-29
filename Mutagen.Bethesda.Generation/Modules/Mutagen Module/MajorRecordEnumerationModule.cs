@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Generation
                                 case LoquiType loqui:
                                     // ToDo
                                     // Add implementation for generics?
-                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic) return;
+                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic) continue;
 
                                     if (loqui.TargetObjectGeneration != null)
                                     {
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("default:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("break;");
+                            fg.AppendLine("throw new ArgumentException();");
                         }
                     }
                 }

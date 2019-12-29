@@ -13,24 +13,22 @@ namespace Mutagen.Bethesda.Examples
         /// However, the FormID concepts are abstracted away so we can just reference the Class record each NPC is pointing to directly.
         public static async Task AccessRecords(string pathToMod, Action<string> output)
         {
-            // ToDo
-            // Refactor to use BinaryOverlay when linking capabilities are added to it
-            IOblivionModGetter mod = await OblivionMod.CreateFromBinary(
-                pathToMod,
-                importMask: new GroupMask()
-                {
-                    NPCs = true,
-                    Classes = true,
-                });
+            IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
             var links = new LinkingPackage<IOblivionModGetter>(mod, null);
             foreach (var npc in mod.NPCs.Records)
             {
                 // Not all NPCs have classes, so skip any that don't have one
                 if (npc.Class == null) continue;
 
-                // Access class directly, and get its name.
+                // Reolve to class major record, and get its name.
                 // Also, we can still get access to the FormID (Or the more strongly typed FormKey) if desired through the property
-                output($"{npc.EditorID} => {npc.Class.Resolve(links).Name} ({npc.Class.FormKey})");
+                if (npc.Class.TryResolve(links, out var classRecord))
+                {
+                    output($"{npc.EditorID} => {classRecord.Name} ({npc.Class.FormKey})");
+                }
+
+                // Can also Resolve without using an if statement, as long as we handle the null potential
+                //output($"{npc.EditorID} => {npc.Class.Resolve(links)?.Name} ({npc.Class.FormKey})");
             }
         }
     }

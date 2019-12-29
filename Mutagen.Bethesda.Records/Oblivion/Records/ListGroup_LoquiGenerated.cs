@@ -1423,8 +1423,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item as TMajor;
                     }
                     yield break;
+                default:
+                    throw new ArgumentException();
             }
         }
+        
         #endregion
         
     }
