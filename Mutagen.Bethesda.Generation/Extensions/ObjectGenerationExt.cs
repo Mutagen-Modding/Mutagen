@@ -143,7 +143,6 @@ namespace Mutagen.Bethesda.Generation
             }
             foreach (var field in objGen.IterateFields())
             {
-                if (field.Name != "Items") continue;
                 if (field is ContainerType cont)
                 {
                     return cont.SingleTypeGen as LoquiType;
@@ -151,10 +150,6 @@ namespace Mutagen.Bethesda.Generation
                 else if (field is DictType dictType)
                 {
                     return dictType.ValueTypeGen as LoquiType;
-                }
-                else
-                {
-                    throw new ArgumentException();
                 }
             }
             throw new ArgumentException();
