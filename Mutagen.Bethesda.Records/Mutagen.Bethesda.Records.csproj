@@ -7,9 +7,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+    <NoWarn>1701;1702; CS1998</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
+    <NoWarn>1701;1702; CS1998</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />

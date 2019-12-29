@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
 
-        protected override IObservableCache<T, FormKey> InternalItems => throw new NotImplementedException();
+        protected override ICache<T, FormKey> InternalItems => this.Items;
     }
 
     public static class GroupExt

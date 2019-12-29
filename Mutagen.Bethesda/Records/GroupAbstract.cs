@@ -16,10 +16,7 @@ namespace Mutagen.Bethesda
     public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        protected abstract IObservableCache<T, FormKey> InternalItems { get; }
-
-        private Lazy<IObservableCache<T, string>> _editorIDCache;
-        public IObservableCache<T, string> ByEditorID => _editorIDCache.Value;
+        protected abstract ICache<T, FormKey> InternalItems { get; }
 
         public IMod SourceMod { get; private set; }
 
@@ -34,19 +31,6 @@ namespace Mutagen.Bethesda
         public GroupAbstract(IMod mod)
         {
             this.SourceMod = mod;
-            this.Init();
-        }
-
-        private void Init()
-        {
-            _editorIDCache = new Lazy<IObservableCache<T, string>>(() =>
-            {
-                return this.InternalItems.Connect()
-                    .RemoveKey()
-                    .AddKey(m => m.EditorID)
-                    .AsObservableCache();
-            },
-            isThreadSafe: true);
         }
 
         public override string ToString()

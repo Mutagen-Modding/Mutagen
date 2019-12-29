@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected override IObservableCache<T, FormKey> InternalItems => throw new NotImplementedException();
+        protected override ICache<T, FormKey> InternalItems => this.Items;
     }
 
     public static class GroupExt
