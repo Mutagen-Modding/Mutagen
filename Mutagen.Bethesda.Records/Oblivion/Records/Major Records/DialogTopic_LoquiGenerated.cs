@@ -3098,8 +3098,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class DialogTopicBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class DialogTopicBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IDialogTopicGetter
     {
         #region Common Routing
@@ -3171,22 +3171,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected DialogTopicBinaryWrapper(
+        protected DialogTopicBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static DialogTopicBinaryWrapper DialogTopicFactory(
+        public static DialogTopicBinaryOverlay DialogTopicFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new DialogTopicBinaryWrapper(
+            var ret = new DialogTopicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3222,7 +3222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x49545351: // QSTI
                 {
-                    this.Quests = BinaryWrapperSetList<IFormIDLinkGetter<IQuestGetter>>.FactoryByArray(
+                    this.Quests = BinaryOverlaySetList<IFormIDLinkGetter<IQuestGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IQuestGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),

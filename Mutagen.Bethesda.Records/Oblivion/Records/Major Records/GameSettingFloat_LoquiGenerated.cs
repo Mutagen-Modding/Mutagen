@@ -2221,8 +2221,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GameSettingFloatBinaryWrapper :
-        GameSettingBinaryWrapper,
+    public partial class GameSettingFloatBinaryOverlay :
+        GameSettingBinaryOverlay,
         IGameSettingFloatGetter
     {
         #region Common Routing
@@ -2279,22 +2279,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected GameSettingFloatBinaryWrapper(
+        protected GameSettingFloatBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GameSettingFloatBinaryWrapper GameSettingFloatFactory(
+        public static GameSettingFloatBinaryOverlay GameSettingFloatFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new GameSettingFloatBinaryWrapper(
+            var ret = new GameSettingFloatBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

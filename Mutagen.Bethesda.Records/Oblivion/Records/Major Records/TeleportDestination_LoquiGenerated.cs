@@ -2135,8 +2135,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class TeleportDestinationBinaryWrapper :
-        BinaryWrapper,
+    public partial class TeleportDestinationBinaryOverlay :
+        BinaryOverlay,
         ITeleportDestinationGetter
     {
         #region Common Routing
@@ -2200,21 +2200,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected TeleportDestinationBinaryWrapper(
+        protected TeleportDestinationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static TeleportDestinationBinaryWrapper TeleportDestinationFactory(
+        public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new TeleportDestinationBinaryWrapper(
+            var ret = new TeleportDestinationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType)
         {
             var data = typeGen.GetFieldData();
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;

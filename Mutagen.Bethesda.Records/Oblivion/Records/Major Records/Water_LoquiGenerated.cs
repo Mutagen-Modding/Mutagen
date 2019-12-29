@@ -6494,8 +6494,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WaterBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class WaterBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IWaterGetter
     {
         #region Common Routing
@@ -6726,7 +6726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
         private bool _RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
-        public IRelatedWatersGetter RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryWrapper.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRelatedWatersGetter RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(
@@ -6734,22 +6734,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected WaterBinaryWrapper(
+        protected WaterBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WaterBinaryWrapper WaterFactory(
+        public static WaterBinaryOverlay WaterFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new WaterBinaryWrapper(
+            var ret = new WaterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

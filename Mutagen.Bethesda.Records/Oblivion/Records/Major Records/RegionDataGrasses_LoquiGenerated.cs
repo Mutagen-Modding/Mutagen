@@ -2079,8 +2079,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionDataGrassesBinaryWrapper :
-        RegionDataBinaryWrapper,
+    public partial class RegionDataGrassesBinaryOverlay :
+        RegionDataBinaryOverlay,
         IRegionDataGrassesGetter
     {
         #region Common Routing
@@ -2134,21 +2134,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RegionDataGrassesBinaryWrapper(
+        protected RegionDataGrassesBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionDataGrassesBinaryWrapper RegionDataGrassesFactory(
+        public static RegionDataGrassesBinaryOverlay RegionDataGrassesFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionDataGrassesBinaryWrapper(
+            var ret = new RegionDataGrassesBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Grasses = BinaryWrapperSetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlaySetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

@@ -2775,8 +2775,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LandTextureBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class LandTextureBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ILandTextureGetter
     {
         #region Common Routing
@@ -2832,7 +2832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Havok
         private RangeInt32? _HavokLocation;
         private bool _Havok_IsSet => _HavokLocation.HasValue;
-        public IHavokDataGetter Havok => _Havok_IsSet ? HavokDataBinaryWrapper.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IHavokDataGetter Havok => _Havok_IsSet ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Havok_IsSet => _HavokLocation.HasValue;
         #endregion
         #region TextureSpecularExponent
@@ -2846,22 +2846,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected LandTextureBinaryWrapper(
+        protected LandTextureBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LandTextureBinaryWrapper LandTextureFactory(
+        public static LandTextureBinaryOverlay LandTextureFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LandTextureBinaryWrapper(
+            var ret = new LandTextureBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2908,7 +2908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E47: // GNAM
                 {
-                    this.PotentialGrass = BinaryWrapperSetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByArray(
+                    this.PotentialGrass = BinaryOverlaySetList<IFormIDLinkGetter<IGrassGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IGrassGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),

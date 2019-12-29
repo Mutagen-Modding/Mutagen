@@ -1995,8 +1995,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SkillBoostBinaryWrapper :
-        BinaryWrapper,
+    public partial class SkillBoostBinaryOverlay :
+        BinaryOverlay,
         ISkillBoostGetter
     {
         #region Common Routing
@@ -2058,21 +2058,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected SkillBoostBinaryWrapper(
+        protected SkillBoostBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static SkillBoostBinaryWrapper SkillBoostFactory(
+        public static SkillBoostBinaryOverlay SkillBoostFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new SkillBoostBinaryWrapper(
+            var ret = new SkillBoostBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 2),
                 package: package);
             int offset = stream.Position;

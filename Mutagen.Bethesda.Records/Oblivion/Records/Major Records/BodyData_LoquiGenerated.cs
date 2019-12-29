@@ -2328,8 +2328,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BodyDataBinaryWrapper :
-        BinaryWrapper,
+    public partial class BodyDataBinaryOverlay :
+        BinaryOverlay,
         IBodyDataGetter
     {
         #region Common Routing
@@ -2388,27 +2388,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryWrapper>.Instance;
+        public IReadOnlySetList<IBodyPartGetter> BodyParts { get; private set; } = EmptySetList<BodyPartBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected BodyDataBinaryWrapper(
+        protected BodyDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static BodyDataBinaryWrapper BodyDataFactory(
+        public static BodyDataBinaryOverlay BodyDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new BodyDataBinaryWrapper(
+            var ret = new BodyDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -2449,11 +2449,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
-                    this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryWrapper>(
+                    this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
-                        factory:  BodyPartBinaryWrapper.BodyPartFactory);
+                        factory:  BodyPartBinaryOverlay.BodyPartFactory);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 }
                 default:

@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Internals
 {
     public delegate T MajorRecordActivator<T>(FormKey formKey) where T : IMajorRecordInternal;
 
-    public partial class MajorRecordBinaryWrapper : IMajorRecordCommonGetter
+    public partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
     {
         public bool IsCompressed => ((MajorRecord.MajorRecordFlag)this.MajorRecordFlagsRaw).HasFlag(MajorRecord.MajorRecordFlag.Compressed);
 

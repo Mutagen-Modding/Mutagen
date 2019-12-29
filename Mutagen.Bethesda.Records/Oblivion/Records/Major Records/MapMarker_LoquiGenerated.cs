@@ -2442,8 +2442,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class MapMarkerBinaryWrapper :
-        BinaryWrapper,
+    public partial class MapMarkerBinaryOverlay :
+        BinaryOverlay,
         IMapMarkerGetter
     {
         #region Common Routing
@@ -2514,21 +2514,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected MapMarkerBinaryWrapper(
+        protected MapMarkerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static MapMarkerBinaryWrapper MapMarkerFactory(
+        public static MapMarkerBinaryOverlay MapMarkerFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new MapMarkerBinaryWrapper(
+            var ret = new MapMarkerBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2573,7 +2573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return TryGet<int?>.Failure;
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Types = BinaryWrapperSetList<MapMarker.Type>.FactoryByStartIndex(
+                    this.Types = BinaryOverlaySetList<MapMarker.Type>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 2,

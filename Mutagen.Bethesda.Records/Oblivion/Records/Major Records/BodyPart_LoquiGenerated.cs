@@ -2178,8 +2178,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BodyPartBinaryWrapper :
-        BinaryWrapper,
+    public partial class BodyPartBinaryOverlay :
+        BinaryOverlay,
         IBodyPartGetter
     {
         #region Common Routing
@@ -2249,21 +2249,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected BodyPartBinaryWrapper(
+        protected BodyPartBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static BodyPartBinaryWrapper BodyPartFactory(
+        public static BodyPartBinaryOverlay BodyPartFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new BodyPartBinaryWrapper(
+            var ret = new BodyPartBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

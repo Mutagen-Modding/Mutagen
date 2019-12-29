@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Tests
                 Path = "Oblivion.esm"
             };
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
-                || (settings.PassthroughSettings?.TestBinaryWrapper ?? false)
+                || (settings.PassthroughSettings?.TestBinaryOverlay ?? false)
                 || (settings.PassthroughSettings?.TestCopyIn ?? false)
                 || (settings.PassthroughSettings?.TestFolder ?? false);
             foreach (var targetGroup in settings.TargetGroups)

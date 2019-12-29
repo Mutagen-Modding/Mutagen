@@ -17,7 +17,7 @@
       <Bool name="ReorderRecords" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestNormal" />
-      <Bool name="TestBinaryWrapper" />
+      <Bool name="TestBinaryOverlay" />
       <Bool name="TestImport" />
       <Bool name="TestFolder" />
       <Bool name="TestCopyIn" />

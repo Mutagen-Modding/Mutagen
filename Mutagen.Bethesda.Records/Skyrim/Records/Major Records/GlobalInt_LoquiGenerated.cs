@@ -2260,8 +2260,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GlobalIntBinaryWrapper :
-        GlobalBinaryWrapper,
+    public partial class GlobalIntBinaryOverlay :
+        GlobalBinaryOverlay,
         IGlobalIntGetter
     {
         #region Common Routing
@@ -2321,22 +2321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GlobalIntBinaryWrapper(
+        protected GlobalIntBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GlobalIntBinaryWrapper GlobalIntFactory(
+        public static GlobalIntBinaryOverlay GlobalIntFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new GlobalIntBinaryWrapper(
+            var ret = new GlobalIntBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

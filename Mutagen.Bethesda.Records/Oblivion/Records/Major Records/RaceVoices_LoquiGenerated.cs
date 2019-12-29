@@ -2032,8 +2032,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RaceVoicesBinaryWrapper :
-        BinaryWrapper,
+    public partial class RaceVoicesBinaryOverlay :
+        BinaryOverlay,
         IRaceVoicesGetter
     {
         #region Common Routing
@@ -2096,21 +2096,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RaceVoicesBinaryWrapper(
+        protected RaceVoicesBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RaceVoicesBinaryWrapper RaceVoicesFactory(
+        public static RaceVoicesBinaryOverlay RaceVoicesFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RaceVoicesBinaryWrapper(
+            var ret = new RaceVoicesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

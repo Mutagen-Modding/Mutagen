@@ -2020,8 +2020,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ObjectBoundsBinaryWrapper :
-        BinaryWrapper,
+    public partial class ObjectBoundsBinaryOverlay :
+        BinaryOverlay,
         IObjectBoundsGetter
     {
         #region Common Routing
@@ -2083,21 +2083,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ObjectBoundsBinaryWrapper(
+        protected ObjectBoundsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ObjectBoundsBinaryWrapper ObjectBoundsFactory(
+        public static ObjectBoundsBinaryOverlay ObjectBoundsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ObjectBoundsBinaryWrapper(
+            var ret = new ObjectBoundsBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

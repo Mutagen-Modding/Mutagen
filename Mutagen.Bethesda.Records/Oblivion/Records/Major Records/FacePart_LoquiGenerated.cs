@@ -2394,8 +2394,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class FacePartBinaryWrapper :
-        BinaryWrapper,
+    public partial class FacePartBinaryOverlay :
+        BinaryOverlay,
         IFacePartGetter
     {
         #region Common Routing
@@ -2469,21 +2469,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected FacePartBinaryWrapper(
+        protected FacePartBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static FacePartBinaryWrapper FacePartFactory(
+        public static FacePartBinaryOverlay FacePartFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new FacePartBinaryWrapper(
+            var ret = new FacePartBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FacePart_FieldIndex.Model) return TryGet<int?>.Failure;
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

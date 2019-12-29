@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class OblivionMajorRecordBinaryWrapper
+        public partial class OblivionMajorRecordBinaryOverlay
         {
             public OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags
             {

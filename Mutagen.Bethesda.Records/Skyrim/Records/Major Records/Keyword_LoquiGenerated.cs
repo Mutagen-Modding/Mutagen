@@ -2137,8 +2137,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class KeywordBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class KeywordBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         IKeywordGetter
     {
         #region Common Routing
@@ -2195,22 +2195,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected KeywordBinaryWrapper(
+        protected KeywordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static KeywordBinaryWrapper KeywordFactory(
+        public static KeywordBinaryOverlay KeywordFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new KeywordBinaryWrapper(
+            var ret = new KeywordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

@@ -3447,8 +3447,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ContainerBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class ContainerBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IContainerGetter
     {
         #region Common Routing
@@ -3510,7 +3510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IContainerItemGetter> Items { get; private set; } = EmptySetList<ContainerItemBinaryWrapper>.Instance;
+        public IReadOnlySetList<IContainerItemGetter> Items { get; private set; } = EmptySetList<ContainerItemBinaryOverlay>.Instance;
         private int? _DATALocation;
         public Container.DATADataType DATADataTypeState { get; private set; }
         #region Flags
@@ -3538,22 +3538,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ContainerBinaryWrapper(
+        protected ContainerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ContainerBinaryWrapper ContainerFactory(
+        public static ContainerBinaryOverlay ContainerFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ContainerBinaryWrapper(
+            var ret = new ContainerBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3590,7 +3590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -3603,11 +3603,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F544E43: // CNTO
                 {
-                    this.Items = BinaryWrapperSetList<ContainerItemBinaryWrapper>.FactoryByArray(
+                    this.Items = BinaryOverlaySetList<ContainerItemBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ContainerItemBinaryWrapper.ContainerItemFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

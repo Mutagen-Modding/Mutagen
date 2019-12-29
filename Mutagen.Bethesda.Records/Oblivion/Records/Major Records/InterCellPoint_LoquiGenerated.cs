@@ -1994,8 +1994,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class InterCellPointBinaryWrapper :
-        BinaryWrapper,
+    public partial class InterCellPointBinaryOverlay :
+        BinaryOverlay,
         IInterCellPointGetter
     {
         #region Common Routing
@@ -2057,21 +2057,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected InterCellPointBinaryWrapper(
+        protected InterCellPointBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static InterCellPointBinaryWrapper InterCellPointFactory(
+        public static InterCellPointBinaryOverlay InterCellPointFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new InterCellPointBinaryWrapper(
+            var ret = new InterCellPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 16),
                 package: package);
             int offset = stream.Position;

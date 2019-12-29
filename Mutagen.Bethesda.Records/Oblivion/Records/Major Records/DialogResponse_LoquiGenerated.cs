@@ -2863,8 +2863,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class DialogResponseBinaryWrapper :
-        BinaryWrapper,
+    public partial class DialogResponseBinaryOverlay :
+        BinaryOverlay,
         IDialogResponseGetter
     {
         #region Common Routing
@@ -2961,21 +2961,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected DialogResponseBinaryWrapper(
+        protected DialogResponseBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static DialogResponseBinaryWrapper DialogResponseFactory(
+        public static DialogResponseBinaryOverlay DialogResponseFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new DialogResponseBinaryWrapper(
+            var ret = new DialogResponseBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

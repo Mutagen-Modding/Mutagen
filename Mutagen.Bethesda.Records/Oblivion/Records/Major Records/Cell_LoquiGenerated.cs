@@ -5899,8 +5899,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class CellBinaryWrapper :
-        PlaceBinaryWrapper,
+    public partial class CellBinaryOverlay :
+        PlaceBinaryOverlay,
         ICellGetter
     {
         #region Common Routing
@@ -5970,7 +5970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Lighting
         private RangeInt32? _LightingLocation;
         private bool _Lighting_IsSet => _LightingLocation.HasValue;
-        public ICellLightingGetter Lighting => _Lighting_IsSet ? CellLightingBinaryWrapper.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICellLightingGetter Lighting => _Lighting_IsSet ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IRegionGetter>> Regions { get; private set; } = EmptySetList<IFormIDLinkGetter<IRegionGetter>>.Instance;
@@ -6018,22 +6018,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected CellBinaryWrapper(
+        protected CellBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static CellBinaryWrapper CellFactory(
+        public static CellBinaryOverlay CellFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new CellBinaryWrapper(
+            var ret = new CellBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -6091,7 +6091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Regions = BinaryWrapperSetList<IFormIDLinkGetter<IRegionGetter>>.FactoryByStartIndex(
+                    this.Regions = BinaryOverlaySetList<IFormIDLinkGetter<IRegionGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

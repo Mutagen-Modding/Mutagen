@@ -2241,8 +2241,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RoadBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class RoadBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IRoadGetter
     {
         #region Common Routing
@@ -2302,22 +2302,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RoadBinaryWrapper(
+        protected RoadBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RoadBinaryWrapper RoadFactory(
+        public static RoadBinaryOverlay RoadFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new RoadBinaryWrapper(
+            var ret = new RoadBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

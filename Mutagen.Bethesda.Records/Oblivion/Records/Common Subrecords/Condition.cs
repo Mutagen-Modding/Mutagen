@@ -76,15 +76,15 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ConditionBinaryWrapper
+        public partial class ConditionBinaryOverlay
         {
             public Condition.Flag Flags => ConditionBinaryCreateTranslation.GetFlag(_data.Span[0]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
-            static ConditionBinaryWrapper CustomRecordTypeTrigger(
+            static ConditionBinaryOverlay CustomRecordTypeTrigger(
                 BinaryMemoryReadStream stream,
                 RecordType recordType,
-                BinaryWrapperFactoryPackage package,
+                BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {
                 var rawBytes = stream.ReadSpan(0x1A);
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
                 rawBytes.CopyTo(newBytes.AsSpan());
                 newBytes[4] = 0x18;
                 newBytes[3] = (byte)'A';
-                return ConditionBinaryWrapper.ConditionFactory(
+                return ConditionBinaryOverlay.ConditionFactory(
                     stream: new BinaryMemoryReadStream(newBytes),
                     package: package,
                     recordTypeConverter: recordTypeConverter);

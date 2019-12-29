@@ -25,9 +25,9 @@ namespace Mutagen.Bethesda.Tests
         {
         }
 
-        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
+        protected override async Task<IModGetter> ImportBinaryOverlay(FilePath path)
         {
-            return OblivionModBinaryWrapper.OblivionModFactory(
+            return OblivionModBinaryOverlay.OblivionModFactory(
                 new BinaryReadStream(this.FilePath.Path),
                 this.ModKey);
         }
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
         {
-            var wrapper = OblivionMod.CreateFromBinaryWrapper(file.Path);
+            var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path);
             var ret = new OblivionMod(this.ModKey);
             ret.DeepCopyFieldsFrom(wrapper);
             return ret;

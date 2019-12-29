@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GroupBinaryWrapper<T>
+        public partial class GroupBinaryOverlay<T>
         {
             private GroupMajorRecordCacheWrapper<T> _Items;
             public IReadOnlyCache<T, FormKey> Items => _Items;

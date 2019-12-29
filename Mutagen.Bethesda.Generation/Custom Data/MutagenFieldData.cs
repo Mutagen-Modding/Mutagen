@@ -19,8 +19,8 @@ namespace Mutagen.Bethesda.Generation
         public bool Optional;
         public int? Length;
         public BinaryGenerationType Binary;
-        public BinaryGenerationType? BinaryWrapper;
-        public BinaryGenerationType BinaryWrapperFallback => this.BinaryWrapper ?? this.Binary;
+        public BinaryGenerationType? BinaryOverlay;
+        public BinaryGenerationType BinaryOverlayFallback => this.BinaryOverlay ?? this.Binary;
         public bool CustomFolder;
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();

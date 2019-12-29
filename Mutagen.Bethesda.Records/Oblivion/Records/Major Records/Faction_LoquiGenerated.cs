@@ -3069,8 +3069,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class FactionBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class FactionBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IFactionGetter
     {
         #region Common Routing
@@ -3123,7 +3123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Name_IsSet => _NameLocation.HasValue;
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _NameLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRelationGetter> Relations { get; private set; } = EmptySetList<RelationBinaryOverlay>.Instance;
         #region Flags
         private int? _FlagsLocation;
         public bool Flags_IsSet => _FlagsLocation.HasValue;
@@ -3134,28 +3134,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool CrimeGoldMultiplier_IsSet => _CrimeGoldMultiplierLocation.HasValue;
         public Single CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGoldMultiplierLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<IRankGetter> Ranks { get; private set; } = EmptySetList<RankBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRankGetter> Ranks { get; private set; } = EmptySetList<RankBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected FactionBinaryWrapper(
+        protected FactionBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static FactionBinaryWrapper FactionFactory(
+        public static FactionBinaryOverlay FactionFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new FactionBinaryWrapper(
+            var ret = new FactionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3192,11 +3192,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    this.Relations = BinaryWrapperSetList<RelationBinaryWrapper>.FactoryByArray(
+                    this.Relations = BinaryOverlaySetList<RelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => RelationBinaryWrapper.RelationFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -3220,11 +3220,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 case 0x4D414E49: // INAM
                 {
-                    this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryWrapper>(
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: Rank_Registration.TriggeringRecordTypes,
-                        factory:  RankBinaryWrapper.RankFactory);
+                        factory:  RankBinaryOverlay.RankFactory);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
                 }
                 default:

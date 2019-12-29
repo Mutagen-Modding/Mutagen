@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Tests
         #region TestNormal
         public Boolean TestNormal { get; set; }
         #endregion
-        #region TestBinaryWrapper
-        public Boolean TestBinaryWrapper { get; set; }
+        #region TestBinaryOverlay
+        public Boolean TestBinaryOverlay { get; set; }
         #endregion
         #region TestImport
         public Boolean TestImport { get; set; }
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Tests
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Tests
 
         new Boolean TestNormal { get; set; }
 
-        new Boolean TestBinaryWrapper { get; set; }
+        new Boolean TestBinaryOverlay { get; set; }
 
         new Boolean TestImport { get; set; }
 
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda.Tests
         Boolean TestNormal { get; }
 
         #endregion
-        #region TestBinaryWrapper
-        Boolean TestBinaryWrapper { get; }
+        #region TestBinaryOverlay
+        Boolean TestBinaryOverlay { get; }
 
         #endregion
         #region TestImport
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         ReorderRecords = 1,
         DeleteCachesAfter = 2,
         TestNormal = 3,
-        TestBinaryWrapper = 4,
+        TestBinaryOverlay = 4,
         TestImport = 5,
         TestFolder = 6,
         TestCopyIn = 7,
@@ -739,8 +739,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)PassthroughSettings_FieldIndex.DeleteCachesAfter;
                 case "TESTNORMAL":
                     return (ushort)PassthroughSettings_FieldIndex.TestNormal;
-                case "TESTBINARYWRAPPER":
-                    return (ushort)PassthroughSettings_FieldIndex.TestBinaryWrapper;
+                case "TESTBINARYOVERLAY":
+                    return (ushort)PassthroughSettings_FieldIndex.TestBinaryOverlay;
                 case "TESTIMPORT":
                     return (ushort)PassthroughSettings_FieldIndex.TestImport;
                 case "TESTFOLDER":
@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -822,8 +822,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "DeleteCachesAfter";
                 case PassthroughSettings_FieldIndex.TestNormal:
                     return "TestNormal";
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    return "TestBinaryWrapper";
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    return "TestBinaryOverlay";
                 case PassthroughSettings_FieldIndex.TestImport:
                     return "TestImport";
                 case PassthroughSettings_FieldIndex.TestFolder:
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                 case PassthroughSettings_FieldIndex.TestImport:
                 case PassthroughSettings_FieldIndex.TestFolder:
                 case PassthroughSettings_FieldIndex.TestCopyIn:
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestNormal:
                     return typeof(Boolean);
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.TestImport:
                     return typeof(Boolean);
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             item.ReorderRecords = default(Boolean);
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
             item.TestNormal = default(Boolean);
-            item.TestBinaryWrapper = default(Boolean);
+            item.TestBinaryOverlay = default(Boolean);
             item.TestImport = default(Boolean);
             item.TestFolder = default(Boolean);
             item.TestCopyIn = default(Boolean);
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.ReorderRecords = item.ReorderRecords == rhs.ReorderRecords;
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestNormal = item.TestNormal == rhs.TestNormal;
-            ret.TestBinaryWrapper = item.TestBinaryWrapper == rhs.TestBinaryWrapper;
+            ret.TestBinaryOverlay = item.TestBinaryOverlay == rhs.TestBinaryOverlay;
             ret.TestImport = item.TestImport == rhs.TestImport;
             ret.TestFolder = item.TestFolder == rhs.TestFolder;
             ret.TestCopyIn = item.TestCopyIn == rhs.TestCopyIn;
@@ -1076,9 +1076,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendLine($"TestNormal => {item.TestNormal}");
             }
-            if (printMask?.TestBinaryWrapper ?? true)
+            if (printMask?.TestBinaryOverlay ?? true)
             {
-                fg.AppendLine($"TestBinaryWrapper => {item.TestBinaryWrapper}");
+                fg.AppendLine($"TestBinaryOverlay => {item.TestBinaryOverlay}");
             }
             if (printMask?.TestImport ?? true)
             {
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             mask.ReorderRecords = true;
             mask.DeleteCachesAfter = true;
             mask.TestNormal = true;
-            mask.TestBinaryWrapper = true;
+            mask.TestBinaryOverlay = true;
             mask.TestImport = true;
             mask.TestFolder = true;
             mask.TestCopyIn = true;
@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs.ReorderRecords != rhs.ReorderRecords) return false;
             if (lhs.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (lhs.TestNormal != rhs.TestNormal) return false;
-            if (lhs.TestBinaryWrapper != rhs.TestBinaryWrapper) return false;
+            if (lhs.TestBinaryOverlay != rhs.TestBinaryOverlay) return false;
             if (lhs.TestImport != rhs.TestImport) return false;
             if (lhs.TestFolder != rhs.TestFolder) return false;
             if (lhs.TestCopyIn != rhs.TestCopyIn) return false;
@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = HashHelper.GetHashCode(item.ReorderRecords).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.DeleteCachesAfter).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestNormal).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(item.TestBinaryWrapper).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.TestBinaryOverlay).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestImport).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestFolder).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.TestCopyIn).CombineHashCode(ret);
@@ -1183,9 +1183,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 item.TestNormal = rhs.TestNormal;
             }
-            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryWrapper) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryOverlay) ?? true))
             {
-                item.TestBinaryWrapper = rhs.TestBinaryWrapper;
+                item.TestBinaryOverlay = rhs.TestBinaryOverlay;
             }
             if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
             {
@@ -1324,13 +1324,13 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)PassthroughSettings_FieldIndex.TestNormal,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryWrapper) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryOverlay) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.TestBinaryWrapper),
-                    item: item.TestBinaryWrapper,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestBinaryWrapper,
+                    name: nameof(item.TestBinaryOverlay),
+                    item: item.TestBinaryOverlay,
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.TestBinaryOverlay,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestImport) ?? true))
@@ -1582,22 +1582,22 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "TestBinaryWrapper":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryWrapper) ?? true))
+                case "TestBinaryOverlay":
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.TestBinaryOverlay) ?? true))
                     {
                         try
                         {
-                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryWrapper);
+                            errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryOverlay);
                             if (BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestBinaryWrapperParse,
+                                item: out Boolean TestBinaryOverlayParse,
                                 errorMask: errorMask))
                             {
-                                item.TestBinaryWrapper = TestBinaryWrapperParse;
+                                item.TestBinaryOverlay = TestBinaryOverlayParse;
                             }
                             else
                             {
-                                item.TestBinaryWrapper = default(Boolean);
+                                item.TestBinaryOverlay = default(Boolean);
                             }
                         }
                         catch (Exception ex)
@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.ReorderRecords = initialValue;
             this.DeleteCachesAfter = initialValue;
             this.TestNormal = initialValue;
-            this.TestBinaryWrapper = initialValue;
+            this.TestBinaryOverlay = initialValue;
             this.TestImport = initialValue;
             this.TestFolder = initialValue;
             this.TestCopyIn = initialValue;
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public T ReorderRecords;
         public T DeleteCachesAfter;
         public T TestNormal;
-        public T TestBinaryWrapper;
+        public T TestBinaryOverlay;
         public T TestImport;
         public T TestFolder;
         public T TestCopyIn;
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!object.Equals(this.ReorderRecords, rhs.ReorderRecords)) return false;
             if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
             if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
-            if (!object.Equals(this.TestBinaryWrapper, rhs.TestBinaryWrapper)) return false;
+            if (!object.Equals(this.TestBinaryOverlay, rhs.TestBinaryOverlay)) return false;
             if (!object.Equals(this.TestImport, rhs.TestImport)) return false;
             if (!object.Equals(this.TestFolder, rhs.TestFolder)) return false;
             if (!object.Equals(this.TestCopyIn, rhs.TestCopyIn)) return false;
@@ -1930,7 +1930,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret = ret.CombineHashCode(this.ReorderRecords?.GetHashCode());
             ret = ret.CombineHashCode(this.DeleteCachesAfter?.GetHashCode());
             ret = ret.CombineHashCode(this.TestNormal?.GetHashCode());
-            ret = ret.CombineHashCode(this.TestBinaryWrapper?.GetHashCode());
+            ret = ret.CombineHashCode(this.TestBinaryOverlay?.GetHashCode());
             ret = ret.CombineHashCode(this.TestImport?.GetHashCode());
             ret = ret.CombineHashCode(this.TestFolder?.GetHashCode());
             ret = ret.CombineHashCode(this.TestCopyIn?.GetHashCode());
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (!eval(this.ReorderRecords)) return false;
             if (!eval(this.DeleteCachesAfter)) return false;
             if (!eval(this.TestNormal)) return false;
-            if (!eval(this.TestBinaryWrapper)) return false;
+            if (!eval(this.TestBinaryOverlay)) return false;
             if (!eval(this.TestImport)) return false;
             if (!eval(this.TestFolder)) return false;
             if (!eval(this.TestCopyIn)) return false;
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.ReorderRecords = eval(this.ReorderRecords);
             obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
             obj.TestNormal = eval(this.TestNormal);
-            obj.TestBinaryWrapper = eval(this.TestBinaryWrapper);
+            obj.TestBinaryOverlay = eval(this.TestBinaryOverlay);
             obj.TestImport = eval(this.TestImport);
             obj.TestFolder = eval(this.TestFolder);
             obj.TestCopyIn = eval(this.TestCopyIn);
@@ -2016,9 +2016,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                 {
                     fg.AppendLine($"TestNormal => {TestNormal}");
                 }
-                if (printMask?.TestBinaryWrapper ?? true)
+                if (printMask?.TestBinaryOverlay ?? true)
                 {
-                    fg.AppendLine($"TestBinaryWrapper => {TestBinaryWrapper}");
+                    fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
                 }
                 if (printMask?.TestImport ?? true)
                 {
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Exception ReorderRecords;
         public Exception DeleteCachesAfter;
         public Exception TestNormal;
-        public Exception TestBinaryWrapper;
+        public Exception TestBinaryOverlay;
         public Exception TestImport;
         public Exception TestFolder;
         public Exception TestCopyIn;
@@ -2079,8 +2079,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return DeleteCachesAfter;
                 case PassthroughSettings_FieldIndex.TestNormal:
                     return TestNormal;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    return TestBinaryWrapper;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    return TestBinaryOverlay;
                 case PassthroughSettings_FieldIndex.TestImport:
                     return TestImport;
                 case PassthroughSettings_FieldIndex.TestFolder:
@@ -2109,8 +2109,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestNormal:
                     this.TestNormal = ex;
                     break;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    this.TestBinaryWrapper = ex;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    this.TestBinaryOverlay = ex;
                     break;
                 case PassthroughSettings_FieldIndex.TestImport:
                     this.TestImport = ex;
@@ -2143,8 +2143,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case PassthroughSettings_FieldIndex.TestNormal:
                     this.TestNormal = (Exception)obj;
                     break;
-                case PassthroughSettings_FieldIndex.TestBinaryWrapper:
-                    this.TestBinaryWrapper = (Exception)obj;
+                case PassthroughSettings_FieldIndex.TestBinaryOverlay:
+                    this.TestBinaryOverlay = (Exception)obj;
                     break;
                 case PassthroughSettings_FieldIndex.TestImport:
                     this.TestImport = (Exception)obj;
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (ReorderRecords != null) return true;
             if (DeleteCachesAfter != null) return true;
             if (TestNormal != null) return true;
-            if (TestBinaryWrapper != null) return true;
+            if (TestBinaryOverlay != null) return true;
             if (TestImport != null) return true;
             if (TestFolder != null) return true;
             if (TestCopyIn != null) return true;
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             fg.AppendLine($"ReorderRecords => {ReorderRecords}");
             fg.AppendLine($"DeleteCachesAfter => {DeleteCachesAfter}");
             fg.AppendLine($"TestNormal => {TestNormal}");
-            fg.AppendLine($"TestBinaryWrapper => {TestBinaryWrapper}");
+            fg.AppendLine($"TestBinaryOverlay => {TestBinaryOverlay}");
             fg.AppendLine($"TestImport => {TestImport}");
             fg.AppendLine($"TestFolder => {TestFolder}");
             fg.AppendLine($"TestCopyIn => {TestCopyIn}");
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.ReorderRecords = this.ReorderRecords.Combine(rhs.ReorderRecords);
             ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
             ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
-            ret.TestBinaryWrapper = this.TestBinaryWrapper.Combine(rhs.TestBinaryWrapper);
+            ret.TestBinaryOverlay = this.TestBinaryOverlay.Combine(rhs.TestBinaryOverlay);
             ret.TestImport = this.TestImport.Combine(rhs.TestImport);
             ret.TestFolder = this.TestFolder.Combine(rhs.TestFolder);
             ret.TestCopyIn = this.TestCopyIn.Combine(rhs.TestCopyIn);
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public bool ReorderRecords;
         public bool DeleteCachesAfter;
         public bool TestNormal;
-        public bool TestBinaryWrapper;
+        public bool TestBinaryOverlay;
         public bool TestImport;
         public bool TestFolder;
         public bool TestCopyIn;
@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.ReorderRecords = defaultOn;
             this.DeleteCachesAfter = defaultOn;
             this.TestNormal = defaultOn;
-            this.TestBinaryWrapper = defaultOn;
+            this.TestBinaryOverlay = defaultOn;
             this.TestImport = defaultOn;
             this.TestFolder = defaultOn;
             this.TestCopyIn = defaultOn;
@@ -2297,7 +2297,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ret.Add((ReorderRecords, null));
             ret.Add((DeleteCachesAfter, null));
             ret.Add((TestNormal, null));
-            ret.Add((TestBinaryWrapper, null));
+            ret.Add((TestBinaryOverlay, null));
             ret.Add((TestImport, null));
             ret.Add((TestFolder, null));
             ret.Add((TestCopyIn, null));

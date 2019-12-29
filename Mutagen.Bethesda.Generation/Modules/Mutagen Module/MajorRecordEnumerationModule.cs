@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Generation
                                             fg.AppendLine($"if ({loqui.HasBeenSetAccessor($"{accessor}.{loqui.Name}")})");
                                             using (new BraceWrapper(fg))
                                             {
-                                                // Query item once, for binary wrapper optimization
+                                                // Query item once, for binary overlay optimization
                                                 fg.AppendLine($"var {loqui.Name}item = {accessor}.{loqui.Name};");
                                                 fg.AppendLine($"if ({loqui.Name}item != null)");
                                                 using (new BraceWrapper(fg))
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Generation
                                             fieldGen.AppendLine($"if ({loqui.HasBeenSetAccessor($"{accessor}.{loqui.Name}")})");
                                             using (new BraceWrapper(fieldGen))
                                             {
-                                                // Query item once, for binary wrapper optimization
+                                                // Query item once, for binary overlay optimization
                                                 fieldGen.AppendLine($"var {loqui.Name}item = {accessor}.{loqui.Name};");
                                                 fieldGen.AppendLine($"if ({loqui.Name}item != null)");
                                                 using (new BraceWrapper(fieldGen))

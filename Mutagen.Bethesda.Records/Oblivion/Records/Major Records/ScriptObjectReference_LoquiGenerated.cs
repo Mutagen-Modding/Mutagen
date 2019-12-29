@@ -1859,8 +1859,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ScriptObjectReferenceBinaryWrapper :
-        ScriptReferenceBinaryWrapper,
+    public partial class ScriptObjectReferenceBinaryOverlay :
+        ScriptReferenceBinaryOverlay,
         IScriptObjectReferenceGetter
     {
         #region Common Routing
@@ -1918,21 +1918,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ScriptObjectReferenceBinaryWrapper(
+        protected ScriptObjectReferenceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ScriptObjectReferenceBinaryWrapper ScriptObjectReferenceFactory(
+        public static ScriptObjectReferenceBinaryOverlay ScriptObjectReferenceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ScriptObjectReferenceBinaryWrapper(
+            var ret = new ScriptObjectReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

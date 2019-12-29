@@ -2032,8 +2032,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RaceHairBinaryWrapper :
-        BinaryWrapper,
+    public partial class RaceHairBinaryOverlay :
+        BinaryOverlay,
         IRaceHairGetter
     {
         #region Common Routing
@@ -2096,21 +2096,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RaceHairBinaryWrapper(
+        protected RaceHairBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RaceHairBinaryWrapper RaceHairFactory(
+        public static RaceHairBinaryOverlay RaceHairFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RaceHairBinaryWrapper(
+            var ret = new RaceHairBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

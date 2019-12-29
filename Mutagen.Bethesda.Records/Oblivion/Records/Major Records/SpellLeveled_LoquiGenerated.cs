@@ -2075,8 +2075,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SpellLeveledBinaryWrapper :
-        SpellBinaryWrapper,
+    public partial class SpellLeveledBinaryOverlay :
+        SpellBinaryOverlay,
         ISpellLeveledGetter
     {
         #region Common Routing
@@ -2128,22 +2128,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected SpellLeveledBinaryWrapper(
+        protected SpellLeveledBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static SpellLeveledBinaryWrapper SpellLeveledFactory(
+        public static SpellLeveledBinaryOverlay SpellLeveledFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new SpellLeveledBinaryWrapper(
+            var ret = new SpellLeveledBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

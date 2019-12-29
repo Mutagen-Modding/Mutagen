@@ -2128,8 +2128,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class MapDataBinaryWrapper :
-        BinaryWrapper,
+    public partial class MapDataBinaryOverlay :
+        BinaryOverlay,
         IMapDataGetter
     {
         #region Common Routing
@@ -2192,21 +2192,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected MapDataBinaryWrapper(
+        protected MapDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static MapDataBinaryWrapper MapDataFactory(
+        public static MapDataBinaryOverlay MapDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new MapDataBinaryWrapper(
+            var ret = new MapDataBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

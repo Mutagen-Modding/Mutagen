@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Generation
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Generation
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             if (list.SubTypeGeneration is LoquiType loqui)
             {
-                var typeName = this.Module.BinaryWrapperClassName(loqui);
+                var typeName = this.Module.BinaryOverlayClassName(loqui);
                 fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} {{ get; private set; }} = EmptySetList<{typeName}>.Instance;");
             }
             else if (data.HasTrigger)
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryWrapperSetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Generation
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Generation
             LoquiType loqui = list.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
-                typeName = this.Module.BinaryWrapperClassName(loqui);
+                typeName = this.Module.BinaryOverlayClassName(loqui);
             }
             else
             {
@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Generation
                         if (loqui.TargetObjectGeneration.IsTypelessStruct())
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = this.{nameof(BinaryWrapper.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
+                                $"this.{typeGen.Name} = this.{nameof(BinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                             {
                                 args.AddPassArg("stream");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
                                 args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
                                 if (subGenTypes.Count <= 1)
                                 {
-                                    args.Add($"factory:  {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
+                                    args.Add($"factory:  {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");
                                 }
                                 else
                                 {
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Generation
                                                     using (new DepthWrapper(subFg))
                                                     {
                                                         LoquiType specificLoqui = item.Value as LoquiType;
-                                                        subFg.AppendLine($"return {this.Module.BinaryWrapperClassName(specificLoqui.TargetObjectGeneration)}.{specificLoqui.TargetObjectGeneration.Name}Factory(s, p);");
+                                                        subFg.AppendLine($"return {this.Module.BinaryOverlayClassName(specificLoqui.TargetObjectGeneration)}.{specificLoqui.TargetObjectGeneration.Name}Factory(s, p);");
                                                     }
                                                 }
                                                 subFg.AppendLine("default:");
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByArray"))
+                                $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
-                                        $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
+                                        $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
                                         subArgs.AddPassArg("finalPos");
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: {nameof(BinaryWrapper.ParseRecordLocations)}"))
+                                    $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
                                     subArgs.AddPassArg("finalPos");
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Generation
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
+                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByStartIndex"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByLazyParse"))
+                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByLazyParse"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");

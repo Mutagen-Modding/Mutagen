@@ -4243,8 +4243,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ClothingAbstractBinaryWrapper :
-        ItemAbstractBinaryWrapper,
+    public partial class ClothingAbstractBinaryOverlay :
+        ItemAbstractBinaryOverlay,
         IClothingAbstractGetter
     {
         #region Common Routing
@@ -4355,9 +4355,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ClothingAbstractBinaryWrapper(
+        protected ClothingAbstractBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
@@ -4403,7 +4403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.MaleBipedModel = ModelBinaryWrapper.ModelFactory(
+                    this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -4411,7 +4411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x32444F4D: // MOD2
                 {
-                    this.MaleWorldModel = ModelBinaryWrapper.ModelFactory(
+                    this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
@@ -4424,7 +4424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x33444F4D: // MOD3
                 {
-                    this.FemaleBipedModel = ModelBinaryWrapper.ModelFactory(
+                    this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
@@ -4432,7 +4432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x34444F4D: // MOD4
                 {
-                    this.FemaleWorldModel = ModelBinaryWrapper.ModelFactory(
+                    this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);

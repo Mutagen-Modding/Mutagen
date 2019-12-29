@@ -2125,8 +2125,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionSoundBinaryWrapper :
-        BinaryWrapper,
+    public partial class RegionSoundBinaryOverlay :
+        BinaryOverlay,
         IRegionSoundGetter
     {
         #region Common Routing
@@ -2190,21 +2190,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RegionSoundBinaryWrapper(
+        protected RegionSoundBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionSoundBinaryWrapper RegionSoundFactory(
+        public static RegionSoundBinaryOverlay RegionSoundFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionSoundBinaryWrapper(
+            var ret = new RegionSoundBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 12),
                 package: package);
             int offset = stream.Position;

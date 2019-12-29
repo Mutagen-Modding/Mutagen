@@ -11295,8 +11295,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class NPCBinaryWrapper :
-        NPCAbstractBinaryWrapper,
+    public partial class NPCBinaryOverlay :
+        NPCAbstractBinaryOverlay,
         INPCGetter
     {
         #region Common Routing
@@ -11390,7 +11390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
         public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_CalcMaxLocation, 2)) : default;
         #endregion
-        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRankPlacementGetter> Factions { get; private set; } = EmptySetList<RankPlacementBinaryOverlay>.Instance;
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
@@ -11407,7 +11407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryWrapper>.Instance;
+        public IReadOnlySetList<IItemEntryGetter> Items { get; private set; } = EmptySetList<ItemEntryBinaryOverlay>.Instance;
         private int? _AIDTLocation;
         public NPC.AIDTDataType AIDTDataTypeState { get; private set; }
         #region Aggression
@@ -11655,22 +11655,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected NPCBinaryWrapper(
+        protected NPCBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static NPCBinaryWrapper NPCFactory(
+        public static NPCBinaryOverlay NPCFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new NPCBinaryWrapper(
+            var ret = new NPCBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -11707,7 +11707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -11721,11 +11721,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    this.Factions = BinaryWrapperSetList<RankPlacementBinaryWrapper>.FactoryByArray(
+                    this.Factions = BinaryOverlaySetList<RankPlacementBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => RankPlacementBinaryWrapper.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -11746,7 +11746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellAbstractGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormIDLinkGetter<ISpellAbstractGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<ISpellAbstractGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -11765,11 +11765,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F544E43: // CNTO
                 {
-                    this.Items = BinaryWrapperSetList<ItemEntryBinaryWrapper>.FactoryByArray(
+                    this.Items = BinaryOverlaySetList<ItemEntryBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ItemEntryBinaryWrapper.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ItemEntryBinaryOverlay.ItemEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -11786,7 +11786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494B50: // PKID
                 {
-                    this.AIPackages = BinaryWrapperSetList<IFormIDLinkGetter<IAIPackageGetter>>.FactoryByArray(
+                    this.AIPackages = BinaryOverlaySetList<IFormIDLinkGetter<IAIPackageGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IAIPackageGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -11802,7 +11802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Animations = BinaryWrapperSetList<String>.FactoryByLazyParse(
+                    this.Animations = BinaryOverlaySetList<String>.FactoryByLazyParse(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
@@ -11834,7 +11834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Eyes = BinaryWrapperSetList<IFormIDLinkGetter<IEyeGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlaySetList<IFormIDLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

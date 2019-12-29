@@ -2474,8 +2474,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class QuestTargetBinaryWrapper :
-        BinaryWrapper,
+    public partial class QuestTargetBinaryOverlay :
+        BinaryOverlay,
         IQuestTargetGetter
     {
         #region Common Routing
@@ -2543,27 +2543,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _QSTALocation.HasValue;
         public QuestTarget.Flag Flags => _Flags_IsSet ? (QuestTarget.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected QuestTargetBinaryWrapper(
+        protected QuestTargetBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static QuestTargetBinaryWrapper QuestTargetFactory(
+        public static QuestTargetBinaryOverlay QuestTargetFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new QuestTargetBinaryWrapper(
+            var ret = new QuestTargetBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2601,11 +2601,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

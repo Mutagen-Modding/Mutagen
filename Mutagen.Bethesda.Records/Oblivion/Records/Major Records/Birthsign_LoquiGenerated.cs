@@ -2750,8 +2750,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BirthsignBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class BirthsignBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IBirthsignGetter
     {
         #region Common Routing
@@ -2820,22 +2820,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected BirthsignBinaryWrapper(
+        protected BirthsignBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static BirthsignBinaryWrapper BirthsignFactory(
+        public static BirthsignBinaryOverlay BirthsignFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new BirthsignBinaryWrapper(
+            var ret = new BirthsignBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2882,7 +2882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormIDLinkGetter<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<ISpellGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -2313,8 +2313,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AIPackageScheduleBinaryWrapper :
-        BinaryWrapper,
+    public partial class AIPackageScheduleBinaryOverlay :
+        BinaryOverlay,
         IAIPackageScheduleGetter
     {
         #region Common Routing
@@ -2379,21 +2379,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected AIPackageScheduleBinaryWrapper(
+        protected AIPackageScheduleBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static AIPackageScheduleBinaryWrapper AIPackageScheduleFactory(
+        public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new AIPackageScheduleBinaryWrapper(
+            var ret = new AIPackageScheduleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

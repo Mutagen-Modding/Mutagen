@@ -2145,8 +2145,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RelatedWatersBinaryWrapper :
-        BinaryWrapper,
+    public partial class RelatedWatersBinaryOverlay :
+        BinaryOverlay,
         IRelatedWatersGetter
     {
         #region Common Routing
@@ -2210,21 +2210,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RelatedWatersBinaryWrapper(
+        protected RelatedWatersBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RelatedWatersBinaryWrapper RelatedWatersFactory(
+        public static RelatedWatersBinaryOverlay RelatedWatersFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RelatedWatersBinaryWrapper(
+            var ret = new RelatedWatersBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ScriptMetaSummaryBinaryWrapper
+        public partial class ScriptMetaSummaryBinaryOverlay
         {
             public int GetCompiledSizeCustom(int location)
             {

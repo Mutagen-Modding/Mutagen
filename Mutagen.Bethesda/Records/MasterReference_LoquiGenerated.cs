@@ -2099,8 +2099,8 @@ namespace Mutagen.Bethesda
 }
 namespace Mutagen.Bethesda.Internals
 {
-    public partial class MasterReferenceBinaryWrapper :
-        BinaryWrapper,
+    public partial class MasterReferenceBinaryOverlay :
+        BinaryOverlay,
         IMasterReferenceGetter
     {
         #region Common Routing
@@ -2169,21 +2169,21 @@ namespace Mutagen.Bethesda.Internals
             int finalPos,
             int offset);
 
-        protected MasterReferenceBinaryWrapper(
+        protected MasterReferenceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static MasterReferenceBinaryWrapper MasterReferenceFactory(
+        public static MasterReferenceBinaryOverlay MasterReferenceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new MasterReferenceBinaryWrapper(
+            var ret = new MasterReferenceBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

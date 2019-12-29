@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor,
             Accessor converterAccessor)
         {
-            switch (typeGen.GetFieldData().BinaryWrapperFallback)
+            switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");

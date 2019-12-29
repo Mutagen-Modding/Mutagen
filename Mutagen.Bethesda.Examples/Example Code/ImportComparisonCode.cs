@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Examples
         /// Downsides to this method is that each field is re-parsed on every access, which may be wasted work if you're
         /// accessing the same field multitudes of times.  IF you're accessing any given field only once, or even just a few
         /// times, this does not matter, and will be the fastest route.
-        public static IOblivionModGetter ImportViaBinaryWrapping(string pathToMod)
+        public static IOblivionModGetter ImportViaBinaryOverlay(string pathToMod)
         {
-            return OblivionMod.CreateFromBinaryWrapper(pathToMod);
+            return OblivionMod.CreateFromBinaryOverlay(pathToMod);
         }
 
         /// This route will load a mod's contents, and fill an object's fields in memory with the parsed content.

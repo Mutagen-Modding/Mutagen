@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation
         public readonly static string ObjectType = "objType";
         public readonly static string GameMode = "gameMode";
         public readonly static string Binary = "binary";
-        public readonly static string BinaryWrapper = "binaryWrapper";
+        public readonly static string BinaryOverlay = "binaryOverlay";
         public readonly static string Optional = "optional";
         public readonly static string ByteLength = "byteLength";
     }

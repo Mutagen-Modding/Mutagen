@@ -45,9 +45,9 @@ namespace Mutagen.Bethesda.Generation
             return await base.AsyncImport(obj);
         }
 
-        public string BinaryWrapperClassName(ObjectGeneration obj) => $"{obj.Name}BinaryWrapper";
-        public string BinaryWrapperClassName(LoquiType loqui) => $"{loqui.TargetObjectGeneration.Name}BinaryWrapper{loqui.GenericTypes(getter: true)}";
-        public string BinaryWrapperClass(ObjectGeneration obj) => $"{BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}";
+        public string BinaryOverlayClassName(ObjectGeneration obj) => $"{obj.Name}BinaryOverlay";
+        public string BinaryOverlayClassName(LoquiType loqui) => $"{loqui.TargetObjectGeneration.Name}BinaryOverlay{loqui.GenericTypes(getter: true)}";
+        public string BinaryOverlayClass(ObjectGeneration obj) => $"{BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}";
 
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
-            await GenerateBinaryWrapperCreates(obj, fg);
+            await GenerateBinaryOverlayCreates(obj, fg);
         }
 
         private void GenerateCustomWritePartials(ObjectGeneration obj, FileGeneration fg)
@@ -599,11 +599,11 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private async Task GenerateBinaryWrapperCreates(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateBinaryOverlayCreates(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"ReadOnlyMemorySlice<byte> bytes");
                 args.Add($"ModKey modKey");
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {BinaryWrapperClass(obj)}.{obj.Name}Factory"))
+                    $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
                     args.Add($"new {nameof(BinaryMemoryReadStream)}(bytes)");
                     args.AddPassArg("modKey");
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"string path");
                 args.Add($"ModKey? modKeyOverride = null");
@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                    $"return {CreateFromPrefix}{ModuleNickname}Overlay"))
                 {
                     args.Add($"stream: new {nameof(BinaryReadStream)}(path)");
                     args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Wrapper"))
+                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"{nameof(IBinaryReadStream)} stream");
                 args.Add($"ModKey modKey");
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {BinaryWrapperClass(obj)}.{obj.Name}Factory"))
+                    $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
                     args.AddPassArg($"stream");
                     args.AddPassArg("modKey");
@@ -1488,10 +1488,10 @@ namespace Mutagen.Bethesda.Generation
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
 
-            using (var args = new ClassWrapper(fg, $"{BinaryWrapperClass(obj)}"))
+            using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
                 args.Partial = true;
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryWrapperClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryWrapper));
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryOverlay));
                 args.Interfaces.Add(obj.Interface(getter: true, internalInterface: true));
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
             }
@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
-                    fg.AppendLine($"private readonly {nameof(BinaryWrapperFactoryPackage)} _package = new {nameof(BinaryWrapperFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                    fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package = new {nameof(BinaryOverlayFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
                     fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
                 }
 
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                         var data = field.GetFieldData();
-                        switch (data.BinaryWrapperFallback)
+                        switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.Custom:
                                 passedLength += CustomLogic.ExpectedLength(obj, field).Value;
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Generation
                     })
                     {
                         var data = field.GetFieldData();
-                        switch (data.BinaryWrapperFallback)
+                        switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.DoNothing:
                             case BinaryGenerationType.NoGeneration:
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                     var data = field.GetFieldData();
-                    switch (data.BinaryWrapperFallback)
+                    switch (data.BinaryOverlayFallback)
                     {
                         case BinaryGenerationType.Normal:
                         case BinaryGenerationType.Custom:
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine();
 
                 using (var args = new FunctionWrapper(fg,
-                    $"protected {BinaryWrapperClassName(obj)}"))
+                    $"protected {BinaryOverlayClassName(obj)}"))
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         args.Add($"ReadOnlyMemorySlice<byte> bytes");
-                        args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
+                        args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
                     }
                 }
                 if (obj.GetObjectType() != ObjectType.Mod)
@@ -1683,7 +1683,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         using (var args = new FunctionWrapper(fg,
-                            $"public static {this.BinaryWrapperClass(obj)} {obj.Name}Factory"))
+                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                         {
                             args.Add($"ReadOnlyMemorySlice<byte> data");
                             args.Add("ModKey modKey");
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Generation
                     }
 
                     using (var args = new FunctionWrapper(fg,
-                        $"public static {this.BinaryWrapperClass(obj)} {obj.Name}Factory"))
+                        $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             args.Add($"{nameof(BinaryMemoryReadStream)} stream");
-                            args.Add($"{nameof(BinaryWrapperFactoryPackage)} package");
+                            args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
                             args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                         }
                     }
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                         using (var args = new ArgsWrapper(fg,
-                            $"var ret = new {BinaryWrapperClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
+                            $"var ret = new {BinaryOverlayClassName(obj)}{obj.GetGenericTypes(MaskType.Normal)}"))
                         {
                             if (obj.IsTypelessStruct())
                             {
@@ -1864,26 +1864,26 @@ namespace Mutagen.Bethesda.Generation
                                 case ObjectType.Record:
                                     if (obj.IsTypelessStruct())
                                     {
-                                        call = $"ret.{nameof(BinaryWrapper.FillTypelessSubrecordTypes)}";
+                                        call = $"ret.{nameof(BinaryOverlay.FillTypelessSubrecordTypes)}";
                                     }
                                     else
                                     {
-                                        call = $"ret.{nameof(BinaryWrapper.FillSubrecordTypes)}";
+                                        call = $"ret.{nameof(BinaryOverlay.FillSubrecordTypes)}";
                                     }
                                     break;
                                 case ObjectType.Group:
                                     var grupLoqui = await obj.GetGroupLoquiType();
                                     if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
                                     {
-                                        call = $"ret.{nameof(BinaryWrapper.FillMajorRecords)}";
+                                        call = $"ret.{nameof(BinaryOverlay.FillMajorRecords)}";
                                     }
                                     else
                                     {
-                                        call = $"ret.{nameof(BinaryWrapper.FillGroupRecordsForWrapper)}";
+                                        call = $"ret.{nameof(BinaryOverlay.FillGroupRecordsForWrapper)}";
                                     }
                                     break;
                                 case ObjectType.Mod:
-                                    call = $"{nameof(BinaryWrapper)}.{nameof(BinaryWrapper.FillModTypes)}";
+                                    call = $"{nameof(BinaryOverlay)}.{nameof(BinaryOverlay.FillModTypes)}";
                                     break;
                                 default:
                                     throw new NotImplementedException();
@@ -1998,8 +1998,8 @@ namespace Mutagen.Bethesda.Generation
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
                                     || fieldData.TriggeringRecordTypes.Count == 0) continue;
-                                if (fieldData.BinaryWrapperFallback == BinaryGenerationType.NoGeneration) continue;
-                                if (field.Field.Derivative && fieldData.BinaryWrapperFallback != BinaryGenerationType.Custom) continue;
+                                if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
+                                if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Examples
         public static async Task AccessRecords(string pathToMod, Action<string> output)
         {
             // ToDo
-            // Refactor to use BinaryWrapper when linking capabilities are added to it
+            // Refactor to use BinaryOverlay when linking capabilities are added to it
             IOblivionModGetter mod = await OblivionMod.CreateFromBinary(
                 pathToMod,
                 importMask: new GroupMask()

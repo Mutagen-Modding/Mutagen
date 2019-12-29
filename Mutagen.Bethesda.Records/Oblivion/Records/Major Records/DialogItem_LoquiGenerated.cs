@@ -4162,8 +4162,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class DialogItemBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class DialogItemBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IDialogItemGetter
     {
         #region Common Routing
@@ -4234,8 +4234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormIDSetLinkGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormIDSetLink<IDialogItemGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PreviousTopicLocation.Value, _package.Meta)))) : FormIDSetLink<IDialogItemGetter>.Empty;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicGetter>>.Instance;
-        public IReadOnlySetList<IDialogResponseGetter> Responses { get; private set; } = EmptySetList<DialogResponseBinaryWrapper>.Instance;
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IDialogResponseGetter> Responses { get; private set; } = EmptySetList<DialogResponseBinaryOverlay>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicGetter>>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = EmptySetList<IFormIDLinkGetter<IDialogTopicGetter>>.Instance;
         #region Script
@@ -4248,22 +4248,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected DialogItemBinaryWrapper(
+        protected DialogItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static DialogItemBinaryWrapper DialogItemFactory(
+        public static DialogItemBinaryOverlay DialogItemFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new DialogItemBinaryWrapper(
+            var ret = new DialogItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -4316,7 +4316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x454D414E: // NAME
                 {
-                    this.Topics = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
+                    this.Topics = BinaryOverlaySetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4330,21 +4330,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54445254: // TRDT
                 {
-                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryWrapper>(
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: DialogItem_Registration.TRDT_HEADER,
-                        factory:  DialogResponseBinaryWrapper.DialogResponseFactory);
+                        factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
                 }
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -4355,7 +4355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x544C4354: // TCLT
                 {
-                    this.Choices = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
+                    this.Choices = BinaryOverlaySetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4369,7 +4369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x464C4354: // TCLF
                 {
-                    this.LinkFrom = BinaryWrapperSetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
+                    this.LinkFrom = BinaryOverlaySetList<IFormIDLinkGetter<IDialogTopicGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<IDialogTopicGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4384,7 +4384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 case 0x44484353: // SCHD
                 {
-                    this._Script = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
+                    this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

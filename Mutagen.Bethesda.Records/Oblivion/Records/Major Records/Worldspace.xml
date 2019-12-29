@@ -15,7 +15,7 @@
       <P2Float name="ObjectBoundsMax" recordType="NAM9" />
       <Enum name="Music" recordType="SNAM" enumName="MusicType" />
       <CustomLogic name="OffsetLength" recordType="XXXX" />
-      <ByteArray name="OffsetData" recordType="OFST" binary="Custom" binaryWrapper="Custom" />
+      <ByteArray name="OffsetData" recordType="OFST" binary="Custom" binaryOverlay="Custom" />
       <RefDirect name="Road" refName="Road" binary="NoGeneration" />
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <ByteArray name="SubCellsTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
@@ -38,7 +38,7 @@
       <Int16 name="BlockNumberX" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
-      <RefList name="Items" refName="Cell" binaryWrapper="Custom" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="MapData" objType="Subrecord" recordType="MNAM" GUID="493c28c6-8dd0-40cd-9c54-87243564a406" ID="146">

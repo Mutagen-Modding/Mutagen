@@ -3907,8 +3907,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PlacedNPCBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class PlacedNPCBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IPlacedNPCGetter
     {
         #region Common Routing
@@ -3974,13 +3974,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
         private bool _DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
-        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryWrapper.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
         private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
-        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryWrapper.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region MerchantContainer
@@ -4020,22 +4020,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected PlacedNPCBinaryWrapper(
+        protected PlacedNPCBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static PlacedNPCBinaryWrapper PlacedNPCFactory(
+        public static PlacedNPCBinaryOverlay PlacedNPCFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new PlacedNPCBinaryWrapper(
+            var ret = new PlacedNPCBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

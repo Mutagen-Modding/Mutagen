@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class SkyrimMajorRecordBinaryWrapper
+        public partial class SkyrimMajorRecordBinaryOverlay
         {
             public SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags
             {

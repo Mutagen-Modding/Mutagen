@@ -2113,8 +2113,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ScriptBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class ScriptBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IScriptGetter
     {
         #region Common Routing
@@ -2172,22 +2172,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ScriptBinaryWrapper(
+        protected ScriptBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ScriptBinaryWrapper ScriptFactory(
+        public static ScriptBinaryOverlay ScriptFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ScriptBinaryWrapper(
+            var ret = new ScriptBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2220,7 +2220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 case 0x44484353: // SCHD
                 {
-                    this._Fields = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
+                    this._Fields = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

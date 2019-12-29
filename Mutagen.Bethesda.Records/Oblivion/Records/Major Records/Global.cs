@@ -72,14 +72,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public abstract partial class GlobalBinaryWrapper
+        public abstract partial class GlobalBinaryOverlay
         {
             public abstract float RawFloat { get; }
             public abstract char TypeChar { get; }
 
-            public static GlobalBinaryWrapper GlobalFactory(
+            public static GlobalBinaryOverlay GlobalFactory(
                 BinaryMemoryReadStream stream,
-                BinaryWrapperFactoryPackage package,
+                BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {
                 var majorFrame = package.Meta.MajorRecordFrame(stream.RemainingSpan);
@@ -87,15 +87,15 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (globalChar)
                 {
                     case GlobalInt.TRIGGER_CHAR:
-                        return GlobalIntBinaryWrapper.GlobalIntFactory(
+                        return GlobalIntBinaryOverlay.GlobalIntFactory(
                             stream,
                             package);
                     case GlobalShort.TRIGGER_CHAR:
-                        return GlobalShortBinaryWrapper.GlobalShortFactory(
+                        return GlobalShortBinaryOverlay.GlobalShortFactory(
                             stream,
                             package);
                     case GlobalFloat.TRIGGER_CHAR:
-                        return GlobalFloatBinaryWrapper.GlobalFloatFactory(
+                        return GlobalFloatBinaryOverlay.GlobalFloatFactory(
                             stream,
                             package);
                     default:

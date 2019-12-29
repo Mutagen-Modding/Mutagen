@@ -2892,8 +2892,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class EffectBinaryWrapper :
-        BinaryWrapper,
+    public partial class EffectBinaryOverlay :
+        BinaryOverlay,
         IEffectGetter
     {
         #region Common Routing
@@ -2995,21 +2995,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected EffectBinaryWrapper(
+        protected EffectBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static EffectBinaryWrapper EffectFactory(
+        public static EffectBinaryOverlay EffectFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new EffectBinaryWrapper(
+            var ret = new EffectBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -3053,7 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494353: // SCIT
                 {
-                    this.ScriptEffect = ScriptEffectBinaryWrapper.ScriptEffectFactory(
+                    this.ScriptEffect = ScriptEffectBinaryOverlay.ScriptEffectFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

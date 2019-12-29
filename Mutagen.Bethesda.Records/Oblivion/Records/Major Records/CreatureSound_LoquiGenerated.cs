@@ -2302,8 +2302,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class CreatureSoundBinaryWrapper :
-        BinaryWrapper,
+    public partial class CreatureSoundBinaryOverlay :
+        BinaryOverlay,
         ICreatureSoundGetter
     {
         #region Common Routing
@@ -2364,27 +2364,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SoundType_IsSet => _SoundTypeLocation.HasValue;
         public CreatureSound.CreatureSoundType SoundType => (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundTypeLocation.Value, _package.Meta));
         #endregion
-        public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryWrapper>.Instance;
+        public IReadOnlySetList<ISoundItemGetter> Sounds { get; private set; } = EmptySetList<SoundItemBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected CreatureSoundBinaryWrapper(
+        protected CreatureSoundBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static CreatureSoundBinaryWrapper CreatureSoundFactory(
+        public static CreatureSoundBinaryOverlay CreatureSoundFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new CreatureSoundBinaryWrapper(
+            var ret = new CreatureSoundBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2422,11 +2422,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x43445343: // CSDC
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
-                    this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryWrapper>(
+                    this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: SoundItem_Registration.TriggeringRecordTypes,
-                        factory:  SoundItemBinaryWrapper.SoundItemFactory);
+                        factory:  SoundItemBinaryOverlay.SoundItemFactory);
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
                 }
                 default:

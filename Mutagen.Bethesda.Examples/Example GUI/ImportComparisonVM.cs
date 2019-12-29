@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Examples
         protected override async Task ToDo()
         {
             await TimeAndReport((s) => ImportComparisonCode.ImportIntoInMemoryObject(s), "Binary");
-            await TimeAndReport(async (s) => ImportComparisonCode.ImportViaBinaryWrapping(s), "Binary Wrapper");
+            await TimeAndReport(async (s) => ImportComparisonCode.ImportViaBinaryOverlay(s), "Binary Overlay");
         }
 
         private async Task TimeAndReport(Func<string, Task<IOblivionModGetter>> toDo, string jobName)

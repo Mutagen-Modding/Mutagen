@@ -2785,8 +2785,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class TextureSetBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class TextureSetBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         ITextureSetGetter
     {
         #region Common Routing
@@ -2836,7 +2836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        public IObjectBoundsGetter ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryWrapper.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
         #endregion
         #region Textures
@@ -2846,7 +2846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Decal
         private RangeInt32? _DecalLocation;
         private bool _Decal_IsSet => _DecalLocation.HasValue;
-        public IDecalGetter Decal => _Decal_IsSet ? DecalBinaryWrapper.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDecalGetter Decal => _Decal_IsSet ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
@@ -2859,22 +2859,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected TextureSetBinaryWrapper(
+        protected TextureSetBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static TextureSetBinaryWrapper TextureSetFactory(
+        public static TextureSetBinaryOverlay TextureSetFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new TextureSetBinaryWrapper(
+            var ret = new TextureSetBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2918,7 +2918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x36305854: // TX06
                 case 0x37305854: // TX07
                 {
-                    this.Textures = TexturesBinaryWrapper.TexturesFactory(
+                    this.Textures = TexturesBinaryOverlay.TexturesFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

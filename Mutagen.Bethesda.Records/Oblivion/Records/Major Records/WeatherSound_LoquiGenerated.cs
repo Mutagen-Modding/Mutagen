@@ -2028,8 +2028,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WeatherSoundBinaryWrapper :
-        BinaryWrapper,
+    public partial class WeatherSoundBinaryOverlay :
+        BinaryOverlay,
         IWeatherSoundGetter
     {
         #region Common Routing
@@ -2092,21 +2092,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected WeatherSoundBinaryWrapper(
+        protected WeatherSoundBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WeatherSoundBinaryWrapper WeatherSoundFactory(
+        public static WeatherSoundBinaryOverlay WeatherSoundFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new WeatherSoundBinaryWrapper(
+            var ret = new WeatherSoundBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

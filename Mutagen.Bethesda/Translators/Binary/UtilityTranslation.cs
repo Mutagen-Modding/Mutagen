@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda
             return stream;
         }
 
-        public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryWrapperFactoryPackage package)
+        public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryOverlayFactoryPackage package)
             where T : IMajorRecordCommonGetter
         {
             var group = mod.GetGroupGetter<T>();

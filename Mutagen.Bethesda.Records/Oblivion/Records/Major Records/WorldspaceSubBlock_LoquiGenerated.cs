@@ -2648,8 +2648,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WorldspaceSubBlockBinaryWrapper :
-        BinaryWrapper,
+    public partial class WorldspaceSubBlockBinaryOverlay :
+        BinaryOverlay,
         IWorldspaceSubBlockGetter
     {
         #region Common Routing
@@ -2726,21 +2726,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected WorldspaceSubBlockBinaryWrapper(
+        protected WorldspaceSubBlockBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WorldspaceSubBlockBinaryWrapper WorldspaceSubBlockFactory(
+        public static WorldspaceSubBlockBinaryOverlay WorldspaceSubBlockFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new WorldspaceSubBlockBinaryWrapper(
+            var ret = new WorldspaceSubBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));

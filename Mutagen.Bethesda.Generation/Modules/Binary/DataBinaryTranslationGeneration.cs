@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Generation
             
             fg.AppendLine($"private int? _{dataType.GetFieldData().RecordType}Location;");
             fg.AppendLine($"public {objGen.ObjectName}.{dataType.EnumName} {dataType.StateName} {{ get; private set; }}");
-            switch (typeGen.GetFieldData().BinaryWrapperFallback)
+            switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Custom:
                     this.Module.CustomLogic.GenerateWrapperFields(
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             DataType dataType = field as DataType;
-            switch (field.GetFieldData().BinaryWrapperFallback)
+            switch (field.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location.Value + 0x{pos.ToString("X")};");
-            switch (typeGen.GetFieldData().BinaryWrapperFallback)
+            switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");

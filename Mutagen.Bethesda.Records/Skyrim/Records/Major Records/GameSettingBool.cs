@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class GameSettingBoolBinaryWrapper
+        public partial class GameSettingBoolBinaryOverlay
         {
             private int? _DataLocation;
             bool GetDataIsSetCustom() => _DataLocation.HasValue;

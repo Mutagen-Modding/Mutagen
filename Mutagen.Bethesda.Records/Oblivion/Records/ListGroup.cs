@@ -171,9 +171,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ListGroupBinaryWrapper<T>
+        public partial class ListGroupBinaryOverlay<T>
         {
-            private ListGroupAbstract.GroupListWrapper<T> _Items;
+            private ListGroupAbstract.GroupListOverlay<T> _Items;
             public IReadOnlyList<T> Items => _Items;
 
             partial void CustomCtor(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
                 int finalPos,
                 int offset)
             {
-                _Items = ListGroupAbstract.GroupListWrapper<T>.Factory(
+                _Items = ListGroupAbstract.GroupListOverlay<T>.Factory(
                     stream,
                     _data,
                     _package,

@@ -2642,8 +2642,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WorldspaceBlockBinaryWrapper :
-        BinaryWrapper,
+    public partial class WorldspaceBlockBinaryOverlay :
+        BinaryOverlay,
         IWorldspaceBlockGetter
     {
         #region Common Routing
@@ -2707,27 +2707,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(2, 2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
-        public IReadOnlySetList<IWorldspaceSubBlockGetter> Items { get; private set; } = EmptySetList<WorldspaceSubBlockBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWorldspaceSubBlockGetter> Items { get; private set; } = EmptySetList<WorldspaceSubBlockBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected WorldspaceBlockBinaryWrapper(
+        protected WorldspaceBlockBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WorldspaceBlockBinaryWrapper WorldspaceBlockFactory(
+        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new WorldspaceBlockBinaryWrapper(
+            var ret = new WorldspaceBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
@@ -2759,11 +2759,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x50555247: // GRUP
                 {
-                    this.Items = BinaryWrapperSetList<WorldspaceSubBlockBinaryWrapper>.FactoryByArray(
+                    this.Items = BinaryOverlaySetList<WorldspaceSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => WorldspaceSubBlockBinaryWrapper.WorldspaceSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WorldspaceSubBlockBinaryOverlay.WorldspaceSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -6547,8 +6547,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class CombatStyleBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class CombatStyleBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ICombatStyleGetter
     {
         #region Common Routing
@@ -6785,7 +6785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Advanced
         private RangeInt32? _AdvancedLocation;
         private bool _Advanced_IsSet => _AdvancedLocation.HasValue;
-        public ICombatStyleAdvancedGetter Advanced => _Advanced_IsSet ? CombatStyleAdvancedBinaryWrapper.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICombatStyleAdvancedGetter Advanced => _Advanced_IsSet ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomCtor(
@@ -6793,22 +6793,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected CombatStyleBinaryWrapper(
+        protected CombatStyleBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static CombatStyleBinaryWrapper CombatStyleFactory(
+        public static CombatStyleBinaryOverlay CombatStyleFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new CombatStyleBinaryWrapper(
+            var ret = new CombatStyleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

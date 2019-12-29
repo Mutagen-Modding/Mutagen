@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation
             DataType dataType = null)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;

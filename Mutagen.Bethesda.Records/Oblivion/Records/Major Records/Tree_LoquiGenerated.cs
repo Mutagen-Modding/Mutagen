@@ -4012,8 +4012,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class TreeBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class TreeBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ITreeGetter
     {
         #region Common Routing
@@ -4129,22 +4129,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected TreeBinaryWrapper(
+        protected TreeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static TreeBinaryWrapper TreeFactory(
+        public static TreeBinaryOverlay TreeFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new TreeBinaryWrapper(
+            var ret = new TreeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -4176,7 +4176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -4191,7 +4191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.SpeedTreeSeeds = BinaryWrapperSetList<UInt32>.FactoryByStartIndex(
+                    this.SpeedTreeSeeds = BinaryOverlaySetList<UInt32>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

@@ -2976,8 +2976,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LeveledCreatureBinaryWrapper :
-        NPCSpawnBinaryWrapper,
+    public partial class LeveledCreatureBinaryOverlay :
+        NPCSpawnBinaryOverlay,
         ILeveledCreatureGetter
     {
         #region Common Routing
@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags_IsSet => _FlagsLocation.HasValue;
         public LeveledFlag Flags => (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
-        public IReadOnlySetList<ILeveledEntryGetter<INPCSpawnGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<INPCSpawnGetter>>.Instance;
+        public IReadOnlySetList<ILeveledEntryGetter<INPCSpawnGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryOverlay<INPCSpawnGetter>>.Instance;
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
@@ -3051,22 +3051,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected LeveledCreatureBinaryWrapper(
+        protected LeveledCreatureBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LeveledCreatureBinaryWrapper LeveledCreatureFactory(
+        public static LeveledCreatureBinaryOverlay LeveledCreatureFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LeveledCreatureBinaryWrapper(
+            var ret = new LeveledCreatureBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3108,11 +3108,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    this.Entries = BinaryWrapperSetList<LeveledEntryBinaryWrapper<INPCSpawnGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<INPCSpawnGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => LeveledEntryBinaryWrapper<INPCSpawnGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<INPCSpawnGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -2130,8 +2130,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RankPlacementBinaryWrapper :
-        BinaryWrapper,
+    public partial class RankPlacementBinaryOverlay :
+        BinaryOverlay,
         IRankPlacementGetter
     {
         #region Common Routing
@@ -2195,21 +2195,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RankPlacementBinaryWrapper(
+        protected RankPlacementBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RankPlacementBinaryWrapper RankPlacementFactory(
+        public static RankPlacementBinaryOverlay RankPlacementFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RankPlacementBinaryWrapper(
+            var ret = new RankPlacementBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

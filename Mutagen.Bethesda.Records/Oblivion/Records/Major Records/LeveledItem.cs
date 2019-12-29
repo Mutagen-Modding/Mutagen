@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class LeveledItemBinaryWrapper
+        public partial class LeveledItemBinaryOverlay
         {
             private bool _vestigialMarker;
 

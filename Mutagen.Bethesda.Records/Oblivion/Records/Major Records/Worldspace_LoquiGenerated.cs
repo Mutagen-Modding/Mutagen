@@ -5047,8 +5047,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WorldspaceBinaryWrapper :
-        PlaceBinaryWrapper,
+    public partial class WorldspaceBinaryOverlay :
+        PlaceBinaryOverlay,
         IWorldspaceGetter
     {
         #region Common Routing
@@ -5128,7 +5128,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MapData
         private RangeInt32? _MapDataLocation;
         private bool _MapData_IsSet => _MapDataLocation.HasValue;
-        public IMapDataGetter MapData => _MapData_IsSet ? MapDataBinaryWrapper.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IMapDataGetter MapData => _MapData_IsSet ? MapDataBinaryOverlay.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region Flags
@@ -5173,22 +5173,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected WorldspaceBinaryWrapper(
+        protected WorldspaceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WorldspaceBinaryWrapper WorldspaceFactory(
+        public static WorldspaceBinaryOverlay WorldspaceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new WorldspaceBinaryWrapper(
+            var ret = new WorldspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

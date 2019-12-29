@@ -2229,8 +2229,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class QuestStageBinaryWrapper :
-        BinaryWrapper,
+    public partial class QuestStageBinaryOverlay :
+        BinaryOverlay,
         IQuestStageGetter
     {
         #region Common Routing
@@ -2290,27 +2290,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _StageLocation;
         public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StageLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<ILogEntryGetter> LogEntries { get; private set; } = EmptySetList<LogEntryBinaryWrapper>.Instance;
+        public IReadOnlySetList<ILogEntryGetter> LogEntries { get; private set; } = EmptySetList<LogEntryBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected QuestStageBinaryWrapper(
+        protected QuestStageBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static QuestStageBinaryWrapper QuestStageFactory(
+        public static QuestStageBinaryOverlay QuestStageFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new QuestStageBinaryWrapper(
+            var ret = new QuestStageBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2351,11 +2351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 case 0x44484353: // SCHD
                 {
-                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryWrapper>(
+                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: LogEntry_Registration.TriggeringRecordTypes,
-                        factory:  LogEntryBinaryWrapper.LogEntryFactory);
+                        factory:  LogEntryBinaryOverlay.LogEntryFactory);
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
                 }
                 default:

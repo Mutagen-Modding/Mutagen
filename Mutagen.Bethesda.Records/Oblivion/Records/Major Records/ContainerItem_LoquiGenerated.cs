@@ -2016,8 +2016,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ContainerItemBinaryWrapper :
-        BinaryWrapper,
+    public partial class ContainerItemBinaryOverlay :
+        BinaryOverlay,
         IContainerItemGetter
     {
         #region Common Routing
@@ -2080,21 +2080,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ContainerItemBinaryWrapper(
+        protected ContainerItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ContainerItemBinaryWrapper ContainerItemFactory(
+        public static ContainerItemBinaryOverlay ContainerItemFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ContainerItemBinaryWrapper(
+            var ret = new ContainerItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

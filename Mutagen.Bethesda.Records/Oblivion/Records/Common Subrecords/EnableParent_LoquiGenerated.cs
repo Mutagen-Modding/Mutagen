@@ -2028,8 +2028,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class EnableParentBinaryWrapper :
-        BinaryWrapper,
+    public partial class EnableParentBinaryOverlay :
+        BinaryOverlay,
         IEnableParentGetter
     {
         #region Common Routing
@@ -2092,21 +2092,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected EnableParentBinaryWrapper(
+        protected EnableParentBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static EnableParentBinaryWrapper EnableParentFactory(
+        public static EnableParentBinaryOverlay EnableParentFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new EnableParentBinaryWrapper(
+            var ret = new EnableParentBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

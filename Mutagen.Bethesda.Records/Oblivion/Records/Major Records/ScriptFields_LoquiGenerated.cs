@@ -2976,8 +2976,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ScriptFieldsBinaryWrapper :
-        BinaryWrapper,
+    public partial class ScriptFieldsBinaryOverlay :
+        BinaryOverlay,
         IScriptFieldsGetter
     {
         #region Common Routing
@@ -3036,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
         private bool _MetadataSummary_IsSet => _MetadataSummaryLocation.HasValue;
-        private IScriptMetaSummaryGetter _MetadataSummary => _MetadataSummary_IsSet ? ScriptMetaSummaryBinaryWrapper.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation.Value.Min)), _package) : default;
+        private IScriptMetaSummaryGetter _MetadataSummary => _MetadataSummary_IsSet ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation.Value.Min)), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         #endregion
         #region MetadataSummaryOld
@@ -3054,28 +3054,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool SourceCode_IsSet => _SourceCodeLocation.HasValue;
         public String SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SourceCodeLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<ILocalVariableGetter> LocalVariables { get; private set; } = EmptySetList<LocalVariableBinaryWrapper>.Instance;
-        public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryWrapper>.Instance;
+        public IReadOnlySetList<ILocalVariableGetter> LocalVariables { get; private set; } = EmptySetList<LocalVariableBinaryOverlay>.Instance;
+        public IReadOnlySetList<IScriptReferenceGetter> References { get; private set; } = EmptySetList<ScriptReferenceBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected ScriptFieldsBinaryWrapper(
+        protected ScriptFieldsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ScriptFieldsBinaryWrapper ScriptFieldsFactory(
+        public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ScriptFieldsBinaryWrapper(
+            var ret = new ScriptFieldsBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -3129,17 +3129,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534C53: // SLSD
                 {
-                    this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryWrapper>(
+                    this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: ScriptFields_Registration.SLSD_HEADER,
-                        factory:  LocalVariableBinaryWrapper.LocalVariableFactory);
+                        factory:  LocalVariableBinaryOverlay.LocalVariableFactory);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
                 }
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryWrapper>(
+                    this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: ScriptReference_Registration.TriggeringRecordTypes,
@@ -3148,9 +3148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (r.TypeInt)
                             {
                                 case 0x56524353: // SCRV
-                                    return ScriptVariableReferenceBinaryWrapper.ScriptVariableReferenceFactory(s, p);
+                                    return ScriptVariableReferenceBinaryOverlay.ScriptVariableReferenceFactory(s, p);
                                 case 0x4F524353: // SCRO
-                                    return ScriptObjectReferenceBinaryWrapper.ScriptObjectReferenceFactory(s, p);
+                                    return ScriptObjectReferenceBinaryOverlay.ScriptObjectReferenceFactory(s, p);
                                 default:
                                     throw new NotImplementedException();
                             }

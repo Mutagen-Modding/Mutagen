@@ -6,15 +6,15 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class BinaryWrapperSetList<T>
+    public abstract class BinaryOverlaySetList<T>
     {
         public static IReadOnlySetList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
-            BinaryWrapperFactoryPackage package,
-            BinaryWrapper.SpanFactory<T> getter,
+            BinaryOverlayFactoryPackage package,
+            BinaryOverlay.SpanFactory<T> getter,
             int[] locs)
         {
-            return new BinaryWrapperListByLocationArray(
+            return new BinaryOverlayListByLocationArray(
                 mem,
                 package,
                 getter,
@@ -23,12 +23,12 @@ namespace Mutagen.Bethesda.Binary
 
         public static IReadOnlySetList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryWrapper.SpanRecordFactory<T> getter,
+            BinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
-            return new BinaryWrapperRecordListByLocationArray(
+            return new BinaryOverlayRecordListByLocationArray(
                 mem,
                 package,
                 recordTypeConverter,
@@ -38,11 +38,11 @@ namespace Mutagen.Bethesda.Binary
 
         public static IReadOnlySetList<T> FactoryByStartIndex(
             ReadOnlyMemorySlice<byte> mem,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             int itemLength,
-            BinaryWrapper.SpanFactory<T> getter)
+            BinaryOverlay.SpanFactory<T> getter)
         {
-            return new BinaryWrapperListByStartIndex(
+            return new BinaryOverlayListByStartIndex(
                 mem,
                 package,
                 getter,
@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Binary
 
         public static IReadOnlySetList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
-            BinaryWrapperFactoryPackage package,
-            BinaryWrapper.Factory<T> getter)
+            BinaryOverlayFactoryPackage package,
+            BinaryOverlay.Factory<T> getter)
         {
-            return new BinaryWrapperLazyList(
+            return new BinaryOverlayLazyList(
                 mem,
                 package,
                 (m, p) =>
@@ -73,26 +73,26 @@ namespace Mutagen.Bethesda.Binary
 
         public static IReadOnlySetList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
-            BinaryWrapperFactoryPackage package,
-            Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> getter)
+            BinaryOverlayFactoryPackage package,
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
         {
-            return new BinaryWrapperLazyList(
+            return new BinaryOverlayLazyList(
                 mem,
                 package,
                 getter);
         }
 
-        private class BinaryWrapperListByLocationArray : IReadOnlySetList<T>
+        private class BinaryOverlayListByLocationArray : IReadOnlySetList<T>
         {
             private int[] _locations;
-            BinaryWrapperFactoryPackage _package;
+            BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryWrapper.SpanFactory<T> _getter;
+            private BinaryOverlay.SpanFactory<T> _getter;
 
-            public BinaryWrapperListByLocationArray(
+            public BinaryOverlayListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
-                BinaryWrapperFactoryPackage package,
-                BinaryWrapper.SpanFactory<T> getter,
+                BinaryOverlayFactoryPackage package,
+                BinaryOverlay.SpanFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -118,19 +118,19 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        private class BinaryWrapperRecordListByLocationArray : IReadOnlySetList<T>
+        private class BinaryOverlayRecordListByLocationArray : IReadOnlySetList<T>
         {
             private int[] _locations;
-            private BinaryWrapperFactoryPackage _package;
+            private BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryWrapper.SpanRecordFactory<T> _getter;
+            private BinaryOverlay.SpanRecordFactory<T> _getter;
             private RecordTypeConverter _recordTypeConverter;
 
-            public BinaryWrapperRecordListByLocationArray(
+            public BinaryOverlayRecordListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
-                BinaryWrapperFactoryPackage package,
+                BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter,
-                BinaryWrapper.SpanRecordFactory<T> getter,
+                BinaryOverlay.SpanRecordFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -157,17 +157,17 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryWrapperListByStartIndex : IReadOnlySetList<T>
+        public class BinaryOverlayListByStartIndex : IReadOnlySetList<T>
         {
             private int _itemLength;
-            BinaryWrapperFactoryPackage _package;
+            BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryWrapper.SpanFactory<T> _getter;
+            private BinaryOverlay.SpanFactory<T> _getter;
 
-            public BinaryWrapperListByStartIndex(
+            public BinaryOverlayListByStartIndex(
                 ReadOnlyMemorySlice<byte> mem,
-                BinaryWrapperFactoryPackage package,
-                BinaryWrapper.SpanFactory<T> getter,
+                BinaryOverlayFactoryPackage package,
+                BinaryOverlay.SpanFactory<T> getter,
                 int itemLength)
             {
                 this._mem = mem;
@@ -200,17 +200,17 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryWrapperLazyList : IReadOnlySetList<T>
+        public class BinaryOverlayLazyList : IReadOnlySetList<T>
         {
             private readonly Lazy<IReadOnlyList<T>> _list;
             private readonly ReadOnlyMemorySlice<byte> _mem;
-            private readonly BinaryWrapperFactoryPackage _package;
-            private readonly Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> _getter;
+            private readonly BinaryOverlayFactoryPackage _package;
+            private readonly Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> _getter;
 
-            public BinaryWrapperLazyList(
+            public BinaryOverlayLazyList(
                 ReadOnlyMemorySlice<byte> mem,
-                BinaryWrapperFactoryPackage package,
-                Func<ReadOnlyMemorySlice<byte>, BinaryWrapperFactoryPackage, IReadOnlyList<T>> getter)
+                BinaryOverlayFactoryPackage package,
+                Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
             {
                 this._mem = mem;
                 this._getter = getter;

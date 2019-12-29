@@ -2110,8 +2110,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionDataWeatherBinaryWrapper :
-        RegionDataBinaryWrapper,
+    public partial class RegionDataWeatherBinaryOverlay :
+        RegionDataBinaryOverlay,
         IRegionDataWeatherGetter
     {
         #region Common Routing
@@ -2159,27 +2159,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public IReadOnlySetList<IWeatherChanceGetter> Weathers { get; private set; } = EmptySetList<WeatherChanceBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWeatherChanceGetter> Weathers { get; private set; } = EmptySetList<WeatherChanceBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected RegionDataWeatherBinaryWrapper(
+        protected RegionDataWeatherBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionDataWeatherBinaryWrapper RegionDataWeatherFactory(
+        public static RegionDataWeatherBinaryOverlay RegionDataWeatherFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionDataWeatherBinaryWrapper(
+            var ret = new RegionDataWeatherBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2211,11 +2211,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Weathers = BinaryWrapperSetList<WeatherChanceBinaryWrapper>.FactoryByStartIndex(
+                    this.Weathers = BinaryOverlaySetList<WeatherChanceBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => WeatherChanceBinaryWrapper.WeatherChanceFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => WeatherChanceBinaryOverlay.WeatherChanceFactory(new BinaryMemoryReadStream(s), p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataWeather_FieldIndex.Weathers);
                 }

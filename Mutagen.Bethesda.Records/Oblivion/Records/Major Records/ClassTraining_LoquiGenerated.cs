@@ -2110,8 +2110,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ClassTrainingBinaryWrapper :
-        BinaryWrapper,
+    public partial class ClassTrainingBinaryOverlay :
+        BinaryOverlay,
         IClassTrainingGetter
     {
         #region Common Routing
@@ -2174,21 +2174,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ClassTrainingBinaryWrapper(
+        protected ClassTrainingBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ClassTrainingBinaryWrapper ClassTrainingFactory(
+        public static ClassTrainingBinaryOverlay ClassTrainingFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ClassTrainingBinaryWrapper(
+            var ret = new ClassTrainingBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 4),
                 package: package);
             int offset = stream.Position;

@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryWrapperFactoryPackage
+    public class BinaryOverlayFactoryPackage
     {
         public MasterReferences MasterReferences;
         public MetaDataConstants Meta;
         public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
 
-        public BinaryWrapperFactoryPackage(GameMode gameMode)
+        public BinaryOverlayFactoryPackage(GameMode gameMode)
         {
             this.Meta = MetaDataConstants.Get(gameMode);
         }

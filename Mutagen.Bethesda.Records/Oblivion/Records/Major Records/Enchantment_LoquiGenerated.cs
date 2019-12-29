@@ -3010,8 +3010,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class EnchantmentBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class EnchantmentBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IEnchantmentGetter
     {
         #region Common Routing
@@ -3086,28 +3086,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public Enchantment.Flag Flags => _Flags_IsSet ? (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
-        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
+        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected EnchantmentBinaryWrapper(
+        protected EnchantmentBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static EnchantmentBinaryWrapper EnchantmentFactory(
+        public static EnchantmentBinaryOverlay EnchantmentFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new EnchantmentBinaryWrapper(
+            var ret = new EnchantmentBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3150,11 +3150,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: Enchantment_Registration.EFID_HEADER,
-                        factory:  EffectBinaryWrapper.EffectFactory);
+                        factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
                 }
                 default:

@@ -3520,8 +3520,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SigilStoneBinaryWrapper :
-        ItemAbstractBinaryWrapper,
+    public partial class SigilStoneBinaryOverlay :
+        ItemAbstractBinaryOverlay,
         ISigilStoneGetter
     {
         #region Common Routing
@@ -3588,7 +3588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Script_IsSet => _ScriptLocation.HasValue;
         public IFormIDSetLinkGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormIDSetLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormIDSetLink<IScriptGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
+        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryOverlay>.Instance;
         private int? _DATALocation;
         public SigilStone.DATADataType DATADataTypeState { get; private set; }
         #region Uses
@@ -3611,22 +3611,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected SigilStoneBinaryWrapper(
+        protected SigilStoneBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static SigilStoneBinaryWrapper SigilStoneFactory(
+        public static SigilStoneBinaryOverlay SigilStoneFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new SigilStoneBinaryWrapper(
+            var ret = new SigilStoneBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3663,7 +3663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -3681,11 +3681,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: SigilStone_Registration.EFID_HEADER,
-                        factory:  EffectBinaryWrapper.EffectFactory);
+                        factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);
                 }
                 case 0x41544144: // DATA

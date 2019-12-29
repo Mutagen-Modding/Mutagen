@@ -3916,8 +3916,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SkillRecordBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class SkillRecordBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ISkillRecordGetter
     {
         #region Common Routing
@@ -4031,22 +4031,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected SkillRecordBinaryWrapper(
+        protected SkillRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static SkillRecordBinaryWrapper SkillRecordFactory(
+        public static SkillRecordBinaryOverlay SkillRecordFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new SkillRecordBinaryWrapper(
+            var ret = new SkillRecordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

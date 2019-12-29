@@ -2702,8 +2702,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LogEntryBinaryWrapper :
-        BinaryWrapper,
+    public partial class LogEntryBinaryOverlay :
+        BinaryOverlay,
         ILogEntryGetter
     {
         #region Common Routing
@@ -2764,7 +2764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags_IsSet => _FlagsLocation.HasValue;
         public LogEntry.Flag Flags => (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0];
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         #region Entry
         private int? _EntryLocation;
         public bool Entry_IsSet => _EntryLocation.HasValue;
@@ -2779,21 +2779,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected LogEntryBinaryWrapper(
+        protected LogEntryBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LogEntryBinaryWrapper LogEntryFactory(
+        public static LogEntryBinaryOverlay LogEntryFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new LogEntryBinaryWrapper(
+            var ret = new LogEntryBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2831,11 +2831,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54445443: // CTDT
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return TryGet<int?>.Failure;
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -2854,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44484353: // SCHD
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
-                    this.ResultScript = ScriptFieldsBinaryWrapper.ScriptFieldsFactory(
+                    this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

@@ -6994,8 +6994,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WeatherBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class WeatherBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IWeatherGetter
     {
         #region Common Routing
@@ -7057,7 +7057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWeatherTypeGetter> WeatherTypes { get; private set; } = EmptySetList<WeatherTypeBinaryOverlay>.Instance;
         private int? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDayNear
@@ -7219,28 +7219,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
         public Color LightningColor => _LightningColor_IsSet ? _data.Span.Slice(_LightningColorLocation, 3).ReadColor() : default;
         #endregion
-        public IReadOnlySetList<IWeatherSoundGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryWrapper>.Instance;
+        public IReadOnlySetList<IWeatherSoundGetter> Sounds { get; private set; } = EmptySetList<WeatherSoundBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected WeatherBinaryWrapper(
+        protected WeatherBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WeatherBinaryWrapper WeatherFactory(
+        public static WeatherBinaryOverlay WeatherFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new WeatherBinaryWrapper(
+            var ret = new WeatherBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -7282,7 +7282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -7292,11 +7292,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.WeatherTypes = BinaryWrapperSetList<WeatherTypeBinaryWrapper>.FactoryByStartIndex(
+                    this.WeatherTypes = BinaryOverlaySetList<WeatherTypeBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
-                        getter: (s, p) => WeatherTypeBinaryWrapper.WeatherTypeFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(new BinaryMemoryReadStream(s), p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
                 }
@@ -7320,11 +7320,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E53: // SNAM
                 {
-                    this.Sounds = BinaryWrapperSetList<WeatherSoundBinaryWrapper>.FactoryByArray(
+                    this.Sounds = BinaryOverlaySetList<WeatherSoundBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => WeatherSoundBinaryWrapper.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

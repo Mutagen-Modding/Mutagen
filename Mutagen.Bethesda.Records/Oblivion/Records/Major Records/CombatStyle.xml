@@ -33,7 +33,7 @@
           <Zero byteLength="3" />
           <Float name="HoldTimerMin" />
           <Float name="HoldTimerMax" />
-          <Enum name="Flags" enumName="CombatStyle.Flag" byteLength="1" binaryWrapper="Custom" />
+          <Enum name="Flags" enumName="CombatStyle.Flag" byteLength="1" binaryOverlay="Custom" />
           <UInt8 name="AcrobaticDodgePercentChance" min="0" max="100" />
           <Zero byteLength="2" />
           <Break />

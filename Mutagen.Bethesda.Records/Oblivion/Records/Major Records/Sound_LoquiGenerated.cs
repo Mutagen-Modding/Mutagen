@@ -2364,8 +2364,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class SoundBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class SoundBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ISoundGetter
     {
         #region Common Routing
@@ -2429,9 +2429,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 switch (_DataType.TypeInt)
                 {
                     case 0x44444E53: // SNDD
-                        return SoundDataBinaryWrapper.SoundDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
+                        return SoundDataBinaryOverlay.SoundDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
                     case 0x58444E53: // SNDX
-                        return SoundDataExtendedBinaryWrapper.SoundDataExtendedFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
+                        return SoundDataExtendedBinaryOverlay.SoundDataExtendedFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation.Value.Min)), _package, default(RecordTypeConverter));
                     default:
                         throw new ArgumentException();
                 }
@@ -2444,22 +2444,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected SoundBinaryWrapper(
+        protected SoundBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static SoundBinaryWrapper SoundFactory(
+        public static SoundBinaryOverlay SoundFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new SoundBinaryWrapper(
+            var ret = new SoundBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

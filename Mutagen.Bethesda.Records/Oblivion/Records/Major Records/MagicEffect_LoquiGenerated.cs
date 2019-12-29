@@ -4322,8 +4322,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class MagicEffectBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class MagicEffectBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IMagicEffectGetter
     {
         #region Common Routing
@@ -4440,7 +4440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region SubData
         private int _SubDataLocation => _DATALocation.Value + 0x24;
         private bool _SubData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
-        private IMagicEffectSubDataGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryWrapper.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
+        private IMagicEffectSubDataGetter _SubData => _SubData_IsSet ? MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(_SubDataLocation)), _package) : default;
         public IMagicEffectSubDataGetter SubData => _SubData ?? new MagicEffectSubData();
         #endregion
         public IReadOnlySetList<IEDIDLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = EmptySetList<IEDIDLinkGetter<IMagicEffectGetter>>.Instance;
@@ -4449,22 +4449,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected MagicEffectBinaryWrapper(
+        protected MagicEffectBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static MagicEffectBinaryWrapper MagicEffectFactory(
+        public static MagicEffectBinaryOverlay MagicEffectFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new MagicEffectBinaryWrapper(
+            var ret = new MagicEffectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -4511,7 +4511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -4532,7 +4532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.CounterEffects = BinaryWrapperSetList<IEDIDLinkGetter<IMagicEffectGetter>>.FactoryByStartIndex(
+                    this.CounterEffects = BinaryOverlaySetList<IEDIDLinkGetter<IMagicEffectGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

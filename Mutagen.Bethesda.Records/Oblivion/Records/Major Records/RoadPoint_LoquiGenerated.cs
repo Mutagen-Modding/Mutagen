@@ -2234,8 +2234,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RoadPointBinaryWrapper :
-        BinaryWrapper,
+    public partial class RoadPointBinaryOverlay :
+        BinaryOverlay,
         IRoadPointGetter
     {
         #region Common Routing
@@ -2292,27 +2292,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Span.Slice(0, 12));
         public ReadOnlySpan<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
-        public IReadOnlyList<P3Float> Connections => BinaryWrapperSetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Connections => BinaryOverlaySetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected RoadPointBinaryWrapper(
+        protected RoadPointBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RoadPointBinaryWrapper RoadPointFactory(
+        public static RoadPointBinaryOverlay RoadPointFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RoadPointBinaryWrapper(
+            var ret = new RoadPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 15),
                 package: package);
             int offset = stream.Position;

@@ -2573,8 +2573,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ListGroupBinaryWrapper<T> :
-        BinaryWrapper,
+    public partial class ListGroupBinaryOverlay<T> :
+        BinaryOverlay,
         IListGroupGetter<T>
         where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
     {
@@ -2647,21 +2647,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ListGroupBinaryWrapper(
+        protected ListGroupBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ListGroupBinaryWrapper<T> ListGroupFactory(
+        public static ListGroupBinaryOverlay<T> ListGroupFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ListGroupBinaryWrapper<T>(
+            var ret = new ListGroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));

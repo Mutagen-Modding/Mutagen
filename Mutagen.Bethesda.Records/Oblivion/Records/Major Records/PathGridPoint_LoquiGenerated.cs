@@ -2323,8 +2323,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PathGridPointBinaryWrapper :
-        BinaryWrapper,
+    public partial class PathGridPointBinaryOverlay :
+        BinaryOverlay,
         IPathGridPointGetter
     {
         #region Common Routing
@@ -2387,21 +2387,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected PathGridPointBinaryWrapper(
+        protected PathGridPointBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static PathGridPointBinaryWrapper PathGridPointFactory(
+        public static PathGridPointBinaryOverlay PathGridPointFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new PathGridPointBinaryWrapper(
+            var ret = new PathGridPointBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 16),
                 package: package);
             int offset = stream.Position;

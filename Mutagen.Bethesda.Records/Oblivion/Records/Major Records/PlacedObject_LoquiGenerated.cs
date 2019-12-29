@@ -6333,8 +6333,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PlacedObjectBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class PlacedObjectBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IPlacedObjectGetter
     {
         #region Common Routing
@@ -6400,13 +6400,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region TeleportDestination
         private RangeInt32? _TeleportDestinationLocation;
         private bool _TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
-        public ITeleportDestinationGetter TeleportDestination => _TeleportDestination_IsSet ? TeleportDestinationBinaryWrapper.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ITeleportDestinationGetter TeleportDestination => _TeleportDestination_IsSet ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
         #endregion
         #region Lock
         private RangeInt32? _LockLocation;
         private bool _Lock_IsSet => _LockLocation.HasValue;
-        public ILockInformationGetter Lock => _Lock_IsSet ? LockInformationBinaryWrapper.LockInformationFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ILockInformationGetter Lock => _Lock_IsSet ? LockInformationBinaryOverlay.LockInformationFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Lock_IsSet => _LockLocation.HasValue;
         #endregion
         #region Owner
@@ -6427,7 +6427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
         private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
-        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryWrapper.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter EnableParent => _EnableParent_IsSet ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region Target
@@ -6443,7 +6443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
         private bool _DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
-        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryWrapper.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDistantLODDataGetter DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region Charge
@@ -6519,22 +6519,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected PlacedObjectBinaryWrapper(
+        protected PlacedObjectBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static PlacedObjectBinaryWrapper PlacedObjectFactory(
+        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new PlacedObjectBinaryWrapper(
+            var ret = new PlacedObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -6657,7 +6657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4B524D58: // XMRK
                 {
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
-                    this.MapMarker = MapMarkerBinaryWrapper.MapMarkerFactory(
+                    this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public static class BinaryWrapperArrayHelper
+    public static class BinaryOverlayArrayHelper
     {
         public static ReadOnlyMemorySlice<T> EnumSliceFromFixedSize<T>(
             ReadOnlyMemorySlice<byte> mem,
@@ -26,9 +26,9 @@ namespace Mutagen.Bethesda.Binary
             ReadOnlyMemorySlice<byte> mem,
             int amount,
             int length,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryWrapper.ConverterFactory<T> getter)
+            BinaryOverlay.ConverterFactory<T> getter)
         {
             T[] ret = new T[amount];
             for (int i = 0; i < amount; i++)

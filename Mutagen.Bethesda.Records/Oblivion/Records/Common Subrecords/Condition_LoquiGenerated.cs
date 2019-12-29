@@ -2688,8 +2688,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ConditionBinaryWrapper :
-        BinaryWrapper,
+    public partial class ConditionBinaryOverlay :
+        BinaryOverlay,
         IConditionGetter
     {
         #region Common Routing
@@ -2760,18 +2760,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ConditionBinaryWrapper(
+        protected ConditionBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ConditionBinaryWrapper ConditionFactory(
+        public static ConditionBinaryOverlay ConditionFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecord = recordTypeConverter.ConvertToCustom(package.Meta.GetSubRecord(stream).RecordType);
@@ -2786,7 +2786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     break;
             }
-            var ret = new ConditionBinaryWrapper(
+            var ret = new ConditionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

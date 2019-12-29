@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    public partial class ArmorBinaryWrapper
+    public partial class ArmorBinaryOverlay
     {
         public bool GetArmorValueIsSetCustom() => _DATALocation.HasValue;
         public float GetArmorValueCustom()

@@ -1819,8 +1819,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GameSettingBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class GameSettingBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         IGameSettingGetter
     {
         #region Common Routing
@@ -1872,9 +1872,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GameSettingBinaryWrapper(
+        protected GameSettingBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

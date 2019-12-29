@@ -1714,8 +1714,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ScriptReferenceBinaryWrapper :
-        BinaryWrapper,
+    public partial class ScriptReferenceBinaryOverlay :
+        BinaryOverlay,
         IScriptReferenceGetter
     {
         #region Common Routing
@@ -1776,9 +1776,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ScriptReferenceBinaryWrapper(
+        protected ScriptReferenceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

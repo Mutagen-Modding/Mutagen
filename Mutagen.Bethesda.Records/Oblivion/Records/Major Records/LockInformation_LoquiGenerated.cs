@@ -2239,8 +2239,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LockInformationBinaryWrapper :
-        BinaryWrapper,
+    public partial class LockInformationBinaryOverlay :
+        BinaryOverlay,
         ILockInformationGetter
     {
         #region Common Routing
@@ -2305,21 +2305,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected LockInformationBinaryWrapper(
+        protected LockInformationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LockInformationBinaryWrapper LockInformationFactory(
+        public static LockInformationBinaryOverlay LockInformationFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new LockInformationBinaryWrapper(
+            var ret = new LockInformationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

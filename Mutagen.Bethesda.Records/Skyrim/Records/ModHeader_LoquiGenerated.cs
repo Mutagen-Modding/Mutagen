@@ -4100,8 +4100,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ModHeaderBinaryWrapper :
-        BinaryWrapper,
+    public partial class ModHeaderBinaryOverlay :
+        BinaryOverlay,
         IModHeaderGetter
     {
         #region Common Routing
@@ -4165,7 +4165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Stats
         private RangeInt32? _StatsLocation;
         private bool _Stats_IsSet => _StatsLocation.HasValue;
-        private IModStatsGetter _Stats => _Stats_IsSet ? ModStatsBinaryWrapper.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation.Value.Min)), _package) : default;
+        private IModStatsGetter _Stats => _Stats_IsSet ? ModStatsBinaryOverlay.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation.Value.Min)), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
@@ -4188,7 +4188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Description_IsSet => _DescriptionLocation.HasValue;
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryWrapper>.Instance;
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = EmptySetList<MasterReferenceBinaryOverlay>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>> OverriddenForms { get; private set; } = EmptySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.Instance;
         #region INTV
         private int? _INTVLocation;
@@ -4205,21 +4205,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ModHeaderBinaryWrapper(
+        protected ModHeaderBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ModHeaderBinaryWrapper ModHeaderFactory(
+        public static ModHeaderBinaryOverlay ModHeaderFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new ModHeaderBinaryWrapper(
+            var ret = new ModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -4276,18 +4276,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x5453414D: // MAST
                 {
-                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryWrapper>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: ModHeader_Registration.MAST_HEADER,
-                        factory:  MasterReferenceBinaryWrapper.MasterReferenceFactory);
+                        factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
                 case 0x4D414E4F: // ONAM
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.OverriddenForms = BinaryWrapperSetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
+                    this.OverriddenForms = BinaryOverlaySetList<IFormIDLinkGetter<ISkyrimMajorRecordGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

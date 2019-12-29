@@ -3603,8 +3603,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ClassBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class ClassBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IClassGetter
     {
         #region Common Routing
@@ -3668,13 +3668,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         private int? _DATALocation;
         public Class.DATADataType DATADataTypeState { get; private set; }
-        public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
+        public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 2, enumLength: 4);
         #region Specialization
         private int _SpecializationLocation => _DATALocation.Value + 0x8;
         private bool _Specialization_IsSet => _DATALocation.HasValue;
         public Class.SpecializationFlag Specialization => _Specialization_IsSet ? (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
         #endregion
-        public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryWrapperArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
+        public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 12) : default, amount: 7, enumLength: 4);
         #region Flags
         private int _FlagsLocation => _DATALocation.Value + 0x28;
         private bool _Flags_IsSet => _DATALocation.HasValue;
@@ -3688,7 +3688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Training
         private int _TrainingLocation => _DATALocation.Value + 0x30;
         private bool _Training_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
-        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryWrapper.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
+        private IClassTrainingGetter _Training => _Training_IsSet ? ClassTrainingBinaryOverlay.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(_TrainingLocation)), _package) : default;
         public IClassTrainingGetter Training => _Training ?? new ClassTraining();
         #endregion
         partial void CustomCtor(
@@ -3696,22 +3696,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ClassBinaryWrapper(
+        protected ClassBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ClassBinaryWrapper ClassFactory(
+        public static ClassBinaryOverlay ClassFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ClassBinaryWrapper(
+            var ret = new ClassBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

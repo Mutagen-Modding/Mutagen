@@ -2565,8 +2565,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RaceStatsBinaryWrapper :
-        BinaryWrapper,
+    public partial class RaceStatsBinaryOverlay :
+        BinaryOverlay,
         IRaceStatsGetter
     {
         #region Common Routing
@@ -2634,21 +2634,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RaceStatsBinaryWrapper(
+        protected RaceStatsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RaceStatsBinaryWrapper RaceStatsFactory(
+        public static RaceStatsBinaryOverlay RaceStatsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RaceStatsBinaryWrapper(
+            var ret = new RaceStatsBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 8),
                 package: package);
             int offset = stream.Position;

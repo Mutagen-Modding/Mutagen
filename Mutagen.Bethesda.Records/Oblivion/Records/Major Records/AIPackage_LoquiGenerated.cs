@@ -3329,8 +3329,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AIPackageBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class AIPackageBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IAIPackageGetter
     {
         #region Common Routing
@@ -3393,43 +3393,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Location
         private RangeInt32? _LocationLocation;
         private bool _Location_IsSet => _LocationLocation.HasValue;
-        public IAIPackageLocationGetter Location => _Location_IsSet ? AIPackageLocationBinaryWrapper.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageLocationGetter Location => _Location_IsSet ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Location_IsSet => _LocationLocation.HasValue;
         #endregion
         #region Schedule
         private RangeInt32? _ScheduleLocation;
         private bool _Schedule_IsSet => _ScheduleLocation.HasValue;
-        public IAIPackageScheduleGetter Schedule => _Schedule_IsSet ? AIPackageScheduleBinaryWrapper.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageScheduleGetter Schedule => _Schedule_IsSet ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Schedule_IsSet => _ScheduleLocation.HasValue;
         #endregion
         #region Target
         private RangeInt32? _TargetLocation;
         private bool _Target_IsSet => _TargetLocation.HasValue;
-        public IAIPackageTargetGetter Target => _Target_IsSet ? AIPackageTargetBinaryWrapper.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageTargetGetter Target => _Target_IsSet ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected AIPackageBinaryWrapper(
+        protected AIPackageBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static AIPackageBinaryWrapper AIPackageFactory(
+        public static AIPackageBinaryOverlay AIPackageFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new AIPackageBinaryWrapper(
+            var ret = new AIPackageBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3483,11 +3483,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

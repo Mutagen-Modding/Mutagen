@@ -2004,8 +2004,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class WeatherChanceBinaryWrapper :
-        BinaryWrapper,
+    public partial class WeatherChanceBinaryOverlay :
+        BinaryOverlay,
         IWeatherChanceGetter
     {
         #region Common Routing
@@ -2068,21 +2068,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected WeatherChanceBinaryWrapper(
+        protected WeatherChanceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static WeatherChanceBinaryWrapper WeatherChanceFactory(
+        public static WeatherChanceBinaryOverlay WeatherChanceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new WeatherChanceBinaryWrapper(
+            var ret = new WeatherChanceBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 8),
                 package: package);
             int offset = stream.Position;

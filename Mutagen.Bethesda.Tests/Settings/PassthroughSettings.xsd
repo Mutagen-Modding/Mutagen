@@ -8,7 +8,7 @@
          <xs:element name="ReorderRecords" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestNormal" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="TestBinaryWrapper" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestBinaryOverlay" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestImport" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestFolder" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestCopyIn" type="ValueType" minOccurs="0" maxOccurs="1" />

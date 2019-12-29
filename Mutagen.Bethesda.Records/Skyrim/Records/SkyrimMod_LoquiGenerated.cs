@@ -735,29 +735,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public static ISkyrimModGetter CreateFromBinaryWrapper(
+        public static ISkyrimModGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
         {
-            return SkyrimModBinaryWrapper.SkyrimModFactory(
+            return SkyrimModBinaryOverlay.SkyrimModFactory(
                 new BinaryMemoryReadStream(bytes),
                 modKey: modKey);
         }
 
-        public static ISkyrimModGetter CreateFromBinaryWrapper(
+        public static ISkyrimModGetter CreateFromBinaryOverlay(
             string path,
             ModKey? modKeyOverride = null)
         {
-            return CreateFromBinaryWrapper(
+            return CreateFromBinaryOverlay(
                 stream: new BinaryReadStream(path),
                 modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
         }
 
-        public static ISkyrimModGetter CreateFromBinaryWrapper(
+        public static ISkyrimModGetter CreateFromBinaryOverlay(
             IBinaryReadStream stream,
             ModKey modKey)
         {
-            return SkyrimModBinaryWrapper.SkyrimModFactory(
+            return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: stream,
                 modKey: modKey);
         }
@@ -4213,7 +4213,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimModBinaryWrapper : ISkyrimModGetter
+    public partial class SkyrimModBinaryOverlay : ISkyrimModGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4263,55 +4263,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         public ModKey ModKey { get; }
-        private readonly BinaryWrapperFactoryPackage _package = new BinaryWrapperFactoryPackage(GameMode.Skyrim);
+        private readonly BinaryOverlayFactoryPackage _package = new BinaryOverlayFactoryPackage(GameMode.Skyrim);
         private readonly IBinaryReadStream _data;
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
         private bool _ModHeader_IsSet => _ModHeaderLocation.HasValue;
-        private IModHeaderGetter _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryWrapper.ModHeaderFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ModHeaderLocation.Value.Min, _ModHeaderLocation.Value.Max)), _package) : default;
+        private IModHeaderGetter _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryOverlay.ModHeaderFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation.Value.Min, _ModHeaderLocation.Value.Max)), _package) : default;
         public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;
         private bool _GameSettings_IsSet => _GameSettingsLocation.HasValue;
-        private IGroupGetter<IGameSettingGetter> _GameSettings => _GameSettings_IsSet ? GroupBinaryWrapper<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _GameSettingsLocation.Value.Min, _GameSettingsLocation.Value.Max)), _package) : default;
+        private IGroupGetter<IGameSettingGetter> _GameSettings => _GameSettings_IsSet ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation.Value.Min, _GameSettingsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
         private RangeInt64? _KeywordsLocation;
         private bool _Keywords_IsSet => _KeywordsLocation.HasValue;
-        private IGroupGetter<IKeywordGetter> _Keywords => _Keywords_IsSet ? GroupBinaryWrapper<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _KeywordsLocation.Value.Min, _KeywordsLocation.Value.Max)), _package) : default;
+        private IGroupGetter<IKeywordGetter> _Keywords => _Keywords_IsSet ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _KeywordsLocation.Value.Min, _KeywordsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
         private RangeInt64? _LocationReferenceTypesLocation;
         private bool _LocationReferenceTypes_IsSet => _LocationReferenceTypesLocation.HasValue;
-        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryWrapper<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _LocationReferenceTypesLocation.Value.Min, _LocationReferenceTypesLocation.Value.Max)), _package) : default;
+        private IGroupGetter<ILocationReferenceTypeGetter> _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation.Value.Min, _LocationReferenceTypesLocation.Value.Max)), _package) : default;
         public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
         private RangeInt64? _ActionsLocation;
         private bool _Actions_IsSet => _ActionsLocation.HasValue;
-        private IGroupGetter<IActionRecordGetter> _Actions => _Actions_IsSet ? GroupBinaryWrapper<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ActionsLocation.Value.Min, _ActionsLocation.Value.Max)), _package) : default;
+        private IGroupGetter<IActionRecordGetter> _Actions => _Actions_IsSet ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActionsLocation.Value.Min, _ActionsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region TextureSets
         private RangeInt64? _TextureSetsLocation;
         private bool _TextureSets_IsSet => _TextureSetsLocation.HasValue;
-        private IGroupGetter<ITextureSetGetter> _TextureSets => _TextureSets_IsSet ? GroupBinaryWrapper<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _TextureSetsLocation.Value.Min, _TextureSetsLocation.Value.Max)), _package) : default;
+        private IGroupGetter<ITextureSetGetter> _TextureSets => _TextureSets_IsSet ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation.Value.Min, _TextureSetsLocation.Value.Max)), _package) : default;
         public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
         #region Globals
         private RangeInt64? _GlobalsLocation;
         private bool _Globals_IsSet => _GlobalsLocation.HasValue;
-        private IGroupGetter<IGlobalGetter> _Globals => _Globals_IsSet ? GroupBinaryWrapper<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _GlobalsLocation.Value.Min, _GlobalsLocation.Value.Max)), _package) : default;
+        private IGroupGetter<IGlobalGetter> _Globals => _Globals_IsSet ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GlobalsLocation.Value.Min, _GlobalsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region Classes
         private RangeInt64? _ClassesLocation;
         private bool _Classes_IsSet => _ClassesLocation.HasValue;
-        private IGroupGetter<IClassGetter> _Classes => _Classes_IsSet ? GroupBinaryWrapper<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryWrapper.LockExtractMemory(_data, _ClassesLocation.Value.Min, _ClassesLocation.Value.Max)), _package) : default;
+        private IGroupGetter<IClassGetter> _Classes => _Classes_IsSet ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ClassesLocation.Value.Min, _ClassesLocation.Value.Max)), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         partial void CustomCtor(
@@ -4319,7 +4319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             long finalPos,
             int offset);
 
-        protected SkyrimModBinaryWrapper(
+        protected SkyrimModBinaryOverlay(
             IBinaryReadStream stream,
             ModKey modKey)
         {
@@ -4327,7 +4327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this._data = stream;
         }
 
-        public static SkyrimModBinaryWrapper SkyrimModFactory(
+        public static SkyrimModBinaryOverlay SkyrimModFactory(
             ReadOnlyMemorySlice<byte> data,
             ModKey modKey)
         {
@@ -4336,18 +4336,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 modKey: modKey);
         }
 
-        public static SkyrimModBinaryWrapper SkyrimModFactory(
+        public static SkyrimModBinaryOverlay SkyrimModFactory(
             IBinaryReadStream stream,
             ModKey modKey)
         {
-            var ret = new SkyrimModBinaryWrapper(
+            var ret = new SkyrimModBinaryOverlay(
                 stream: stream,
                 modKey: modKey);
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: 0);
-            BinaryWrapper.FillModTypes(
+            BinaryOverlay.FillModTypes(
                 stream: stream,
                 package: ret._package,
                 fill: ret.FillRecordType);

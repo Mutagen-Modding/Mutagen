@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GlobalShortBinaryWrapper
+        public partial class GlobalShortBinaryOverlay
         {
             public override char TypeChar => GlobalShort.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;

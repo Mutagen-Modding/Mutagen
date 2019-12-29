@@ -2575,8 +2575,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class MagicEffectSubDataBinaryWrapper :
-        BinaryWrapper,
+    public partial class MagicEffectSubDataBinaryOverlay :
+        BinaryOverlay,
         IMagicEffectSubDataGetter
     {
         #region Common Routing
@@ -2644,21 +2644,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected MagicEffectSubDataBinaryWrapper(
+        protected MagicEffectSubDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static MagicEffectSubDataBinaryWrapper MagicEffectSubDataFactory(
+        public static MagicEffectSubDataBinaryOverlay MagicEffectSubDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new MagicEffectSubDataBinaryWrapper(
+            var ret = new MagicEffectSubDataBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 28),
                 package: package);
             int offset = stream.Position;

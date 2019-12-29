@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiType loqui = typeGen as LoquiType;
             var data = typeGen.GetFieldData();
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
-                    return $"{nameof(BinaryWrapper)}.{nameof(BinaryWrapper.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
+                    return $"{nameof(BinaryOverlay)}.{nameof(BinaryOverlay.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
                 }
                 else
                 {
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Generation
                             if (!severalSubTypes)
                             {
                                 fg.Append($" => _{typeGen.Name}_IsSet ? ");
-                                fg.Append($"{this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location.Value.Min", $"_{typeGen.Name}Location.Value.Max")}), _package");
+                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location.Value.Min", $"_{typeGen.Name}Location.Value.Max")}), _package");
                                 if (loqui.SingletonType == SingletonLevel.None)
                                 {
                                     fg.Append($", {recConverter}");
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Generation
                                             using (new DepthWrapper(fg))
                                             using (new LineWrapper(fg))
                                             {
-                                                fg.Append($"return {this.Module.BinaryWrapperClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location.Value.Min", $"_{subLoq.Name}Location.Value.Max")}), _package");
+                                                fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location.Value.Min", $"_{subLoq.Name}Location.Value.Max")}), _package");
                                                 if (loqui.SingletonType == SingletonLevel.None)
                                                 {
                                                     fg.Append($", {recConverter}");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (loqui.SingletonType == SingletonLevel.None)
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package, {recConverter});");
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package, {recConverter});");
                     }
                     else
                     {
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
-                fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
+                fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
             }
 
             if (loqui.SingletonType != SingletonLevel.None)
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"this.{accessor} = {this.Module.BinaryWrapperClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))
+                    $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))
                 {
                     args.Add($"stream: stream");
                     args.Add($"package: {packageAccessor}");
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
-            return $"{this.Module.BinaryWrapperClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)";
+            return $"{this.Module.BinaryOverlayClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p)";
         }
     }
 }

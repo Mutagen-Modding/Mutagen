@@ -3252,8 +3252,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class TexturesBinaryWrapper :
-        BinaryWrapper,
+    public partial class TexturesBinaryOverlay :
+        BinaryOverlay,
         ITexturesGetter
     {
         #region Common Routing
@@ -3353,21 +3353,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected TexturesBinaryWrapper(
+        protected TexturesBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static TexturesBinaryWrapper TexturesFactory(
+        public static TexturesBinaryOverlay TexturesFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new TexturesBinaryWrapper(
+            var ret = new TexturesBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

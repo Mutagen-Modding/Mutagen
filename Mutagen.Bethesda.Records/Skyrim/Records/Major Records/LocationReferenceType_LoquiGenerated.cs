@@ -2137,8 +2137,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class LocationReferenceTypeBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class LocationReferenceTypeBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         ILocationReferenceTypeGetter
     {
         #region Common Routing
@@ -2195,22 +2195,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected LocationReferenceTypeBinaryWrapper(
+        protected LocationReferenceTypeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LocationReferenceTypeBinaryWrapper LocationReferenceTypeFactory(
+        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LocationReferenceTypeBinaryWrapper(
+            var ret = new LocationReferenceTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

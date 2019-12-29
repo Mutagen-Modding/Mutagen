@@ -23,9 +23,9 @@ namespace Mutagen.Bethesda.Tests
             return new ModRecordAligner.AlignmentRules();
         }
 
-        protected override async Task<IModGetter> ImportBinaryWrapper(FilePath path)
+        protected override async Task<IModGetter> ImportBinaryOverlay(FilePath path)
         {
-            return SkyrimModBinaryWrapper.SkyrimModFactory(
+            return SkyrimModBinaryOverlay.SkyrimModFactory(
                 new BinaryReadStream(this.FilePath.Path),
                 this.ModKey);
         }
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
         {
-            var wrapper = SkyrimMod.CreateFromBinaryWrapper(file.Path);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path);
             var ret = new SkyrimMod(this.ModKey);
             ret.DeepCopyFieldsFrom(wrapper);
             return ret;

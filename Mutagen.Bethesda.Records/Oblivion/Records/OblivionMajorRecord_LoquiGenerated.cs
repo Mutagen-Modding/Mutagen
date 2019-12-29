@@ -2084,8 +2084,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class OblivionMajorRecordBinaryWrapper :
-        MajorRecordBinaryWrapper,
+    public partial class OblivionMajorRecordBinaryOverlay :
+        MajorRecordBinaryOverlay,
         IOblivionMajorRecordGetter
     {
         #region Common Routing
@@ -2142,9 +2142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected OblivionMajorRecordBinaryWrapper(
+        protected OblivionMajorRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

@@ -2718,8 +2718,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LeveledItemBinaryWrapper :
-        ItemAbstractBinaryWrapper,
+    public partial class LeveledItemBinaryOverlay :
+        ItemAbstractBinaryOverlay,
         ILeveledItemGetter
     {
         #region Common Routing
@@ -2780,28 +2780,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Flags_IsSet => GetFlagsIsSetCustom();
         public LeveledFlag Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlySetList<ILeveledEntryGetter<IItemAbstractGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryWrapper<IItemAbstractGetter>>.Instance;
+        public IReadOnlySetList<ILeveledEntryGetter<IItemAbstractGetter>> Entries { get; private set; } = EmptySetList<LeveledEntryBinaryOverlay<IItemAbstractGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LeveledItemBinaryWrapper(
+        protected LeveledItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LeveledItemBinaryWrapper LeveledItemFactory(
+        public static LeveledItemBinaryOverlay LeveledItemFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LeveledItemBinaryWrapper(
+            var ret = new LeveledItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2846,11 +2846,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    this.Entries = BinaryWrapperSetList<LeveledEntryBinaryWrapper<IItemAbstractGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IItemAbstractGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => LeveledEntryBinaryWrapper<IItemAbstractGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IItemAbstractGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

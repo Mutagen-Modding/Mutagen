@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class CombatStyleBinaryWrapper
+        public partial class CombatStyleBinaryOverlay
         {
             private bool GetFlagsIsSetCustom() => _CSTDLocation.HasValue;
             private CombatStyle.Flag GetFlagsCustom()

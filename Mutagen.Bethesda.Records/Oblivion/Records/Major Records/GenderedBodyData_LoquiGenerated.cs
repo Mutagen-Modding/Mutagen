@@ -2253,8 +2253,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class GenderedBodyDataBinaryWrapper :
-        BinaryWrapper,
+    public partial class GenderedBodyDataBinaryOverlay :
+        BinaryOverlay,
         IGenderedBodyDataGetter
     {
         #region Common Routing
@@ -2322,21 +2322,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected GenderedBodyDataBinaryWrapper(
+        protected GenderedBodyDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GenderedBodyDataBinaryWrapper GenderedBodyDataFactory(
+        public static GenderedBodyDataBinaryOverlay GenderedBodyDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new GenderedBodyDataBinaryWrapper(
+            var ret = new GenderedBodyDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2368,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Male) return TryGet<int?>.Failure;
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
-                    this.Male = BodyDataBinaryWrapper.BodyDataFactory(
+                    this.Male = BodyDataBinaryOverlay.BodyDataFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)GenderedBodyData_FieldIndex.Female) return TryGet<int?>.Failure;
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
-                    this.Female = BodyDataBinaryWrapper.BodyDataFactory(
+                    this.Female = BodyDataBinaryOverlay.BodyDataFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

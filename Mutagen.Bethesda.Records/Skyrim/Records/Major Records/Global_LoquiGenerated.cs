@@ -1911,8 +1911,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GlobalBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class GlobalBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         IGlobalGetter
     {
         #region Common Routing
@@ -1969,9 +1969,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GlobalBinaryWrapper(
+        protected GlobalBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

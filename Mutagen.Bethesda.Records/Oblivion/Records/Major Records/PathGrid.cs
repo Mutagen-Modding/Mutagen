@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
     }
 
-    public partial class PathGridBinaryWrapper
+    public partial class PathGridBinaryOverlay
     {
         public IReadOnlySetList<IPathGridPointGetter> PointToPointConnections { get; private set; } = EmptySetList<IPathGridPointGetter>.Instance;
 
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     case 0x52524750: // "PGRR":
                         stream.Position += subMeta.HeaderLength;
                         var connectionPtData = stream.ReadMemory(subMeta.RecordLength);
-                        this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByLazyParse(
+                        this.PointToPointConnections = BinaryOverlaySetList<IPathGridPointGetter>.FactoryByLazyParse(
                             pointData,
                             _package,
                             getter: (s, p) =>
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 IPathGridPointGetter[] pathGridPoints = new IPathGridPointGetter[bytePointsNum];
                                 for (int i = 0; i < bytePointsNum; i++)
                                 {
-                                    var pt = PathGridPointBinaryWrapper.Factory(s, p);
+                                    var pt = PathGridPointBinaryOverlay.Factory(s, p);
                                     pt.Connections = connectionInts.Slice(0, pt.NumConnections).ToArray().ToList();
                                     pathGridPoints[i] = pt;
                                     s = s.Slice(16);
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
             if (!readPGRR)
             {
-                this.PointToPointConnections = BinaryWrapperSetList<IPathGridPointGetter>.FactoryByStartIndex(
+                this.PointToPointConnections = BinaryOverlaySetList<IPathGridPointGetter>.FactoryByStartIndex(
                     pointData,
                     this._package,
                     itemLength: 16,

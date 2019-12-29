@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryWrapperNumberedList
+    public class BinaryOverlayNumberedList
     {
         public static IReadOnlyList<T> FactoryForEnum<T>(
             ReadOnlyMemorySlice<byte> mem,
@@ -22,9 +22,9 @@ namespace Mutagen.Bethesda.Binary
             ReadOnlyMemorySlice<byte> mem,
             int amount, 
             int length,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryWrapper.ConverterFactory<T> getter)
+            BinaryOverlay.ConverterFactory<T> getter)
         {
             return new NumberedLoquiList<T>(mem, amount, length, package, recordTypeConverter, getter);
         }
@@ -35,17 +35,17 @@ namespace Mutagen.Bethesda.Binary
         public int Amount { get; }
         public ReadOnlyMemorySlice<byte> Memory { get; }
         public int Length { get; }
-        public BinaryWrapperFactoryPackage Package { get; }
-        public BinaryWrapper.ConverterFactory<T> Getter { get; }
+        public BinaryOverlayFactoryPackage Package { get; }
+        public BinaryOverlay.ConverterFactory<T> Getter { get; }
         public RecordTypeConverter RecordTypeConverter { get; }
 
         public NumberedLoquiList(
             ReadOnlyMemorySlice<byte> mem,
             int amount,
             int length,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryWrapper.ConverterFactory<T> getter)
+            BinaryOverlay.ConverterFactory<T> getter)
         {
             this.Amount = amount;
             this.Memory = mem;

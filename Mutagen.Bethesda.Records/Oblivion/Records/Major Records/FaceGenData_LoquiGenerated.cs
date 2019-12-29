@@ -2360,8 +2360,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class FaceGenDataBinaryWrapper :
-        BinaryWrapper,
+    public partial class FaceGenDataBinaryOverlay :
+        BinaryOverlay,
         IFaceGenDataGetter
     {
         #region Common Routing
@@ -2436,21 +2436,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected FaceGenDataBinaryWrapper(
+        protected FaceGenDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static FaceGenDataBinaryWrapper FaceGenDataFactory(
+        public static FaceGenDataBinaryOverlay FaceGenDataFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new FaceGenDataBinaryWrapper(
+            var ret = new FaceGenDataBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;

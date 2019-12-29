@@ -2137,8 +2137,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ActionRecordBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class ActionRecordBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         IActionRecordGetter
     {
         #region Common Routing
@@ -2195,22 +2195,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ActionRecordBinaryWrapper(
+        protected ActionRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ActionRecordBinaryWrapper ActionRecordFactory(
+        public static ActionRecordBinaryOverlay ActionRecordFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ActionRecordBinaryWrapper(
+            var ret = new ActionRecordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

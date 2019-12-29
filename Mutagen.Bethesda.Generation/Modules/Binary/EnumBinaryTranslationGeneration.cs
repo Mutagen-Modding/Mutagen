@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             var data = typeGen.GetFieldData();
-            switch (data.BinaryWrapperFallback)
+            switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     break;

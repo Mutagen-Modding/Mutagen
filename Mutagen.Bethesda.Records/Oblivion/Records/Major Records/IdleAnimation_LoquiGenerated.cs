@@ -2893,8 +2893,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class IdleAnimationBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class IdleAnimationBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IIdleAnimationGetter
     {
         #region Common Routing
@@ -2946,7 +2946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
         public bool AnimationGroupSection_IsSet => _AnimationGroupSectionLocation.HasValue;
@@ -2958,22 +2958,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected IdleAnimationBinaryWrapper(
+        protected IdleAnimationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static IdleAnimationBinaryWrapper IdleAnimationFactory(
+        public static IdleAnimationBinaryOverlay IdleAnimationFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new IdleAnimationBinaryWrapper(
+            var ret = new IdleAnimationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -3014,11 +3014,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -3036,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.RelatedIdleAnimations = BinaryWrapperSetList<IFormIDLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
+                    this.RelatedIdleAnimations = BinaryOverlaySetList<IFormIDLinkGetter<IIdleAnimationGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

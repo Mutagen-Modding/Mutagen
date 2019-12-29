@@ -59,11 +59,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class GameSettingBinaryWrapper
+        public partial class GameSettingBinaryOverlay
         {
-            public static GameSettingBinaryWrapper GameSettingFactory(
+            public static GameSettingBinaryOverlay GameSettingFactory(
                 BinaryMemoryReadStream stream,
-                BinaryWrapperFactoryPackage package,
+                BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {
                 var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.Meta);
@@ -74,13 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (settingType.Value)
                 {
                     case GameSettingType.Float:
-                        return GameSettingFloatBinaryWrapper.GameSettingFloatFactory(stream, package);
+                        return GameSettingFloatBinaryOverlay.GameSettingFloatFactory(stream, package);
                     case GameSettingType.Int:
-                        return GameSettingIntBinaryWrapper.GameSettingIntFactory(stream, package);
+                        return GameSettingIntBinaryOverlay.GameSettingIntFactory(stream, package);
                     case GameSettingType.String:
-                        return GameSettingStringBinaryWrapper.GameSettingStringFactory(stream, package);
+                        return GameSettingStringBinaryOverlay.GameSettingStringFactory(stream, package);
                     case GameSettingType.Bool:
-                        return GameSettingBoolBinaryWrapper.GameSettingBoolFactory(stream, package);
+                        return GameSettingBoolBinaryOverlay.GameSettingBoolFactory(stream, package);
                     default:
                         throw new ArgumentException($"Unknown game type: {settingType.Value}");
                 }

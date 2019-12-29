@@ -9,18 +9,18 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class LoquiBinaryWrapperTranslation<T>
+    public class LoquiBinaryOverlayTranslation<T>
     {
         public delegate T CreateFunc(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter);
         public static readonly CreateFunc Create = GetCreateFunc();
 
         private static CreateFunc GetCreateFunc()
         {
             var regis = LoquiRegistration.GetRegister(typeof(T));
-            var className = $"{regis.Namespace}.Internals.{regis.Name}BinaryWrapper";
+            var className = $"{regis.Namespace}.Internals.{regis.Name}BinaryOverlay";
 
             var tType = regis.ClassType.Assembly.GetType(className);
             var method = tType.GetMethods()
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Binary
                     var param = methodInfo.GetParameters();
                     if (param.Length != 3) return false;
                     if (!param[0].ParameterType.Equals(typeof(BinaryMemoryReadStream))) return false;
-                    if (!param[1].ParameterType.Equals(typeof(BinaryWrapperFactoryPackage))) return false;
+                    if (!param[1].ParameterType.Equals(typeof(BinaryOverlayFactoryPackage))) return false;
                     if (!param[2].ParameterType.Equals(typeof(RecordTypeConverter))) return false;
                     return true;
                 })

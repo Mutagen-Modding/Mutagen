@@ -2551,8 +2551,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class CellSubBlockBinaryWrapper :
-        BinaryWrapper,
+    public partial class CellSubBlockBinaryOverlay :
+        BinaryOverlay,
         ICellSubBlockGetter
     {
         #region Common Routing
@@ -2628,21 +2628,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected CellSubBlockBinaryWrapper(
+        protected CellSubBlockBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static CellSubBlockBinaryWrapper CellSubBlockFactory(
+        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new CellSubBlockBinaryWrapper(
+            var ret = new CellSubBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));

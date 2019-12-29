@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
     
-        public partial class SoundDataExtendedBinaryWrapper
+        public partial class SoundDataExtendedBinaryOverlay
         {
             public override ReadOnlySpan<byte> Marker => SoundDataExtended.SoundDataExtendedMarker;
 

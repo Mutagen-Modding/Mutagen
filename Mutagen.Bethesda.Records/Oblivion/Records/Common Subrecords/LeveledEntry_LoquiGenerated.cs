@@ -2578,8 +2578,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LeveledEntryBinaryWrapper<T> :
-        BinaryWrapper,
+    public partial class LeveledEntryBinaryOverlay<T> :
+        BinaryOverlay,
         ILeveledEntryGetter<T>
         where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -2652,21 +2652,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected LeveledEntryBinaryWrapper(
+        protected LeveledEntryBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LeveledEntryBinaryWrapper<T> LeveledEntryFactory(
+        public static LeveledEntryBinaryOverlay<T> LeveledEntryFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new LeveledEntryBinaryWrapper<T>(
+            var ret = new LeveledEntryBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

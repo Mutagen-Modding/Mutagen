@@ -2260,8 +2260,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GameSettingBoolBinaryWrapper :
-        GameSettingBinaryWrapper,
+    public partial class GameSettingBoolBinaryOverlay :
+        GameSettingBinaryOverlay,
         IGameSettingBoolGetter
     {
         #region Common Routing
@@ -2321,22 +2321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GameSettingBoolBinaryWrapper(
+        protected GameSettingBoolBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GameSettingBoolBinaryWrapper GameSettingBoolFactory(
+        public static GameSettingBoolBinaryOverlay GameSettingBoolFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new GameSettingBoolBinaryWrapper(
+            var ret = new GameSettingBoolBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

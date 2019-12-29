@@ -2241,8 +2241,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionAreaBinaryWrapper :
-        BinaryWrapper,
+    public partial class RegionAreaBinaryOverlay :
+        BinaryOverlay,
         IRegionAreaGetter
     {
         #region Common Routing
@@ -2308,21 +2308,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RegionAreaBinaryWrapper(
+        protected RegionAreaBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionAreaBinaryWrapper RegionAreaFactory(
+        public static RegionAreaBinaryOverlay RegionAreaFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionAreaBinaryWrapper(
+            var ret = new RegionAreaBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2361,7 +2361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.RegionPoints = BinaryWrapperSetList<P2Float>.FactoryByStartIndex(
+                    this.RegionPoints = BinaryOverlaySetList<P2Float>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

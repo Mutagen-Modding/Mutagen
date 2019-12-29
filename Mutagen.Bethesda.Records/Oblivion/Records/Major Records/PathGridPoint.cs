@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PathGridPointBinaryWrapper
+    public partial class PathGridPointBinaryOverlay
     {
         public List<short> Connections;
         IReadOnlyList<short> IPathGridPointGetter.Connections => Connections;
 
-        public static PathGridPointBinaryWrapper Factory(
+        public static PathGridPointBinaryOverlay Factory(
             ReadOnlyMemorySlice<byte> stream,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
         {
-            return new PathGridPointBinaryWrapper(
+            return new PathGridPointBinaryOverlay(
                 bytes: stream.Slice(0, 16),
                 package: package);
         }

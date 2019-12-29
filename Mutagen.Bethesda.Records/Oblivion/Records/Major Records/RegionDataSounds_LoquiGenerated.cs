@@ -2301,8 +2301,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionDataSoundsBinaryWrapper :
-        RegionDataBinaryWrapper,
+    public partial class RegionDataSoundsBinaryOverlay :
+        RegionDataBinaryOverlay,
         IRegionDataSoundsGetter
     {
         #region Common Routing
@@ -2355,27 +2355,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool MusicType_IsSet => _MusicTypeLocation.HasValue;
         public MusicType MusicType => (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation.Value, _package.Meta));
         #endregion
-        public IReadOnlySetList<IRegionSoundGetter> Sounds { get; private set; } = EmptySetList<RegionSoundBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRegionSoundGetter> Sounds { get; private set; } = EmptySetList<RegionSoundBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected RegionDataSoundsBinaryWrapper(
+        protected RegionDataSoundsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionDataSoundsBinaryWrapper RegionDataSoundsFactory(
+        public static RegionDataSoundsBinaryOverlay RegionDataSoundsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionDataSoundsBinaryWrapper(
+            var ret = new RegionDataSoundsBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2412,11 +2412,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Sounds = BinaryWrapperSetList<RegionSoundBinaryWrapper>.FactoryByStartIndex(
+                    this.Sounds = BinaryOverlaySetList<RegionSoundBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
-                        getter: (s, p) => RegionSoundBinaryWrapper.RegionSoundFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(new BinaryMemoryReadStream(s), p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.Sounds);
                 }

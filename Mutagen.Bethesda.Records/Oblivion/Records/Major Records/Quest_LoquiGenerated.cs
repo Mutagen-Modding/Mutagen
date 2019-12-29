@@ -3686,8 +3686,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class QuestBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class QuestBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IQuestGetter
     {
         #region Common Routing
@@ -3762,30 +3762,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Priority_IsSet => _DATALocation.HasValue;
         public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
         #endregion
-        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryWrapper>.Instance;
-        public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryWrapper>.Instance;
-        public IReadOnlySetList<IQuestTargetGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryWrapper>.Instance;
+        public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<ConditionBinaryOverlay>.Instance;
+        public IReadOnlySetList<IQuestStageGetter> Stages { get; private set; } = EmptySetList<QuestStageBinaryOverlay>.Instance;
+        public IReadOnlySetList<IQuestTargetGetter> Targets { get; private set; } = EmptySetList<QuestTargetBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected QuestBinaryWrapper(
+        protected QuestBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static QuestBinaryWrapper QuestFactory(
+        public static QuestBinaryOverlay QuestFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new QuestBinaryWrapper(
+            var ret = new QuestBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3839,11 +3839,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41445443: // CTDA
                 case 0x54445443: // CTDT
                 {
-                    this.Conditions = BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    this.Conditions = BinaryOverlaySetList<ConditionBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -3854,20 +3854,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x58444E49: // INDX
                 {
-                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryWrapper>(
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<QuestStageBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: Quest_Registration.INDX_HEADER,
-                        factory:  QuestStageBinaryWrapper.QuestStageFactory);
+                        factory:  QuestStageBinaryOverlay.QuestStageFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
                 case 0x41545351: // QSTA
                 {
-                    this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryWrapper>(
+                    this.Targets = this.ParseRepeatedTypelessSubrecord<QuestTargetBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: Quest_Registration.QSTA_HEADER,
-                        factory:  QuestTargetBinaryWrapper.QuestTargetFactory);
+                        factory:  QuestTargetBinaryOverlay.QuestTargetFactory);
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
                 }
                 default:

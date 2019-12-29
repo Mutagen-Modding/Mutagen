@@ -5512,8 +5512,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ClassBinaryWrapper :
-        SkyrimMajorRecordBinaryWrapper,
+    public partial class ClassBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
         IClassGetter
     {
         #region Common Routing
@@ -5717,22 +5717,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ClassBinaryWrapper(
+        protected ClassBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ClassBinaryWrapper ClassFactory(
+        public static ClassBinaryOverlay ClassFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ClassBinaryWrapper(
+            var ret = new ClassBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

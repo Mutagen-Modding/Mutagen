@@ -3358,8 +3358,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AlchemicalApparatusBinaryWrapper :
-        ItemAbstractBinaryWrapper,
+    public partial class AlchemicalApparatusBinaryOverlay :
+        ItemAbstractBinaryOverlay,
         IAlchemicalApparatusGetter
     {
         #region Common Routing
@@ -3453,22 +3453,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected AlchemicalApparatusBinaryWrapper(
+        protected AlchemicalApparatusBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static AlchemicalApparatusBinaryWrapper AlchemicalApparatusFactory(
+        public static AlchemicalApparatusBinaryOverlay AlchemicalApparatusFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new AlchemicalApparatusBinaryWrapper(
+            var ret = new AlchemicalApparatusBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3505,7 +3505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class BinaryWrapper
+    public abstract class BinaryOverlay
     {
         public delegate TryGet<int?> RecordTypeFillWrapper(
             BinaryMemoryReadStream stream,
@@ -24,11 +24,11 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter recordTypeConverter);
 
         protected ReadOnlyMemorySlice<byte> _data;
-        protected BinaryWrapperFactoryPackage _package;
+        protected BinaryOverlayFactoryPackage _package;
 
-        protected BinaryWrapper(
+        protected BinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
         {
             this._data = bytes;
             this._package = package;
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
         public static void FillModTypes(
             IBinaryReadStream stream,
             ModTypeFillWrapper fill,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
             ModHeaderMeta headerMeta = package.Meta.GetHeader(stream);
@@ -248,26 +248,26 @@ namespace Mutagen.Bethesda.Binary
 
         public delegate T Factory<T>(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package);
+            BinaryOverlayFactoryPackage package);
 
         public delegate T ConverterFactory<T>(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter);
 
         public delegate T StreamTypedFactory<T>(
             BinaryMemoryReadStream stream,
             RecordType recordType,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter);
 
         public delegate T SpanFactory<T>(
             ReadOnlyMemorySlice<byte> span,
-            BinaryWrapperFactoryPackage package);
+            BinaryOverlayFactoryPackage package);
 
         public delegate T SpanRecordFactory<T>(
             ReadOnlyMemorySlice<byte> span,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter);
 
         public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(

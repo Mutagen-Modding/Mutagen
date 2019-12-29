@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class CellBinaryWrapper
+        public partial class CellBinaryOverlay
         {
             static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
             {
@@ -420,11 +420,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             private int? _pathgridLocation;
             public bool PathGrid_IsSet => _pathgridLocation.HasValue;
-            public IPathGridGetter PathGrid => PathGridBinaryWrapper.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
+            public IPathGridGetter PathGrid => PathGridBinaryOverlay.PathGridFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_pathgridLocation.Value)), _package);
 
             private int? _landscapeLocation;
             public bool Landscape_IsSet => _landscapeLocation.HasValue;
-            public ILandscapeGetter Landscape => LandscapeBinaryWrapper.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
+            public ILandscapeGetter Landscape => LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_landscapeLocation.Value)), _package);
 
             public ReadOnlySpan<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
             public ReadOnlySpan<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
             public IReadOnlySetList<IPlacedGetter> VisibleWhenDistant { get; private set; } = EmptySetList<IPlacedGetter>.Instance;
 
-            public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryWrapperFactoryPackage package)
+            public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
             {
                 List<int> ret = new List<int>();
                 var startingPos = stream.Position;
@@ -492,17 +492,17 @@ namespace Mutagen.Bethesda.Oblivion
 
                     IPlacedGetter TypicalGetter(
                         ReadOnlyMemorySlice<byte> span,
-                        BinaryWrapperFactoryPackage package)
+                        BinaryOverlayFactoryPackage package)
                     {
                         var majorMeta = package.Meta.MajorRecord(span);
                         switch (majorMeta.RecordType.TypeInt)
                         {
                             case 0x45524341: // "ACRE":
-                                return PlacedCreatureBinaryWrapper.PlacedCreatureFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new BinaryMemoryReadStream(span), package);
                             case 0x52484341: // "ACHR":
-                                return PlacedNPCBinaryWrapper.PlacedNPCFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedNPCBinaryOverlay.PlacedNPCFactory(new BinaryMemoryReadStream(span), package);
                             case 0x52464552: // "REFR":
-                                return PlacedObjectBinaryWrapper.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedObjectBinaryOverlay.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                this.Persistent = BinaryOverlaySetList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     }
                                     stream.Position += (int)majorMeta.TotalLength;
                                 }
-                                this.Temporary = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                this.Temporary = BinaryOverlaySetList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._visibleWhenDistantLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.VisibleWhenDistant = BinaryWrapperSetList<IPlacedGetter>.FactoryByArray(
+                                this.VisibleWhenDistant = BinaryOverlaySetList<IPlacedGetter>.FactoryByArray(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,

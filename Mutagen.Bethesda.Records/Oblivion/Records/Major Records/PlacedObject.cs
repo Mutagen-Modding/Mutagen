@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class PlacedObjectBinaryWrapper
+        public partial class PlacedObjectBinaryOverlay
         {
             private int? _OpenByDefaultLocation;
             public bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;

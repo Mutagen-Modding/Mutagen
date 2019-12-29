@@ -2796,8 +2796,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ArmorBinaryWrapper :
-        ClothingAbstractBinaryWrapper,
+    public partial class ArmorBinaryOverlay :
+        ClothingAbstractBinaryOverlay,
         IArmorGetter
     {
         #region Common Routing
@@ -2871,22 +2871,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ArmorBinaryWrapper(
+        protected ArmorBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static ArmorBinaryWrapper ArmorFactory(
+        public static ArmorBinaryOverlay ArmorFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new ArmorBinaryWrapper(
+            var ret = new ArmorBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

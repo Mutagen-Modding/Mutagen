@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ClimateBinaryWrapper
+        public partial class ClimateBinaryOverlay
         {
             private bool GetSunriseBeginIsSetCustom() => _TNAMLocation.HasValue;
             private bool GetSunriseEndIsSetCustom() => _TNAMLocation.HasValue;

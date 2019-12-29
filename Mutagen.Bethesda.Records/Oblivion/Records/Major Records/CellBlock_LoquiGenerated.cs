@@ -2545,8 +2545,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class CellBlockBinaryWrapper :
-        BinaryWrapper,
+    public partial class CellBlockBinaryOverlay :
+        BinaryOverlay,
         ICellBlockGetter
     {
         #region Common Routing
@@ -2609,27 +2609,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
         public ReadOnlySpan<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
-        public IReadOnlySetList<ICellSubBlockGetter> Items { get; private set; } = EmptySetList<CellSubBlockBinaryWrapper>.Instance;
+        public IReadOnlySetList<ICellSubBlockGetter> Items { get; private set; } = EmptySetList<CellSubBlockBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected CellBlockBinaryWrapper(
+        protected CellBlockBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static CellBlockBinaryWrapper CellBlockFactory(
+        public static CellBlockBinaryOverlay CellBlockFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new CellBlockBinaryWrapper(
+            var ret = new CellBlockBinaryOverlay(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
@@ -2661,11 +2661,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x50555247: // GRUP
                 {
-                    this.Items = BinaryWrapperSetList<CellSubBlockBinaryWrapper>.FactoryByArray(
+                    this.Items = BinaryOverlaySetList<CellSubBlockBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => CellSubBlockBinaryWrapper.CellSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => CellSubBlockBinaryOverlay.CellSubBlockFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

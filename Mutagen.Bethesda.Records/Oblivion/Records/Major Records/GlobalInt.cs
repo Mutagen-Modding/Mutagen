@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class GlobalIntBinaryWrapper
+        public partial class GlobalIntBinaryOverlay
         {
             public override char TypeChar => GlobalInt.TRIGGER_CHAR;
             public override float RawFloat => (float)this.Data;

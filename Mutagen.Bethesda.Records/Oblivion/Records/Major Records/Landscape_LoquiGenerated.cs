@@ -3234,8 +3234,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LandscapeBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class LandscapeBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ILandscapeGetter
     {
         #region Common Routing
@@ -3303,29 +3303,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool VertexColors_IsSet => _VertexColorsLocation.HasValue;
         public ReadOnlySpan<Byte> VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _VertexColorsLocation.Value, _package.Meta).ToArray() : default;
         #endregion
-        public IReadOnlySetList<IBaseLayerGetter> Layers { get; private set; } = EmptySetList<BaseLayerBinaryWrapper>.Instance;
+        public IReadOnlySetList<IBaseLayerGetter> Layers { get; private set; } = EmptySetList<BaseLayerBinaryOverlay>.Instance;
         public IReadOnlySetList<IFormIDLinkGetter<ILandTextureGetter>> Textures { get; private set; } = EmptySetList<IFormIDLinkGetter<ILandTextureGetter>>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LandscapeBinaryWrapper(
+        protected LandscapeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LandscapeBinaryWrapper LandscapeFactory(
+        public static LandscapeBinaryOverlay LandscapeFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LandscapeBinaryWrapper(
+            var ret = new LandscapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3378,7 +3378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54585442: // BTXT
                 case 0x54585441: // ATXT
                 {
-                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryWrapper>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: BaseLayer_Registration.TriggeringRecordTypes,
@@ -3387,9 +3387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             switch (r.TypeInt)
                             {
                                 case 0x54585442: // BTXT
-                                    return BaseLayerBinaryWrapper.BaseLayerFactory(s, p);
+                                    return BaseLayerBinaryOverlay.BaseLayerFactory(s, p);
                                 case 0x54585441: // ATXT
-                                    return AlphaLayerBinaryWrapper.AlphaLayerFactory(s, p);
+                                    return AlphaLayerBinaryOverlay.AlphaLayerFactory(s, p);
                                 default:
                                     throw new NotImplementedException();
                             }
@@ -3400,7 +3400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Textures = BinaryWrapperSetList<IFormIDLinkGetter<ILandTextureGetter>>.FactoryByStartIndex(
+                    this.Textures = BinaryOverlaySetList<IFormIDLinkGetter<ILandTextureGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

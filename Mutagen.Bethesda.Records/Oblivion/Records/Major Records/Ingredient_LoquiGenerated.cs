@@ -3591,8 +3591,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class IngredientBinaryWrapper :
-        ItemAbstractBinaryWrapper,
+    public partial class IngredientBinaryOverlay :
+        ItemAbstractBinaryOverlay,
         IIngredientGetter
     {
         #region Common Routing
@@ -3676,28 +3676,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public IngredientFlag Flags => _Flags_IsSet ? (IngredientFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
         #endregion
-        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryWrapper>.Instance;
+        public IReadOnlySetList<IEffectGetter> Effects { get; private set; } = EmptySetList<EffectBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected IngredientBinaryWrapper(
+        protected IngredientBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static IngredientBinaryWrapper IngredientFactory(
+        public static IngredientBinaryOverlay IngredientFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new IngredientBinaryWrapper(
+            var ret = new IngredientBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3734,7 +3734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    this.Model = ModelBinaryWrapper.ModelFactory(
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -3763,11 +3763,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44494645: // EFID
                 {
-                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryWrapper>(
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: Ingredient_Registration.EFID_HEADER,
-                        factory:  EffectBinaryWrapper.EffectFactory);
+                        factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Effects);
                 }
                 default:

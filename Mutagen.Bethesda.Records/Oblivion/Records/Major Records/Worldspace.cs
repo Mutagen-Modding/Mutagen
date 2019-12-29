@@ -461,17 +461,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class WorldspaceBinaryWrapper
+        public partial class WorldspaceBinaryOverlay
         {
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _RoadLocation;
             public bool Road_IsSet => this._RoadLocation.HasValue;
-            public IRoadGetter Road => RoadBinaryWrapper.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
+            public IRoadGetter Road => RoadBinaryOverlay.RoadFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_RoadLocation.Value)), _package);
 
             private int? _TopCellLocation;
             public bool TopCell_IsSet => this._TopCellLocation.HasValue;
-            public ICellGetter TopCell => CellBinaryWrapper.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
+            public ICellGetter TopCell => CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData.Value.Slice(_TopCellLocation.Value)), _package);
 
             public ReadOnlySpan<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan : UtilityTranslation.Zeros.Slice(0, 4);
 
@@ -551,10 +551,10 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryWrapperSetList<IWorldspaceBlockGetter>.FactoryByArray(
+                            this.SubCells = BinaryOverlaySetList<IWorldspaceBlockGetter>.FactoryByArray(
                                 stream.RemainingMemory,
                                 _package,
-                                getter: (s, p) => WorldspaceBlockBinaryWrapper.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),
+                                getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),
                                 locs: ParseRecordLocations(
                                     stream: new BinaryMemoryReadStream(stream.RemainingMemory),
                                     finalPos: stream.Length,

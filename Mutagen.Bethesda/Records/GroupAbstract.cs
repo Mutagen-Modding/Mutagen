@@ -76,12 +76,12 @@ namespace Mutagen.Bethesda
         {
             private readonly IReadOnlyDictionary<FormKey, int> _locs;
             private readonly ReadOnlyMemorySlice<byte> _data;
-            private readonly BinaryWrapperFactoryPackage _package;
+            private readonly BinaryOverlayFactoryPackage _package;
 
             public GroupMajorRecordCacheWrapper(
                 IReadOnlyDictionary<FormKey, int> locs,
                 ReadOnlyMemorySlice<byte> data,
-                BinaryWrapperFactoryPackage package)
+                BinaryOverlayFactoryPackage package)
             {
                 this._locs = locs;
                 this._data = data;
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda
                     }
                     slice = new MemorySlice<byte>(buf);
                 }
-                return LoquiBinaryWrapperTranslation<T>.Create(
+                return LoquiBinaryOverlayTranslation<T>.Create(
                    stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
                    package: _package,
                    recordTypeConverter: null);
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda
             public static GroupMajorRecordCacheWrapper<T> Factory(
                 IBinaryReadStream stream, 
                 ReadOnlyMemorySlice<byte> data,
-                BinaryWrapperFactoryPackage package, 
+                BinaryOverlayFactoryPackage package, 
                 int offset)
             {
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();

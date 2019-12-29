@@ -3723,8 +3723,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class RegionBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IRegionGetter
     {
         #region Common Routing
@@ -3790,7 +3790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
         public IFormIDSetLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormIDSetLink<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormIDSetLink<IWorldspaceGetter>.Empty;
         #endregion
-        public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRegionAreaGetter> Areas { get; private set; } = EmptySetList<RegionAreaBinaryOverlay>.Instance;
         #region RegionAreaLogic
         partial void RegionAreaLogicCustomParse(
             BinaryMemoryReadStream stream,
@@ -3801,22 +3801,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RegionBinaryWrapper(
+        protected RegionBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionBinaryWrapper RegionFactory(
+        public static RegionBinaryOverlay RegionFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new RegionBinaryWrapper(
+            var ret = new RegionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3867,11 +3867,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x494C5052: // RPLI
                 case 0x444C5052: // RPLD
                 {
-                    this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryWrapper>(
+                    this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: RegionArea_Registration.TriggeringRecordTypes,
-                        factory:  RegionAreaBinaryWrapper.RegionAreaFactory);
+                        factory:  RegionAreaBinaryOverlay.RegionAreaFactory);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
                 case 0x54414452: // RDAT

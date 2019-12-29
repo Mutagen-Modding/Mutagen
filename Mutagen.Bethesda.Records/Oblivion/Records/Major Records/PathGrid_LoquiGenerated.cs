@@ -2992,8 +2992,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PathGridBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class PathGridBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IPathGridGetter
     {
         #region Common Routing
@@ -3049,29 +3049,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             int? lastParsed);
         #endregion
-        public IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryWrapper>.Instance;
-        public IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryWrapper>.Instance;
+        public IReadOnlySetList<IInterCellPointGetter> InterCellConnections { get; private set; } = EmptySetList<InterCellPointBinaryOverlay>.Instance;
+        public IReadOnlySetList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = EmptySetList<PointToReferenceMappingBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected PathGridBinaryWrapper(
+        protected PathGridBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static PathGridBinaryWrapper PathGridFactory(
+        public static PathGridBinaryOverlay PathGridFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new PathGridBinaryWrapper(
+            var ret = new PathGridBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3119,21 +3119,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.InterCellConnections = BinaryWrapperSetList<InterCellPointBinaryWrapper>.FactoryByStartIndex(
+                    this.InterCellConnections = BinaryOverlaySetList<InterCellPointBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
-                        getter: (s, p) => InterCellPointBinaryWrapper.InterCellPointFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => InterCellPointBinaryOverlay.InterCellPointFactory(new BinaryMemoryReadStream(s), p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 }
                 case 0x4C524750: // PGRL
                 {
-                    this.PointToReferenceMappings = BinaryWrapperSetList<PointToReferenceMappingBinaryWrapper>.FactoryByArray(
+                    this.PointToReferenceMappings = BinaryOverlaySetList<PointToReferenceMappingBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => PointToReferenceMappingBinaryWrapper.PointToReferenceMappingFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => PointToReferenceMappingBinaryOverlay.PointToReferenceMappingFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

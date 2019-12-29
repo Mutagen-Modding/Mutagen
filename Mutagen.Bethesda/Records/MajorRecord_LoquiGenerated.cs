@@ -2577,8 +2577,8 @@ namespace Mutagen.Bethesda
 }
 namespace Mutagen.Bethesda.Internals
 {
-    public partial class MajorRecordBinaryWrapper :
-        BinaryWrapper,
+    public partial class MajorRecordBinaryOverlay :
+        BinaryOverlay,
         IMajorRecordGetter
     {
         #region Common Routing
@@ -2651,9 +2651,9 @@ namespace Mutagen.Bethesda.Internals
             int finalPos,
             int offset);
 
-        protected MajorRecordBinaryWrapper(
+        protected MajorRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

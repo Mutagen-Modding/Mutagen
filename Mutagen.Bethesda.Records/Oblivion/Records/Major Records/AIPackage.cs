@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class AIPackageBinaryWrapper
+        public partial class AIPackageBinaryOverlay
         {
             public bool GetFlagsIsSetCustom() => _PKDTLocation.HasValue;
             public AIPackage.Flag GetFlagsCustom()

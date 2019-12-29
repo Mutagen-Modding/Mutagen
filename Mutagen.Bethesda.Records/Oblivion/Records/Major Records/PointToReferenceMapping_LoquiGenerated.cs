@@ -2142,8 +2142,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class PointToReferenceMappingBinaryWrapper :
-        BinaryWrapper,
+    public partial class PointToReferenceMappingBinaryOverlay :
+        BinaryOverlay,
         IPointToReferenceMappingGetter
     {
         #region Common Routing
@@ -2200,27 +2200,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public IFormIDLinkGetter<IPlacedGetter> Reference => new FormIDLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public IReadOnlyList<Int16> Points => BinaryWrapperSetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        public IReadOnlyList<Int16> Points => BinaryOverlaySetList<Int16>.FactoryByStartIndex(_data.Slice(4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected PointToReferenceMappingBinaryWrapper(
+        protected PointToReferenceMappingBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static PointToReferenceMappingBinaryWrapper PointToReferenceMappingFactory(
+        public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new PointToReferenceMappingBinaryWrapper(
+            var ret = new PointToReferenceMappingBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

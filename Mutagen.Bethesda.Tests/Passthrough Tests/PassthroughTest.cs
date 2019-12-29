@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected abstract Task<IMod> ImportBinary(FilePath path);
-        protected abstract Task<IModGetter> ImportBinaryWrapper(FilePath path);
+        protected abstract Task<IModGetter> ImportBinaryOverlay(FilePath path);
         protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
         protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
         protected abstract Task<IMod> ImportCopyIn(FilePath file);
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Tests
                 var outputPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
                 var processedPath = ProcessedPath(tmp);
                 var orderedPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
-                var binaryWrapperPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryWrapper");
+                var binaryOverlayPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_BinaryOverlay");
                 var copyInPath = Path.Combine(tmp.Dir.Path, $"{this.Nickname}_CopyIn");
 
                 List<Exception> delayedExceptions = new List<Exception>();
@@ -196,19 +196,19 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
 
-                if (Settings.TestBinaryWrapper)
+                if (Settings.TestBinaryOverlay)
                 {
-                    var wrapper = await ImportBinaryWrapper(this.FilePath.Path);
+                    var wrapper = await ImportBinaryOverlay(this.FilePath.Path);
 
                     wrapper.WriteToBinary(
-                        binaryWrapperPath,
+                        binaryOverlayPath,
                         Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {
                         var ret = PassthroughTest.AssertFilesEqual(
                             stream,
-                            binaryWrapperPath,
+                            binaryOverlayPath,
                             amountToReport: 15);
                         if (ret.Exception != null)
                         {

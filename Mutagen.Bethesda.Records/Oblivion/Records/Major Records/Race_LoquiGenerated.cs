@@ -6518,8 +6518,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RaceBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class RaceBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IRaceGetter
     {
         #region Common Routing
@@ -6578,10 +6578,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
         public IReadOnlySetList<IFormIDLinkGetter<ISpellGetter>> Spells { get; private set; } = EmptySetList<IFormIDLinkGetter<ISpellGetter>>.Instance;
-        public IReadOnlySetList<IRaceRelationGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRaceRelationGetter> Relations { get; private set; } = EmptySetList<RaceRelationBinaryOverlay>.Instance;
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
-        public ReadOnlyMemorySlice<ISkillBoostGetter> SkillBoosts => BinaryWrapperArrayHelper.LoquiSliceFromFixedSize<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryWrapper.SkillBoostFactory);
+        public ReadOnlyMemorySlice<ISkillBoostGetter> SkillBoosts => BinaryOverlayArrayHelper.LoquiSliceFromFixedSize<ISkillBoostGetter>(_DATALocation.HasValue ? _data.Slice(_DATALocation.Value + 0) : default, amount: 7, length: 2, _package, null, SkillBoostBinaryOverlay.SkillBoostFactory);
         #region Fluff
         private int _FluffLocation => _DATALocation.Value + 0xE;
         private bool _Fluff_IsSet => _DATALocation.HasValue;
@@ -6615,13 +6615,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Voices
         private RangeInt32? _VoicesLocation;
         private bool _Voices_IsSet => _VoicesLocation.HasValue;
-        public IRaceVoicesGetter Voices => _Voices_IsSet ? RaceVoicesBinaryWrapper.RaceVoicesFactory(new BinaryMemoryReadStream(_data.Slice(_VoicesLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceVoicesGetter Voices => _Voices_IsSet ? RaceVoicesBinaryOverlay.RaceVoicesFactory(new BinaryMemoryReadStream(_data.Slice(_VoicesLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Voices_IsSet => _VoicesLocation.HasValue;
         #endregion
         #region DefaultHair
         private RangeInt32? _DefaultHairLocation;
         private bool _DefaultHair_IsSet => _DefaultHairLocation.HasValue;
-        public IRaceHairGetter DefaultHair => _DefaultHair_IsSet ? RaceHairBinaryWrapper.RaceHairFactory(new BinaryMemoryReadStream(_data.Slice(_DefaultHairLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceHairGetter DefaultHair => _DefaultHair_IsSet ? RaceHairBinaryOverlay.RaceHairFactory(new BinaryMemoryReadStream(_data.Slice(_DefaultHairLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool DefaultHair_IsSet => _DefaultHairLocation.HasValue;
         #endregion
         #region DefaultHairColor
@@ -6642,10 +6642,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region RaceStats
         private RangeInt32? _RaceStatsLocation;
         private bool _RaceStats_IsSet => _RaceStatsLocation.HasValue;
-        public IRaceStatsGenderedGetter RaceStats => _RaceStats_IsSet ? RaceStatsGenderedBinaryWrapper.RaceStatsGenderedFactory(new BinaryMemoryReadStream(_data.Slice(_RaceStatsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceStatsGenderedGetter RaceStats => _RaceStats_IsSet ? RaceStatsGenderedBinaryOverlay.RaceStatsGenderedFactory(new BinaryMemoryReadStream(_data.Slice(_RaceStatsLocation.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool RaceStats_IsSet => _RaceStatsLocation.HasValue;
         #endregion
-        public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryWrapper>.Instance;
+        public IReadOnlySetList<IFacePartGetter> FaceData { get; private set; } = EmptySetList<FacePartBinaryOverlay>.Instance;
         #region BodyData
         public IGenderedBodyDataGetter BodyData { get; private set; }
         public bool BodyData_IsSet => BodyData != null;
@@ -6666,22 +6666,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected RaceBinaryWrapper(
+        protected RaceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RaceBinaryWrapper RaceFactory(
+        public static RaceBinaryOverlay RaceFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new RaceBinaryWrapper(
+            var ret = new RaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -6723,7 +6723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C5053: // SPLO
                 {
-                    this.Spells = BinaryWrapperSetList<IFormIDLinkGetter<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlaySetList<IFormIDLinkGetter<ISpellGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormIDLink<ISpellGetter>(FormKey.Factory(p.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -6737,11 +6737,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E58: // XNAM
                 {
-                    this.Relations = BinaryWrapperSetList<RaceRelationBinaryWrapper>.FactoryByArray(
+                    this.Relations = BinaryOverlaySetList<RaceRelationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => RaceRelationBinaryWrapper.RaceRelationFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -6789,17 +6789,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x304D414E: // NAM0
                 {
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
-                    this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryWrapper>(
+                    this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: null,
                         trigger: FacePart_Registration.TriggeringRecordTypes,
-                        factory:  FacePartBinaryWrapper.FacePartFactory);
+                        factory:  FacePartBinaryOverlay.FacePartFactory);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 }
                 case 0x314D414E: // NAM1
                 {
                     stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
-                    this.BodyData = GenderedBodyDataBinaryWrapper.GenderedBodyDataFactory(
+                    this.BodyData = GenderedBodyDataBinaryOverlay.GenderedBodyDataFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);
@@ -6809,7 +6809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Hairs = BinaryWrapperSetList<IFormIDLinkGetter<IHairGetter>>.FactoryByStartIndex(
+                    this.Hairs = BinaryOverlaySetList<IFormIDLinkGetter<IHairGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -6821,7 +6821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Eyes = BinaryWrapperSetList<IFormIDLinkGetter<IEyeGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlaySetList<IFormIDLinkGetter<IEyeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -6833,7 +6833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41474746: // FGGA
                 case 0x53544746: // FGTS
                 {
-                    this.FaceGenData = FaceGenDataBinaryWrapper.FaceGenDataFactory(
+                    this.FaceGenData = FaceGenDataBinaryOverlay.FaceGenDataFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: null);

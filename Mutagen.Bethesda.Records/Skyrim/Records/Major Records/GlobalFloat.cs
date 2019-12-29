@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class GlobalFloatBinaryWrapper
+        public partial class GlobalFloatBinaryOverlay
         {
             public override char TypeChar => GlobalFloat.TRIGGER_CHAR;
             public override float RawFloat => this.Data;

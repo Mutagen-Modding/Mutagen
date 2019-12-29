@@ -2110,8 +2110,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RegionDataObjectsBinaryWrapper :
-        RegionDataBinaryWrapper,
+    public partial class RegionDataObjectsBinaryOverlay :
+        RegionDataBinaryOverlay,
         IRegionDataObjectsGetter
     {
         #region Common Routing
@@ -2159,27 +2159,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public IReadOnlySetList<IRegionDataObjectGetter> Objects { get; private set; } = EmptySetList<RegionDataObjectBinaryWrapper>.Instance;
+        public IReadOnlySetList<IRegionDataObjectGetter> Objects { get; private set; } = EmptySetList<RegionDataObjectBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected RegionDataObjectsBinaryWrapper(
+        protected RegionDataObjectsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RegionDataObjectsBinaryWrapper RegionDataObjectsFactory(
+        public static RegionDataObjectsBinaryOverlay RegionDataObjectsFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RegionDataObjectsBinaryWrapper(
+            var ret = new RegionDataObjectsBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2211,11 +2211,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = _package.Meta.ReadSubRecord(stream);
                     var subLen = subMeta.RecordLength;
-                    this.Objects = BinaryWrapperSetList<RegionDataObjectBinaryWrapper>.FactoryByStartIndex(
+                    this.Objects = BinaryOverlaySetList<RegionDataObjectBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 52,
-                        getter: (s, p) => RegionDataObjectBinaryWrapper.RegionDataObjectFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => RegionDataObjectBinaryOverlay.RegionDataObjectFactory(new BinaryMemoryReadStream(s), p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataObjects_FieldIndex.Objects);
                 }

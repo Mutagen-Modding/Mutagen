@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException($"{obj.Name} {field.Name} cannot have an optional field if it is not a record typed field.");
             }
             data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
-            data.BinaryWrapper = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryWrapper, default);
+            data.BinaryOverlay = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryOverlay, default);
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
             data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);

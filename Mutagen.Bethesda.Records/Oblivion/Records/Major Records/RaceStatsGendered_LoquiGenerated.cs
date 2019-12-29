@@ -2129,8 +2129,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class RaceStatsGenderedBinaryWrapper :
-        BinaryWrapper,
+    public partial class RaceStatsGenderedBinaryOverlay :
+        BinaryOverlay,
         IRaceStatsGenderedGetter
     {
         #region Common Routing
@@ -2185,28 +2185,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
         }
 
-        public IRaceStatsGetter Male => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package, default(RecordTypeConverter));
-        public IRaceStatsGetter Female => RaceStatsBinaryWrapper.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package, default(RecordTypeConverter));
+        public IRaceStatsGetter Male => RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(0)), _package, default(RecordTypeConverter));
+        public IRaceStatsGetter Female => RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected RaceStatsGenderedBinaryWrapper(
+        protected RaceStatsGenderedBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static RaceStatsGenderedBinaryWrapper RaceStatsGenderedFactory(
+        public static RaceStatsGenderedBinaryOverlay RaceStatsGenderedFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new RaceStatsGenderedBinaryWrapper(
+            var ret = new RaceStatsGenderedBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.SubRecord(stream.RemainingSpan).TotalLength));

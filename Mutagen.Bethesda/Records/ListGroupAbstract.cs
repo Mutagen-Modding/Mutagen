@@ -11,20 +11,20 @@ namespace Mutagen.Bethesda
 {
     public abstract class ListGroupAbstract
     {
-        public class GroupListWrapper<T> : IReadOnlyList<T>
+        public class GroupListOverlay<T> : IReadOnlyList<T>
         {
             private readonly IReadOnlyList<int> _locs;
             private readonly ReadOnlyMemorySlice<byte> _data;
-            private readonly BinaryWrapperFactoryPackage _package;
+            private readonly BinaryOverlayFactoryPackage _package;
 
             public int Count => _locs.Count;
 
             public T this[int index] => ConstructWrapper(_locs[index]);
 
-            public GroupListWrapper(
+            public GroupListOverlay(
                 IReadOnlyList<int> locs,
                 ReadOnlyMemorySlice<byte> data,
-                BinaryWrapperFactoryPackage package)
+                BinaryOverlayFactoryPackage package)
             {
                 this._locs = locs;
                 this._data = data;
@@ -52,16 +52,16 @@ namespace Mutagen.Bethesda
                     }
                     slice = new MemorySlice<byte>(buf);
                 }
-                return LoquiBinaryWrapperTranslation<T>.Create(
+                return LoquiBinaryOverlayTranslation<T>.Create(
                    stream: new BinaryMemoryReadStream(slice),
                    package: _package,
                    recordTypeConverter: null);
             }
 
-            public static GroupListWrapper<T> Factory(
+            public static GroupListOverlay<T> Factory(
                 IBinaryReadStream stream,
                 ReadOnlyMemorySlice<byte> data,
-                BinaryWrapperFactoryPackage package,
+                BinaryOverlayFactoryPackage package,
                 ObjectType objectType,
                 int offset)
             {
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda
                     stream.Position += checked((int)meta.TotalLength);
                 }
 
-                return new GroupListWrapper<T>(
+                return new GroupListOverlay<T>(
                     locations,
                     data,
                     package);

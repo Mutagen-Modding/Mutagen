@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Examples
     {
         public static void PrintContent(string pathToMod, Action<string> output)
         {
-            IOblivionModGetter mod = OblivionMod.CreateFromBinaryWrapper(pathToMod);
+            IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
             foreach (var name in mod.NPCs.Items.Items
                 .Select(npc => npc.Name)
                 .Distinct()

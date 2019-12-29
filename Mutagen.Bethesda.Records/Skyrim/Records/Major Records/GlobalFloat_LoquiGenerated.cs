@@ -2231,8 +2231,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GlobalFloatBinaryWrapper :
-        GlobalBinaryWrapper,
+    public partial class GlobalFloatBinaryOverlay :
+        GlobalBinaryOverlay,
         IGlobalFloatGetter
     {
         #region Common Routing
@@ -2289,22 +2289,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GlobalFloatBinaryWrapper(
+        protected GlobalFloatBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GlobalFloatBinaryWrapper GlobalFloatFactory(
+        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new GlobalFloatBinaryWrapper(
+            var ret = new GlobalFloatBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));

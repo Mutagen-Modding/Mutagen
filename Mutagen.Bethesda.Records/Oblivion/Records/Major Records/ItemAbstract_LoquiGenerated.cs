@@ -1854,8 +1854,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class ItemAbstractBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class ItemAbstractBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         IItemAbstractGetter
     {
         #region Common Routing
@@ -1908,9 +1908,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected ItemAbstractBinaryWrapper(
+        protected ItemAbstractBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)

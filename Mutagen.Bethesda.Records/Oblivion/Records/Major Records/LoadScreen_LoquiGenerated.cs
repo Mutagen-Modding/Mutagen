@@ -2600,8 +2600,8 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LoadScreenBinaryWrapper :
-        OblivionMajorRecordBinaryWrapper,
+    public partial class LoadScreenBinaryOverlay :
+        OblivionMajorRecordBinaryOverlay,
         ILoadScreenGetter
     {
         #region Common Routing
@@ -2659,28 +2659,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Description_IsSet => _DescriptionLocation.HasValue;
         public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _DescriptionLocation.Value, _package.Meta)) : default;
         #endregion
-        public IReadOnlySetList<ILoadScreenLocationGetter> Locations { get; private set; } = EmptySetList<LoadScreenLocationBinaryWrapper>.Instance;
+        public IReadOnlySetList<ILoadScreenLocationGetter> Locations { get; private set; } = EmptySetList<LoadScreenLocationBinaryOverlay>.Instance;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LoadScreenBinaryWrapper(
+        protected LoadScreenBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static LoadScreenBinaryWrapper LoadScreenFactory(
+        public static LoadScreenBinaryOverlay LoadScreenFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new LoadScreenBinaryWrapper(
+            var ret = new LoadScreenBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2722,11 +2722,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4C: // LNAM
                 {
-                    this.Locations = BinaryWrapperSetList<LoadScreenLocationBinaryWrapper>.FactoryByArray(
+                    this.Locations = BinaryOverlaySetList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: null,
-                        getter: (s, p, recConv) => LoadScreenLocationBinaryWrapper.LoadScreenLocationFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LoadScreenLocationBinaryOverlay.LoadScreenLocationFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

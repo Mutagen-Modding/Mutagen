@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class DialogTopicBinaryWrapper
+        public partial class DialogTopicBinaryOverlay
         {
             private ReadOnlyMemorySlice<byte>? _grupData;
 
@@ -112,10 +112,10 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.Meta.GroupConstants.HeaderLength);
-                this.Items = BinaryWrapperSetList<IDialogItemGetter>.FactoryByArray(
+                this.Items = BinaryOverlaySetList<IDialogItemGetter>.FactoryByArray(
                     contentSpan,
                     _package,
-                    getter: (s, p) => DialogItemBinaryWrapper.DialogItemFactory(new BinaryMemoryReadStream(s), p),
+                    getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new BinaryMemoryReadStream(s), p),
                     locs: ParseRecordLocations(
                         stream: new BinaryMemoryReadStream(contentSpan),
                         finalPos: contentSpan.Length,

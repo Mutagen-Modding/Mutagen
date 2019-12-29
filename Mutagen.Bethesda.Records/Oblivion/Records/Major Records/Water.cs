@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class WaterBinaryWrapper
+        public partial class WaterBinaryOverlay
         {
             partial void DATACustomParse(BinaryMemoryReadStream stream, int offset)
             {

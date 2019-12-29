@@ -2643,8 +2643,8 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class GroupBinaryWrapper<T> :
-        BinaryWrapper,
+    public partial class GroupBinaryOverlay<T> :
+        BinaryOverlay,
         IGroupGetter<T>
         where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -2717,21 +2717,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected GroupBinaryWrapper(
+        protected GroupBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
-            BinaryWrapperFactoryPackage package)
+            BinaryOverlayFactoryPackage package)
             : base(
                 bytes: bytes,
                 package: package)
         {
         }
 
-        public static GroupBinaryWrapper<T> GroupFactory(
+        public static GroupBinaryOverlay<T> GroupFactory(
             BinaryMemoryReadStream stream,
-            BinaryWrapperFactoryPackage package,
+            BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter = null)
         {
-            var ret = new GroupBinaryWrapper<T>(
+            var ret = new GroupBinaryOverlay<T>(
                 bytes: HeaderTranslation.ExtractGroupWrapperMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Group(stream.RemainingSpan).TotalLength));
