@@ -6,6 +6,7 @@
       <Bool name="TestFlattenedMod" />
       <Bool name="TestBenchmarks" />
       <Bool name="TestLocators" />
+      <Bool name="TestRecordEnumerables" />
       <RefDirect name="DataFolderLocations" refName="DataFolderLocations" />
       <RefDirect name="PassthroughSettings" refName="PassthroughSettings" />
       <RefList name="TargetGroups" refName="TargetGroup" />

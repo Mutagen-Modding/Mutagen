@@ -64,6 +64,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 Mutagen.Bethesda.Tests.Benchmarks.Benchmarks.Run();
             }
+            if (settings.TestRecordEnumerables)
+            {
+                yield return OtherTests.RecordEnumerations(settings, oblivPassthrough);
+            }
         }
     }
 }

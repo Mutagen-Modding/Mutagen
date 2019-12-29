@@ -95,5 +95,15 @@ namespace Mutagen.Bethesda.Tests
                 Assert.Equal(settings.ExpectedBaseGroupCount, grups.Length);
             }
         }
+
+        public static async Task RecordEnumerations(TestingSettings settings, Target target)
+        {
+            var mod = OblivionMod.CreateFromBinaryOverlay(
+                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path));
+            var set1 = new HashSet<FormKey>(mod.EnumerateMajorRecords().Select(m => m.FormKey));
+            var set2 = new HashSet<FormKey>(mod.EnumerateMajorRecords<IMajorRecordCommonGetter>().Select(m => m.FormKey));
+            Assert.Equal(set1.Count, set2.Count);
+            Assert.Equal(set1, set2);
+        }
     }
 }

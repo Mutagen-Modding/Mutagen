@@ -11,6 +11,7 @@
          <xs:element name="TestFlattenedMod" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestBenchmarks" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestLocators" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="TestRecordEnumerables" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="DataFolderLocations" type="DataFolderLocationsType" minOccurs="0" maxOccurs="1" />
          <xs:element name="PassthroughSettings" type="PassthroughSettingsType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TargetGroups" type="TargetGroupsType" minOccurs="0" maxOccurs="1" />
