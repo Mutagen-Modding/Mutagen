@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
         protected abstract ICache<T, FormKey> InternalItems { get; }
+        public IEnumerable<T> Records => InternalItems.Items;
 
         public IMod SourceMod { get; private set; }
 

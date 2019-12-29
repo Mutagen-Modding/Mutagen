@@ -8,18 +8,23 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public interface IGroupCommon<T>
-        where T : IMajorRecordCommon, IXmlItem, IBinaryItem
+    public interface IGroupCommon<out TMajor>
+        where TMajor : IMajorRecordCommonGetter, IXmlItem, IBinaryItem
     {
         IMod SourceMod { get; }
+
+        /// <summary>
+        /// A convenience accessor to iterate over all records in a group
+        /// </summary>
+        IEnumerable<TMajor> Records { get; }
     }
 
     public static class IGroupCommonExt
     {
-        public static T AddNew<T>(this IGroupCommon<T> group)
-            where T : IMajorRecordCommon, IXmlItem, IBinaryItem, IEquatable<T>
+        public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group)
+            where TMajor : IMajorRecordCommon, IXmlItem, IBinaryItem, IEquatable<TMajor>
         {
-            return MajorRecordInstantiator<T>.Activator(group.SourceMod.GetNextFormKey());
+            return MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
         }
     }
 }

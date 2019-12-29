@@ -25,6 +25,11 @@ namespace Mutagen.Bethesda.Skyrim
         protected override ICache<T, FormKey> InternalItems => this.Items;
     }
 
+    public partial interface IGroupGetter<out T> : IGroupCommon<T>
+        where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+    {
+    }
+
     public static class GroupExt
     {
         public static async Task CreateFromXmlFolder<T>(
@@ -85,6 +90,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             private GroupMajorRecordCacheWrapper<T> _Items;
             public IReadOnlyCache<T, FormKey> Items => _Items;
+            public IMod SourceMod => throw new NotImplementedException();
+            public IEnumerable<T> Records => Items.Items;
 
             partial void CustomCtor(
                 IBinaryReadStream stream,
