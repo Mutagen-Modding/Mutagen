@@ -7,25 +7,72 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// An interface for retriving records given a FormKey.
+    /// </summary>
+    /// <typeparam name="TMod">Modtype records are being retrieved from</typeparam>
     public interface ILinkingPackage<TMod>
         where TMod : IModGetter
     {
+        /// <summary>
+        /// Mod object the linking package is relative to, if any.
+        /// </summary>
         TMod SourceMod { get; }
+
+        /// <summary>
+        /// ModList object the linking package is relative to, if any.
+        /// </summary>
         ModList<TMod> ModList { get; }
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// 
+        /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+        /// processed, rather than being able to scope the search to a specific area.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <returns>True if a matching record was found</returns>
         bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec);
+
+        /// <summary>
+        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// 
+        /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+        /// the function will return false.
+        /// </summary>
+        /// <param name="formKey">FormKey to look for</param>
+        /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <returns>True if a matching record was found</returns>
         bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter;
     }
 
+    /// <summary>
+    /// A class that facilitates retrieval of records relative to a mod or modlist, and caches results.
+    /// If attached to a mod, links will point to the record as it exists in that mod.
+    /// If attached to a modlist, links will point to the record as it exists in the last mod that contained it.
+    /// 
+    /// If a mod or modlist is modified after being attached to a LinkingPackage, the behavior is undefined.
+    /// </summary>
+    /// <typeparam name="TMod">Modtype records are being retrieved from</typeparam>
     public class LinkingPackage<TMod> : ILinkingPackage<TMod>
         where TMod : IModGetter
     {
+        /// <summary>
+        /// Mod object the linking package is relative to, if any.
+        /// </summary>
         public TMod SourceMod { get; private set; }
+
+        /// <summary>
+        /// ModList object the linking package is relative to, if any.
+        /// </summary>
+        public ModList<TMod> ModList { get; }
+
         private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> _sourceModUntypedMajorRecords;
-        private Dictionary<Type, object> _sourceModMajorRecords = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _sourceModMajorRecords = new Dictionary<Type, object>();
         private readonly IReadOnlyCache<IMajorRecordCommonGetter, FormKey>[] _modListUntypedMajorRecords;
         private readonly Dictionary<Type, object>[] _modListMajorRecords;
-        public ModList<TMod> ModList { get; }
 
         public LinkingPackage(TMod sourceMod, ModList<TMod> modList)
         {
