@@ -2453,6 +2453,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
                 case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "ISkyrimMajorRecordGetter":
+                case "SkyrimMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item as TMajor;
@@ -2462,63 +2465,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<IGameSettingGetter>())
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    foreach (var item in obj.Keywords.EnumerateMajorRecords<IKeywordGetter>())
+                    foreach (var item in obj.Keywords.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords<ILocationReferenceTypeGetter>())
+                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    foreach (var item in obj.Actions.EnumerateMajorRecords<IActionRecordGetter>())
+                    foreach (var item in obj.Actions.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords<ITextureSetGetter>())
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords<IGlobalGetter>())
+                    foreach (var item in obj.Globals.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords<IClassGetter>())
+                    foreach (var item in obj.Classes.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 default:

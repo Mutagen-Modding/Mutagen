@@ -1440,13 +1440,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
                 case "MajorRecord":
+                case "ISkyrimMajorRecord":
+                case "ISkyrimMajorRecordGetter":
+                case "SkyrimMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item as TMajor;
                     }
                     yield break;
                 default:
-                    throw new ArgumentException();
+                    if(typeof(T).IsAssignableFrom(typeof(TMajor)))
+                    {
+                        foreach (var item in obj.RecordCache.Items)
+                        {
+                            yield return item as TMajor;
+                        }
+                    }
+                    yield break;
             }
         }
         

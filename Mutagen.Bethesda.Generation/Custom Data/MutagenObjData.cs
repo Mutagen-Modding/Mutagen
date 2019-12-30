@@ -23,7 +23,17 @@ namespace Mutagen.Bethesda.Generation
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
-        public GameMode GameMode => (GameMode)ObjGen.CustomData[Mutagen.Bethesda.Generation.Constants.GameMode];
+        public GameMode? GameMode
+        {
+            get
+            {
+                if (Enum.TryParse<Bethesda.GameMode>(ObjGen.Namespace.Split('.').Last(), out var mode))
+                {
+                    return mode;
+                }
+                return null;
+            }
+        }
 
         public MutagenObjData(ObjectGeneration objGen)
         {

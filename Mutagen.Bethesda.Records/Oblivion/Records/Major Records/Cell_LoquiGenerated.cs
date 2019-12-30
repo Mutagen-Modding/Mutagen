@@ -2824,6 +2824,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
                 case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "IOblivionMajorRecordGetter":
+                case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item as TMajor;

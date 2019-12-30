@@ -7562,6 +7562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
                 case "MajorRecord":
+                case "IOblivionMajorRecord":
+                case "IOblivionMajorRecordGetter":
+                case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
                         yield return item as TMajor;
@@ -7571,503 +7574,503 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<IGameSettingGetter>())
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords<IGlobalGetter>())
+                    foreach (var item in obj.Globals.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords<IClassGetter>())
+                    foreach (var item in obj.Classes.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords<IFactionGetter>())
+                    foreach (var item in obj.Factions.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords<IHairGetter>())
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Eye":
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords<IEyeGetter>())
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords<IRaceGetter>())
+                    foreach (var item in obj.Races.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    foreach (var item in obj.Sounds.EnumerateMajorRecords<ISoundGetter>())
+                    foreach (var item in obj.Sounds.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "SkillRecord":
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    foreach (var item in obj.Skills.EnumerateMajorRecords<ISkillRecordGetter>())
+                    foreach (var item in obj.Skills.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords<IMagicEffectGetter>())
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Script":
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    foreach (var item in obj.Scripts.EnumerateMajorRecords<IScriptGetter>())
+                    foreach (var item in obj.Scripts.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LandTexture":
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    foreach (var item in obj.LandTextures.EnumerateMajorRecords<ILandTextureGetter>())
+                    foreach (var item in obj.LandTextures.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Enchantment":
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    foreach (var item in obj.Enchantments.EnumerateMajorRecords<IEnchantmentGetter>())
+                    foreach (var item in obj.Enchantments.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "SpellUnleveled":
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords<ISpellUnleveledGetter>())
+                    foreach (var item in obj.Spells.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Birthsign":
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    foreach (var item in obj.Birthsigns.EnumerateMajorRecords<IBirthsignGetter>())
+                    foreach (var item in obj.Birthsigns.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords<IActivatorGetter>())
+                    foreach (var item in obj.Activators.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords<IAlchemicalApparatusGetter>())
+                    foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords<IArmorGetter>())
+                    foreach (var item in obj.Armors.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords<IBookGetter>())
+                    foreach (var item in obj.Books.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Clothing":
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    foreach (var item in obj.Clothes.EnumerateMajorRecords<IClothingGetter>())
+                    foreach (var item in obj.Clothes.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords<IContainerGetter>())
+                    foreach (var item in obj.Containers.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords<IDoorGetter>())
+                    foreach (var item in obj.Doors.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords<IIngredientGetter>())
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords<ILightGetter>())
+                    foreach (var item in obj.Lights.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Miscellaneous":
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    foreach (var item in obj.Miscellaneous.EnumerateMajorRecords<IMiscellaneousGetter>())
+                    foreach (var item in obj.Miscellaneous.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords<IStaticGetter>())
+                    foreach (var item in obj.Statics.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords<IGrassGetter>())
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords<ITreeGetter>())
+                    foreach (var item in obj.Trees.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Flora.EnumerateMajorRecords<IFloraGetter>())
+                    foreach (var item in obj.Flora.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Furnature":
                 case "IFurnatureGetter":
                 case "IFurnature":
                 case "IFurnatureInternal":
-                    foreach (var item in obj.Furnature.EnumerateMajorRecords<IFurnatureGetter>())
+                    foreach (var item in obj.Furnature.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords<IWeaponGetter>())
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Ammo":
                 case "IAmmoGetter":
                 case "IAmmo":
                 case "IAmmoInternal":
-                    foreach (var item in obj.Ammo.EnumerateMajorRecords<IAmmoGetter>())
+                    foreach (var item in obj.Ammo.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "NPC":
                 case "INPCGetter":
                 case "INPC":
                 case "INPCInternal":
-                    foreach (var item in obj.NPCs.EnumerateMajorRecords<INPCGetter>())
+                    foreach (var item in obj.NPCs.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Creature":
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    foreach (var item in obj.Creatures.EnumerateMajorRecords<ICreatureGetter>())
+                    foreach (var item in obj.Creatures.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LeveledCreature":
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords<ILeveledCreatureGetter>())
+                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords<ISoulGemGetter>())
+                    foreach (var item in obj.SoulGems.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords<IKeyGetter>())
+                    foreach (var item in obj.Keys.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Potion":
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    foreach (var item in obj.Potions.EnumerateMajorRecords<IPotionGetter>())
+                    foreach (var item in obj.Potions.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Subspace":
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    foreach (var item in obj.Subspaces.EnumerateMajorRecords<ISubspaceGetter>())
+                    foreach (var item in obj.Subspaces.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "SigilStone":
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    foreach (var item in obj.SigilStones.EnumerateMajorRecords<ISigilStoneGetter>())
+                    foreach (var item in obj.SigilStones.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords<ILeveledItemGetter>())
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords<IWeatherGetter>())
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords<IClimateGetter>())
+                    foreach (var item in obj.Climates.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords<IRegionGetter>())
+                    foreach (var item in obj.Regions.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords<ICellBlockGetter>())
+                    foreach (var item in obj.Cells.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Worldspace":
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords<IWorldspaceGetter>())
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords<IDialogTopicGetter>())
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords<IQuestGetter>())
+                    foreach (var item in obj.Quests.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords<IIdleAnimationGetter>())
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "AIPackage":
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    foreach (var item in obj.AIPackages.EnumerateMajorRecords<IAIPackageGetter>())
+                    foreach (var item in obj.AIPackages.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords<ICombatStyleGetter>())
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords<ILoadScreenGetter>())
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords<ILeveledSpellGetter>())
+                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords<IAnimatedObjectGetter>())
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords<IWaterGetter>())
+                    foreach (var item in obj.Waters.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords<IEffectShaderGetter>())
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords<TMajor>())
                     {
-                        yield return item as TMajor;
+                        yield return item;
                     }
                     yield break;
                 default:

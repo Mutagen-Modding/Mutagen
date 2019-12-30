@@ -432,6 +432,13 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
                         fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
                         fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
+                        var gameMode = obj.GetObjectData().GameMode;
+                        if (gameMode != null)
+                        {
+                            fg.AppendLine($"case \"I{gameMode}MajorRecord\":");
+                            fg.AppendLine($"case \"I{gameMode}MajorRecordGetter\":");
+                            fg.AppendLine($"case \"{gameMode}MajorRecord\":");
+                        }
                         using (new DepthWrapper(fg))
                         {
                             fg.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
@@ -467,10 +474,10 @@ namespace Mutagen.Bethesda.Generation
                                 var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                                 {
-                                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords<{loqui.GetGroupTarget().Interface(getter: true, internalInterface: true)}>())");
+                                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords<TMajor>())");
                                     using (new BraceWrapper(fieldGen))
                                     {
-                                        fieldGen.AppendLine("yield return item as TMajor;");
+                                        fieldGen.AppendLine("yield return item;");
                                     }
                                     continue;
                                 }
@@ -514,15 +521,22 @@ namespace Mutagen.Bethesda.Generation
                             else if (field is ContainerType cont)
                             {
                                 if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
-                                fieldGen = generationDict.TryCreateValue(contLoqui);
-                                // ToDo
-                                // Add generics implementation
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen.AppendLine("throw new NotImplementedException();");
+                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen.AppendLine($"if(typeof({contLoqui.GenericDef.Name}).IsAssignableFrom(typeof(TMajor)))");
+                                    using (new BraceWrapper(fieldGen))
+                                    {
+                                        fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
+                                        using (new BraceWrapper(fieldGen))
+                                        {
+                                            fieldGen.AppendLine($"yield return item as TMajor;");
+                                        }
+                                    }
                                 }
                                 else
                                 {
+                                    fieldGen = generationDict.TryCreateValue(contLoqui);
                                     targetLoqui = contLoqui;
                                     var isMajorRecord = contLoqui.TargetObjectGeneration != null && await contLoqui.TargetObjectGeneration.IsMajorRecord();
                                     if (isMajorRecord
@@ -555,15 +569,22 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (dict.Mode != DictMode.KeyedValue) continue;
                                 if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
-                                fieldGen = generationDict.TryCreateValue(dictLoqui);
-                                // ToDo
-                                // Add generics implementation
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    fieldGen.AppendLine("throw new NotImplementedException();");
+                                    fieldGen = generationDict.TryCreateValue("default:");
+                                    fieldGen.AppendLine($"if(typeof({dictLoqui.GenericDef.Name}).IsAssignableFrom(typeof(TMajor)))");
+                                    using (new BraceWrapper(fieldGen))
+                                    {
+                                        fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");
+                                        using (new BraceWrapper(fieldGen))
+                                        {
+                                            fieldGen.AppendLine($"yield return item as TMajor;");
+                                        }
+                                    }
                                 }
                                 else
                                 {
+                                    fieldGen = generationDict.TryCreateValue(dictLoqui);
                                     targetLoqui = dictLoqui;
                                     var isMajorRecord = dictLoqui.TargetObjectGeneration != null && await dictLoqui.TargetObjectGeneration.IsMajorRecord();
                                     if (isMajorRecord
@@ -603,23 +624,27 @@ namespace Mutagen.Bethesda.Generation
                             switch (kv.Key)
                             {
                                 case LoquiType loqui:
-                                    // ToDo
-                                    // Add implementation for generics?
-                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic) continue;
-
-                                    if (loqui.TargetObjectGeneration != null)
+                                    if (loqui.RefType == LoquiType.LoquiRefType.Generic)
                                     {
-                                        fg.AppendLine($"case \"{loqui.TargetObjectGeneration}\":");
+                                        // Handled in default case
+                                        continue;
                                     }
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
-                                    fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
-                                    if (loqui.HasInternalGetInterface)
+                                    else
                                     {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
-                                    }
-                                    if (loqui.HasInternalSetInterface)
-                                    {
-                                        fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                        if (loqui.TargetObjectGeneration != null)
+                                        {
+                                            fg.AppendLine($"case \"{loqui.TargetObjectGeneration}\":");
+                                        }
+                                        fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
+                                        fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
+                                        if (loqui.HasInternalGetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: true, internalInterface: true)}\":");
+                                        }
+                                        if (loqui.HasInternalSetInterface)
+                                        {
+                                            fg.AppendLine($"case \"{loqui.Interface(getter: false, internalInterface: true)}\":");
+                                        }
                                     }
                                     break;
                                 case ObjectGeneration targetObj:
@@ -635,6 +660,12 @@ namespace Mutagen.Bethesda.Generation
                                         fg.AppendLine($"case \"{targetObj.Interface(getter: false, internalInterface: true)}\":");
                                     }
                                     break;
+                                case string str:
+                                    if (str != "default:")
+                                    {
+                                        throw new NotImplementedException();
+                                    }
+                                    continue;
                                 default:
                                     throw new NotImplementedException();
                             }
@@ -648,7 +679,15 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("default:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("throw new ArgumentException();");
+                            if (generationDict.TryGetValue("default:", out var gen))
+                            {
+                                fg.AppendLines(gen);
+                                fg.AppendLine("yield break;");
+                            }
+                            else
+                            {
+                                fg.AppendLine("throw new ArgumentException();");
+                            }
                         }
                     }
                 }
