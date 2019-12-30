@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda
         public string Name { get; private set; }
         public bool Master { get; private set; }
         public string FileName => this.ToString();
-        private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>();
+        private static Dictionary<string, ModKey[]> cache_ = new Dictionary<string, ModKey[]>(StringComparer.OrdinalIgnoreCase);
         private readonly int _hash;
 
         /// </summary>
@@ -75,37 +75,37 @@ namespace Mutagen.Bethesda
         {
             if (string.IsNullOrWhiteSpace(str))
             {
-                modKey = default(ModKey);
+                modKey = default;
                 return false;
             }
             var index = str.LastIndexOf('.');
             if (index == -1
                 || index != str.Length - 4)
             {
-                modKey = default(ModKey);
+                modKey = default;
                 return false;
             }
             var modString = str.Substring(0, index);
-            var endString = str.Substring(index + 1);
+            var endString = str.AsSpan(index + 1);
             bool master;
-            switch (endString.ToLower())
+            if (endString.Equals("esm".AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
-                case "esm":
-                    master = true;
-                    break;
-                case "esp":
-                    master = false;
-                    break;
-                default:
-                    modKey = default(ModKey);
-                    return false;
+                master = true;
             }
-            var upper = modString.ToUpper();
+            else if (endString.Equals("esp".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                master = false;
+            }
+            else
+            {
+                modKey = default;
+                return false;
+            }
             var keyIndex = master ? 0 : 1;
             ModKey[] keyItem;
             lock (cache_)
             {
-                if (cache_.TryGetValue(upper, out keyItem))
+                if (cache_.TryGetValue(modString, out keyItem))
                 {
                     modKey = keyItem[keyIndex];
                     if (modKey != NULL)
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda
                 {
                     keyItem = new ModKey[2];
                     keyItem[master ? 1 : 0] = NULL;
-                    cache_[upper] = keyItem;
+                    cache_[modString] = keyItem;
                 }
             }
             modKey = new ModKey(
