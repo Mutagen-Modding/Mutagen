@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Flora_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Flora_FieldIndex.Name] = value;
         }
-        bool IFloraGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFloraGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IFloraGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Flora_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Flora_FieldIndex.Model] = value;
         }
-        bool IFloraGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFloraGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -108,20 +111,21 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IFloraGetter.Model => this.Model;
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IFloraGetter.Script => this.Script;
         #endregion
         #region Ingredient
-        protected IFormIDSetLink<Ingredient> _Ingredient = new FormIDSetLink<Ingredient>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Ingredient> _Ingredient = new FormIDSetLink<Ingredient>();
         public IFormIDSetLink<Ingredient> Ingredient => this._Ingredient;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IIngredientGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion
         #region Spring
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Spring;
         public Byte Spring
         {
@@ -134,6 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Summer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Summer;
         public Byte Summer
         {
@@ -146,6 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fall
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Fall;
         public Byte Fall
         {
@@ -158,6 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Winter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Winter;
         public Byte Winter
         {
@@ -203,6 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -385,6 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FloraCommon.Instance.GetLinks(this);
         public Flora(FormKey formKey)
         {
@@ -400,6 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3218,6 +3228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFloraGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => FloraCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FloraXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3232,6 +3243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FloraBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

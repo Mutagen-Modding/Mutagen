@@ -102,7 +102,9 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => PassthroughSettingsXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -258,6 +260,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {

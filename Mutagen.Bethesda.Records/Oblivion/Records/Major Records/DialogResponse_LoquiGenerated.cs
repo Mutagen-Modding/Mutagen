@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Emotion
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EmotionType _Emotion;
         public EmotionType Emotion
         {
@@ -62,6 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EmotionValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Int32 _EmotionValue;
         public Int32 EmotionValue
         {
@@ -74,15 +76,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Fluff1 = new byte[4];
         public Byte[] Fluff1
         {
             get => _Fluff1;
             set => this._Fluff1 = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff1 => this.Fluff1;
         #endregion
         #region ResponseNumber
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _ResponseNumber;
         public Byte ResponseNumber
         {
@@ -95,12 +100,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Fluff2 = new byte[3];
         public Byte[] Fluff2
         {
             get => _Fluff2;
             set => this._Fluff2 = value ?? new byte[3];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IDialogResponseGetter.Fluff2 => this.Fluff2;
         #endregion
         #region ResponseText
@@ -109,14 +116,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText];
             set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ResponseText] = value;
         }
-        bool IDialogResponseGetter.ResponseText_IsSet => ResponseText_IsSet;
-        private String _ResponseText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDialogResponseGetter.ResponseText_IsSet => ResponseText_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ResponseText;
         public String ResponseText
         {
             get => this._ResponseText;
             set => ResponseText_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IDialogResponseGetter.ResponseText => this.ResponseText;
         public void ResponseText_Set(
             String value,
@@ -136,14 +145,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes];
             set => _hasBeenSetTracker[(int)DialogResponse_FieldIndex.ActorNotes] = value;
         }
-        bool IDialogResponseGetter.ActorNotes_IsSet => ActorNotes_IsSet;
-        private String _ActorNotes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDialogResponseGetter.ActorNotes_IsSet => ActorNotes_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ActorNotes;
         public String ActorNotes
         {
             get => this._ActorNotes;
             set => ActorNotes_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IDialogResponseGetter.ActorNotes => this.ActorNotes;
         public void ActorNotes_Set(
             String value,
@@ -191,7 +202,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => DialogResponseXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -347,6 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -377,7 +391,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2888,7 +2904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponseGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => DialogResponseXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2903,7 +2921,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

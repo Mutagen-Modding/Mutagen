@@ -50,13 +50,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        protected IFormIDLink<LandTexture> _Texture = new FormIDLink<LandTexture>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<LandTexture> _Texture = new FormIDLink<LandTexture>();
         public IFormIDLink<LandTexture> Texture => this._Texture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<ILandTextureGetter> IBaseLayerGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AlphaLayer.QuadrantEnum _Quadrant;
         public AlphaLayer.QuadrantEnum Quadrant
         {
@@ -69,6 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region LayerNumber
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _LayerNumber;
         public UInt16 LayerNumber
         {
@@ -79,6 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._LayerNumber = value;
             }
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16 IBaseLayerInternal.LayerNumber
         {
             get => this.LayerNumber;
@@ -119,7 +122,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -275,6 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected virtual bool GetHasBeenSet(int index)
         {
@@ -296,11 +302,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2373,7 +2382,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2388,7 +2399,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

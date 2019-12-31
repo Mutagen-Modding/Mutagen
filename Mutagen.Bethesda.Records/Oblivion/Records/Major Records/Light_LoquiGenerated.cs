@@ -60,9 +60,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Light_FieldIndex.Model] = value;
         }
-        bool ILightGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILightGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -83,8 +84,8 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter ILightGetter.Model => this.Model;
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> ILightGetter.Script => this.Script;
@@ -95,14 +96,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Light_FieldIndex.Name] = value;
         }
-        bool ILightGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILightGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ILightGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -122,14 +125,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Light_FieldIndex.Icon] = value;
         }
-        bool ILightGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILightGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ILightGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -145,6 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Time
         public readonly static Int32 _Time_Default = -1;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Int32 _Time;
         public Int32 Time
         {
@@ -157,6 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Radius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Radius;
         public UInt32 Radius
         {
@@ -169,6 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _Color;
         public Color Color
         {
@@ -181,6 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Light.LightFlag _Flags;
         public Light.LightFlag Flags
         {
@@ -194,6 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FalloffExponent
         public readonly static Single _FalloffExponent_Default = 1;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FalloffExponent;
         public Single FalloffExponent
         {
@@ -207,6 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FOV
         public readonly static Single _FOV_Default = 90;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FOV;
         public Single FOV
         {
@@ -219,6 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Value;
         public UInt32 Value
         {
@@ -232,6 +244,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Weight;
         public Single Weight
         {
@@ -250,14 +263,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Light_FieldIndex.Fade];
             set => _hasBeenSetTracker[(int)Light_FieldIndex.Fade] = value;
         }
-        bool ILightGetter.Fade_IsSet => Fade_IsSet;
-        private Single _Fade;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILightGetter.Fade_IsSet => Fade_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Fade;
         public Single Fade
         {
             get => this._Fade;
             set => Fade_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single ILightGetter.Fade => this.Fade;
         public void Fade_Set(
             Single value,
@@ -272,8 +287,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Sound
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
@@ -312,6 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LightXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -501,6 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             Has = 1,
             Break0 = 2
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LightCommon.Instance.GetLinks(this);
         public Light(FormKey formKey)
         {
@@ -516,6 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4172,6 +4190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILightGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => LightCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LightXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4186,6 +4205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

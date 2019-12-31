@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Furnature_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Furnature_FieldIndex.Name] = value;
         }
-        bool IFurnatureGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFurnatureGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IFurnatureGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Furnature_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Furnature_FieldIndex.Model] = value;
         }
-        bool IFurnatureGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFurnatureGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -108,8 +111,8 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IFurnatureGetter.Model => this.Model;
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IFurnatureGetter.Script => this.Script;
@@ -122,8 +125,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFurnatureGetter.MarkerFlags_IsSet => MarkerFlags_IsSet;
-        protected Byte[] _MarkerFlags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _MarkerFlags;
         public Byte[] MarkerFlags
         {
             get => this._MarkerFlags;
@@ -174,6 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -345,6 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Furnature_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FurnatureCommon.Instance.GetLinks(this);
         public Furnature(FormKey formKey)
         {
@@ -360,6 +365,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FurnatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2688,6 +2694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnatureGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => FurnatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FurnatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2702,6 +2709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FurnatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

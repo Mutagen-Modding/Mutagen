@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType];
             set => _hasBeenSetTracker[(int)CreatureSound_FieldIndex.SoundType] = value;
         }
-        bool ICreatureSoundGetter.SoundType_IsSet => SoundType_IsSet;
-        private CreatureSound.CreatureSoundType _SoundType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureSoundGetter.SoundType_IsSet => SoundType_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CreatureSound.CreatureSoundType _SoundType;
         public CreatureSound.CreatureSoundType SoundType
         {
             get => this._SoundType;
             set => SoundType_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         CreatureSound.CreatureSoundType ICreatureSoundGetter.SoundType => this.SoundType;
         public void SoundType_Set(
             CreatureSound.CreatureSoundType value,
@@ -121,7 +123,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => CreatureSoundXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -277,6 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -292,11 +297,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => CreatureSoundCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureSoundBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2328,7 +2336,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureSoundGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => CreatureSoundCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => CreatureSoundXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2343,7 +2353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureSoundBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

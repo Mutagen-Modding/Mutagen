@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture];
             set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.FillTexture] = value;
         }
-        bool IEffectShaderGetter.FillTexture_IsSet => FillTexture_IsSet;
-        private String _FillTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IEffectShaderGetter.FillTexture_IsSet => FillTexture_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _FillTexture;
         public String FillTexture
         {
             get => this._FillTexture;
             set => FillTexture_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IEffectShaderGetter.FillTexture => this.FillTexture;
         public void FillTexture_Set(
             String value,
@@ -86,14 +88,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture];
             set => _hasBeenSetTracker[(int)EffectShader_FieldIndex.ParticleShaderTexture] = value;
         }
-        bool IEffectShaderGetter.ParticleShaderTexture_IsSet => ParticleShaderTexture_IsSet;
-        private String _ParticleShaderTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IEffectShaderGetter.ParticleShaderTexture_IsSet => ParticleShaderTexture_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ParticleShaderTexture;
         public String ParticleShaderTexture
         {
             get => this._ParticleShaderTexture;
             set => ParticleShaderTexture_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
         public void ParticleShaderTexture_Set(
             String value,
@@ -108,6 +112,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.Flag _Flags;
         public EffectShader.Flag Flags
         {
@@ -120,6 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MembraneShaderSourceBlendMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.SourceBlendMode _MembraneShaderSourceBlendMode;
         public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode
         {
@@ -132,6 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MembraneShaderBlendOperation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.BlendOperation _MembraneShaderBlendOperation;
         public EffectShader.BlendOperation MembraneShaderBlendOperation
         {
@@ -144,6 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MembraneShaderZTestFunction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.ZTestFunction _MembraneShaderZTestFunction;
         public EffectShader.ZTestFunction MembraneShaderZTestFunction
         {
@@ -156,6 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _FillTextureEffectColor;
         public Color FillTextureEffectColor
         {
@@ -168,6 +177,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectAlphaFadeInTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectAlphaFadeInTime;
         public Single FillTextureEffectAlphaFadeInTime
         {
@@ -180,6 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectFullAlphaTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectFullAlphaTime;
         public Single FillTextureEffectFullAlphaTime
         {
@@ -192,6 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectAlphaFadeOutTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectAlphaFadeOutTime;
         public Single FillTextureEffectAlphaFadeOutTime
         {
@@ -204,6 +216,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectPersistentAlphaRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectPersistentAlphaRatio;
         public Single FillTextureEffectPersistentAlphaRatio
         {
@@ -216,6 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectAlphaPulseAmplitude
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectAlphaPulseAmplitude;
         public Single FillTextureEffectAlphaPulseAmplitude
         {
@@ -228,6 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectAlphaPulseFrequency
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectAlphaPulseFrequency;
         public Single FillTextureEffectAlphaPulseFrequency
         {
@@ -240,6 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectTextureAnimationSpeedU
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectTextureAnimationSpeedU;
         public Single FillTextureEffectTextureAnimationSpeedU
         {
@@ -252,6 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectTextureAnimationSpeedV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectTextureAnimationSpeedV;
         public Single FillTextureEffectTextureAnimationSpeedV
         {
@@ -264,6 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectFallOff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectFallOff;
         public Single EdgeEffectFallOff
         {
@@ -276,6 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _EdgeEffectColor;
         public Color EdgeEffectColor
         {
@@ -288,6 +307,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectAlphaFadeInTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectAlphaFadeInTime;
         public Single EdgeEffectAlphaFadeInTime
         {
@@ -300,6 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectFullAlphaTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectFullAlphaTime;
         public Single EdgeEffectFullAlphaTime
         {
@@ -312,6 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectAlphaFadeOutTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectAlphaFadeOutTime;
         public Single EdgeEffectAlphaFadeOutTime
         {
@@ -324,6 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectPersistentAlphaRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectPersistentAlphaRatio;
         public Single EdgeEffectPersistentAlphaRatio
         {
@@ -336,6 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectAlphaPulseAmplitude;
         public Single EdgeEffectAlphaPulseAmplitude
         {
@@ -348,6 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectAlphaPulseFrequency
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectAlphaPulseFrequency;
         public Single EdgeEffectAlphaPulseFrequency
         {
@@ -360,6 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FillTextureEffectFullAlphaRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FillTextureEffectFullAlphaRatio;
         public Single FillTextureEffectFullAlphaRatio
         {
@@ -372,6 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EdgeEffectFullAlphaRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _EdgeEffectFullAlphaRatio;
         public Single EdgeEffectFullAlphaRatio
         {
@@ -384,6 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MembraneShaderDestBlendMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.SourceBlendMode _MembraneShaderDestBlendMode;
         public EffectShader.SourceBlendMode MembraneShaderDestBlendMode
         {
@@ -396,6 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderSourceBlendMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.SourceBlendMode _ParticleShaderSourceBlendMode;
         public EffectShader.SourceBlendMode ParticleShaderSourceBlendMode
         {
@@ -409,6 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderBlendOperation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.BlendOperation _ParticleShaderBlendOperation;
         public EffectShader.BlendOperation ParticleShaderBlendOperation
         {
@@ -422,6 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderZTestFunction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.ZTestFunction _ParticleShaderZTestFunction;
         public EffectShader.ZTestFunction ParticleShaderZTestFunction
         {
@@ -435,6 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderDestBlendMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EffectShader.SourceBlendMode _ParticleShaderDestBlendMode;
         public EffectShader.SourceBlendMode ParticleShaderDestBlendMode
         {
@@ -448,6 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderParticleBirthRampUpTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderParticleBirthRampUpTime;
         public Single ParticleShaderParticleBirthRampUpTime
         {
@@ -461,6 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderFullParticleBirthTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderFullParticleBirthTime;
         public Single ParticleShaderFullParticleBirthTime
         {
@@ -474,6 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderParticleBirthRampDownTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderParticleBirthRampDownTime;
         public Single ParticleShaderParticleBirthRampDownTime
         {
@@ -487,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderFullParticleBirthRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderFullParticleBirthRatio;
         public Single ParticleShaderFullParticleBirthRatio
         {
@@ -500,6 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderPersistentParticleBirthRatio
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderPersistentParticleBirthRatio;
         public Single ParticleShaderPersistentParticleBirthRatio
         {
@@ -513,6 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderParticleLifetime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderParticleLifetime;
         public Single ParticleShaderParticleLifetime
         {
@@ -526,6 +564,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderParticleLifetimePlusMinus
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderParticleLifetimePlusMinus;
         public Single ParticleShaderParticleLifetimePlusMinus
         {
@@ -539,6 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderInitialSpeedAlongNormal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderInitialSpeedAlongNormal;
         public Single ParticleShaderInitialSpeedAlongNormal
         {
@@ -552,6 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderAccelerationAlongNormal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderAccelerationAlongNormal;
         public Single ParticleShaderAccelerationAlongNormal
         {
@@ -565,6 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderInitialVelocity1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderInitialVelocity1;
         public Single ParticleShaderInitialVelocity1
         {
@@ -578,6 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderInitialVelocity2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderInitialVelocity2;
         public Single ParticleShaderInitialVelocity2
         {
@@ -591,6 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderInitialVelocity3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderInitialVelocity3;
         public Single ParticleShaderInitialVelocity3
         {
@@ -604,6 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderAcceleration1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderAcceleration1;
         public Single ParticleShaderAcceleration1
         {
@@ -617,6 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderAcceleration2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderAcceleration2;
         public Single ParticleShaderAcceleration2
         {
@@ -630,6 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderAcceleration3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderAcceleration3;
         public Single ParticleShaderAcceleration3
         {
@@ -643,6 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderScaleKey1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderScaleKey1;
         public Single ParticleShaderScaleKey1
         {
@@ -656,6 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderScaleKey2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderScaleKey2;
         public Single ParticleShaderScaleKey2
         {
@@ -669,6 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderScaleKey1Time
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderScaleKey1Time;
         public Single ParticleShaderScaleKey1Time
         {
@@ -682,6 +732,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ParticleShaderScaleKey2Time
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ParticleShaderScaleKey2Time;
         public Single ParticleShaderScaleKey2Time
         {
@@ -695,6 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey1Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _ColorKey1Color;
         public Color ColorKey1Color
         {
@@ -708,6 +760,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey2Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _ColorKey2Color;
         public Color ColorKey2Color
         {
@@ -721,6 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey3Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _ColorKey3Color;
         public Color ColorKey3Color
         {
@@ -734,6 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey1ColorAlpha
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey1ColorAlpha;
         public Single ColorKey1ColorAlpha
         {
@@ -747,6 +802,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey2ColorAlpha
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey2ColorAlpha;
         public Single ColorKey2ColorAlpha
         {
@@ -760,6 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey3ColorAlpha
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey3ColorAlpha;
         public Single ColorKey3ColorAlpha
         {
@@ -773,6 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey1ColorKeyTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey1ColorKeyTime;
         public Single ColorKey1ColorKeyTime
         {
@@ -786,6 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey2ColorKeyTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey2ColorKeyTime;
         public Single ColorKey2ColorKeyTime
         {
@@ -799,6 +858,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorKey3ColorKeyTime
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorKey3ColorKeyTime;
         public Single ColorKey3ColorKeyTime
         {
@@ -845,6 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1092,6 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -9085,6 +9147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEffectShaderGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => EffectShaderXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -9099,6 +9162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

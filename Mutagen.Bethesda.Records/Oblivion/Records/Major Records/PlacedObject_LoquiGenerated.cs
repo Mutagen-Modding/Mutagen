@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        protected IFormIDSetLink<OblivionMajorRecord> _Base = new FormIDSetLink<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<OblivionMajorRecord> _Base = new FormIDSetLink<OblivionMajorRecord>();
         public IFormIDSetLink<OblivionMajorRecord> Base => this._Base;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IPlacedObjectGetter.XPCIFluff_IsSet => XPCIFluff_IsSet;
-        protected Byte[] _XPCIFluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _XPCIFluff;
         public Byte[] XPCIFluff
         {
             get => this._XPCIFluff;
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IPlacedObjectGetter.FULLFluff_IsSet => FULLFluff_IsSet;
-        protected Byte[] _FULLFluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _FULLFluff;
         public Byte[] FULLFluff
         {
             get => this._FULLFluff;
@@ -122,9 +122,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.TeleportDestination] = value;
         }
-        bool IPlacedObjectGetter.TeleportDestination_IsSet => TeleportDestination_IsSet;
-        private TeleportDestination _TeleportDestination;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.TeleportDestination_IsSet => TeleportDestination_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private TeleportDestination _TeleportDestination;
         public TeleportDestination TeleportDestination
         {
             get => _TeleportDestination;
@@ -150,9 +151,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Lock] = value;
         }
-        bool IPlacedObjectGetter.Lock_IsSet => Lock_IsSet;
-        private LockInformation _Lock;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.Lock_IsSet => Lock_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LockInformation _Lock;
         public LockInformation Lock
         {
             get => _Lock;
@@ -173,8 +175,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILockInformationGetter IPlacedObjectGetter.Lock => this.Lock;
         #endregion
         #region Owner
-        protected IFormIDSetLink<IOwner> _Owner = new FormIDSetLink<IOwner>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<IOwner> _Owner = new FormIDSetLink<IOwner>();
         public IFormIDSetLink<IOwner> Owner => this._Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IOwner> IPlacedObjectGetter.Owner => this.Owner;
@@ -185,14 +187,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.FactionRank] = value;
         }
-        bool IPlacedObjectGetter.FactionRank_IsSet => FactionRank_IsSet;
-        private Int32 _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.FactionRank_IsSet => FactionRank_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FactionRank;
         public Int32 FactionRank
         {
             get => this._FactionRank;
             set => FactionRank_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IPlacedObjectGetter.FactionRank => this.FactionRank;
         public void FactionRank_Set(
             Int32 value,
@@ -207,8 +211,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GlobalVariable
-        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         public IFormIDSetLink<Global> GlobalVariable => this._GlobalVariable;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IGlobalGetter> IPlacedObjectGetter.GlobalVariable => this.GlobalVariable;
@@ -219,9 +223,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.EnableParent] = value;
         }
-        bool IPlacedObjectGetter.EnableParent_IsSet => EnableParent_IsSet;
-        private EnableParent _EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.EnableParent_IsSet => EnableParent_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EnableParent _EnableParent;
         public EnableParent EnableParent
         {
             get => _EnableParent;
@@ -242,8 +247,8 @@ namespace Mutagen.Bethesda.Oblivion
         IEnableParentGetter IPlacedObjectGetter.EnableParent => this.EnableParent;
         #endregion
         #region Target
-        protected IFormIDSetLink<IPlaced> _Target = new FormIDSetLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<IPlaced> _Target = new FormIDSetLink<IPlaced>();
         public IFormIDSetLink<IPlaced> Target => this._Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IPlacedGetter> IPlacedObjectGetter.Target => this.Target;
@@ -254,14 +259,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.SpeedTreeSeed] = value;
         }
-        bool IPlacedObjectGetter.SpeedTreeSeed_IsSet => SpeedTreeSeed_IsSet;
-        private Byte _SpeedTreeSeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.SpeedTreeSeed_IsSet => SpeedTreeSeed_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _SpeedTreeSeed;
         public Byte SpeedTreeSeed
         {
             get => this._SpeedTreeSeed;
             set => SpeedTreeSeed_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte IPlacedObjectGetter.SpeedTreeSeed => this.SpeedTreeSeed;
         public void SpeedTreeSeed_Set(
             Byte value,
@@ -281,9 +288,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.DistantLODData] = value;
         }
-        bool IPlacedObjectGetter.DistantLODData_IsSet => DistantLODData_IsSet;
-        private DistantLODData _DistantLODData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.DistantLODData_IsSet => DistantLODData_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DistantLODData _DistantLODData;
         public DistantLODData DistantLODData
         {
             get => _DistantLODData;
@@ -309,14 +317,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Charge] = value;
         }
-        bool IPlacedObjectGetter.Charge_IsSet => Charge_IsSet;
-        private Single _Charge;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.Charge_IsSet => Charge_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Charge;
         public Single Charge
         {
             get => this._Charge;
             set => Charge_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IPlacedObjectGetter.Charge => this.Charge;
         public void Charge_Set(
             Single value,
@@ -336,14 +346,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Health] = value;
         }
-        bool IPlacedObjectGetter.Health_IsSet => Health_IsSet;
-        private Int32 _Health;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.Health_IsSet => Health_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Health;
         public Int32 Health
         {
             get => this._Health;
             set => Health_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IPlacedObjectGetter.Health => this.Health;
         public void Health_Set(
             Int32 value,
@@ -363,14 +375,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.LevelModifier] = value;
         }
-        bool IPlacedObjectGetter.LevelModifier_IsSet => LevelModifier_IsSet;
-        private Int32 _LevelModifier;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.LevelModifier_IsSet => LevelModifier_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _LevelModifier;
         public Int32 LevelModifier
         {
             get => this._LevelModifier;
             set => LevelModifier_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IPlacedObjectGetter.LevelModifier => this.LevelModifier;
         public void LevelModifier_Set(
             Int32 value,
@@ -385,8 +399,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Unknown
-        protected IFormIDSetLink<OblivionMajorRecord> _Unknown = new FormIDSetLink<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<OblivionMajorRecord> _Unknown = new FormIDSetLink<OblivionMajorRecord>();
         public IFormIDSetLink<OblivionMajorRecord> Unknown => this._Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IOblivionMajorRecordGetter> IPlacedObjectGetter.Unknown => this.Unknown;
@@ -397,14 +411,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.ActionFlags] = value;
         }
-        bool IPlacedObjectGetter.ActionFlags_IsSet => ActionFlags_IsSet;
-        private PlacedObject.ActionFlag _ActionFlags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.ActionFlags_IsSet => ActionFlags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PlacedObject.ActionFlag _ActionFlags;
         public PlacedObject.ActionFlag ActionFlags
         {
             get => this._ActionFlags;
             set => ActionFlags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         PlacedObject.ActionFlag IPlacedObjectGetter.ActionFlags => this.ActionFlags;
         public void ActionFlags_Set(
             PlacedObject.ActionFlag value,
@@ -424,14 +440,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Count] = value;
         }
-        bool IPlacedObjectGetter.Count_IsSet => Count_IsSet;
-        private Int32 _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.Count_IsSet => Count_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Count;
         public Int32 Count
         {
             get => this._Count;
             set => Count_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IPlacedObjectGetter.Count => this.Count;
         public void Count_Set(
             Int32 value,
@@ -451,9 +469,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.MapMarker] = value;
         }
-        bool IPlacedObjectGetter.MapMarker_IsSet => MapMarker_IsSet;
-        private MapMarker _MapMarker;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.MapMarker_IsSet => MapMarker_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MapMarker _MapMarker;
         public MapMarker MapMarker
         {
             get => _MapMarker;
@@ -484,8 +503,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IPlacedObjectGetter.RagdollData_IsSet => RagdollData_IsSet;
-        protected Byte[] _RagdollData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _RagdollData;
         public Byte[] RagdollData
         {
             get => this._RagdollData;
@@ -511,14 +530,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale];
             set => _hasBeenSetTracker[(int)PlacedObject_FieldIndex.Scale] = value;
         }
-        bool IPlacedObjectGetter.Scale_IsSet => Scale_IsSet;
-        private Single _Scale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedObjectGetter.Scale_IsSet => Scale_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Scale;
         public Single Scale
         {
             get => this._Scale;
             set => Scale_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IPlacedObjectGetter.Scale => this.Scale;
         public void Scale_Set(
             Single value,
@@ -533,13 +554,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ContainedSoul
-        protected IFormIDSetLink<SoulGem> _ContainedSoul = new FormIDSetLink<SoulGem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<SoulGem> _ContainedSoul = new FormIDSetLink<SoulGem>();
         public IFormIDSetLink<SoulGem> ContainedSoul => this._ContainedSoul;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoulGemGetter> IPlacedObjectGetter.ContainedSoul => this.ContainedSoul;
         #endregion
         #region Position
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private P3Float _Position;
         public P3Float Position
         {
@@ -552,6 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Rotation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private P3Float _Rotation;
         public P3Float Rotation
         {
@@ -597,6 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -796,6 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
         public PlacedObject(FormKey formKey)
         {
@@ -811,6 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -6353,6 +6379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -6367,6 +6394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
@@ -62,14 +62,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance];
             set => _hasBeenSetTracker[(int)SoundItem_FieldIndex.Chance] = value;
         }
-        bool ISoundItemGetter.Chance_IsSet => Chance_IsSet;
-        private Byte _Chance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoundItemGetter.Chance_IsSet => Chance_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Chance;
         public Byte Chance
         {
             get => this._Chance;
             set => Chance_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ISoundItemGetter.Chance => this.Chance;
         public void Chance_Set(
             Byte value,
@@ -114,7 +116,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -270,6 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -284,11 +289,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => SoundItemCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2168,7 +2176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundItemGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => SoundItemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => SoundItemXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2183,7 +2193,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundItemBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

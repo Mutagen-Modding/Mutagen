@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Name] = value;
         }
-        bool IWeaponGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeaponGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWeaponGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Model] = value;
         }
-        bool IWeaponGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeaponGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -113,14 +116,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Weapon_FieldIndex.Icon] = value;
         }
-        bool IWeaponGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeaponGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWeaponGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -135,15 +140,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IWeaponGetter.Script => this.Script;
         #endregion
         #region Enchantment
-        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
         public IFormIDSetLink<Enchantment> Enchantment => this._Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IEnchantmentGetter> IWeaponGetter.Enchantment => this.Enchantment;
@@ -154,14 +159,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weapon_FieldIndex.EnchantmentPoints];
             set => _hasBeenSetTracker[(int)Weapon_FieldIndex.EnchantmentPoints] = value;
         }
-        bool IWeaponGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
-        private UInt16 _EnchantmentPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeaponGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _EnchantmentPoints;
         public UInt16 EnchantmentPoints
         {
             get => this._EnchantmentPoints;
             set => EnchantmentPoints_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16 IWeaponGetter.EnchantmentPoints => this.EnchantmentPoints;
         public void EnchantmentPoints_Set(
             UInt16 value,
@@ -176,6 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Weapon.WeaponType _Type;
         public Weapon.WeaponType Type
         {
@@ -188,6 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Speed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Speed;
         public Single Speed
         {
@@ -200,6 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Reach
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Reach;
         public Single Reach
         {
@@ -212,6 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Weapon.WeaponFlag _Flags;
         public Weapon.WeaponFlag Flags
         {
@@ -224,6 +235,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Value;
         public UInt32 Value
         {
@@ -236,6 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Health;
         public UInt32 Health
         {
@@ -248,6 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Weight;
         public Single Weight
         {
@@ -260,6 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Damage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _Damage;
         public UInt16 Damage
         {
@@ -305,6 +320,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -493,6 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WeaponCommon.Instance.GetLinks(this);
         public Weapon(FormKey formKey)
         {
@@ -508,6 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4137,6 +4155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => WeaponCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WeaponXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4151,6 +4170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

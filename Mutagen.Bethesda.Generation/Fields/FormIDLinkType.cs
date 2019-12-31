@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"protected {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"protected {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
             fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} => this._{ this.Name};");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");

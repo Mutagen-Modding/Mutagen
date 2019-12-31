@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Potion_FieldIndex.Name] = value;
         }
-        bool IPotionGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPotionGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IPotionGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,9 +89,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Potion_FieldIndex.Model] = value;
         }
-        bool IPotionGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPotionGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -115,14 +118,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Potion_FieldIndex.Icon] = value;
         }
-        bool IPotionGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPotionGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IPotionGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -137,8 +142,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IPotionGetter.Script => this.Script;
@@ -149,14 +154,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Potion_FieldIndex.Weight];
             set => _hasBeenSetTracker[(int)Potion_FieldIndex.Weight] = value;
         }
-        bool IPotionGetter.Weight_IsSet => Weight_IsSet;
-        private Single _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPotionGetter.Weight_IsSet => Weight_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Weight;
         public Single Weight
         {
             get => this._Weight;
             set => Weight_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IPotionGetter.Weight => this.Weight;
         public void Weight_Set(
             Single value,
@@ -171,6 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Value;
         public UInt32 Value
         {
@@ -183,6 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IngredientFlag _Flags;
         public IngredientFlag Flags
         {
@@ -240,6 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PotionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -423,6 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => PotionCommon.Instance.GetLinks(this);
         public Potion(FormKey formKey)
         {
@@ -438,6 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PotionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3611,6 +3623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPotionGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => PotionCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PotionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3625,6 +3638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PotionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

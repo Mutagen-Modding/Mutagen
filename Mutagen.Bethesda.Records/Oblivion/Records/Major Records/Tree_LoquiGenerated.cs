@@ -59,9 +59,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Tree_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Tree_FieldIndex.Model] = value;
         }
-        bool ITreeGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITreeGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -87,14 +88,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Tree_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Tree_FieldIndex.Icon] = value;
         }
-        bool ITreeGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITreeGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITreeGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -121,6 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LeafCurvature
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _LeafCurvature;
         public Single LeafCurvature
         {
@@ -133,6 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MinimumLeafAngle
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _MinimumLeafAngle;
         public Single MinimumLeafAngle
         {
@@ -145,6 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MaximumLeafAngle
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _MaximumLeafAngle;
         public Single MaximumLeafAngle
         {
@@ -157,6 +163,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BranchDimmingValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BranchDimmingValue;
         public Single BranchDimmingValue
         {
@@ -169,6 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region LeafDimmingValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _LeafDimmingValue;
         public Single LeafDimmingValue
         {
@@ -181,6 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ShadowRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Int32 _ShadowRadius;
         public Int32 ShadowRadius
         {
@@ -193,6 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RockingSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RockingSpeed;
         public Single RockingSpeed
         {
@@ -205,6 +215,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RustleSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RustleSpeed;
         public Single RustleSpeed
         {
@@ -217,6 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BillboardWidth
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BillboardWidth;
         public Single BillboardWidth
         {
@@ -229,6 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BillboardHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BillboardHeight;
         public Single BillboardHeight
         {
@@ -277,6 +290,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -485,6 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4031,6 +4046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITreeGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => TreeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4045,6 +4061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

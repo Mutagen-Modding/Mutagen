@@ -57,9 +57,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Grass_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Grass_FieldIndex.Model] = value;
         }
-        bool IGrassGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IGrassGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -80,6 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IGrassGetter.Model => this.Model;
         #endregion
         #region Density
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Density;
         public Byte Density
         {
@@ -92,6 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MinSlope
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MinSlope;
         public Byte MinSlope
         {
@@ -104,6 +107,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MaxSlope
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MaxSlope;
         public Byte MaxSlope
         {
@@ -116,6 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Fluff1;
         public Byte Fluff1
         {
@@ -128,6 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UnitFromWaterAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _UnitFromWaterAmount;
         public UInt16 UnitFromWaterAmount
         {
@@ -140,6 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fluff2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _Fluff2;
         public UInt16 Fluff2
         {
@@ -152,6 +159,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UnitFromWaterMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Grass.UnitFromWaterType _UnitFromWaterMode;
         public Grass.UnitFromWaterType UnitFromWaterMode
         {
@@ -164,6 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PositionRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _PositionRange;
         public Single PositionRange
         {
@@ -176,6 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HeightRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HeightRange;
         public Single HeightRange
         {
@@ -188,6 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ColorRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ColorRange;
         public Single ColorRange
         {
@@ -200,6 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region WavePeriod
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _WavePeriod;
         public Single WavePeriod
         {
@@ -212,6 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Grass.GrassFlag _Flags;
         public Grass.GrassFlag Flags
         {
@@ -257,6 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -458,6 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3661,6 +3676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3675,6 +3691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Object
-        protected IFormIDLink<OblivionMajorRecord> _Object = new FormIDLink<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<OblivionMajorRecord> _Object = new FormIDLink<OblivionMajorRecord>();
         public IFormIDLink<OblivionMajorRecord> Object => this._Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IOblivionMajorRecordGetter> IRegionDataObjectGetter.Object => this.Object;
@@ -60,12 +60,14 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt16 ParentIndex { get; set; }
         #endregion
         #region Unknown1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Unknown1 = new byte[2];
         public Byte[] Unknown1
         {
             get => _Unknown1;
             set => this._Unknown1 = value ?? new byte[2];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Density
@@ -108,12 +110,14 @@ namespace Mutagen.Bethesda.Oblivion
         public P3UInt16 AngleVariance { get; set; }
         #endregion
         #region Unknown2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Unknown2 = new byte[6];
         public Byte[] Unknown2
         {
             get => _Unknown2;
             set => this._Unknown2 = value ?? new byte[6];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IRegionDataObjectGetter.Unknown2 => this.Unknown2;
         #endregion
 
@@ -147,7 +151,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -303,6 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -332,11 +339,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionDataObjectBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3608,7 +3618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3623,7 +3635,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionDataObjectBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ScriptFields _Fields_Object = new ScriptFields();
         public ScriptFields Fields => _Fields_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IScriptFieldsGetter IScriptGetter.Fields => _Fields_Object;
         #endregion
 
@@ -88,6 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -256,6 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Script_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ScriptCommon.Instance.GetLinks(this);
         public Script(FormKey formKey)
         {
@@ -271,6 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2133,6 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => ScriptCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ScriptXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2147,6 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

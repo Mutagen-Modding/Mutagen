@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda
             get => _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize];
             set => _hasBeenSetTracker[(int)MasterReference_FieldIndex.FileSize] = value;
         }
-        bool IMasterReferenceGetter.FileSize_IsSet => FileSize_IsSet;
-        private UInt64 _FileSize;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMasterReferenceGetter.FileSize_IsSet => FileSize_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt64 _FileSize;
         public UInt64 FileSize
         {
             get => this._FileSize;
             set => FileSize_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt64 IMasterReferenceGetter.FileSize => this.FileSize;
         public void FileSize_Set(
             UInt64 value,
@@ -109,7 +111,9 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -265,6 +269,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -284,7 +289,9 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2124,7 +2131,9 @@ namespace Mutagen.Bethesda.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMasterReferenceGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MasterReferenceXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2139,7 +2148,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MasterReferenceBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -50,15 +50,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        protected IFormIDLink<Race> _Male = new FormIDLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<Race> _Male = new FormIDLink<Race>();
         public IFormIDLink<Race> Male => this._Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Male => this.Male;
         #endregion
         #region Female
-        protected IFormIDLink<Race> _Female = new FormIDLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<Race> _Female = new FormIDLink<Race>();
         public IFormIDLink<Race> Female => this._Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IRaceGetter> IRaceVoicesGetter.Female => this.Female;
@@ -94,7 +94,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -250,6 +252,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -265,11 +268,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RaceVoices_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => RaceVoicesCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2058,7 +2064,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceVoicesGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => RaceVoicesCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RaceVoicesXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2073,7 +2081,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceVoicesBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

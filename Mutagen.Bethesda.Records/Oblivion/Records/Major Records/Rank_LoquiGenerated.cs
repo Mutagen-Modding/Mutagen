@@ -55,14 +55,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber];
             set => _hasBeenSetTracker[(int)Rank_FieldIndex.RankNumber] = value;
         }
-        bool IRankGetter.RankNumber_IsSet => RankNumber_IsSet;
-        private Int32 _RankNumber;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRankGetter.RankNumber_IsSet => RankNumber_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _RankNumber;
         public Int32 RankNumber
         {
             get => this._RankNumber;
             set => RankNumber_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IRankGetter.RankNumber => this.RankNumber;
         public void RankNumber_Set(
             Int32 value,
@@ -82,14 +84,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName];
             set => _hasBeenSetTracker[(int)Rank_FieldIndex.MaleName] = value;
         }
-        bool IRankGetter.MaleName_IsSet => MaleName_IsSet;
-        private String _MaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRankGetter.MaleName_IsSet => MaleName_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _MaleName;
         public String MaleName
         {
             get => this._MaleName;
             set => MaleName_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRankGetter.MaleName => this.MaleName;
         public void MaleName_Set(
             String value,
@@ -109,14 +113,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName];
             set => _hasBeenSetTracker[(int)Rank_FieldIndex.FemaleName] = value;
         }
-        bool IRankGetter.FemaleName_IsSet => FemaleName_IsSet;
-        private String _FemaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRankGetter.FemaleName_IsSet => FemaleName_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _FemaleName;
         public String FemaleName
         {
             get => this._FemaleName;
             set => FemaleName_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRankGetter.FemaleName => this.FemaleName;
         public void FemaleName_Set(
             String value,
@@ -136,14 +142,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia];
             set => _hasBeenSetTracker[(int)Rank_FieldIndex.Insignia] = value;
         }
-        bool IRankGetter.Insignia_IsSet => Insignia_IsSet;
-        private String _Insignia;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRankGetter.Insignia_IsSet => Insignia_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Insignia;
         public String Insignia
         {
             get => this._Insignia;
             set => Insignia_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRankGetter.Insignia => this.Insignia;
         public void Insignia_Set(
             String value,
@@ -188,7 +196,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -344,6 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -360,7 +371,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2551,7 +2564,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRankGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RankXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2566,7 +2581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Texture];
             set => _hasBeenSetTracker[(int)Water_FieldIndex.Texture] = value;
         }
-        bool IWaterGetter.Texture_IsSet => Texture_IsSet;
-        private String _Texture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWaterGetter.Texture_IsSet => Texture_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Texture;
         public String Texture
         {
             get => this._Texture;
             set => Texture_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWaterGetter.Texture => this.Texture;
         public void Texture_Set(
             String value,
@@ -86,14 +88,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity];
             set => _hasBeenSetTracker[(int)Water_FieldIndex.Opacity] = value;
         }
-        bool IWaterGetter.Opacity_IsSet => Opacity_IsSet;
-        private Byte _Opacity;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWaterGetter.Opacity_IsSet => Opacity_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _Opacity;
         public Byte Opacity
         {
             get => this._Opacity;
             set => Opacity_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte IWaterGetter.Opacity => this.Opacity;
         public void Opacity_Set(
             Byte value,
@@ -113,14 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Water_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Water_FieldIndex.Flags] = value;
         }
-        bool IWaterGetter.Flags_IsSet => Flags_IsSet;
-        private Water.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWaterGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Water.Flag _Flags;
         public Water.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Water.Flag IWaterGetter.Flags => this.Flags;
         public void Flags_Set(
             Water.Flag value,
@@ -140,14 +146,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID];
             set => _hasBeenSetTracker[(int)Water_FieldIndex.MaterialID] = value;
         }
-        bool IWaterGetter.MaterialID_IsSet => MaterialID_IsSet;
-        private String _MaterialID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWaterGetter.MaterialID_IsSet => MaterialID_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _MaterialID;
         public String MaterialID
         {
             get => this._MaterialID;
             set => MaterialID_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWaterGetter.MaterialID => this.MaterialID;
         public void MaterialID_Set(
             String value,
@@ -162,13 +170,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Sound
-        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _Sound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion
         #region WindVelocity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _WindVelocity;
         public Single WindVelocity
         {
@@ -182,6 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region WindDirection
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _WindDirection;
         public Single WindDirection
         {
@@ -195,6 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region WaveAmplitude
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _WaveAmplitude;
         public Single WaveAmplitude
         {
@@ -208,6 +219,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region WaveFrequency
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _WaveFrequency;
         public Single WaveFrequency
         {
@@ -221,6 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunPower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _SunPower;
         public Single SunPower
         {
@@ -234,6 +247,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ReflectivityAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ReflectivityAmount;
         public Single ReflectivityAmount
         {
@@ -247,6 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FresnelAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FresnelAmount;
         public Single FresnelAmount
         {
@@ -260,6 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ScrollXSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ScrollXSpeed;
         public Single ScrollXSpeed
         {
@@ -273,6 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ScrollYSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ScrollYSpeed;
         public Single ScrollYSpeed
         {
@@ -286,6 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FogDistanceNearPlane
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceNearPlane;
         public Single FogDistanceNearPlane
         {
@@ -299,6 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FogDistanceFarPlane
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDistanceFarPlane;
         public Single FogDistanceFarPlane
         {
@@ -313,6 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ShallowColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _ShallowColor;
         public Color ShallowColor
         {
@@ -327,6 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DeepColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _DeepColor;
         public Color DeepColor
         {
@@ -341,6 +362,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ReflectionColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _ReflectionColor;
         public Color ReflectionColor
         {
@@ -355,6 +377,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region TextureBlend
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _TextureBlend;
         public Byte TextureBlend
         {
@@ -369,6 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RainSimulatorForce
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RainSimulatorForce;
         public Single RainSimulatorForce
         {
@@ -384,6 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RainSimulatorVelocity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RainSimulatorVelocity;
         public Single RainSimulatorVelocity
         {
@@ -399,6 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RainSimulatorFalloff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RainSimulatorFalloff;
         public Single RainSimulatorFalloff
         {
@@ -414,6 +440,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RainSimulatorDampner
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RainSimulatorDampner;
         public Single RainSimulatorDampner
         {
@@ -429,6 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RainSimulatorStartingSize
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RainSimulatorStartingSize;
         public Single RainSimulatorStartingSize
         {
@@ -444,6 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DisplacementSimulatorForce
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DisplacementSimulatorForce;
         public Single DisplacementSimulatorForce
         {
@@ -459,6 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DisplacementSimulatorVelocity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DisplacementSimulatorVelocity;
         public Single DisplacementSimulatorVelocity
         {
@@ -475,6 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DisplacementSimulatorFalloff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DisplacementSimulatorFalloff;
         public Single DisplacementSimulatorFalloff
         {
@@ -491,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DisplacementSimulatorDampner
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DisplacementSimulatorDampner;
         public Single DisplacementSimulatorDampner
         {
@@ -507,6 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DisplacementSimulatorStartingSize
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DisplacementSimulatorStartingSize;
         public Single DisplacementSimulatorStartingSize
         {
@@ -523,6 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Damage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _Damage;
         public UInt16 Damage
         {
@@ -544,9 +578,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters];
             set => _hasBeenSetTracker[(int)Water_FieldIndex.RelatedWaters] = value;
         }
-        bool IWaterGetter.RelatedWaters_IsSet => RelatedWaters_IsSet;
-        private RelatedWaters _RelatedWaters;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWaterGetter.RelatedWaters_IsSet => RelatedWaters_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RelatedWaters _RelatedWaters;
         public RelatedWaters RelatedWaters
         {
             get => _RelatedWaters;
@@ -600,6 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -810,6 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             Break2 = 8,
             Break3 = 16
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WaterCommon.Instance.GetLinks(this);
         public Water(FormKey formKey)
         {
@@ -825,6 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -6514,6 +6552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => WaterCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -6528,6 +6567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

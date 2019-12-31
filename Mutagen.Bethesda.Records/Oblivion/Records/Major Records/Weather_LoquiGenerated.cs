@@ -61,14 +61,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer];
             set => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureLowerLayer] = value;
         }
-        bool IWeatherGetter.TextureLowerLayer_IsSet => TextureLowerLayer_IsSet;
-        private String _TextureLowerLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeatherGetter.TextureLowerLayer_IsSet => TextureLowerLayer_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _TextureLowerLayer;
         public String TextureLowerLayer
         {
             get => this._TextureLowerLayer;
             set => TextureLowerLayer_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWeatherGetter.TextureLowerLayer => this.TextureLowerLayer;
         public void TextureLowerLayer_Set(
             String value,
@@ -88,14 +90,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer];
             set => _hasBeenSetTracker[(int)Weather_FieldIndex.TextureUpperLayer] = value;
         }
-        bool IWeatherGetter.TextureUpperLayer_IsSet => TextureUpperLayer_IsSet;
-        private String _TextureUpperLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeatherGetter.TextureUpperLayer_IsSet => TextureUpperLayer_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _TextureUpperLayer;
         public String TextureUpperLayer
         {
             get => this._TextureUpperLayer;
             set => TextureUpperLayer_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWeatherGetter.TextureUpperLayer => this.TextureUpperLayer;
         public void TextureUpperLayer_Set(
             String value,
@@ -115,9 +119,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Weather_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Weather_FieldIndex.Model] = value;
         }
-        bool IWeatherGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWeatherGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -150,6 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FogDayNear
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDayNear;
         public Single FogDayNear
         {
@@ -162,6 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FogDayFar
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogDayFar;
         public Single FogDayFar
         {
@@ -174,6 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FogNightNear
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogNightNear;
         public Single FogNightNear
         {
@@ -186,6 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FogNightFar
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FogNightFar;
         public Single FogNightFar
         {
@@ -198,6 +207,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrEyeAdaptSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrEyeAdaptSpeed;
         public Single HdrEyeAdaptSpeed
         {
@@ -210,6 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrBlurRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrBlurRadius;
         public Single HdrBlurRadius
         {
@@ -222,6 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrBlurPasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrBlurPasses;
         public Single HdrBlurPasses
         {
@@ -234,6 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrEmissiveMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrEmissiveMult;
         public Single HdrEmissiveMult
         {
@@ -246,6 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrTargetLum
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrTargetLum;
         public Single HdrTargetLum
         {
@@ -258,6 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrUpperLumClamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrUpperLumClamp;
         public Single HdrUpperLumClamp
         {
@@ -270,6 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrBrightScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrBrightScale;
         public Single HdrBrightScale
         {
@@ -282,6 +298,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrBrightClamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrBrightClamp;
         public Single HdrBrightClamp
         {
@@ -294,6 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrLumRampNoTex
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrLumRampNoTex;
         public Single HdrLumRampNoTex
         {
@@ -306,6 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrLumRampMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrLumRampMin;
         public Single HdrLumRampMin
         {
@@ -318,6 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrLumRampMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrLumRampMax;
         public Single HdrLumRampMax
         {
@@ -330,6 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrSunlightDimmer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrSunlightDimmer;
         public Single HdrSunlightDimmer
         {
@@ -342,6 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrGrassDimmer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrGrassDimmer;
         public Single HdrGrassDimmer
         {
@@ -354,6 +376,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HdrTreeDimmer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HdrTreeDimmer;
         public Single HdrTreeDimmer
         {
@@ -366,6 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region WindSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _WindSpeed;
         public Byte WindSpeed
         {
@@ -378,6 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CloudSpeedLower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _CloudSpeedLower;
         public Byte CloudSpeedLower
         {
@@ -390,6 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CloudSpeedUpper
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _CloudSpeedUpper;
         public Byte CloudSpeedUpper
         {
@@ -402,6 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region TransDelta
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _TransDelta;
         public Byte TransDelta
         {
@@ -414,6 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunGlare
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _SunGlare;
         public Byte SunGlare
         {
@@ -426,6 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunDamage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _SunDamage;
         public Byte SunDamage
         {
@@ -438,6 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PrecipitationBeginFadeIn
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PrecipitationBeginFadeIn;
         public Byte PrecipitationBeginFadeIn
         {
@@ -450,6 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PrecipitationEndFadeOut
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PrecipitationEndFadeOut;
         public Byte PrecipitationEndFadeOut
         {
@@ -462,6 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ThunderLightningBeginFadeIn
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _ThunderLightningBeginFadeIn;
         public Byte ThunderLightningBeginFadeIn
         {
@@ -474,6 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ThunderLightningEndFadeOut
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _ThunderLightningEndFadeOut;
         public Byte ThunderLightningEndFadeOut
         {
@@ -486,6 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ThunderLightningFrequency
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _ThunderLightningFrequency;
         public Byte ThunderLightningFrequency
         {
@@ -498,6 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Classification
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Weather.WeatherClassification _Classification;
         public Weather.WeatherClassification Classification
         {
@@ -510,6 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region LightningColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Color _LightningColor;
         public Color LightningColor
         {
@@ -573,6 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -797,6 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WeatherCommon.Instance.GetLinks(this);
         public Weather(FormKey formKey)
         {
@@ -812,6 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -7014,6 +7053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => WeatherCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WeatherXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -7028,6 +7068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

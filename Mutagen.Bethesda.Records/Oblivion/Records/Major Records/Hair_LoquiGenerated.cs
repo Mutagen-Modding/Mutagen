@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Hair_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Hair_FieldIndex.Name] = value;
         }
-        bool IHairGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IHairGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IHairGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Hair_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Hair_FieldIndex.Model] = value;
         }
-        bool IHairGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IHairGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -113,14 +116,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Hair_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Hair_FieldIndex.Icon] = value;
         }
-        bool IHairGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IHairGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IHairGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -140,14 +145,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Hair_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Hair_FieldIndex.Flags] = value;
         }
-        bool IHairGetter.Flags_IsSet => Flags_IsSet;
-        private Hair.HairFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IHairGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Hair.HairFlag _Flags;
         public Hair.HairFlag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Hair.HairFlag IHairGetter.Flags => this.Flags;
         public void Flags_Set(
             Hair.HairFlag value,
@@ -192,6 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => HairXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -377,6 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HairBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2715,6 +2724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHairGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => HairXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2729,6 +2739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HairBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

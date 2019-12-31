@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data];
             set => _hasBeenSetTracker[(int)GameSettingBool_FieldIndex.Data] = value;
         }
-        bool IGameSettingBoolGetter.Data_IsSet => Data_IsSet;
-        private Boolean _Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IGameSettingBoolGetter.Data_IsSet => Data_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _Data;
         public Boolean Data
         {
             get => this._Data;
             set => Data_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Boolean IGameSettingBoolGetter.Data => this.Data;
         public void Data_Set(
             Boolean value,
@@ -109,6 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GameSettingBoolXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -291,6 +294,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GameSettingBoolBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2279,6 +2283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGameSettingBoolGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GameSettingBoolXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2293,6 +2298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GameSettingBoolBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

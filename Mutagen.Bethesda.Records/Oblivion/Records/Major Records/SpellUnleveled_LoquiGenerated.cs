@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Spell.SpellType _Type;
         public Spell.SpellType Type
         {
@@ -66,6 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Cost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Cost;
         public UInt32 Cost
         {
@@ -78,6 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Level
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Spell.SpellLevel _Level;
         public Spell.SpellLevel Level
         {
@@ -90,6 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flag
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Spell.SpellFlag _Flag;
         public Spell.SpellFlag Flag
         {
@@ -147,6 +151,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SpellUnleveledXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -326,6 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => SpellUnleveledCommon.Instance.GetLinks(this);
         public SpellUnleveled(FormKey formKey)
         {
@@ -341,6 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellUnleveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3054,6 +3061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellUnleveledGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => SpellUnleveledCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SpellUnleveledXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3068,6 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellUnleveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Flags] = value;
         }
-        bool IMapMarkerGetter.Flags_IsSet => Flags_IsSet;
-        private MapMarker.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMapMarkerGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MapMarker.Flag _Flags;
         public MapMarker.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MapMarker.Flag IMapMarkerGetter.Flags => this.Flags;
         public void Flags_Set(
             MapMarker.Flag value,
@@ -85,14 +87,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)MapMarker_FieldIndex.Name] = value;
         }
-        bool IMapMarkerGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMapMarkerGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IMapMarkerGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -149,7 +153,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -305,6 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -321,7 +328,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2467,7 +2476,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMapMarkerGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MapMarkerXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2482,7 +2493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

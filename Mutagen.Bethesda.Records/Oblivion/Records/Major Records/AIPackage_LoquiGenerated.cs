@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AIPackage.Flag _Flags;
         public AIPackage.Flag Flags
         {
@@ -66,6 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GeneralType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AIPackage.GeneralTypeEnum _GeneralType;
         public AIPackage.GeneralTypeEnum GeneralType
         {
@@ -83,9 +85,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location];
             set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Location] = value;
         }
-        bool IAIPackageGetter.Location_IsSet => Location_IsSet;
-        private AIPackageLocation _Location;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAIPackageGetter.Location_IsSet => Location_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackageLocation _Location;
         public AIPackageLocation Location
         {
             get => _Location;
@@ -111,9 +114,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule];
             set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Schedule] = value;
         }
-        bool IAIPackageGetter.Schedule_IsSet => Schedule_IsSet;
-        private AIPackageSchedule _Schedule;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAIPackageGetter.Schedule_IsSet => Schedule_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackageSchedule _Schedule;
         public AIPackageSchedule Schedule
         {
             get => _Schedule;
@@ -139,9 +143,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target];
             set => _hasBeenSetTracker[(int)AIPackage_FieldIndex.Target] = value;
         }
-        bool IAIPackageGetter.Target_IsSet => Target_IsSet;
-        private AIPackageTarget _Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAIPackageGetter.Target_IsSet => Target_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AIPackageTarget _Target;
         public AIPackageTarget Target
         {
             get => _Target;
@@ -207,6 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AIPackageXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -388,6 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => AIPackageCommon.Instance.GetLinks(this);
         public AIPackage(FormKey formKey)
         {
@@ -403,6 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3349,6 +3357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAIPackageGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => AIPackageCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AIPackageXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3363,6 +3372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AIPackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

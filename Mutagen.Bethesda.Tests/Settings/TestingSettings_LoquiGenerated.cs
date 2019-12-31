@@ -61,10 +61,12 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region DataFolderLocations
         public DataFolderLocations DataFolderLocations { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDataFolderLocationsGetter ITestingSettingsGetter.DataFolderLocations => DataFolderLocations;
         #endregion
         #region PassthroughSettings
         public PassthroughSettings PassthroughSettings { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPassthroughSettingsGetter ITestingSettingsGetter.PassthroughSettings => PassthroughSettings;
         #endregion
         #region TargetGroups
@@ -115,7 +117,9 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => TestingSettingsXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -271,6 +275,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {

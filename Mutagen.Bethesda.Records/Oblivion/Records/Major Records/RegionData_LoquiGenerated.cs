@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DataType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RegionData.RegionDataType _DataType;
         public RegionData.RegionDataType DataType
         {
@@ -60,6 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this._DataType = value;
             }
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RegionData.RegionDataType IRegionDataInternal.DataType
         {
             get => this.DataType;
@@ -67,6 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RegionData.RegionDataFlag _Flags;
         public RegionData.RegionDataFlag Flags
         {
@@ -79,6 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Priority
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Priority;
         public Byte Priority
         {
@@ -124,7 +128,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => RegionDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -283,6 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected virtual bool GetHasBeenSet(int index)
         {
@@ -305,11 +312,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public virtual IEnumerable<ILinkGetter> Links => RegionDataCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => RegionDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2319,7 +2329,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataGetter)rhs, include);
 
         public virtual IEnumerable<ILinkGetter> Links => RegionDataCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => RegionDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2334,7 +2346,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => RegionDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

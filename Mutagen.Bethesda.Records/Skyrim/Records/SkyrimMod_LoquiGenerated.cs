@@ -64,48 +64,56 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ModHeader _ModHeader_Object = new ModHeader();
         public ModHeader ModHeader => _ModHeader_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModHeaderGetter ISkyrimModGetter.ModHeader => _ModHeader_Object;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<GameSetting> _GameSettings_Object;
         public Group<GameSetting> GameSettings => _GameSettings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IGameSettingGetter> ISkyrimModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Keyword> _Keywords_Object;
         public Group<Keyword> Keywords => _Keywords_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IKeywordGetter> ISkyrimModGetter.Keywords => _Keywords_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<LocationReferenceType> _LocationReferenceTypes_Object;
         public Group<LocationReferenceType> LocationReferenceTypes => _LocationReferenceTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILocationReferenceTypeGetter> ISkyrimModGetter.LocationReferenceTypes => _LocationReferenceTypes_Object;
         #endregion
         #region Actions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<ActionRecord> _Actions_Object;
         public Group<ActionRecord> Actions => _Actions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IActionRecordGetter> ISkyrimModGetter.Actions => _Actions_Object;
         #endregion
         #region TextureSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<TextureSet> _TextureSets_Object;
         public Group<TextureSet> TextureSets => _TextureSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ITextureSetGetter> ISkyrimModGetter.TextureSets => _TextureSets_Object;
         #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Global> _Globals_Object;
         public Group<Global> Globals => _Globals_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IGlobalGetter> ISkyrimModGetter.Globals => _Globals_Object;
         #endregion
         #region Classes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Group<Class> _Classes_Object;
         public Group<Class> Classes => _Classes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IClassGetter> ISkyrimModGetter.Classes => _Classes_Object;
         #endregion
 
@@ -139,7 +147,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -295,6 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -447,6 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         partial void GetCustomRecordCount(Action<int> setter);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => SkyrimModCommon.Instance.GetLinks(this);
         public static Task<SkyrimMod> CreateFromXmlFolder(
             DirectoryPath dir,
@@ -4250,7 +4262,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => SkyrimModXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,

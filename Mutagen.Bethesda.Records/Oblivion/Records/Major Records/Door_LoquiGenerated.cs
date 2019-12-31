@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Door_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Door_FieldIndex.Name] = value;
         }
-        bool IDoorGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDoorGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IDoorGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,9 +89,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Door_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Door_FieldIndex.Model] = value;
         }
-        bool IDoorGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDoorGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -110,29 +113,29 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IDoorGetter.Model => this.Model;
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IDoorGetter.Script => this.Script;
         #endregion
         #region OpenSound
-        protected IFormIDSetLink<Sound> _OpenSound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _OpenSound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> OpenSound => this._OpenSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        protected IFormIDSetLink<Sound> _CloseSound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _CloseSound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> CloseSound => this._CloseSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.CloseSound => this.CloseSound;
         #endregion
         #region LoopSound
-        protected IFormIDSetLink<Sound> _LoopSound = new FormIDSetLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Sound> _LoopSound = new FormIDSetLink<Sound>();
         public IFormIDSetLink<Sound> LoopSound => this._LoopSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ISoundGetter> IDoorGetter.LoopSound => this.LoopSound;
@@ -143,14 +146,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Door_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Door_FieldIndex.Flags] = value;
         }
-        bool IDoorGetter.Flags_IsSet => Flags_IsSet;
-        private Door.DoorFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDoorGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Door.DoorFlag _Flags;
         public Door.DoorFlag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Door.DoorFlag IDoorGetter.Flags => this.Flags;
         public void Flags_Set(
             Door.DoorFlag value,
@@ -207,6 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -383,6 +389,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Door_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DoorCommon.Instance.GetLinks(this);
         public Door(FormKey formKey)
         {
@@ -398,6 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3390,6 +3398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => DoorCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3404,6 +3413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

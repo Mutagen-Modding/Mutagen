@@ -69,6 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Stats;
             set => _Stats = value ?? new ModStats();
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModStatsGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
@@ -79,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.TypeOffsets_IsSet => TypeOffsets_IsSet;
-        protected Byte[] _TypeOffsets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _TypeOffsets;
         public Byte[] TypeOffsets
         {
             get => this._TypeOffsets;
@@ -108,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.Deleted_IsSet => Deleted_IsSet;
-        protected Byte[] _Deleted;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _Deleted;
         public Byte[] Deleted
         {
             get => this._Deleted;
@@ -135,14 +136,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = value;
         }
-        bool IModHeaderGetter.Author_IsSet => Author_IsSet;
-        private String _Author;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.Author_IsSet => Author_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Author;
         public String Author
         {
             get => this._Author;
             set => Author_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IModHeaderGetter.Author => this.Author;
         public void Author_Set(
             String value,
@@ -162,14 +165,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = value;
         }
-        bool IModHeaderGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IModHeaderGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -201,14 +206,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.VestigialData] = value;
         }
-        bool IModHeaderGetter.VestigialData_IsSet => VestigialData_IsSet;
-        private UInt64 _VestigialData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.VestigialData_IsSet => VestigialData_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt64 _VestigialData;
         public UInt64 VestigialData
         {
             get => this._VestigialData;
             set => VestigialData_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt64 IModHeaderGetter.VestigialData => this.VestigialData;
         public void VestigialData_Set(
             UInt64 value,
@@ -253,7 +260,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -409,6 +418,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -448,7 +458,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3502,7 +3514,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3517,7 +3531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

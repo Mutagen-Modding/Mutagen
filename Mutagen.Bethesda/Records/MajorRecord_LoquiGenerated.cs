@@ -53,6 +53,7 @@ namespace Mutagen.Bethesda
         #endregion
         #region FormKey
         public FormKey FormKey { get; protected set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormKey IMajorRecordInternal.FormKey
         {
             get => this.FormKey;
@@ -68,14 +69,16 @@ namespace Mutagen.Bethesda
             get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
             set => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = value;
         }
-        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
-        private String _EditorID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _EditorID;
         public String EditorID
         {
             get => this._EditorID;
             set => EditorID_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IMajorRecordGetter.EditorID => this.EditorID;
         public void EditorID_Set(
             String value,
@@ -120,7 +123,9 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -279,6 +284,7 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected virtual bool GetHasBeenSet(int index)
         {
@@ -296,6 +302,7 @@ namespace Mutagen.Bethesda
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public virtual IEnumerable<ILinkGetter> Links => MajorRecordCommon.Instance.GetLinks(this);
         public virtual async Task WriteToXmlFolder(
             DirectoryPath? dir,
@@ -331,7 +338,9 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2607,7 +2616,9 @@ namespace Mutagen.Bethesda.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => MajorRecordXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2622,7 +2633,9 @@ namespace Mutagen.Bethesda.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => MajorRecordBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

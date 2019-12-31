@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data];
             set => _hasBeenSetTracker[(int)GlobalFloat_FieldIndex.Data] = value;
         }
-        bool IGlobalFloatGetter.Data_IsSet => Data_IsSet;
-        private Single _Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IGlobalFloatGetter.Data_IsSet => Data_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Data;
         public Single Data
         {
             get => this._Data;
             set => Data_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IGlobalFloatGetter.Data => this.Data;
         public void Data_Set(
             Single value,
@@ -109,6 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GlobalFloatXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -291,6 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GlobalFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2240,6 +2244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGlobalFloatGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GlobalFloatXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2254,6 +2259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GlobalFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

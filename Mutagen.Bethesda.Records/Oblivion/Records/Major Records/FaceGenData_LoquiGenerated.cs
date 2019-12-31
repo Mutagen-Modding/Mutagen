@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.SymmetricGeometry_IsSet => SymmetricGeometry_IsSet;
-        protected Byte[] _SymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _SymmetricGeometry;
         public Byte[] SymmetricGeometry
         {
             get => this._SymmetricGeometry;
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.AsymmetricGeometry_IsSet => AsymmetricGeometry_IsSet;
-        protected Byte[] _AsymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _AsymmetricGeometry;
         public Byte[] AsymmetricGeometry
         {
             get => this._AsymmetricGeometry;
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IFaceGenDataGetter.SymmetricTexture_IsSet => SymmetricTexture_IsSet;
-        protected Byte[] _SymmetricTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _SymmetricTexture;
         public Byte[] SymmetricTexture
         {
             get => this._SymmetricTexture;
@@ -167,7 +167,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => FaceGenDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -323,6 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -338,7 +341,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2385,7 +2390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFaceGenDataGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => FaceGenDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2400,7 +2407,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

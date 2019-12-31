@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.Name] = value;
         }
-        bool IRaceGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRaceGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,14 +89,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.Description] = value;
         }
-        bool IRaceGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRaceGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -145,15 +149,18 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Fluff = new byte[4];
         public Byte[] Fluff
         {
             get => _Fluff;
             set => this._Fluff = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IRaceGetter.Fluff => this.Fluff;
         #endregion
         #region MaleHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _MaleHeight;
         public Single MaleHeight
         {
@@ -166,6 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FemaleHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FemaleHeight;
         public Single FemaleHeight
         {
@@ -178,6 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MaleWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _MaleWeight;
         public Single MaleWeight
         {
@@ -190,6 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region FemaleWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _FemaleWeight;
         public Single FemaleWeight
         {
@@ -202,6 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Race.Flag _Flags;
         public Race.Flag Flags
         {
@@ -219,9 +230,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.Voices];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.Voices] = value;
         }
-        bool IRaceGetter.Voices_IsSet => Voices_IsSet;
-        private RaceVoices _Voices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.Voices_IsSet => Voices_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RaceVoices _Voices;
         public RaceVoices Voices
         {
             get => _Voices;
@@ -247,9 +259,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHair] = value;
         }
-        bool IRaceGetter.DefaultHair_IsSet => DefaultHair_IsSet;
-        private RaceHair _DefaultHair;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.DefaultHair_IsSet => DefaultHair_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RaceHair _DefaultHair;
         public RaceHair DefaultHair
         {
             get => _DefaultHair;
@@ -275,14 +288,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.DefaultHairColor] = value;
         }
-        bool IRaceGetter.DefaultHairColor_IsSet => DefaultHairColor_IsSet;
-        private Byte _DefaultHairColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.DefaultHairColor_IsSet => DefaultHairColor_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _DefaultHairColor;
         public Byte DefaultHairColor
         {
             get => this._DefaultHairColor;
             set => DefaultHairColor_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte IRaceGetter.DefaultHairColor => this.DefaultHairColor;
         public void DefaultHairColor_Set(
             Byte value,
@@ -302,14 +317,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenMainClamp] = value;
         }
-        bool IRaceGetter.FaceGenMainClamp_IsSet => FaceGenMainClamp_IsSet;
-        private Int32 _FaceGenMainClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.FaceGenMainClamp_IsSet => FaceGenMainClamp_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FaceGenMainClamp;
         public Int32 FaceGenMainClamp
         {
             get => this._FaceGenMainClamp;
             set => FaceGenMainClamp_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IRaceGetter.FaceGenMainClamp => this.FaceGenMainClamp;
         public void FaceGenMainClamp_Set(
             Int32 value,
@@ -329,14 +346,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenFaceClamp] = value;
         }
-        bool IRaceGetter.FaceGenFaceClamp_IsSet => FaceGenFaceClamp_IsSet;
-        private Int32 _FaceGenFaceClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.FaceGenFaceClamp_IsSet => FaceGenFaceClamp_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FaceGenFaceClamp;
         public Int32 FaceGenFaceClamp
         {
             get => this._FaceGenFaceClamp;
             set => FaceGenFaceClamp_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IRaceGetter.FaceGenFaceClamp => this.FaceGenFaceClamp;
         public void FaceGenFaceClamp_Set(
             Int32 value,
@@ -356,9 +375,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.RaceStats] = value;
         }
-        bool IRaceGetter.RaceStats_IsSet => RaceStats_IsSet;
-        private RaceStatsGendered _RaceStats;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.RaceStats_IsSet => RaceStats_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RaceStatsGendered _RaceStats;
         public RaceStatsGendered RaceStats
         {
             get => _RaceStats;
@@ -396,9 +416,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.BodyData];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.BodyData] = value;
         }
-        bool IRaceGetter.BodyData_IsSet => BodyData_IsSet;
-        private GenderedBodyData _BodyData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.BodyData_IsSet => BodyData_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private GenderedBodyData _BodyData;
         public GenderedBodyData BodyData
         {
             get => _BodyData;
@@ -448,9 +469,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData];
             set => _hasBeenSetTracker[(int)Race_FieldIndex.FaceGenData] = value;
         }
-        bool IRaceGetter.FaceGenData_IsSet => FaceGenData_IsSet;
-        private FaceGenData _FaceGenData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRaceGetter.FaceGenData_IsSet => FaceGenData_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private FaceGenData _FaceGenData;
         public FaceGenData FaceGenData
         {
             get => _FaceGenData;
@@ -478,8 +500,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IRaceGetter.Unknown_IsSet => Unknown_IsSet;
-        protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _Unknown;
         public Byte[] Unknown
         {
             get => this._Unknown;
@@ -533,6 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -735,6 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
         public Race(FormKey formKey)
         {
@@ -750,6 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -6538,6 +6563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -6552,6 +6578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

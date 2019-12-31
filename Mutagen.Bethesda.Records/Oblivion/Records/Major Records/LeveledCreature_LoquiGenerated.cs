@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone];
             set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.ChanceNone] = value;
         }
-        bool ILeveledCreatureGetter.ChanceNone_IsSet => ChanceNone_IsSet;
-        private Byte _ChanceNone;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILeveledCreatureGetter.ChanceNone_IsSet => ChanceNone_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _ChanceNone;
         public Byte ChanceNone
         {
             get => this._ChanceNone;
             set => ChanceNone_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ILeveledCreatureGetter.ChanceNone => this.ChanceNone;
         public void ChanceNone_Set(
             Byte value,
@@ -86,14 +88,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)LeveledCreature_FieldIndex.Flags] = value;
         }
-        bool ILeveledCreatureGetter.Flags_IsSet => Flags_IsSet;
-        private LeveledFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILeveledCreatureGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LeveledFlag _Flags;
         public LeveledFlag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LeveledFlag ILeveledCreatureGetter.Flags => this.Flags;
         public void Flags_Set(
             LeveledFlag value,
@@ -120,15 +124,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
         #endregion
         #region Template
-        protected IFormIDSetLink<NPCAbstract> _Template = new FormIDSetLink<NPCAbstract>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<NPCAbstract> _Template = new FormIDSetLink<NPCAbstract>();
         public IFormIDSetLink<NPCAbstract> Template => this._Template;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<INPCAbstractGetter> ILeveledCreatureGetter.Template => this.Template;
@@ -164,6 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -337,6 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledCreature_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LeveledCreatureCommon.Instance.GetLinks(this);
         public LeveledCreature(FormKey formKey)
         {
@@ -352,6 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2996,6 +3003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledCreatureGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => LeveledCreatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledCreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3010,6 +3018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

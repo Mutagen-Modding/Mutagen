@@ -56,14 +56,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName];
             set => _hasBeenSetTracker[(int)RegionDataMapName_FieldIndex.MapName] = value;
         }
-        bool IRegionDataMapNameGetter.MapName_IsSet => MapName_IsSet;
-        private String _MapName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionDataMapNameGetter.MapName_IsSet => MapName_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _MapName;
         public String MapName
         {
             get => this._MapName;
             set => MapName_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRegionDataMapNameGetter.MapName => this.MapName;
         public void MapName_Set(
             String value,
@@ -108,6 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionDataMapNameXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -279,6 +282,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionDataMapNameBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2023,6 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataMapNameGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionDataMapNameXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2037,6 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionDataMapNameBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

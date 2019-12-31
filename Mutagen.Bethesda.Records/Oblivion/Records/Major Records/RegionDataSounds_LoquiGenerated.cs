@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType];
             set => _hasBeenSetTracker[(int)RegionDataSounds_FieldIndex.MusicType] = value;
         }
-        bool IRegionDataSoundsGetter.MusicType_IsSet => MusicType_IsSet;
-        private MusicType _MusicType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionDataSoundsGetter.MusicType_IsSet => MusicType_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MusicType _MusicType;
         public MusicType MusicType
         {
             get => this._MusicType;
             set => MusicType_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType IRegionDataSoundsGetter.MusicType => this.MusicType;
         public void MusicType_Set(
             MusicType value,
@@ -122,6 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionDataSoundsXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -292,10 +295,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = RegionDataSounds_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RegionDataSoundsCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionDataSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2321,6 +2326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataSoundsGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => RegionDataSoundsCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionDataSoundsXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2335,6 +2341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionDataSoundsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

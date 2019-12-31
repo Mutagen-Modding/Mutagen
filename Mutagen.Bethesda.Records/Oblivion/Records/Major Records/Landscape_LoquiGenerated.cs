@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.Unknown_IsSet => Unknown_IsSet;
-        protected Byte[] _Unknown;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _Unknown;
         public Byte[] Unknown
         {
             get => this._Unknown;
@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexNormals_IsSet => VertexNormals_IsSet;
-        protected Byte[] _VertexNormals;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _VertexNormals;
         public Byte[] VertexNormals
         {
             get => this._VertexNormals;
@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexHeightMap_IsSet => VertexHeightMap_IsSet;
-        protected Byte[] _VertexHeightMap;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _VertexHeightMap;
         public Byte[] VertexHeightMap
         {
             get => this._VertexHeightMap;
@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ILandscapeGetter.VertexColors_IsSet => VertexColors_IsSet;
-        protected Byte[] _VertexColors;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _VertexColors;
         public Byte[] VertexColors
         {
             get => this._VertexColors;
@@ -224,6 +224,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -399,6 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Landscape_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LandscapeCommon.Instance.GetLinks(this);
         public Landscape(FormKey formKey)
         {
@@ -414,6 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3254,6 +3257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandscapeGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => LandscapeCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LandscapeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3268,6 +3272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

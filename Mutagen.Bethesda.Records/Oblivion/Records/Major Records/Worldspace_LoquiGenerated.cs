@@ -61,14 +61,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Name] = value;
         }
-        bool IWorldspaceGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWorldspaceGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -83,22 +85,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Parent
-        protected IFormIDSetLink<Worldspace> _Parent = new FormIDSetLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Worldspace> _Parent = new FormIDSetLink<Worldspace>();
         public IFormIDSetLink<Worldspace> Parent => this._Parent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWorldspaceGetter> IWorldspaceGetter.Parent => this.Parent;
         #endregion
         #region Climate
-        protected IFormIDSetLink<Climate> _Climate = new FormIDSetLink<Climate>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Climate> _Climate = new FormIDSetLink<Climate>();
         public IFormIDSetLink<Climate> Climate => this._Climate;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IClimateGetter> IWorldspaceGetter.Climate => this.Climate;
         #endregion
         #region Water
-        protected IFormIDSetLink<Water> _Water = new FormIDSetLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Water> _Water = new FormIDSetLink<Water>();
         public IFormIDSetLink<Water> Water => this._Water;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWaterGetter> IWorldspaceGetter.Water => this.Water;
@@ -109,14 +111,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Icon] = value;
         }
-        bool IWorldspaceGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IWorldspaceGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -136,9 +140,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.MapData] = value;
         }
-        bool IWorldspaceGetter.MapData_IsSet => MapData_IsSet;
-        private MapData _MapData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.MapData_IsSet => MapData_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MapData _MapData;
         public MapData MapData
         {
             get => _MapData;
@@ -164,14 +169,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Flags] = value;
         }
-        bool IWorldspaceGetter.Flags_IsSet => Flags_IsSet;
-        private Worldspace.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Worldspace.Flag _Flags;
         public Worldspace.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Worldspace.Flag IWorldspaceGetter.Flags => this.Flags;
         public void Flags_Set(
             Worldspace.Flag value,
@@ -191,14 +198,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMin] = value;
         }
-        bool IWorldspaceGetter.ObjectBoundsMin_IsSet => ObjectBoundsMin_IsSet;
-        private P2Float _ObjectBoundsMin;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.ObjectBoundsMin_IsSet => ObjectBoundsMin_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Float _ObjectBoundsMin;
         public P2Float ObjectBoundsMin
         {
             get => this._ObjectBoundsMin;
             set => ObjectBoundsMin_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Float IWorldspaceGetter.ObjectBoundsMin => this.ObjectBoundsMin;
         public void ObjectBoundsMin_Set(
             P2Float value,
@@ -218,14 +227,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.ObjectBoundsMax] = value;
         }
-        bool IWorldspaceGetter.ObjectBoundsMax_IsSet => ObjectBoundsMax_IsSet;
-        private P2Float _ObjectBoundsMax;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.ObjectBoundsMax_IsSet => ObjectBoundsMax_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Float _ObjectBoundsMax;
         public P2Float ObjectBoundsMax
         {
             get => this._ObjectBoundsMax;
             set => ObjectBoundsMax_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Float IWorldspaceGetter.ObjectBoundsMax => this.ObjectBoundsMax;
         public void ObjectBoundsMax_Set(
             P2Float value,
@@ -245,14 +256,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Music] = value;
         }
-        bool IWorldspaceGetter.Music_IsSet => Music_IsSet;
-        private MusicType _Music;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.Music_IsSet => Music_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MusicType _Music;
         public MusicType Music
         {
             get => this._Music;
             set => Music_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType IWorldspaceGetter.Music => this.Music;
         public void Music_Set(
             MusicType value,
@@ -274,8 +287,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IWorldspaceGetter.OffsetData_IsSet => OffsetData_IsSet;
-        protected Byte[] _OffsetData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _OffsetData;
         public Byte[] OffsetData
         {
             get => this._OffsetData;
@@ -301,9 +314,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.Road] = value;
         }
-        bool IWorldspaceGetter.Road_IsSet => Road_IsSet;
-        private Road _Road;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.Road_IsSet => Road_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Road _Road;
         public Road Road
         {
             get => _Road;
@@ -329,9 +343,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell];
             set => _hasBeenSetTracker[(int)Worldspace_FieldIndex.TopCell] = value;
         }
-        bool IWorldspaceGetter.TopCell_IsSet => TopCell_IsSet;
-        private Cell _TopCell;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IWorldspaceGetter.TopCell_IsSet => TopCell_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Cell _TopCell;
         public Cell TopCell
         {
             get => _TopCell;
@@ -352,12 +367,14 @@ namespace Mutagen.Bethesda.Oblivion
         ICellGetter IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _SubCellsTimestamp = new byte[4];
         public Byte[] SubCellsTimestamp
         {
             get => _SubCellsTimestamp;
             set => this._SubCellsTimestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
         #endregion
         #region SubCells
@@ -406,6 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -591,6 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Worldspace_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WorldspaceCommon.Instance.GetLinks(this);
         public Worldspace(FormKey formKey)
         {
@@ -614,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -5074,6 +5094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -5088,6 +5109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

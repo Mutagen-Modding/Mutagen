@@ -59,9 +59,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.Model] = value;
         }
-        bool IIdleAnimationGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IIdleAnimationGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -99,14 +100,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection];
             set => _hasBeenSetTracker[(int)IdleAnimation_FieldIndex.AnimationGroupSection] = value;
         }
-        bool IIdleAnimationGetter.AnimationGroupSection_IsSet => AnimationGroupSection_IsSet;
-        private IdleAnimation.AnimationGroupSectionEnum _AnimationGroupSection;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IIdleAnimationGetter.AnimationGroupSection_IsSet => AnimationGroupSection_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IdleAnimation.AnimationGroupSectionEnum _AnimationGroupSection;
         public IdleAnimation.AnimationGroupSectionEnum AnimationGroupSection
         {
             get => this._AnimationGroupSection;
             set => AnimationGroupSection_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IdleAnimation.AnimationGroupSectionEnum IIdleAnimationGetter.AnimationGroupSection => this.AnimationGroupSection;
         public void AnimationGroupSection_Set(
             IdleAnimation.AnimationGroupSectionEnum value,
@@ -163,6 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -336,6 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = IdleAnimation_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
         public IdleAnimation(FormKey formKey)
         {
@@ -351,6 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2913,6 +2919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2927,6 +2934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

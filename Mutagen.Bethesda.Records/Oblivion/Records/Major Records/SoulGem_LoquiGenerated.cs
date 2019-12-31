@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Name] = value;
         }
-        bool ISoulGemGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoulGemGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISoulGemGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Model] = value;
         }
-        bool ISoulGemGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoulGemGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -113,14 +116,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.Icon] = value;
         }
-        bool ISoulGemGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoulGemGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISoulGemGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -135,13 +140,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> ISoulGemGetter.Script => this.Script;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Value;
         public UInt32 Value
         {
@@ -154,6 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Weight;
         public Single Weight
         {
@@ -171,14 +178,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.ContainedSoul];
             set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.ContainedSoul] = value;
         }
-        bool ISoulGemGetter.ContainedSoul_IsSet => ContainedSoul_IsSet;
-        private SoulLevel _ContainedSoul;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoulGemGetter.ContainedSoul_IsSet => ContainedSoul_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoulLevel _ContainedSoul;
         public SoulLevel ContainedSoul
         {
             get => this._ContainedSoul;
             set => ContainedSoul_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoulLevel ISoulGemGetter.ContainedSoul => this.ContainedSoul;
         public void ContainedSoul_Set(
             SoulLevel value,
@@ -198,14 +207,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SoulGem_FieldIndex.MaximumCapacity];
             set => _hasBeenSetTracker[(int)SoulGem_FieldIndex.MaximumCapacity] = value;
         }
-        bool ISoulGemGetter.MaximumCapacity_IsSet => MaximumCapacity_IsSet;
-        private SoulLevel _MaximumCapacity;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoulGemGetter.MaximumCapacity_IsSet => MaximumCapacity_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoulLevel _MaximumCapacity;
         public SoulLevel MaximumCapacity
         {
             get => this._MaximumCapacity;
             set => MaximumCapacity_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoulLevel ISoulGemGetter.MaximumCapacity => this.MaximumCapacity;
         public void MaximumCapacity_Set(
             SoulLevel value,
@@ -253,6 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SoulGemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -435,6 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => SoulGemCommon.Instance.GetLinks(this);
         public SoulGem(FormKey formKey)
         {
@@ -450,6 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3496,6 +3510,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => SoulGemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SoulGemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3510,6 +3525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

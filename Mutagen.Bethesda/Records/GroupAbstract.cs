@@ -8,6 +8,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -16,11 +17,14 @@ namespace Mutagen.Bethesda
     public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<T, FormKey> ProtectedCache { get; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
         public IEnumerable<T> Records => ProtectedCache.Items;
         public int Count => this.ProtectedCache.Count;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IMod SourceMod { get; private set; }
 
         protected GroupAbstract()

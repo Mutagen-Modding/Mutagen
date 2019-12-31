@@ -51,13 +51,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Script
-        protected IFormIDLink<Script> _Script = new FormIDLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<Script> _Script = new FormIDLink<Script>();
         public IFormIDLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IScriptGetter> IScriptEffectGetter.Script => this.Script;
         #endregion
         #region MagicSchool
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private MagicSchool _MagicSchool;
         public MagicSchool MagicSchool
         {
@@ -71,13 +72,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region VisualEffect
-        protected IEDIDLink<MagicEffect> _VisualEffect = new EDIDLink<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEDIDLink<MagicEffect> _VisualEffect = new EDIDLink<MagicEffect>();
         public IEDIDLink<MagicEffect> VisualEffect => this._VisualEffect;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ScriptEffect.Flag _Flags;
         public ScriptEffect.Flag Flags
         {
@@ -97,14 +99,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)ScriptEffect_FieldIndex.Name] = value;
         }
-        bool IScriptEffectGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IScriptEffectGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IScriptEffectGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -152,7 +156,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ScriptEffectXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -308,6 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -335,11 +342,14 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 2,
             Break1 = 4
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ScriptEffectCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEffectBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2652,7 +2662,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptEffectGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => ScriptEffectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ScriptEffectXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2667,7 +2679,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEffectBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

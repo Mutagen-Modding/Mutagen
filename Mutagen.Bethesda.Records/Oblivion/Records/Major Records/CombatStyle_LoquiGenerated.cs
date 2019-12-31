@@ -52,6 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DodgePercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _DodgePercentChance;
         public Byte DodgePercentChance
         {
@@ -65,6 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region LeftRightPercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _LeftRightPercentChance;
         public Byte LeftRightPercentChance
         {
@@ -78,6 +80,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 LeftRightPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region DodgeLeftRightTimerMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeLeftRightTimerMin;
         public Single DodgeLeftRightTimerMin
         {
@@ -90,6 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DodgeLeftRightTimerMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeLeftRightTimerMax;
         public Single DodgeLeftRightTimerMax
         {
@@ -102,6 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DodgeForwardTimerMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeForwardTimerMin;
         public Single DodgeForwardTimerMin
         {
@@ -114,6 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DodgeForwardTimerMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeForwardTimerMax;
         public Single DodgeForwardTimerMax
         {
@@ -126,6 +132,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DodgeBackTimerMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeBackTimerMin;
         public Single DodgeBackTimerMin
         {
@@ -138,6 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region DodgeBackTimerMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _DodgeBackTimerMax;
         public Single DodgeBackTimerMax
         {
@@ -150,6 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region IdleTimerMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _IdleTimerMin;
         public Single IdleTimerMin
         {
@@ -162,6 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region IdleTimerMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _IdleTimerMax;
         public Single IdleTimerMax
         {
@@ -174,6 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BlockPercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _BlockPercentChance;
         public Byte BlockPercentChance
         {
@@ -187,6 +198,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 BlockPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region AttackPercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _AttackPercentChance;
         public Byte AttackPercentChance
         {
@@ -200,6 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 AttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToAttack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RecoilStaggerBonusToAttack;
         public Single RecoilStaggerBonusToAttack
         {
@@ -212,6 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UnconsciousBonusToAttack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _UnconsciousBonusToAttack;
         public Single UnconsciousBonusToAttack
         {
@@ -224,6 +238,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HandToHandBonusToAttack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HandToHandBonusToAttack;
         public Single HandToHandBonusToAttack
         {
@@ -236,6 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PowerAttackPercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackPercentChance;
         public Byte PowerAttackPercentChance
         {
@@ -249,6 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RecoilStaggerBonusToPowerAttack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RecoilStaggerBonusToPowerAttack;
         public Single RecoilStaggerBonusToPowerAttack
         {
@@ -261,6 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UnconsciousBonusToPowerAttack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _UnconsciousBonusToPowerAttack;
         public Single UnconsciousBonusToPowerAttack
         {
@@ -273,6 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PowerAttackNormal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackNormal;
         public Byte PowerAttackNormal
         {
@@ -286,6 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackNormal_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackForward
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackForward;
         public Byte PowerAttackForward
         {
@@ -299,6 +319,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackForward_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackBack
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackBack;
         public Byte PowerAttackBack
         {
@@ -312,6 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackBack_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackLeft
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackLeft;
         public Byte PowerAttackLeft
         {
@@ -325,6 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackLeft_Range = new RangeUInt8(0, 100);
         #endregion
         #region PowerAttackRight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PowerAttackRight;
         public Byte PowerAttackRight
         {
@@ -338,6 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 PowerAttackRight_Range = new RangeUInt8(0, 100);
         #endregion
         #region HoldTimerMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HoldTimerMin;
         public Single HoldTimerMin
         {
@@ -350,6 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region HoldTimerMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _HoldTimerMax;
         public Single HoldTimerMax
         {
@@ -362,6 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private CombatStyle.Flag _Flags;
         public CombatStyle.Flag Flags
         {
@@ -374,6 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region AcrobaticDodgePercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _AcrobaticDodgePercentChance;
         public Byte AcrobaticDodgePercentChance
         {
@@ -387,6 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 AcrobaticDodgePercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RangeMultOptimal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RangeMultOptimal;
         public Single RangeMultOptimal
         {
@@ -400,6 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RangeMultMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RangeMultMax;
         public Single RangeMultMax
         {
@@ -413,6 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SwitchDistanceMelee
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _SwitchDistanceMelee;
         public Single SwitchDistanceMelee
         {
@@ -427,6 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SwitchDistanceRanged
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _SwitchDistanceRanged;
         public Single SwitchDistanceRanged
         {
@@ -441,6 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BuffStandoffDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BuffStandoffDistance;
         public Single BuffStandoffDistance
         {
@@ -455,6 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RangedStandoffDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RangedStandoffDistance;
         public Single RangedStandoffDistance
         {
@@ -470,6 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GroupStandoffDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _GroupStandoffDistance;
         public Single GroupStandoffDistance
         {
@@ -485,6 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region RushingAttackPercentChance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _RushingAttackPercentChance;
         public Byte RushingAttackPercentChance
         {
@@ -502,6 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 RushingAttackPercentChance_Range = new RangeUInt8(0, 100);
         #endregion
         #region RushingAttackDistanceMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _RushingAttackDistanceMult;
         public Single RushingAttackDistanceMult
         {
@@ -523,9 +559,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced];
             set => _hasBeenSetTracker[(int)CombatStyle_FieldIndex.Advanced] = value;
         }
-        bool ICombatStyleGetter.Advanced_IsSet => Advanced_IsSet;
-        private CombatStyleAdvanced _Advanced;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICombatStyleGetter.Advanced_IsSet => Advanced_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CombatStyleAdvanced _Advanced;
         public CombatStyleAdvanced Advanced
         {
             get => _Advanced;
@@ -579,6 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -809,6 +847,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -6566,6 +6605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICombatStyleGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CombatStyleXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -6580,6 +6620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

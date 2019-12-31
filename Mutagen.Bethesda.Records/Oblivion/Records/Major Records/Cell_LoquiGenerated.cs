@@ -61,14 +61,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.Name] = value;
         }
-        bool ICellGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ICellGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -88,14 +90,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.Flags] = value;
         }
-        bool ICellGetter.Flags_IsSet => Flags_IsSet;
-        private Cell.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Cell.Flag _Flags;
         public Cell.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Cell.Flag ICellGetter.Flags => this.Flags;
         public void Flags_Set(
             Cell.Flag value,
@@ -115,14 +119,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Grid];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.Grid] = value;
         }
-        bool ICellGetter.Grid_IsSet => Grid_IsSet;
-        private P2Int _Grid;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.Grid_IsSet => Grid_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Int _Grid;
         public P2Int Grid
         {
             get => this._Grid;
             set => Grid_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         P2Int ICellGetter.Grid => this.Grid;
         public void Grid_Set(
             P2Int value,
@@ -142,9 +148,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.Lighting] = value;
         }
-        bool ICellGetter.Lighting_IsSet => Lighting_IsSet;
-        private CellLighting _Lighting;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.Lighting_IsSet => Lighting_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellLighting _Lighting;
         public CellLighting Lighting
         {
             get => _Lighting;
@@ -182,14 +189,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.MusicType] = value;
         }
-        bool ICellGetter.MusicType_IsSet => MusicType_IsSet;
-        private MusicType _MusicType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.MusicType_IsSet => MusicType_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MusicType _MusicType;
         public MusicType MusicType
         {
             get => this._MusicType;
             set => MusicType_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MusicType ICellGetter.MusicType => this.MusicType;
         public void MusicType_Set(
             MusicType value,
@@ -209,14 +218,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.WaterHeight] = value;
         }
-        bool ICellGetter.WaterHeight_IsSet => WaterHeight_IsSet;
-        private Single _WaterHeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.WaterHeight_IsSet => WaterHeight_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WaterHeight;
         public Single WaterHeight
         {
             get => this._WaterHeight;
             set => WaterHeight_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single ICellGetter.WaterHeight => this.WaterHeight;
         public void WaterHeight_Set(
             Single value,
@@ -231,22 +242,22 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Climate
-        protected IFormIDSetLink<Climate> _Climate = new FormIDSetLink<Climate>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Climate> _Climate = new FormIDSetLink<Climate>();
         public IFormIDSetLink<Climate> Climate => this._Climate;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IClimateGetter> ICellGetter.Climate => this.Climate;
         #endregion
         #region Water
-        protected IFormIDSetLink<Water> _Water = new FormIDSetLink<Water>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Water> _Water = new FormIDSetLink<Water>();
         public IFormIDSetLink<Water> Water => this._Water;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWaterGetter> ICellGetter.Water => this.Water;
         #endregion
         #region Owner
-        protected IFormIDSetLink<Faction> _Owner = new FormIDSetLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Faction> _Owner = new FormIDSetLink<Faction>();
         public IFormIDSetLink<Faction> Owner => this._Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IFactionGetter> ICellGetter.Owner => this.Owner;
@@ -257,14 +268,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.FactionRank] = value;
         }
-        bool ICellGetter.FactionRank_IsSet => FactionRank_IsSet;
-        private Int32 _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.FactionRank_IsSet => FactionRank_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FactionRank;
         public Int32 FactionRank
         {
             get => this._FactionRank;
             set => FactionRank_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 ICellGetter.FactionRank => this.FactionRank;
         public void FactionRank_Set(
             Int32 value,
@@ -279,8 +292,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GlobalVariable
-        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         public IFormIDSetLink<Global> GlobalVariable => this._GlobalVariable;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
@@ -291,9 +304,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.PathGrid] = value;
         }
-        bool ICellGetter.PathGrid_IsSet => PathGrid_IsSet;
-        private PathGrid _PathGrid;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.PathGrid_IsSet => PathGrid_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PathGrid _PathGrid;
         public PathGrid PathGrid
         {
             get => _PathGrid;
@@ -319,9 +333,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape];
             set => _hasBeenSetTracker[(int)Cell_FieldIndex.Landscape] = value;
         }
-        bool ICellGetter.Landscape_IsSet => Landscape_IsSet;
-        private Landscape _Landscape;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICellGetter.Landscape_IsSet => Landscape_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Landscape _Landscape;
         public Landscape Landscape
         {
             get => _Landscape;
@@ -342,21 +357,25 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscapeGetter ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Timestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Timestamp = new byte[4];
         public Byte[] Timestamp
         {
             get => _Timestamp;
             set => this._Timestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> ICellGetter.Timestamp => this.Timestamp;
         #endregion
         #region PersistentTimestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _PersistentTimestamp = new byte[4];
         public Byte[] PersistentTimestamp
         {
             get => _PersistentTimestamp;
             set => this._PersistentTimestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
         #endregion
         #region Persistent
@@ -372,12 +391,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region TemporaryTimestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _TemporaryTimestamp = new byte[4];
         public Byte[] TemporaryTimestamp
         {
             get => _TemporaryTimestamp;
             set => this._TemporaryTimestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
         #endregion
         #region Temporary
@@ -393,12 +414,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region VisibleWhenDistantTimestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _VisibleWhenDistantTimestamp = new byte[4];
         public Byte[] VisibleWhenDistantTimestamp
         {
             get => _VisibleWhenDistantTimestamp;
             set => this._VisibleWhenDistantTimestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
         #endregion
         #region VisibleWhenDistant
@@ -444,6 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -637,6 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Cell_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => CellCommon.Instance.GetLinks(this);
         public Cell(FormKey formKey)
         {
@@ -660,6 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -5926,6 +5952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CellXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -5940,6 +5967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

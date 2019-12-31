@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Name] = value;
         }
-        bool IMagicEffectGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMagicEffectGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IMagicEffectGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,14 +89,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Description] = value;
         }
-        bool IMagicEffectGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMagicEffectGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IMagicEffectGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -114,14 +118,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Icon] = value;
         }
-        bool IMagicEffectGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMagicEffectGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IMagicEffectGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -141,9 +147,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)MagicEffect_FieldIndex.Model] = value;
         }
-        bool IMagicEffectGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMagicEffectGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -164,6 +171,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IMagicEffectGetter.Model => this.Model;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private MagicEffect.MagicFlag _Flags;
         public MagicEffect.MagicFlag Flags
         {
@@ -176,6 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BaseCost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BaseCost;
         public Single BaseCost
         {
@@ -188,15 +197,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Unused = new byte[4];
         public Byte[] Unused
         {
             get => _Unused;
             set => this._Unused = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IMagicEffectGetter.Unused => this.Unused;
         #endregion
         #region MagicSchool
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private MagicSchool _MagicSchool;
         public MagicSchool MagicSchool
         {
@@ -209,6 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Resistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Resistance _Resistance;
         public Resistance Resistance
         {
@@ -221,6 +234,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CounterEffectCount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _CounterEffectCount;
         public UInt32 CounterEffectCount
         {
@@ -233,13 +247,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Light
-        protected IFormIDLink<Light> _Light = new FormIDLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<Light> _Light = new FormIDLink<Light>();
         public IFormIDLink<Light> Light => this._Light;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<ILightGetter> IMagicEffectGetter.Light => this.Light;
         #endregion
         #region ProjectileSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _ProjectileSpeed;
         public Single ProjectileSpeed
         {
@@ -252,8 +267,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EffectShader
-        protected IFormIDLink<EffectShader> _EffectShader = new FormIDLink<EffectShader>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDLink<EffectShader> _EffectShader = new FormIDLink<EffectShader>();
         public IFormIDLink<EffectShader> EffectShader => this._EffectShader;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EffectShader => this.EffectShader;
@@ -266,6 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _SubData;
             set => _SubData = value ?? new MagicEffectSubData();
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IMagicEffectSubDataGetter IMagicEffectGetter.SubData => _SubData;
         #endregion
         #region CounterEffects
@@ -314,6 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -505,6 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
             Has = 1,
             Break0 = 2
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => MagicEffectCommon.Instance.GetLinks(this);
         public MagicEffect(FormKey formKey)
         {
@@ -520,6 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4342,6 +4361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => MagicEffectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4356,6 +4376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

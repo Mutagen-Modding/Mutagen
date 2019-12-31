@@ -57,9 +57,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds];
             set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.ObjectBounds] = value;
         }
-        bool ITextureSetGetter.ObjectBounds_IsSet => ObjectBounds_IsSet;
-        private ObjectBounds _ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITextureSetGetter.ObjectBounds_IsSet => ObjectBounds_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds;
         public ObjectBounds ObjectBounds
         {
             get => _ObjectBounds;
@@ -85,9 +86,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures];
             set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Textures] = value;
         }
-        bool ITextureSetGetter.Textures_IsSet => Textures_IsSet;
-        private Textures _Textures;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITextureSetGetter.Textures_IsSet => Textures_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Textures _Textures;
         public Textures Textures
         {
             get => _Textures;
@@ -113,9 +115,10 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal];
             set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Decal] = value;
         }
-        bool ITextureSetGetter.Decal_IsSet => Decal_IsSet;
-        private Decal _Decal;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITextureSetGetter.Decal_IsSet => Decal_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Decal _Decal;
         public Decal Decal
         {
             get => _Decal;
@@ -141,14 +144,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)TextureSet_FieldIndex.Flags] = value;
         }
-        bool ITextureSetGetter.Flags_IsSet => Flags_IsSet;
-        private TextureSet.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITextureSetGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private TextureSet.Flag _Flags;
         public TextureSet.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TextureSet.Flag ITextureSetGetter.Flags => this.Flags;
         public void Flags_Set(
             TextureSet.Flag value,
@@ -193,6 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -378,6 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2804,6 +2811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2818,6 +2826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

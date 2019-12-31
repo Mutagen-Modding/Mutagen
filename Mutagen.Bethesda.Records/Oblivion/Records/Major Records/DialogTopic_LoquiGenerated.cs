@@ -72,14 +72,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.Name] = value;
         }
-        bool IDialogTopicGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDialogTopicGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IDialogTopicGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -99,14 +101,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType];
             set => _hasBeenSetTracker[(int)DialogTopic_FieldIndex.DialogType] = value;
         }
-        bool IDialogTopicGetter.DialogType_IsSet => DialogType_IsSet;
-        private DialogType _DialogType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IDialogTopicGetter.DialogType_IsSet => DialogType_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DialogType _DialogType;
         public DialogType DialogType
         {
             get => this._DialogType;
             set => DialogType_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         DialogType IDialogTopicGetter.DialogType => this.DialogType;
         public void DialogType_Set(
             DialogType value,
@@ -121,12 +125,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Timestamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte[] _Timestamp = new byte[4];
         public Byte[] Timestamp
         {
             get => _Timestamp;
             set => this._Timestamp = value ?? new byte[4];
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlySpan<Byte> IDialogTopicGetter.Timestamp => this.Timestamp;
         #endregion
         #region Items
@@ -172,6 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -347,6 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = DialogTopic_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
         public DialogTopic(FormKey formKey)
         {
@@ -370,6 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3125,6 +3134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3139,6 +3149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogTopicBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

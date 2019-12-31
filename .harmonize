@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>4fc9c55605aba9584f9545a349d7cda21cdcfbcc</Sha>
+         <Sha>aeb7f03317f2ae18ec74dc7555b3af5d31f9c199</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-11-2019 19:20:39</CommitDate>
-         <Description>TaskExt.FireAndForget</Description>
+         <CommitDate>12-31-2019 03:14:56</CommitDate>
+         <Description>ITryGetter</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f371d7eb8d8bb3841b6371fe9d3105b1f08ee319</Sha>
+         <Sha>ed24428b3a8e703c0e1cbc6550f4308475902846</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-28-2019 20:39:54</CommitDate>
-         <Description>Added some DebuggerStepThrough</Description>
+         <CommitDate>12-31-2019 03:15:04</CommitDate>
+         <Description>DebugBrowsable improvements</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

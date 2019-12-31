@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region DialogType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DialogType _DialogType;
         public DialogType DialogType
         {
@@ -66,6 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DialogItem.Flag _Flags;
         public DialogItem.Flag Flags
         {
@@ -79,15 +81,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Quest
-        protected IFormIDSetLink<Quest> _Quest = new FormIDSetLink<Quest>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Quest> _Quest = new FormIDSetLink<Quest>();
         public IFormIDSetLink<Quest> Quest => this._Quest;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
         #endregion
         #region PreviousTopic
-        protected IFormIDSetLink<DialogItem> _PreviousTopic = new FormIDSetLink<DialogItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<DialogItem> _PreviousTopic = new FormIDSetLink<DialogItem>();
         public IFormIDSetLink<DialogItem> PreviousTopic => this._PreviousTopic;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;
@@ -156,6 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly ScriptFields _Script_Object = new ScriptFields();
         public ScriptFields Script => _Script_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IScriptFieldsGetter IDialogItemGetter.Script => _Script_Object;
         #endregion
         #region DATADataTypeState
@@ -192,6 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -382,6 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
             Has = 1,
             Break0 = 2
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => DialogItemCommon.Instance.GetLinks(this);
         public DialogItem(FormKey formKey)
         {
@@ -397,6 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4182,6 +4188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogItemGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => DialogItemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4196,6 +4203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

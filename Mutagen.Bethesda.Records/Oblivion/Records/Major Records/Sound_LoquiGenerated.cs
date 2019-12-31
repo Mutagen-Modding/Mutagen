@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Sound_FieldIndex.File];
             set => _hasBeenSetTracker[(int)Sound_FieldIndex.File] = value;
         }
-        bool ISoundGetter.File_IsSet => File_IsSet;
-        private String _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoundGetter.File_IsSet => File_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _File;
         public String File
         {
             get => this._File;
             set => File_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISoundGetter.File => this.File;
         public void File_Set(
             String value,
@@ -84,9 +86,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Sound_FieldIndex.Data];
             set => _hasBeenSetTracker[(int)Sound_FieldIndex.Data] = value;
         }
-        bool ISoundGetter.Data_IsSet => Data_IsSet;
-        private SoundData _Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISoundGetter.Data_IsSet => Data_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundData _Data;
         public SoundData Data
         {
             get => _Data;
@@ -137,6 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -320,6 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2383,6 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SoundXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2397,6 +2403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

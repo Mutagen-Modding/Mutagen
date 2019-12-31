@@ -52,15 +52,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Base
-        protected IFormIDSetLink<Creature> _Base = new FormIDSetLink<Creature>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Creature> _Base = new FormIDSetLink<Creature>();
         public IFormIDSetLink<Creature> Base => this._Base;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ICreatureGetter> IPlacedCreatureGetter.Base => this.Base;
         #endregion
         #region Owner
-        protected IFormIDSetLink<Faction> _Owner = new FormIDSetLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Faction> _Owner = new FormIDSetLink<Faction>();
         public IFormIDSetLink<Faction> Owner => this._Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IFactionGetter> IPlacedCreatureGetter.Owner => this.Owner;
@@ -71,14 +71,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.FactionRank];
             set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.FactionRank] = value;
         }
-        bool IPlacedCreatureGetter.FactionRank_IsSet => FactionRank_IsSet;
-        private Int32 _FactionRank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedCreatureGetter.FactionRank_IsSet => FactionRank_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _FactionRank;
         public Int32 FactionRank
         {
             get => this._FactionRank;
             set => FactionRank_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IPlacedCreatureGetter.FactionRank => this.FactionRank;
         public void FactionRank_Set(
             Int32 value,
@@ -93,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region GlobalVariable
-        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Global> _GlobalVariable = new FormIDSetLink<Global>();
         public IFormIDSetLink<Global> GlobalVariable => this._GlobalVariable;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;
@@ -105,9 +107,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.EnableParent];
             set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.EnableParent] = value;
         }
-        bool IPlacedCreatureGetter.EnableParent_IsSet => EnableParent_IsSet;
-        private EnableParent _EnableParent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedCreatureGetter.EnableParent_IsSet => EnableParent_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EnableParent _EnableParent;
         public EnableParent EnableParent
         {
             get => _EnableParent;
@@ -135,8 +138,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IPlacedCreatureGetter.RagdollData_IsSet => RagdollData_IsSet;
-        protected Byte[] _RagdollData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _RagdollData;
         public Byte[] RagdollData
         {
             get => this._RagdollData;
@@ -162,14 +165,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Scale];
             set => _hasBeenSetTracker[(int)PlacedCreature_FieldIndex.Scale] = value;
         }
-        bool IPlacedCreatureGetter.Scale_IsSet => Scale_IsSet;
-        private Single _Scale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IPlacedCreatureGetter.Scale_IsSet => Scale_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _Scale;
         public Single Scale
         {
             get => this._Scale;
             set => Scale_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IPlacedCreatureGetter.Scale => this.Scale;
         public void Scale_Set(
             Single value,
@@ -184,6 +189,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Position
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private P3Float _Position;
         public P3Float Position
         {
@@ -196,6 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Rotation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private P3Float _Rotation;
         public P3Float Rotation
         {
@@ -241,6 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedCreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -424,6 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => PlacedCreatureCommon.Instance.GetLinks(this);
         public PlacedCreature(FormKey formKey)
         {
@@ -439,6 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3526,6 +3536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedCreatureGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => PlacedCreatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedCreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3540,6 +3551,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

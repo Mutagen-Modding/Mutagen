@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Examples
         #endregion
 
         #region ModFilePath
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private String _ModFilePath;
         public String ModFilePath
         {
@@ -88,7 +89,9 @@ namespace Mutagen.Bethesda.Examples
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MainVMXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -244,6 +247,7 @@ namespace Mutagen.Bethesda.Examples
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {

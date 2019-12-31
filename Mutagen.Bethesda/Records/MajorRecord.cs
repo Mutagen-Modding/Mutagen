@@ -42,12 +42,14 @@ namespace Mutagen.Bethesda
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormKey.ToString()}";
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IMajorRecordCommon.IsCompressed
         {
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
             set => this.MajorRecordFlags = this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IMajorRecordCommonGetter.IsCompressed
         {
             get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);

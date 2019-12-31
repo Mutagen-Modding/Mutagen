@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Enchantment_FieldIndex.Name] = value;
         }
-        bool IEnchantmentGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IEnchantmentGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IEnchantmentGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -82,6 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Enchantment.EnchantmentType _Type;
         public Enchantment.EnchantmentType Type
         {
@@ -94,6 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ChargeAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _ChargeAmount;
         public UInt32 ChargeAmount
         {
@@ -106,6 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EnchantCost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _EnchantCost;
         public UInt32 EnchantCost
         {
@@ -118,6 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Enchantment.Flag _Flags;
         public Enchantment.Flag Flags
         {
@@ -175,6 +181,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -356,6 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => EnchantmentCommon.Instance.GetLinks(this);
         public Enchantment(FormKey formKey)
         {
@@ -371,6 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3030,6 +3039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEnchantmentGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => EnchantmentCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => EnchantmentXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3044,6 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EnchantmentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

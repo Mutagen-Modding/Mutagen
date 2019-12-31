@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.Name] = value;
         }
-        bool IClothingAbstractGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClothingAbstractGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -80,15 +82,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IClothingAbstractGetter.Script => this.Script;
         #endregion
         #region Enchantment
-        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Enchantment> _Enchantment = new FormIDSetLink<Enchantment>();
         public IFormIDSetLink<Enchantment> Enchantment => this._Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IEnchantmentGetter> IClothingAbstractGetter.Enchantment => this.Enchantment;
@@ -99,14 +101,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.EnchantmentPoints] = value;
         }
-        bool IClothingAbstractGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
-        private UInt16 _EnchantmentPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.EnchantmentPoints_IsSet => EnchantmentPoints_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _EnchantmentPoints;
         public UInt16 EnchantmentPoints
         {
             get => this._EnchantmentPoints;
             set => EnchantmentPoints_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16 IClothingAbstractGetter.EnchantmentPoints => this.EnchantmentPoints;
         public void EnchantmentPoints_Set(
             UInt16 value,
@@ -121,6 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BipedFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private BipedFlag _BipedFlags;
         public BipedFlag BipedFlags
         {
@@ -133,6 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EquipmentFlag _Flags;
         public EquipmentFlag Flags
         {
@@ -150,9 +156,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleBipedModel] = value;
         }
-        bool IClothingAbstractGetter.MaleBipedModel_IsSet => MaleBipedModel_IsSet;
-        private Model _MaleBipedModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.MaleBipedModel_IsSet => MaleBipedModel_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _MaleBipedModel;
         public Model MaleBipedModel
         {
             get => _MaleBipedModel;
@@ -178,9 +185,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleWorldModel] = value;
         }
-        bool IClothingAbstractGetter.MaleWorldModel_IsSet => MaleWorldModel_IsSet;
-        private Model _MaleWorldModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.MaleWorldModel_IsSet => MaleWorldModel_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _MaleWorldModel;
         public Model MaleWorldModel
         {
             get => _MaleWorldModel;
@@ -206,14 +214,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.MaleIcon] = value;
         }
-        bool IClothingAbstractGetter.MaleIcon_IsSet => MaleIcon_IsSet;
-        private String _MaleIcon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.MaleIcon_IsSet => MaleIcon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _MaleIcon;
         public String MaleIcon
         {
             get => this._MaleIcon;
             set => MaleIcon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClothingAbstractGetter.MaleIcon => this.MaleIcon;
         public void MaleIcon_Set(
             String value,
@@ -233,9 +243,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleBipedModel] = value;
         }
-        bool IClothingAbstractGetter.FemaleBipedModel_IsSet => FemaleBipedModel_IsSet;
-        private Model _FemaleBipedModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.FemaleBipedModel_IsSet => FemaleBipedModel_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _FemaleBipedModel;
         public Model FemaleBipedModel
         {
             get => _FemaleBipedModel;
@@ -261,9 +272,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleWorldModel] = value;
         }
-        bool IClothingAbstractGetter.FemaleWorldModel_IsSet => FemaleWorldModel_IsSet;
-        private Model _FemaleWorldModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.FemaleWorldModel_IsSet => FemaleWorldModel_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _FemaleWorldModel;
         public Model FemaleWorldModel
         {
             get => _FemaleWorldModel;
@@ -289,14 +301,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon];
             set => _hasBeenSetTracker[(int)ClothingAbstract_FieldIndex.FemaleIcon] = value;
         }
-        bool IClothingAbstractGetter.FemaleIcon_IsSet => FemaleIcon_IsSet;
-        private String _FemaleIcon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClothingAbstractGetter.FemaleIcon_IsSet => FemaleIcon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _FemaleIcon;
         public String FemaleIcon
         {
             get => this._FemaleIcon;
             set => FemaleIcon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClothingAbstractGetter.FemaleIcon => this.FemaleIcon;
         public void FemaleIcon_Set(
             String value,
@@ -344,6 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -532,6 +547,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ClothingAbstractCommon.Instance.GetLinks(this);
         public ClothingAbstract(FormKey formKey)
         {
@@ -547,6 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClothingAbstractBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4263,6 +4280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClothingAbstractGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => ClothingAbstractCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClothingAbstractXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4277,6 +4295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClothingAbstractBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

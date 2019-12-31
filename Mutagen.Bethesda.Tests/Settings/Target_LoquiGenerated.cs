@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Tests
             get => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount];
             set => _hasBeenSetTracker[(int)Target_FieldIndex.ExpectedBaseGroupCount] = value;
         }
-        bool ITargetGetter.ExpectedBaseGroupCount_IsSet => ExpectedBaseGroupCount_IsSet;
-        private Byte _ExpectedBaseGroupCount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITargetGetter.ExpectedBaseGroupCount_IsSet => ExpectedBaseGroupCount_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _ExpectedBaseGroupCount;
         public Byte ExpectedBaseGroupCount
         {
             get => this._ExpectedBaseGroupCount;
             set => ExpectedBaseGroupCount_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
         public void ExpectedBaseGroupCount_Set(
             Byte value,
@@ -83,6 +85,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Interest
         public RecordInterest Interest { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRecordInterestGetter ITargetGetter.Interest => Interest;
         #endregion
 
@@ -121,7 +124,9 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => TargetXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -277,6 +282,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {

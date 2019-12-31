@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Icon] = value;
         }
-        bool ILandTextureGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILandTextureGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ILandTextureGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -86,9 +88,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok];
             set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.Havok] = value;
         }
-        bool ILandTextureGetter.Havok_IsSet => Havok_IsSet;
-        private HavokData _Havok;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILandTextureGetter.Havok_IsSet => Havok_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private HavokData _Havok;
         public HavokData Havok
         {
             get => _Havok;
@@ -114,14 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent];
             set => _hasBeenSetTracker[(int)LandTexture_FieldIndex.TextureSpecularExponent] = value;
         }
-        bool ILandTextureGetter.TextureSpecularExponent_IsSet => TextureSpecularExponent_IsSet;
-        private Byte _TextureSpecularExponent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILandTextureGetter.TextureSpecularExponent_IsSet => TextureSpecularExponent_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _TextureSpecularExponent;
         public Byte TextureSpecularExponent
         {
             get => this._TextureSpecularExponent;
             set => TextureSpecularExponent_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ILandTextureGetter.TextureSpecularExponent => this.TextureSpecularExponent;
         public void TextureSpecularExponent_Set(
             Byte value,
@@ -178,6 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -350,6 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LandTexture_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LandTextureCommon.Instance.GetLinks(this);
         public LandTexture(FormKey formKey)
         {
@@ -365,6 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2795,6 +2803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILandTextureGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => LandTextureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LandTextureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2809,6 +2818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandTextureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

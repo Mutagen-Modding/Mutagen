@@ -61,14 +61,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.Icon] = value;
         }
-        bool IRegionGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IRegionGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -88,14 +90,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.MapColor];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.MapColor] = value;
         }
-        bool IRegionGetter.MapColor_IsSet => MapColor_IsSet;
-        private Color _MapColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.MapColor_IsSet => MapColor_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _MapColor;
         public Color MapColor
         {
             get => this._MapColor;
             set => MapColor_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color IRegionGetter.MapColor => this.MapColor;
         public void MapColor_Set(
             Color value,
@@ -110,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Worldspace
-        protected IFormIDSetLink<Worldspace> _Worldspace = new FormIDSetLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Worldspace> _Worldspace = new FormIDSetLink<Worldspace>();
         public IFormIDSetLink<Worldspace> Worldspace => this._Worldspace;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
@@ -134,9 +138,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Objects];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.Objects] = value;
         }
-        bool IRegionGetter.Objects_IsSet => Objects_IsSet;
-        private RegionDataObjects _Objects;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.Objects_IsSet => Objects_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataObjects _Objects;
         public RegionDataObjects Objects
         {
             get => _Objects;
@@ -162,9 +167,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Weather];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.Weather] = value;
         }
-        bool IRegionGetter.Weather_IsSet => Weather_IsSet;
-        private RegionDataWeather _Weather;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.Weather_IsSet => Weather_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataWeather _Weather;
         public RegionDataWeather Weather
         {
             get => _Weather;
@@ -190,9 +196,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.MapName];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.MapName] = value;
         }
-        bool IRegionGetter.MapName_IsSet => MapName_IsSet;
-        private RegionDataMapName _MapName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.MapName_IsSet => MapName_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataMapName _MapName;
         public RegionDataMapName MapName
         {
             get => _MapName;
@@ -218,9 +225,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Grasses];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.Grasses] = value;
         }
-        bool IRegionGetter.Grasses_IsSet => Grasses_IsSet;
-        private RegionDataGrasses _Grasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.Grasses_IsSet => Grasses_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataGrasses _Grasses;
         public RegionDataGrasses Grasses
         {
             get => _Grasses;
@@ -246,9 +254,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Region_FieldIndex.Sounds];
             set => _hasBeenSetTracker[(int)Region_FieldIndex.Sounds] = value;
         }
-        bool IRegionGetter.Sounds_IsSet => Sounds_IsSet;
-        private RegionDataSounds _Sounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IRegionGetter.Sounds_IsSet => Sounds_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionDataSounds _Sounds;
         public RegionDataSounds Sounds
         {
             get => _Sounds;
@@ -299,6 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -476,6 +486,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Region_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RegionCommon.Instance.GetLinks(this);
         public Region(FormKey formKey)
         {
@@ -491,6 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3743,6 +3755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => RegionCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3757,6 +3770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

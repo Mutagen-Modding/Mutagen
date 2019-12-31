@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.Name] = value;
         }
-        bool ICreatureGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ICreatureGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,9 +89,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.Model] = value;
         }
-        bool ICreatureGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -153,8 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool ICreatureGetter.NIFT_IsSet => NIFT_IsSet;
-        protected Byte[] _NIFT;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _NIFT;
         public Byte[] NIFT
         {
             get => this._NIFT;
@@ -175,6 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Creature.CreatureFlag _Flags;
         public Creature.CreatureFlag Flags
         {
@@ -187,6 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BaseSpellPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _BaseSpellPoints;
         public UInt16 BaseSpellPoints
         {
@@ -199,6 +204,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Fatigue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _Fatigue;
         public UInt16 Fatigue
         {
@@ -211,6 +217,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BarterGold
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _BarterGold;
         public UInt16 BarterGold
         {
@@ -223,6 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region LevelOffset
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Int16 _LevelOffset;
         public Int16 LevelOffset
         {
@@ -235,6 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CalcMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _CalcMin;
         public UInt16 CalcMin
         {
@@ -247,6 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CalcMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _CalcMax;
         public UInt16 CalcMax
         {
@@ -271,20 +281,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        protected IFormIDSetLink<ItemAbstract> _DeathItem = new FormIDSetLink<ItemAbstract>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<ItemAbstract> _DeathItem = new FormIDSetLink<ItemAbstract>();
         public IFormIDSetLink<ItemAbstract> DeathItem => this._DeathItem;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IItemAbstractGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
         #endregion
         #region Aggression
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Aggression;
         public Byte Aggression
         {
@@ -297,6 +308,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Confidence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Confidence;
         public Byte Confidence
         {
@@ -309,6 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region EnergyLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _EnergyLevel;
         public Byte EnergyLevel
         {
@@ -321,6 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Responsibility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Responsibility;
         public Byte Responsibility
         {
@@ -333,6 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region BuySellServices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NPC.BuySellServiceFlag _BuySellServices;
         public NPC.BuySellServiceFlag BuySellServices
         {
@@ -345,6 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Teaches
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Skill _Teaches;
         public Skill Teaches
         {
@@ -357,6 +373,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MaximumTrainingLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MaximumTrainingLevel;
         public Byte MaximumTrainingLevel
         {
@@ -393,6 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CreatureType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Creature.CreatureTypeEnum _CreatureType;
         public Creature.CreatureTypeEnum CreatureType
         {
@@ -405,6 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CombatSkill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _CombatSkill;
         public Byte CombatSkill
         {
@@ -417,6 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region MagicSkill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MagicSkill;
         public Byte MagicSkill
         {
@@ -429,6 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region StealthSkill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _StealthSkill;
         public Byte StealthSkill
         {
@@ -441,6 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SoulLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoulLevel _SoulLevel;
         public SoulLevel SoulLevel
         {
@@ -453,6 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Health;
         public UInt32 Health
         {
@@ -465,6 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region AttackDamage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt16 _AttackDamage;
         public UInt16 AttackDamage
         {
@@ -477,6 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Strength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Strength;
         public Byte Strength
         {
@@ -489,6 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Intelligence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Intelligence;
         public Byte Intelligence
         {
@@ -501,6 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Willpower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Willpower;
         public Byte Willpower
         {
@@ -513,6 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Agility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Agility;
         public Byte Agility
         {
@@ -525,6 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Speed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Speed;
         public Byte Speed
         {
@@ -537,6 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Endurance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Endurance;
         public Byte Endurance
         {
@@ -549,6 +579,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Personality
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Personality;
         public Byte Personality
         {
@@ -561,6 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Luck
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Luck;
         public Byte Luck
         {
@@ -578,14 +610,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.AttackReach] = value;
         }
-        bool ICreatureGetter.AttackReach_IsSet => AttackReach_IsSet;
-        private Byte _AttackReach;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.AttackReach_IsSet => AttackReach_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _AttackReach;
         public Byte AttackReach
         {
             get => this._AttackReach;
             set => AttackReach_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ICreatureGetter.AttackReach => this.AttackReach;
         public void AttackReach_Set(
             Byte value,
@@ -600,8 +634,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region CombatStyle
-        protected IFormIDSetLink<CombatStyle> _CombatStyle = new FormIDSetLink<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<CombatStyle> _CombatStyle = new FormIDSetLink<CombatStyle>();
         public IFormIDSetLink<CombatStyle> CombatStyle => this._CombatStyle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
@@ -612,14 +646,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.TurningSpeed] = value;
         }
-        bool ICreatureGetter.TurningSpeed_IsSet => TurningSpeed_IsSet;
-        private Single _TurningSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.TurningSpeed_IsSet => TurningSpeed_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _TurningSpeed;
         public Single TurningSpeed
         {
             get => this._TurningSpeed;
             set => TurningSpeed_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single ICreatureGetter.TurningSpeed => this.TurningSpeed;
         public void TurningSpeed_Set(
             Single value,
@@ -639,14 +675,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.BaseScale] = value;
         }
-        bool ICreatureGetter.BaseScale_IsSet => BaseScale_IsSet;
-        private Single _BaseScale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.BaseScale_IsSet => BaseScale_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BaseScale;
         public Single BaseScale
         {
             get => this._BaseScale;
             set => BaseScale_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single ICreatureGetter.BaseScale => this.BaseScale;
         public void BaseScale_Set(
             Single value,
@@ -666,14 +704,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.FootWeight] = value;
         }
-        bool ICreatureGetter.FootWeight_IsSet => FootWeight_IsSet;
-        private Single _FootWeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.FootWeight_IsSet => FootWeight_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FootWeight;
         public Single FootWeight
         {
             get => this._FootWeight;
             set => FootWeight_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single ICreatureGetter.FootWeight => this.FootWeight;
         public void FootWeight_Set(
             Single value,
@@ -693,14 +733,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodSpray] = value;
         }
-        bool ICreatureGetter.BloodSpray_IsSet => BloodSpray_IsSet;
-        private String _BloodSpray;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.BloodSpray_IsSet => BloodSpray_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _BloodSpray;
         public String BloodSpray
         {
             get => this._BloodSpray;
             set => BloodSpray_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ICreatureGetter.BloodSpray => this.BloodSpray;
         public void BloodSpray_Set(
             String value,
@@ -720,14 +762,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal];
             set => _hasBeenSetTracker[(int)Creature_FieldIndex.BloodDecal] = value;
         }
-        bool ICreatureGetter.BloodDecal_IsSet => BloodDecal_IsSet;
-        private String _BloodDecal;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ICreatureGetter.BloodDecal_IsSet => BloodDecal_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _BloodDecal;
         public String BloodDecal
         {
             get => this._BloodDecal;
             set => BloodDecal_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ICreatureGetter.BloodDecal => this.BloodDecal;
         public void BloodDecal_Set(
             String value,
@@ -742,8 +786,8 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region InheritsSoundFrom
-        protected IFormIDSetLink<Creature> _InheritsSoundFrom = new FormIDSetLink<Creature>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Creature> _InheritsSoundFrom = new FormIDSetLink<Creature>();
         public IFormIDSetLink<Creature> InheritsSoundFrom => this._InheritsSoundFrom;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;
@@ -800,6 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1042,6 +1087,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
         public Creature(FormKey formKey)
         {
@@ -1057,6 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -9789,6 +9836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -9803,6 +9851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

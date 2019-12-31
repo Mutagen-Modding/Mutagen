@@ -56,9 +56,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male];
             set => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Male] = value;
         }
-        bool IGenderedBodyDataGetter.Male_IsSet => Male_IsSet;
-        private BodyData _Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IGenderedBodyDataGetter.Male_IsSet => Male_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private BodyData _Male;
         public BodyData Male
         {
             get => _Male;
@@ -84,9 +85,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female];
             set => _hasBeenSetTracker[(int)GenderedBodyData_FieldIndex.Female] = value;
         }
-        bool IGenderedBodyDataGetter.Female_IsSet => Female_IsSet;
-        private BodyData _Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IGenderedBodyDataGetter.Female_IsSet => Female_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private BodyData _Female;
         public BodyData Female
         {
             get => _Female;
@@ -137,7 +139,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -293,6 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -307,7 +312,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => GenderedBodyDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2278,7 +2285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGenderedBodyDataGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => GenderedBodyDataXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2293,7 +2302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => GenderedBodyDataBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

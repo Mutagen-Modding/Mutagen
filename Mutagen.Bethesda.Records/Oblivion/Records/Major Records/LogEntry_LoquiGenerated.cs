@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Flags] = value;
         }
-        bool ILogEntryGetter.Flags_IsSet => Flags_IsSet;
-        private LogEntry.Flag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILogEntryGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LogEntry.Flag _Flags;
         public LogEntry.Flag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LogEntry.Flag ILogEntryGetter.Flags => this.Flags;
         public void Flags_Set(
             LogEntry.Flag value,
@@ -97,14 +99,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry];
             set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.Entry] = value;
         }
-        bool ILogEntryGetter.Entry_IsSet => Entry_IsSet;
-        private String _Entry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILogEntryGetter.Entry_IsSet => Entry_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Entry;
         public String Entry
         {
             get => this._Entry;
             set => Entry_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ILogEntryGetter.Entry => this.Entry;
         public void Entry_Set(
             String value,
@@ -124,9 +128,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript];
             set => _hasBeenSetTracker[(int)LogEntry_FieldIndex.ResultScript] = value;
         }
-        bool ILogEntryGetter.ResultScript_IsSet => ResultScript_IsSet;
-        private ScriptFields _ResultScript;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILogEntryGetter.ResultScript_IsSet => ResultScript_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScriptFields _ResultScript;
         public ScriptFields ResultScript
         {
             get => _ResultScript;
@@ -177,7 +182,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -333,6 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -350,11 +358,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => LogEntryCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2728,7 +2739,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILogEntryGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => LogEntryCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => LogEntryXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2743,7 +2756,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

@@ -255,6 +255,7 @@ namespace Mutagen.Bethesda.Generation
                 var linkCase = await HasLinks(obj, includeBaseClass: false);
                 if (linkCase == LinkCase.No) return;
             }
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"public{await obj.FunctionOverride(async (o) => (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(ILinkGetter)}> Links => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinks(this);");
         }
     }

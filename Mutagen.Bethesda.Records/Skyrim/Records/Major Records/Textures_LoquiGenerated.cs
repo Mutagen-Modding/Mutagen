@@ -55,14 +55,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Diffuse];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.Diffuse] = value;
         }
-        bool ITexturesGetter.Diffuse_IsSet => Diffuse_IsSet;
-        private String _Diffuse;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.Diffuse_IsSet => Diffuse_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Diffuse;
         public String Diffuse
         {
             get => this._Diffuse;
             set => Diffuse_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.Diffuse => this.Diffuse;
         public void Diffuse_Set(
             String value,
@@ -82,14 +84,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.NormalOrGloss];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.NormalOrGloss] = value;
         }
-        bool ITexturesGetter.NormalOrGloss_IsSet => NormalOrGloss_IsSet;
-        private String _NormalOrGloss;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.NormalOrGloss_IsSet => NormalOrGloss_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _NormalOrGloss;
         public String NormalOrGloss
         {
             get => this._NormalOrGloss;
             set => NormalOrGloss_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.NormalOrGloss => this.NormalOrGloss;
         public void NormalOrGloss_Set(
             String value,
@@ -109,14 +113,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint] = value;
         }
-        bool ITexturesGetter.EnvironmentMaskOrSubsurfaceTint_IsSet => EnvironmentMaskOrSubsurfaceTint_IsSet;
-        private String _EnvironmentMaskOrSubsurfaceTint;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.EnvironmentMaskOrSubsurfaceTint_IsSet => EnvironmentMaskOrSubsurfaceTint_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _EnvironmentMaskOrSubsurfaceTint;
         public String EnvironmentMaskOrSubsurfaceTint
         {
             get => this._EnvironmentMaskOrSubsurfaceTint;
             set => EnvironmentMaskOrSubsurfaceTint_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.EnvironmentMaskOrSubsurfaceTint => this.EnvironmentMaskOrSubsurfaceTint;
         public void EnvironmentMaskOrSubsurfaceTint_Set(
             String value,
@@ -136,14 +142,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.GlowOrDetailMap];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.GlowOrDetailMap] = value;
         }
-        bool ITexturesGetter.GlowOrDetailMap_IsSet => GlowOrDetailMap_IsSet;
-        private String _GlowOrDetailMap;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.GlowOrDetailMap_IsSet => GlowOrDetailMap_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _GlowOrDetailMap;
         public String GlowOrDetailMap
         {
             get => this._GlowOrDetailMap;
             set => GlowOrDetailMap_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.GlowOrDetailMap => this.GlowOrDetailMap;
         public void GlowOrDetailMap_Set(
             String value,
@@ -163,14 +171,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Height];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.Height] = value;
         }
-        bool ITexturesGetter.Height_IsSet => Height_IsSet;
-        private String _Height;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.Height_IsSet => Height_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Height;
         public String Height
         {
             get => this._Height;
             set => Height_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.Height => this.Height;
         public void Height_Set(
             String value,
@@ -190,14 +200,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Environment];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.Environment] = value;
         }
-        bool ITexturesGetter.Environment_IsSet => Environment_IsSet;
-        private String _Environment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.Environment_IsSet => Environment_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Environment;
         public String Environment
         {
             get => this._Environment;
             set => Environment_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.Environment => this.Environment;
         public void Environment_Set(
             String value,
@@ -217,14 +229,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.Multilayer];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.Multilayer] = value;
         }
-        bool ITexturesGetter.Multilayer_IsSet => Multilayer_IsSet;
-        private String _Multilayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.Multilayer_IsSet => Multilayer_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Multilayer;
         public String Multilayer
         {
             get => this._Multilayer;
             set => Multilayer_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.Multilayer => this.Multilayer;
         public void Multilayer_Set(
             String value,
@@ -244,14 +258,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Textures_FieldIndex.BacklightMaskOrSpecular];
             set => _hasBeenSetTracker[(int)Textures_FieldIndex.BacklightMaskOrSpecular] = value;
         }
-        bool ITexturesGetter.BacklightMaskOrSpecular_IsSet => BacklightMaskOrSpecular_IsSet;
-        private String _BacklightMaskOrSpecular;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ITexturesGetter.BacklightMaskOrSpecular_IsSet => BacklightMaskOrSpecular_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _BacklightMaskOrSpecular;
         public String BacklightMaskOrSpecular
         {
             get => this._BacklightMaskOrSpecular;
             set => BacklightMaskOrSpecular_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ITexturesGetter.BacklightMaskOrSpecular => this.BacklightMaskOrSpecular;
         public void BacklightMaskOrSpecular_Set(
             String value,
@@ -296,7 +312,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => TexturesXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -452,6 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -472,7 +491,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TexturesBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3277,7 +3298,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITexturesGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => TexturesXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3292,7 +3315,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TexturesBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

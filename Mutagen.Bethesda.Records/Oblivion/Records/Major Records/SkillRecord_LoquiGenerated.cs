@@ -57,14 +57,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Skill] = value;
         }
-        bool ISkillRecordGetter.Skill_IsSet => Skill_IsSet;
-        private ActorValue _Skill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.Skill_IsSet => Skill_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ActorValue _Skill;
         public ActorValue Skill
         {
             get => this._Skill;
             set => Skill_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ActorValue ISkillRecordGetter.Skill => this.Skill;
         public void Skill_Set(
             ActorValue value,
@@ -84,14 +86,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Description] = value;
         }
-        bool ISkillRecordGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -111,14 +115,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.Icon] = value;
         }
-        bool ISkillRecordGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -133,6 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Action
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ActorValue _Action;
         public ActorValue Action
         {
@@ -145,6 +152,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Attribute
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ActorValue _Attribute;
         public ActorValue Attribute
         {
@@ -157,6 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Specialization
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Specialization _Specialization;
         public Specialization Specialization
         {
@@ -169,6 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UseValueFirst
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _UseValueFirst;
         public Single UseValueFirst
         {
@@ -181,6 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region UseValueSecond
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _UseValueSecond;
         public Single UseValueSecond
         {
@@ -198,14 +209,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ApprenticeText] = value;
         }
-        bool ISkillRecordGetter.ApprenticeText_IsSet => ApprenticeText_IsSet;
-        private String _ApprenticeText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.ApprenticeText_IsSet => ApprenticeText_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ApprenticeText;
         public String ApprenticeText
         {
             get => this._ApprenticeText;
             set => ApprenticeText_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.ApprenticeText => this.ApprenticeText;
         public void ApprenticeText_Set(
             String value,
@@ -225,14 +238,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.JourneymanText] = value;
         }
-        bool ISkillRecordGetter.JourneymanText_IsSet => JourneymanText_IsSet;
-        private String _JourneymanText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.JourneymanText_IsSet => JourneymanText_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _JourneymanText;
         public String JourneymanText
         {
             get => this._JourneymanText;
             set => JourneymanText_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.JourneymanText => this.JourneymanText;
         public void JourneymanText_Set(
             String value,
@@ -252,14 +267,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.ExpertText] = value;
         }
-        bool ISkillRecordGetter.ExpertText_IsSet => ExpertText_IsSet;
-        private String _ExpertText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.ExpertText_IsSet => ExpertText_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _ExpertText;
         public String ExpertText
         {
             get => this._ExpertText;
             set => ExpertText_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.ExpertText => this.ExpertText;
         public void ExpertText_Set(
             String value,
@@ -279,14 +296,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText];
             set => _hasBeenSetTracker[(int)SkillRecord_FieldIndex.MasterText] = value;
         }
-        bool ISkillRecordGetter.MasterText_IsSet => MasterText_IsSet;
-        private String _MasterText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ISkillRecordGetter.MasterText_IsSet => MasterText_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _MasterText;
         public String MasterText
         {
             get => this._MasterText;
             set => MasterText_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String ISkillRecordGetter.MasterText => this.MasterText;
         public void MasterText_Set(
             String value,
@@ -334,6 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -534,6 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3935,6 +3956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillRecordGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SkillRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3949,6 +3971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SkillRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

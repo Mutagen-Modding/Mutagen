@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Name] = value;
         }
-        bool IAlchemicalApparatusGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAlchemicalApparatusGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IAlchemicalApparatusGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,9 +87,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Model] = value;
         }
-        bool IAlchemicalApparatusGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAlchemicalApparatusGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -113,14 +116,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)AlchemicalApparatus_FieldIndex.Icon] = value;
         }
-        bool IAlchemicalApparatusGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IAlchemicalApparatusGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IAlchemicalApparatusGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -135,13 +140,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Script
-        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormIDSetLink<Script> _Script = new FormIDSetLink<Script>();
         public IFormIDSetLink<Script> Script => this._Script;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormIDSetLinkGetter<IScriptGetter> IAlchemicalApparatusGetter.Script => this.Script;
         #endregion
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AlchemicalApparatus.ApparatusType _Type;
         public AlchemicalApparatus.ApparatusType Type
         {
@@ -154,6 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _Value;
         public UInt32 Value
         {
@@ -166,6 +173,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Weight;
         public Single Weight
         {
@@ -178,6 +186,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Quality
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _Quality;
         public Single Quality
         {
@@ -224,6 +233,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AlchemicalApparatusXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -406,6 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => AlchemicalApparatusCommon.Instance.GetLinks(this);
         public AlchemicalApparatus(FormKey formKey)
         {
@@ -421,6 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AlchemicalApparatusBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3378,6 +3390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => AlchemicalApparatusCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AlchemicalApparatusXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3392,6 +3405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AlchemicalApparatusBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

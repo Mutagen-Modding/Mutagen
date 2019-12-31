@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Keyword_FieldIndex.Color];
             set => _hasBeenSetTracker[(int)Keyword_FieldIndex.Color] = value;
         }
-        bool IKeywordGetter.Color_IsSet => Color_IsSet;
-        private Color _Color;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IKeywordGetter.Color_IsSet => Color_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _Color;
         public Color Color
         {
             get => this._Color;
             set => Color_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Color IKeywordGetter.Color => this.Color;
         public void Color_Set(
             Color value,
@@ -111,6 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => KeywordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -293,6 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2156,6 +2160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IKeywordGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => KeywordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2170,6 +2175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

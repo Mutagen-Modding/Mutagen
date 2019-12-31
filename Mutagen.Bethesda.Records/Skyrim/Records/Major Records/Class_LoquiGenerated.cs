@@ -58,14 +58,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Name] = value;
         }
-        bool IClassGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -85,14 +87,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Description] = value;
         }
-        bool IClassGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -112,14 +116,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = value;
         }
-        bool IClassGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -134,6 +140,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Int32 _Unknown;
         public Int32 Unknown
         {
@@ -146,6 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Teaches
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Skill _Teaches;
         public Skill Teaches
         {
@@ -158,6 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region MaxTrainingLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MaxTrainingLevel;
         public Byte MaxTrainingLevel
         {
@@ -170,6 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region OneHandedWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _OneHandedWeight;
         public Byte OneHandedWeight
         {
@@ -182,6 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region TwoHandedWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _TwoHandedWeight;
         public Byte TwoHandedWeight
         {
@@ -194,6 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region MarksmanWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MarksmanWeight;
         public Byte MarksmanWeight
         {
@@ -206,6 +218,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region BlockWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _BlockWeight;
         public Byte BlockWeight
         {
@@ -218,6 +231,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region SmithingWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _SmithingWeight;
         public Byte SmithingWeight
         {
@@ -230,6 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region HeavyArmorWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _HeavyArmorWeight;
         public Byte HeavyArmorWeight
         {
@@ -242,6 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region LightArmorWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _LightArmorWeight;
         public Byte LightArmorWeight
         {
@@ -254,6 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region PickpocketWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PickpocketWeight;
         public Byte PickpocketWeight
         {
@@ -266,6 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region LockpickingWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _LockpickingWeight;
         public Byte LockpickingWeight
         {
@@ -278,6 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region SneakWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _SneakWeight;
         public Byte SneakWeight
         {
@@ -290,6 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region AlchemyWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _AlchemyWeight;
         public Byte AlchemyWeight
         {
@@ -302,6 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region SpeechcraftWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _SpeechcraftWeight;
         public Byte SpeechcraftWeight
         {
@@ -314,6 +335,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region AlterationWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _AlterationWeight;
         public Byte AlterationWeight
         {
@@ -326,6 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ConjurationWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _ConjurationWeight;
         public Byte ConjurationWeight
         {
@@ -338,6 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region DestructionWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _DestructionWeight;
         public Byte DestructionWeight
         {
@@ -350,6 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region IllusionWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _IllusionWeight;
         public Byte IllusionWeight
         {
@@ -362,6 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region RestorationWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _RestorationWeight;
         public Byte RestorationWeight
         {
@@ -374,6 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region EnchantingWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _EnchantingWeight;
         public Byte EnchantingWeight
         {
@@ -386,6 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region BleedoutDefault
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Single _BleedoutDefault;
         public Single BleedoutDefault
         {
@@ -398,6 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region VoicePoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UInt32 _VoicePoints;
         public UInt32 VoicePoints
         {
@@ -410,6 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region HealthWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _HealthWeight;
         public Byte HealthWeight
         {
@@ -422,6 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region MagickaWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _MagickaWeight;
         public Byte MagickaWeight
         {
@@ -434,6 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region StaminaWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _StaminaWeight;
         public Byte StaminaWeight
         {
@@ -446,6 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region Unknown2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Unknown2;
         public Byte Unknown2
         {
@@ -491,6 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -709,6 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -5531,6 +5566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -5545,6 +5581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

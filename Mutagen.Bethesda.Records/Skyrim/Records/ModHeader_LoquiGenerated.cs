@@ -75,6 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             get => _Stats;
             set => _Stats = value ?? new ModStats();
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModStatsGetter IModHeaderGetter.Stats => _Stats;
         #endregion
         #region TypeOffsets
@@ -85,8 +86,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.TypeOffsets_IsSet => TypeOffsets_IsSet;
-        protected Byte[] _TypeOffsets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _TypeOffsets;
         public Byte[] TypeOffsets
         {
             get => this._TypeOffsets;
@@ -114,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool IModHeaderGetter.Deleted_IsSet => Deleted_IsSet;
-        protected Byte[] _Deleted;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected Byte[] _Deleted;
         public Byte[] Deleted
         {
             get => this._Deleted;
@@ -141,14 +142,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Author] = value;
         }
-        bool IModHeaderGetter.Author_IsSet => Author_IsSet;
-        private String _Author;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.Author_IsSet => Author_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Author;
         public String Author
         {
             get => this._Author;
             set => Author_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IModHeaderGetter.Author => this.Author;
         public void Author_Set(
             String value,
@@ -168,14 +171,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.Description] = value;
         }
-        bool IModHeaderGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IModHeaderGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -219,14 +224,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INTV] = value;
         }
-        bool IModHeaderGetter.INTV_IsSet => INTV_IsSet;
-        private Int32 _INTV;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.INTV_IsSet => INTV_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _INTV;
         public Int32 INTV
         {
             get => this._INTV;
             set => INTV_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IModHeaderGetter.INTV => this.INTV;
         public void INTV_Set(
             Int32 value,
@@ -246,14 +253,16 @@ namespace Mutagen.Bethesda.Skyrim
             get => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC];
             set => _hasBeenSetTracker[(int)ModHeader_FieldIndex.INCC] = value;
         }
-        bool IModHeaderGetter.INCC_IsSet => INCC_IsSet;
-        private Int32 _INCC;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IModHeaderGetter.INCC_IsSet => INCC_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _INCC;
         public Int32 INCC
         {
             get => this._INCC;
             set => INCC_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32 IModHeaderGetter.INCC => this.INCC;
         public void INCC_Set(
             Int32 value,
@@ -298,7 +307,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -454,6 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly BitArray _hasBeenSetTracker;
         protected bool GetHasBeenSet(int index)
         {
@@ -483,6 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = ModHeader_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
         public async Task WriteToXmlFolder(
             DirectoryPath? dir,
@@ -499,7 +512,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -4126,7 +4141,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
 
         public IEnumerable<ILinkGetter> Links => ModHeaderCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ModHeaderXmlWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4141,7 +4158,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

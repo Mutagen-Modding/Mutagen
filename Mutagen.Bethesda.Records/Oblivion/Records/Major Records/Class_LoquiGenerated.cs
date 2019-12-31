@@ -60,14 +60,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Name] = value;
         }
-        bool IClassGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -87,14 +89,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Description];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Description] = value;
         }
-        bool IClassGetter.Description_IsSet => Description_IsSet;
-        private String _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Description_IsSet => Description_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Description;
         public String Description
         {
             get => this._Description;
             set => Description_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Description => this.Description;
         public void Description_Set(
             String value,
@@ -114,14 +118,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Class_FieldIndex.Icon];
             set => _hasBeenSetTracker[(int)Class_FieldIndex.Icon] = value;
         }
-        bool IClassGetter.Icon_IsSet => Icon_IsSet;
-        private String _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClassGetter.Icon_IsSet => Icon_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Icon;
         public String Icon
         {
             get => this._Icon;
             set => Icon_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClassGetter.Icon => this.Icon;
         public void Icon_Set(
             String value,
@@ -148,6 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Specialization
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Class.SpecializationFlag _Specialization;
         public Class.SpecializationFlag Specialization
         {
@@ -172,6 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ClassFlag _Flags;
         public ClassFlag Flags
         {
@@ -184,6 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region ClassServices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ClassService _ClassServices;
         public ClassService ClassServices
         {
@@ -203,6 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
             get => _Training;
             set => _Training = value ?? new ClassTraining();
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IClassTrainingGetter IClassGetter.Training => _Training;
         #endregion
         #region DATADataTypeState
@@ -239,6 +249,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -437,6 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3622,6 +3634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClassGetter)rhs, include);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3636,6 +3649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

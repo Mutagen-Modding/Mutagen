@@ -18,6 +18,7 @@ using System.IO;
 using System.Xml.Linq;
 using Loqui.Xml;
 using Mutagen.Bethesda.Skyrim.Internals;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -31,7 +32,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial class SkyrimMod
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
         public ModKey ModKey { get; }

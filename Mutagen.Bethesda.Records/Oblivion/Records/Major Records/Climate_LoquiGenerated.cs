@@ -71,14 +71,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture];
             set => _hasBeenSetTracker[(int)Climate_FieldIndex.SunTexture] = value;
         }
-        bool IClimateGetter.SunTexture_IsSet => SunTexture_IsSet;
-        private String _SunTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClimateGetter.SunTexture_IsSet => SunTexture_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _SunTexture;
         public String SunTexture
         {
             get => this._SunTexture;
             set => SunTexture_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClimateGetter.SunTexture => this.SunTexture;
         public void SunTexture_Set(
             String value,
@@ -98,14 +100,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture];
             set => _hasBeenSetTracker[(int)Climate_FieldIndex.SunGlareTexture] = value;
         }
-        bool IClimateGetter.SunGlareTexture_IsSet => SunGlareTexture_IsSet;
-        private String _SunGlareTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClimateGetter.SunGlareTexture_IsSet => SunGlareTexture_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _SunGlareTexture;
         public String SunGlareTexture
         {
             get => this._SunGlareTexture;
             set => SunGlareTexture_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IClimateGetter.SunGlareTexture => this.SunGlareTexture;
         public void SunGlareTexture_Set(
             String value,
@@ -125,9 +129,10 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Climate_FieldIndex.Model];
             set => _hasBeenSetTracker[(int)Climate_FieldIndex.Model] = value;
         }
-        bool IClimateGetter.Model_IsSet => Model_IsSet;
-        private Model _Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IClimateGetter.Model_IsSet => Model_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model _Model;
         public Model Model
         {
             get => _Model;
@@ -148,6 +153,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter IClimateGetter.Model => this.Model;
         #endregion
         #region SunriseBegin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DateTime _SunriseBegin;
         public DateTime SunriseBegin
         {
@@ -160,6 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunriseEnd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DateTime _SunriseEnd;
         public DateTime SunriseEnd
         {
@@ -172,6 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunsetBegin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DateTime _SunsetBegin;
         public DateTime SunsetBegin
         {
@@ -184,6 +192,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region SunsetEnd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private DateTime _SunsetEnd;
         public DateTime SunsetEnd
         {
@@ -196,6 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Volatility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _Volatility;
         public Byte Volatility
         {
@@ -208,6 +218,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region Phase
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Climate.MoonPhase _Phase;
         public Climate.MoonPhase Phase
         {
@@ -220,6 +231,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
         #region PhaseLength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Byte _PhaseLength;
         public Byte PhaseLength
         {
@@ -266,6 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClimateXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -452,6 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Has = 1
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => ClimateCommon.Instance.GetLinks(this);
         public Climate(FormKey formKey)
         {
@@ -467,6 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3991,6 +4006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IClimateGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => ClimateCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ClimateXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -4005,6 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

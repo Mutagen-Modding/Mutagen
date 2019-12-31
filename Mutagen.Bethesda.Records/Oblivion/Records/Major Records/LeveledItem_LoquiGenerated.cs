@@ -59,14 +59,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone];
             set => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.ChanceNone] = value;
         }
-        bool ILeveledItemGetter.ChanceNone_IsSet => ChanceNone_IsSet;
-        private Byte _ChanceNone;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILeveledItemGetter.ChanceNone_IsSet => ChanceNone_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Byte _ChanceNone;
         public Byte ChanceNone
         {
             get => this._ChanceNone;
             set => ChanceNone_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte ILeveledItemGetter.ChanceNone => this.ChanceNone;
         public void ChanceNone_Set(
             Byte value,
@@ -86,14 +88,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)LeveledItem_FieldIndex.Flags] = value;
         }
-        bool ILeveledItemGetter.Flags_IsSet => Flags_IsSet;
-        private LeveledFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool ILeveledItemGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private LeveledFlag _Flags;
         public LeveledFlag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LeveledFlag ILeveledItemGetter.Flags => this.Flags;
         public void Flags_Set(
             LeveledFlag value,
@@ -150,6 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -321,6 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = LeveledItem_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LeveledItemCommon.Instance.GetLinks(this);
         public LeveledItem(FormKey formKey)
         {
@@ -336,6 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -2738,6 +2745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => LeveledItemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -2752,6 +2760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

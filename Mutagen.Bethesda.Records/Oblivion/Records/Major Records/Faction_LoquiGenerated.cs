@@ -61,14 +61,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.Name];
             set => _hasBeenSetTracker[(int)Faction_FieldIndex.Name] = value;
         }
-        bool IFactionGetter.Name_IsSet => Name_IsSet;
-        private String _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFactionGetter.Name_IsSet => Name_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _Name;
         public String Name
         {
             get => this._Name;
             set => Name_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String IFactionGetter.Name => this.Name;
         public void Name_Set(
             String value,
@@ -100,14 +102,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags];
             set => _hasBeenSetTracker[(int)Faction_FieldIndex.Flags] = value;
         }
-        bool IFactionGetter.Flags_IsSet => Flags_IsSet;
-        private Faction.FactionFlag _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFactionGetter.Flags_IsSet => Flags_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Faction.FactionFlag _Flags;
         public Faction.FactionFlag Flags
         {
             get => this._Flags;
             set => Flags_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Faction.FactionFlag IFactionGetter.Flags => this.Flags;
         public void Flags_Set(
             Faction.FactionFlag value,
@@ -127,14 +131,16 @@ namespace Mutagen.Bethesda.Oblivion
             get => _hasBeenSetTracker[(int)Faction_FieldIndex.CrimeGoldMultiplier];
             set => _hasBeenSetTracker[(int)Faction_FieldIndex.CrimeGoldMultiplier] = value;
         }
-        bool IFactionGetter.CrimeGoldMultiplier_IsSet => CrimeGoldMultiplier_IsSet;
-        private Single _CrimeGoldMultiplier;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IFactionGetter.CrimeGoldMultiplier_IsSet => CrimeGoldMultiplier_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _CrimeGoldMultiplier;
         public Single CrimeGoldMultiplier
         {
             get => this._CrimeGoldMultiplier;
             set => CrimeGoldMultiplier_Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single IFactionGetter.CrimeGoldMultiplier => this.CrimeGoldMultiplier;
         public void CrimeGoldMultiplier_Set(
             Single value,
@@ -191,6 +197,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Xml Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -365,6 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public new static readonly RecordType GRUP_RECORD_TYPE = Faction_Registration.TRIGGERING_RECORD_TYPE;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FactionCommon.Instance.GetLinks(this);
         public Faction(FormKey formKey)
         {
@@ -380,6 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
@@ -3089,6 +3098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
         public override IEnumerable<ILinkGetter> Links => FactionCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -3103,6 +3113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,

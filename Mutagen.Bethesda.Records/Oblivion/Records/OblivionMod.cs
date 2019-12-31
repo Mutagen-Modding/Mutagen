@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using Loqui.Xml;
 using Loqui;
 using System.Buffers.Binary;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -33,7 +34,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial class OblivionMod
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
 
         public ModKey ModKey { get; }
