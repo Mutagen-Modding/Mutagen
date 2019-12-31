@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.TryCreateValue("default:");
-                                    fieldGen.AppendLine($"if(typeof({contLoqui.GenericDef.Name}).IsAssignableFrom(typeof(TMajor)))");
+                                    fieldGen.AppendLine($"if(typeof(TMajor).IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
                                     using (new BraceWrapper(fieldGen))
                                     {
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.TryCreateValue("default:");
-                                    fieldGen.AppendLine($"if(typeof({dictLoqui.GenericDef.Name}).IsAssignableFrom(typeof(TMajor)))");
+                                    fieldGen.AppendLine($"if(typeof(TMajor).IsAssignableFrom(typeof({dictLoqui.GenericDef.Name})))");
                                     using (new BraceWrapper(fieldGen))
                                     {
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");

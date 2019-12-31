@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
-                    if(typeof(T).IsAssignableFrom(typeof(TMajor)))
+                    if(typeof(TMajor).IsAssignableFrom(typeof(T)))
                     {
                         foreach (var item in obj.Records)
                         {

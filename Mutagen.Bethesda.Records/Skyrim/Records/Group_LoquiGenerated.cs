@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 default:
-                    if(typeof(T).IsAssignableFrom(typeof(TMajor)))
+                    if(typeof(TMajor).IsAssignableFrom(typeof(T)))
                     {
                         foreach (var item in obj.RecordCache.Items)
                         {
