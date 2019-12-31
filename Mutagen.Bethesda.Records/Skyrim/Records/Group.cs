@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
         }
 
-        protected override ICache<T, FormKey> InternalCache => this.RecordCache;
+        protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>

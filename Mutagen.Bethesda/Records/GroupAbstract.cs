@@ -1,4 +1,4 @@
-﻿using DynamicData;
+using DynamicData;
 using Ionic.Zlib;
 using Loqui;
 using Loqui.Xml;
@@ -16,8 +16,9 @@ namespace Mutagen.Bethesda
     public abstract class GroupAbstract<T> : IEnumerable<T>, IGroupCommon<T>
         where T : IMajorRecordInternal, IXmlItem, IBinaryItem
     {
-        protected abstract ICache<T, FormKey> InternalCache { get; }
-        public IEnumerable<T> Records => InternalCache.Items;
+        protected abstract ICache<T, FormKey> ProtectedCache { get; }
+        internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
+        public IEnumerable<T> Records => ProtectedCache.Items;
 
         public IMod SourceMod { get; private set; }
 

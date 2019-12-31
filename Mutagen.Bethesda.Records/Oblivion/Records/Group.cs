@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected override ICache<T, FormKey> InternalCache => this.RecordCache;
+        protected override ICache<T, FormKey> ProtectedCache => this.RecordCache;
     }
 
     public partial interface IGroupGetter<out T> : IGroupCommon<T>
