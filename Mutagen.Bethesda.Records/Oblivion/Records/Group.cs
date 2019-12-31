@@ -184,6 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
             public IReadOnlyCache<T, FormKey> RecordCache => _RecordCache;
             public IMod SourceMod => throw new NotImplementedException();
             public IEnumerable<T> Records => RecordCache.Items;
+            public int Count => this.RecordCache.Count;
 
             partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
             {

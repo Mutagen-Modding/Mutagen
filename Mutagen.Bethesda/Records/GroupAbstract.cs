@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda
         protected abstract ICache<T, FormKey> ProtectedCache { get; }
         internal ICache<T, FormKey> InternalCache => this.ProtectedCache;
         public IEnumerable<T> Records => ProtectedCache.Items;
+        public int Count => this.ProtectedCache.Count;
 
         public IMod SourceMod { get; private set; }
 

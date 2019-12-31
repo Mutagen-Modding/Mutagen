@@ -17,14 +17,18 @@ namespace Mutagen.Bethesda
         /// A convenience accessor to iterate over all records in a group
         /// </summary>
         IEnumerable<TMajor> Records { get; }
+
+        int Count { get; }
     }
 
     public static class IGroupCommonExt
     {
-        public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group)
-            where TMajor : IMajorRecordCommon, IXmlItem, IBinaryItem, IEquatable<TMajor>
+        public static TMajor AddNew<TMajor>(this GroupAbstract<TMajor> group)
+            where TMajor : IMajorRecordInternal, IXmlItem, IBinaryItem, IEquatable<TMajor>
         {
-            return MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
+            var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
+            group.InternalCache.Set(ret);
+            return ret;
         }
     }
 }
