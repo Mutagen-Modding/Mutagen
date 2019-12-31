@@ -11,4 +11,4 @@ Frequency=3984642 Hz, Resolution=250.9636 ns, Timer=TSC
 ```
 |             Method |     Mean |     Error |    StdDev |
 |------------------- |---------:|----------:|----------:|
-| ReadNextRecordType | 28.68 ns | 0.3113 ns | 0.2600 ns |
+| ReadNextRecordType | 17.16 ns | 0.3565 ns | 0.3501 ns |

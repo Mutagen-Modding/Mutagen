@@ -1,14 +1,16 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.5, OS=Windows 10.0.17134.765 (1803/April2018Update/Redstone4)
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
 Intel Core i7-4790K CPU 4.00GHz (Haswell), 1 CPU, 8 logical and 4 physical cores
-Frequency=3984652 Hz, Resolution=250.9629 ns, Timer=TSC
-.NET Core SDK=2.1.700-preview-009618
-  [Host]     : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
-  DefaultJob : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
+.NET Core SDK=3.1.100
+  [Host]     : .NET Core 2.1.14 (CoreCLR 4.6.28207.04, CoreFX 4.6.28208.01), X64 RyuJIT
+  DefaultJob : .NET Core 2.1.14 (CoreCLR 4.6.28207.04, CoreFX 4.6.28208.01), X64 RyuJIT
 
 
 ```
-|             Method |     Mean |    Error |   StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
-|------------------- |---------:|---------:|---------:|-------:|------:|------:|----------:|
-| ParseStringFormKey | 458.5 ns | 4.422 ns | 3.920 ns | 0.1030 |     - |     - |     432 B |
+|        Method |     Mean |   Error |  StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|-------------- |---------:|--------:|--------:|-------:|------:|------:|----------:|
+|  ParseFormKey | 299.4 ns | 5.61 ns | 5.77 ns | 0.0834 |     - |     - |     352 B |
+|   ParseModKey | 147.9 ns | 0.37 ns | 0.32 ns | 0.0112 |     - |     - |      48 B |
+|   ParseFormID | 106.6 ns | 0.41 ns | 0.38 ns |      - |     - |     - |         - |
+| ParseFormID0x | 118.3 ns | 0.32 ns | 0.28 ns | 0.0112 |     - |     - |      48 B |
