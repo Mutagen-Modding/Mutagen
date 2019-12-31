@@ -46,7 +46,7 @@
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="FormKey_Tests.cs" />
     <Compile Include="GroupCommon_Tests.cs" />
-    <Compile Include="LinkingPackage_Tests.cs" />
+    <Compile Include="Linking_Tests.cs" />
     <Compile Include="MajorRecordEnumeration_Tests.cs" />
     <Compile Include="MajorRecordInstantiator_Tests.cs" />
     <Compile Include="Misc_Tests.cs" />
