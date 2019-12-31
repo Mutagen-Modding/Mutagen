@@ -84,24 +84,9 @@ namespace Mutagen.Bethesda
                 major = default;
                 return false;
             }
-            if (package.SourceMod != null && TryLinkToMod(package.SourceMod, out var item))
+            foreach (var mod in package)
             {
-                major = item;
-                return true;
-            }
-            if (package.ModList == null)
-            {
-                major = default;
-                return false;
-            }
-            foreach (var listing in package.ModList)
-            {
-                if (!listing.Loaded)
-                {
-                    major = default;
-                    return false;
-                }
-                if (TryLinkToMod(listing.Mod, out item))
+                if (TryLinkToMod(mod, out var item))
                 {
                     major = item;
                     return true;

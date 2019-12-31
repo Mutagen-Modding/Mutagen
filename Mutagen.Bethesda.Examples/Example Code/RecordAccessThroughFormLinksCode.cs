@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Examples
         public static async Task AccessRecords(string pathToMod, Action<string> output)
         {
             IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
-            var links = new LinkingPackage<IOblivionModGetter>(mod, null);
+            var links = mod.CreateLinkingPackage();
             foreach (var npc in mod.NPCs.Records)
             {
                 // Not all NPCs have classes, so skip any that don't have one

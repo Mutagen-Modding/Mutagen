@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda
             {
                 npc.IsCompressed = false;
             }
-            LinkingPackage<TMod> package = new LinkingPackage<TMod>(modList);
+            var linkingPackage = modList.CreateLinkingPackage();
             outMod.MasterReferences.SetTo(
                 outMod.Links
                     .Select(l =>
                     {
-                        if (l.TryResolveFormKey(package, out var form)) return form;
+                        if (l.TryResolveFormKey(linkingPackage, out var form)) return form;
                         return FormKey.NULL;
                     })
                     .Where(fk => !fk.IsNull)

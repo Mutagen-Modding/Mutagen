@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
-            var package = new LinkingPackage<OblivionMod>(this, default);
+            var package = this.CreateLinkingPackage();
             foreach (var rec in router.Values)
             {
                 foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormIDLink>())
