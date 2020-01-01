@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
+    /// <summary>
+    /// A struct representing an index of a master within a mod.
+    /// Mods can only reference a byte's worth of masters, so must be limited to a byte.
+    /// </summary>
     public struct ModID
     {
         public static readonly ModID Zero = new ModID(0);
