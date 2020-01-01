@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mutagen.Bethesda.Binary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,5 +65,71 @@ namespace Mutagen.Bethesda.UnitTests
         {
             Assert.Equal(0, FormKey.NULL.GetHashCode());
         }
+
+        #region BinaryTranslation
+        public ModKey TargetModKey() => new ModKey("Master2", true);
+
+        public MasterReferences TypicalMasters() => 
+            new MasterReferences(
+                new List<IMasterReferenceGetter>()
+                {
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master1", true)
+                    },
+                    new MasterReference()
+                    {
+                        Master = TargetModKey()
+                    },
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master3", false)
+                    },
+                },
+                ModKey.Dummy);
+
+        [Fact]
+        public void BinaryTranslation_Typical()
+        {
+            byte[] b = new byte[]
+            {
+                0x56,
+                0x34,
+                0x12,
+                1
+            };
+            var formKey = FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters());
+            Assert.Equal(TargetModKey(), formKey.ModKey);
+            Assert.Equal((uint)0x123456, formKey.ID);
+        }
+
+        [Fact]
+        public void BinaryTranslation_TooShort()
+        {
+            byte[] b = new byte[]
+            {
+                0x56,
+                0x34,
+                0x12,
+            };
+            Assert.Throws<ArgumentOutOfRangeException>(() => FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters()));
+        }
+
+        [Fact]
+        public void BinaryTranslation_TooLong()
+        {
+            byte[] b = new byte[]
+            {
+                0x56,
+                0x34,
+                0x12,
+                1,
+                0x99
+            };
+            var formKey = FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters());
+            Assert.Equal(TargetModKey(), formKey.ModKey);
+            Assert.Equal((uint)0x123456, formKey.ID);
+        }
+        #endregion
     }
 }
