@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
             MasterReferences masterReferences)
         {
             var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
-            var modID = ModID.GetModIDByteFromUInt(id);
+            var modID = span[3];
             if (modID < masterReferences.Masters.Count)
             {
                 return new FormKey(

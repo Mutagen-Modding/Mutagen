@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
 
         public static FormKey Factory(MasterReferences masterReferences, uint id)
         {
-            var modID = (byte)(id >> 24);
+            var modID = ModID.GetModIDByteFromUInt(id);
 
             if (modID >= masterReferences.Masters.Count)
             {
