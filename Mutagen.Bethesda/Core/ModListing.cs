@@ -13,15 +13,21 @@ namespace Mutagen.Bethesda
         public ModKey Key { get; private set; }
         public bool Loaded => Mod != null;
 
-        public ModListing(ModKey key, TMod mod)
+        private ModListing(ModKey key, TMod mod)
         {
             this.Key = key;
             this.Mod = mod;
         }
 
-        public ModListing(ModKey key)
+        public ModListing(TMod mod)
         {
-            this.Key = key;
+            this.Key = mod.ModKey;
+            this.Mod = mod;
+        }
+
+        public static ModListing<TMod> UnloadedModListing(ModKey key)
+        {
+            return new ModListing<TMod>(key, default);
         }
 
         public override string ToString()

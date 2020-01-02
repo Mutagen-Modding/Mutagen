@@ -58,23 +58,22 @@ namespace Mutagen.Bethesda
             return _modsByLoadOrder[index.ID];
         }
 
-        public void Add(ModKey key, TMod mod)
+        public void Add(TMod mod)
         {
-            if (this.Contains(key))
+            if (this.Contains(mod.ModKey))
             {
                 throw new ArgumentException("Mod was already present on the mod list.");
             }
-            _modsByLoadOrder.Add(
-                new ModListing<TMod>(key, mod));
+            _modsByLoadOrder.Add(new ModListing<TMod>(mod));
         }
 
-        public void Add(ModKey key, TMod mod, byte index)
+        public void Add(TMod mod, byte index)
         {
-            if (this.Contains(key))
+            if (this.Contains(mod.ModKey))
             {
                 throw new ArgumentException("Mod was already present on the mod list.");
             }
-            _modsByLoadOrder.Insert(index, new ModListing<TMod>(key, mod));
+            _modsByLoadOrder.Insert(index, new ModListing<TMod>(mod));
         }
 
         public bool Contains(ModKey mod)
@@ -124,13 +123,12 @@ namespace Mutagen.Bethesda
                 {
                     this._modsByLoadOrder.Add(
                         new ModListing<TMod>(
-                            item.modKey,
                             item.Item3.Value));
                 }
                 else
                 {
                     this._modsByLoadOrder.Add(
-                        new ModListing<TMod>(item.modKey));
+                        ModListing<TMod>.UnloadedModListing(item.modKey));
                 }
             }
         }
