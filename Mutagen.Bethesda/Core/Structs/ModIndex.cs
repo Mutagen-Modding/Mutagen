@@ -55,5 +55,10 @@ namespace Mutagen.Bethesda
         {
             return !(a == b);
         }
+
+        public static implicit operator ModIndex(int i)
+        {
+            return new ModIndex(i);
+        }
     }
 }

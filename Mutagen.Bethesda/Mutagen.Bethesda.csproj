@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="Core\Links\DirectModLinkingPackage.cs" />
     <Compile Include="Core\Links\ILinkingPackage.cs" />
+    <Compile Include="Core\Links\ModListLinkingPackage.cs" />
     <Compile Include="Core\LoadOrder.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Core\Structs\ModIndex.cs" />

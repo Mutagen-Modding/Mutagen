@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda
         public static ILinkingPackage<TMod> CreateLinkingPackage<TMod>(this ModList<TMod> modList)
             where TMod : IModGetter
         {
-            throw new NotImplementedException();
+            return new ModListLinkingPackage<TMod>(modList);
         }
     }
 }

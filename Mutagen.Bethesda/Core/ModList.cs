@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda
 
         public int Count => _modsByLoadOrder.Count;
 
+        public ModListing<TMod> this[ModIndex index] => _modsByLoadOrder[index.ID];
+
         public bool TryGetListing(ModKey key, out (ModIndex Index, ModListing<TMod> Listing) result)
         {
             for (int i = 0; i < _modsByLoadOrder.Count; i++)
@@ -51,11 +53,6 @@ namespace Mutagen.Bethesda
             }
             result = _modsByLoadOrder[index.ID];
             return result != null;
-        }
-
-        public ModListing<TMod> GetIndex(ModIndex index)
-        {
-            return _modsByLoadOrder[index.ID];
         }
 
         public void Add(TMod mod)

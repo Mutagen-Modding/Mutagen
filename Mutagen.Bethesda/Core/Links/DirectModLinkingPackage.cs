@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
         private readonly TMod _sourceMod;
 
         private readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
-        private readonly Dictionary<Type, object> _majorRecords = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, IReadOnlyCache<object, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<object, FormKey>>();
 
         public DirectModLinkingPackage(TMod sourceMod)
         {
@@ -32,14 +32,10 @@ namespace Mutagen.Bethesda
         public bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            IReadOnlyCache<TMajor, FormKey> cache;
+            IReadOnlyCache<object, FormKey> cache;
             lock (_majorRecords)
             {
-                if (_majorRecords.TryGetValue(typeof(TMajor), out object cacheObj))
-                {
-                    cache = cacheObj as IReadOnlyCache<TMajor, FormKey>;
-                }
-                else
+                if (!_majorRecords.TryGetValue(typeof(TMajor), out cache))
                 {
                     cache = GetCache<TMajor>();
                     if (typeof(TMajor).Equals(typeof(IMajorRecordCommon))
@@ -65,7 +61,13 @@ namespace Mutagen.Bethesda
                     }
                 }
             }
-            return cache.TryGetValue(formKey, out majorRec);
+            if (!cache.TryGetValue(formKey, out var majorRecObj))
+            {
+                majorRec = default;
+                return false;
+            }
+            majorRec = majorRecObj as TMajor;
+            return majorRec != null;
         }
 
         private IReadOnlyCache<IMajorRecordCommonGetter, FormKey> GetCache()
