@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
 
@@ -82,6 +83,23 @@ namespace Mutagen.Bethesda.Skyrim
                 return (CompareOperator)((CompareMask & b) >> 5);
             }
 
+            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            {
+                var countMeta = frame.MetaData.ReadSubRecordFrame(frame);
+                if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
+                    || countMeta.ContentSpan.Length != 4)
+                {
+                    throw new ArgumentException();
+                }
+                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.ContentSpan);
+                List<Condition> conds = new List<Condition>(count);
+                for (int i = 0; i < count; i++)
+                {
+                    conds.Add(Condition.CreateFromBinary(frame, masterReferences, default(RecordTypeConverter), errorMask));
+                }
+                conditions.SetTo(conds);
+            }
+
             static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
                 byte b = frame.ReadUInt8();
@@ -115,6 +133,19 @@ namespace Mutagen.Bethesda.Skyrim
                 int b = ((int)flag) & 0x1F;
                 int b2 = ((int)compare) << 5;
                 return (byte)(b & b2);
+            }
+
+            public static void WriteConditionsList(IReadOnlySetList<IConditionGetter> condList, MutagenWriter writer, MasterReferences masterReferences)
+            {
+                if (!condList.HasBeenSet) return;
+                using (HeaderExport.ExportSubRecordHeader(writer, Faction_Registration.CITC_HEADER))
+                {
+                    writer.Write(condList.Count);
+                }
+                foreach (var cond in condList)
+                {
+                    cond.WriteToBinary(writer, masterReferences);
+                }
             }
 
             static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)

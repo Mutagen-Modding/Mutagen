@@ -35,19 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                var countMeta = frame.MetaData.ReadSubRecordFrame(frame);
-                if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
-                    || countMeta.ContentSpan.Length != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.ContentSpan);
-                List<Condition> conds = new List<Condition>(count);
-                for (int i = 0; i < count; i++)
-                {
-                    conds.Add(Condition.CreateFromBinary(frame, masterReferences, default(RecordTypeConverter), errorMask));
-                }
-                item.Conditions.SetTo(conds);
+                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, masterReferences, errorMask);
             }
         }
 
@@ -55,15 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
             {
-                if (!item.Conditions.HasBeenSet) return;
-                using (HeaderExport.ExportSubRecordHeader(writer, Faction_Registration.CITC_HEADER))
-                {
-                    writer.Write(item.Conditions.Count);
-                }
-                foreach (var cond in item.Conditions)
-                {
-                    cond.WriteToBinary(writer, masterReferences);
-                }
+                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer, masterReferences);
             }
         }
 
