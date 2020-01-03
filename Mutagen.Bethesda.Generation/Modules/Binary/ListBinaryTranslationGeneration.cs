@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         SubTrigger,
         Trigger,
+        Counter,
         Frame
     }
 
@@ -64,18 +65,21 @@ namespace Mutagen.Bethesda.Generation
             MutagenFieldData data,
             MutagenFieldData subData)
         {
+            if (list.CustomData.TryGetValue(CounterRecordType, out var counterRecTypeObj)
+                && counterRecTypeObj is string counterRecType
+                && !string.IsNullOrWhiteSpace(counterRecType))
+            {
+                return ListBinaryType.Counter;
+            }
             if (subData.HasTrigger)
             {
                 return ListBinaryType.SubTrigger;
             }
-            else if (data.RecordType.HasValue)
+            if (data.HasTrigger)
             {
                 return ListBinaryType.Trigger;
             }
-            else
-            {
-                return ListBinaryType.Frame;
-            }
+            return ListBinaryType.Frame;
         }
 
         protected virtual string GetWriteAccessor(Accessor itemAccessor)
@@ -120,18 +124,6 @@ namespace Mutagen.Bethesda.Generation
                 typeName = loqui.TypeName(getter: true, internalInterface: true);
             }
 
-            if (list.CustomData.TryGetValue(CounterRecordType, out var counterRecTypeObj)
-                && counterRecTypeObj is string counterRecType
-                && !string.IsNullOrWhiteSpace(counterRecType))
-            {
-
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{counterRecType}_HEADER, {nameof(ObjectType)}.{nameof(ObjectType.Subrecord)}))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"writer.Write({itemAccessor.PropertyOrDirectAccess}.Count);");
-                }
-            }
-
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{(listOfRecords ? "ListOfRecords" : null)}"))
             {
@@ -143,7 +135,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
-                    args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                    args.Add($"recordType: {data.TriggeringRecordSetAccessor}");
                 }
                 if (listOfRecords)
                 {
@@ -203,19 +195,18 @@ namespace Mutagen.Bethesda.Generation
             var isAsync = subTransl.IsAsync(list.SubTypeGeneration, read: true);
             ListBinaryType listBinaryType = GetListType(list, data, subData);
 
-            if (data.MarkerType.HasValue)
+            if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
+                && counterRecObj is string counterRecType)
+            {
+                fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip counter");
+            }
+            else if (data.MarkerType.HasValue)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(RecordConstants.HeaderLength)};");
-            }
-
-            if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
-                && counterRecObj is string counterRecType)
-            {
-                fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip counter");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
@@ -231,22 +222,25 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"frame: frame");
                     args.Add($"amount: {arr.FixedSize.Value}");
                 }
-                else if (listBinaryType == ListBinaryType.SubTrigger)
-                {
-                    args.Add($"frame: frame");
-                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
-                }
-                else if (listBinaryType == ListBinaryType.Trigger)
-                {
-                    args.Add($"frame: frame.SpawnWithLength(contentLength)");
-                }
-                else if (listBinaryType == ListBinaryType.Frame)
-                {
-                    args.Add($"frame: frame");
-                }
                 else
                 {
-                    throw new NotImplementedException();
+                    switch (listBinaryType)
+                    {
+                        case ListBinaryType.SubTrigger:
+                            args.Add($"frame: frame");
+                            args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                            break;
+                        case ListBinaryType.Trigger:
+                            args.Add($"frame: frame.SpawnWithLength(contentLength)");
+                            break;
+                        case ListBinaryType.Counter:
+                            break;
+                        case ListBinaryType.Frame:
+                            args.Add($"frame: frame");
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                 }
                 if (threading)
                 {
@@ -578,7 +572,6 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                     }
-
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
@@ -666,6 +659,57 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 throw new NotImplementedException();
                             }
+                        }
+                    }
+                    fg.AppendLine("stream.Position += subLen;");
+                    break;
+                case ListBinaryType.Counter:
+                    fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
+                    fg.AppendLine("var subLen = subMeta.RecordLength;");
+                    if (!subData.HasTrigger)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    using (var args = new ArgsWrapper(fg,
+                        $"this.{typeGen.Name} = BinaryWrapperSetList<{typeName}>.FactoryByStartIndex"))
+                    {
+                        args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
+                        args.Add($"package: _package");
+                        args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
+                        if (subGenTypes.Count <= 1)
+                        {
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                        }
+                        else
+                        {
+                            args.Add((subFg) =>
+                            {
+                                subFg.AppendLine("getter: (s, r, p) =>");
+                                using (new BraceWrapper(subFg))
+                                {
+                                    subFg.AppendLine("switch (r.TypeInt)");
+                                    using (new BraceWrapper(subFg))
+                                    {
+                                        foreach (var item in subGenTypes)
+                                        {
+                                            foreach (var trigger in item.Key)
+                                            {
+                                                subFg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                            }
+                                            using (new DepthWrapper(subFg))
+                                            {
+                                                LoquiType specificLoqui = item.Value as LoquiType;
+                                                subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")};");
+                                            }
+                                        }
+                                        subFg.AppendLine("default:");
+                                        using (new DepthWrapper(subFg))
+                                        {
+                                            subFg.AppendLine("throw new NotImplementedException();");
+                                        }
+                                    }
+                                }
+                            });
                         }
                     }
                     fg.AppendLine("stream.Position += subLen;");

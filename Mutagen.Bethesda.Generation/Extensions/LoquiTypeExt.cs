@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -18,7 +19,7 @@ namespace Mutagen.Bethesda.Generation
                 if (subRecs.Failed) continue;
                 foreach (var subRec in subRecs.Value)
                 {
-                    data.SubLoquiTypes.Add(subRec, subObj);
+                    data.SubLoquiTypes.TryCreateValue(subRec).Add(subObj);
                 }
             }
         }

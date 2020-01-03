@@ -207,7 +207,6 @@ namespace Mutagen.Bethesda.Generation
                     && counterTypeObj is string counterType)
                 {
                     subData.TriggeringRecordTypes.Add(new RecordType(counterType));
-                    return;
                 }
                 await SetRecordTrigger(
                     obj,
@@ -240,11 +239,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
-            if (obj.Name == "Script")
-            {
-                int wer = 23;
-                wer++;
-            }
             await SetContainerSubTriggers(obj, field);
 
             if (field is LoquiType loqui
@@ -470,11 +464,6 @@ namespace Mutagen.Bethesda.Generation
 
         private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
         {
-            if (obj.Name == "Script")
-            {
-                int wer = 23;
-                wer++;
-            }
             if (!data.HasTrigger)
             {
                 if (data.MarkerType.HasValue)
