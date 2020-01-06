@@ -49,10 +49,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FactionBinaryWrapper
         {
-            public IReadOnlySetList<IConditionGetter> Conditions => throw new NotImplementedException();
+            public IReadOnlySetList<IConditionGetter> Conditions { get; private set; } = EmptySetList<IConditionGetter>.Instance;
 
             partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
+                Conditions = ConditionBinaryWrapper.ConstructBinayWrapperList(stream, _package);
             }
         }
     }

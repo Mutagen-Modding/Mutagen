@@ -175,12 +175,61 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ConditionBinaryWrapper
         {
+            private static RecordType[] IncludeTriggers = new RecordType[]
+            {
+                new RecordType("CIS1"),
+                new RecordType("CIS2"),
+            };
+
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
             public static ConditionBinaryWrapper ConditionFactory(BinaryMemoryReadStream stream, BinaryWrapperFactoryPackage package)
             {
-                throw new NotImplementedException();
+                var subRecMeta = package.Meta.GetSubRecordFrame(stream);
+                if (subRecMeta.Header.RecordType != Condition_Registration.CTDA_HEADER)
+                {
+                    throw new ArgumentException();
+                }
+                Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.ContentSpan[0]);
+                if (flag.HasFlag(Condition.Flag.UseGlobal))
+                {
+                    return ConditionGlobalBinaryWrapper.ConditionGlobalFactory(stream, package);
+                }
+                else
+                {
+                    return ConditionFloatBinaryWrapper.ConditionFloatFactory(stream, package);
+                }
+            }
+
+            public static IReadOnlySetList<ConditionBinaryWrapper> ConstructBinayWrapperList(BinaryMemoryReadStream stream, BinaryWrapperFactoryPackage package)
+            {
+                var counterMeta = package.Meta.ReadSubRecordFrame(stream);
+                if (counterMeta.Header.RecordType != Faction_Registration.CITC_HEADER
+                    || counterMeta.ContentSpan.Length != 4)
+                {
+                    throw new ArgumentException();
+                }
+                var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.ContentSpan);
+                var span = stream.RemainingMemory;
+                var pos = stream.Position;
+                var recordLocs = ParseRecordLocations(
+                    stream: stream,
+                    finalPos: long.MaxValue,
+                    constants: package.Meta.SubConstants,
+                    trigger: Condition_Registration.CTDA_HEADER,
+                    includeTriggers: IncludeTriggers,
+                    skipHeader: false);
+                span = span.Slice(0, stream.Position - pos);
+                if (count != recordLocs.Length)
+                {
+                    throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
+                }
+                return BinaryWrapperSetList<ConditionBinaryWrapper>.FactoryByArray(
+                    mem: span,
+                    package: package,
+                    getter: (s, p) => ConditionBinaryWrapper.ConditionFactory(new BinaryMemoryReadStream(s), p),
+                    locs: recordLocs);
             }
         }
 
@@ -278,39 +327,95 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class FunctionConditionDataBinaryWrapper
+        public partial class ConditionFloatBinaryWrapper
         {
-            public IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => throw new NotImplementedException();
+            private IConditionDataGetter GetDataCustom(int location)
+            {
+                var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+                {
+                    return GetEventDataBinaryWrapper.GetEventDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                }
+                else
+                {
+                    return FunctionConditionDataBinaryWrapper.FunctionConditionDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                }
+            }
 
-            public int ParameterOneNumber => throw new NotImplementedException();
-
-            public IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => throw new NotImplementedException();
-
-            public int ParameterTwoNumber => throw new NotImplementedException();
-
-            public string ParameterOneString => throw new NotImplementedException();
-
-            public string ParameterTwoString => throw new NotImplementedException();
-
-            public bool ParameterOneString_IsSet => throw new NotImplementedException();
-
-            public bool ParameterTwoString_IsSet => throw new NotImplementedException();
-
-            public int Unknown3 => throw new NotImplementedException();
-
-            public int Unknown4 => throw new NotImplementedException();
-
-            public int Unknown5 => throw new NotImplementedException();
+            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            {
+                stream.Position = offset;
+                _data = stream.RemainingMemory;
+            }
         }
 
         public partial class ConditionGlobalBinaryWrapper
         {
-            private IConditionDataGetter GetDataCustom(int location) => throw new NotImplementedException();
+            private IConditionDataGetter GetDataCustom(int location)
+            {
+                var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
+                if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+                {
+                    return GetEventDataBinaryWrapper.GetEventDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                }
+                else
+                {
+                    return FunctionConditionDataBinaryWrapper.FunctionConditionDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                }
+            }
+
+            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            {
+                stream.Position = offset;
+                _data = stream.RemainingMemory;
+            }
         }
 
-        public partial class ConditionFloatBinaryWrapper
+        public partial class FunctionConditionDataBinaryWrapper
         {
-            private IConditionDataGetter GetDataCustom(int location) => throw new NotImplementedException();
+            private ReadOnlyMemorySlice<byte> _data2;
+
+            public IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
+
+            public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
+
+            public IFormIDLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormIDLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
+
+            public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
+
+            public int Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(8));
+
+            public int Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(12));
+
+            public int Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(16));
+
+            private ReadOnlyMemorySlice<byte> _stringParamData1;
+            public bool ParameterOneString_IsSet { get; private set; }
+            public string ParameterOneString => BinaryStringUtility.ProcessWholeToZString(_stringParamData1);
+
+            private ReadOnlyMemorySlice<byte> _stringParamData2;
+            public bool ParameterTwoString_IsSet { get; private set; }
+            public string ParameterTwoString => BinaryStringUtility.ProcessWholeToZString(_stringParamData2);
+
+            partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
+            {
+                _data2 = stream.RemainingMemory.Slice(4, 0x14);
+                stream.Position += 0x18;
+                if (stream.Complete || !_package.Meta.TryGetSubrecord(stream, out var subFrame)) return;
+                switch (subFrame.RecordTypeInt)
+                {
+                    case 0x31534943: // CIS1
+                        _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.RecordLength);
+                        ParameterOneString_IsSet = true;
+                        break;
+                    case 0x32534943: // CIS2
+                        _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.RecordLength);
+                        ParameterTwoString_IsSet = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
