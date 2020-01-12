@@ -2,28 +2,28 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>aeb7f03317f2ae18ec74dc7555b3af5d31f9c199</Sha>
+         <Sha>9ab0dba74335c0a11d4a8d84620dece04381da65</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-31-2019 03:14:56</CommitDate>
-         <Description>ITryGetter</Description>
+         <CommitDate>01-11-2020 23:53:11</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ed24428b3a8e703c0e1cbc6550f4308475902846</Sha>
+         <Sha>7fa1a4da6cd266fb433a2d543c515133a94c1ccc</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-31-2019 03:15:04</CommitDate>
-         <Description>DebugBrowsable improvements</Description>
+         <CommitDate>01-11-2020 23:54:03</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>DynamicData</Nickname>
-         <Sha>c78c6e40223e62ff65f1cbf5e3524eb639a1ba4d</Sha>
+         <Sha>9cec67a68201b949df6b6b76f1caa054ef066700</Sha>
          <Path>../DynamicData</Path>
-         <CommitDate>10-18-2019 18:19:05</CommitDate>
-         <Description>IReadOnlyDictionary removed from ICache</Description>
+         <CommitDate>01-11-2020 23:52:54</CommitDate>
+         <Description>Nuget updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/DynamicData.git</OriginHint>
       </RepoListing>
