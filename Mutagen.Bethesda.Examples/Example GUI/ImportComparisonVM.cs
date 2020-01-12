@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Examples
     {
         public override string Name => "Import Comparisons";
 
-        public override string Description => "";
+        public override string Description => "Explore different ways of importing a mod";
 
         public ImportComparisonVM(MainVM mvm) 
             : base(mvm)

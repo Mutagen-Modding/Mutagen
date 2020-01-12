@@ -1,7 +1,7 @@
 ﻿using DynamicData.Binding;
-using Noggog;
+using Newtonsoft.Json;
 using Noggog.WPF;
-using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +10,24 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Examples
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class MainVM
     {
         public ObservableCollectionExtended<ViewModel> Examples { get; } = new ObservableCollectionExtended<ViewModel>();
 
-        private ViewModel _SelectedExample;
-        public ViewModel SelectedExample { get => _SelectedExample; set => this.RaiseAndSetIfChanged(ref _SelectedExample, value); }
+        [Reactive]
+        public ViewModel SelectedExample { get; set; }
 
-        public MainVM(MainWindow window)
+        [JsonProperty]
+        [Reactive]
+        public string ModFilePath { get; set; }
+
+        public MainVM()
         {
             this.Examples.Add(new PrintContentVM(this));
             this.Examples.Add(new RecordAccessThroughFormLinksVM(this));
             this.Examples.Add(new ImportComparisonVM(this));
+            this.Examples.Add(new RecordOverrideOrDuplicationVM(this));
         }
     }
 }

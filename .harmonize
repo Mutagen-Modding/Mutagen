@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>9ab0dba74335c0a11d4a8d84620dece04381da65</Sha>
+         <Sha>dd9fa1a9318d3409cf8ed57a0dcb27e70fef20b0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-11-2020 23:53:11</CommitDate>
-         <Description>Nuget updates</Description>
+         <CommitDate>01-11-2020 23:55:06</CommitDate>
+         <Description>WindowExt extended to have json serialization fallback</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

@@ -1,8 +1,10 @@
 ﻿using Loqui;
 using MahApps.Metro.Controls;
+using Newtonsoft.Json;
 using Noggog;
 using Noggog.WPF;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Examples
@@ -16,11 +18,7 @@ namespace Mutagen.Bethesda.Examples
         {
             InitializeComponent();
             Task.Run(() => LoquiRegistration.SpinUp()).FireAndForget();
-            this.WireMainVM(
-                new MainVM(this),
-                System.IO.Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), $"Mutagen Examples/Settings.xml"),
-                load: (s, vm) => vm.CopyInFromXml(s),
-                save: (s, vm) => vm.WriteToXml(s, "MutagenExamples"));
+            this.WireMainVM<MainVM>(System.IO.Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), $"Mutagen Examples/Settings.json"));
         }
     }
 }
