@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>c82e035e48cff38726807c25e08e42e1cd11211c</Sha>
+         <Sha>1d0c10452c4cfe9e2c9a45038736f5da57b0fd4d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-12-2020 01:24:25</CommitDate>
-         <Description>Namespace cleaning</Description>
+         <CommitDate>01-12-2020 16:53:20</CommitDate>
+         <Description>PathPicker ported back over</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Examples
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var mod = await toDo(this.MainVM.ModFilePath);
+            var mod = await toDo(this.MainVM.ModFilePath.TargetPath);
             sw.Stop();
             this.Output.Add($"{jobName} has {mod.NPCs.RecordCache.Count} NPCs. Took: {sw.ElapsedMilliseconds}ms");
         }

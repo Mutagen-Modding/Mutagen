@@ -19,11 +19,12 @@ namespace Mutagen.Bethesda.Examples
         public ViewModel SelectedExample { get; set; }
 
         [JsonProperty]
-        [Reactive]
-        public string ModFilePath { get; set; }
+        public PathPickerVM ModFilePath { get; } = new PathPickerVM();
 
         public MainVM()
         {
+            this.ModFilePath.PathType = PathPickerVM.PathTypeOptions.File;
+            this.ModFilePath.ExistCheckOption = PathPickerVM.CheckOptions.On;
             this.Examples.Add(new PrintContentVM(this));
             this.Examples.Add(new RecordAccessThroughFormLinksVM(this));
             this.Examples.Add(new ImportComparisonVM(this));
