@@ -1,7 +1,4 @@
-using CSharpExt.Rx;
 using DynamicData;
-using Mutagen.Bethesda.Internals;
-using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
 using System.Linq;

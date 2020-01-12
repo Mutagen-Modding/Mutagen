@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>dd9fa1a9318d3409cf8ed57a0dcb27e70fef20b0</Sha>
+         <Sha>c82e035e48cff38726807c25e08e42e1cd11211c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-11-2020 23:55:06</CommitDate>
-         <Description>WindowExt extended to have json serialization fallback</Description>
+         <CommitDate>01-12-2020 01:24:25</CommitDate>
+         <Description>Namespace cleaning</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7fa1a4da6cd266fb433a2d543c515133a94c1ccc</Sha>
+         <Sha>b61f43aea16a3a7a6a205aed50384d5dd03440f3</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-11-2020 23:54:03</CommitDate>
-         <Description>Nuget updates</Description>
+         <CommitDate>01-12-2020 01:24:41</CommitDate>
+         <Description>Namespace cleaning</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

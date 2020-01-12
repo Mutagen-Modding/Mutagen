@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Noggog;
-using Noggog.Notifying;
-using Mutagen.Bethesda.Binary;
 using Loqui;
 using System.IO;
 using Loqui.Internal;
 using DynamicData;
-using CSharpExt.Rx;
 
 namespace Mutagen.Bethesda.Binary
 {

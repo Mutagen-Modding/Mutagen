@@ -1,5 +1,4 @@
-﻿using Noggog.Notifying;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,6 @@ using ReactiveUI;
 using System.Reactive.Linq;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim

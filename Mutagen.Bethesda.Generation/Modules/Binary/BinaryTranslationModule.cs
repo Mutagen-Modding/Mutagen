@@ -188,7 +188,6 @@ namespace Mutagen.Bethesda.Generation
                 gen.Module = this;
                 gen.MaskModule = this.Gen.MaskModule;
             }
-            obj.RequiredNamespaces.Add("ReactiveUI");
             obj.RequiredNamespaces.Add("System.Reactive.Disposables");
             obj.RequiredNamespaces.Add("System.Reactive.Linq");
         }

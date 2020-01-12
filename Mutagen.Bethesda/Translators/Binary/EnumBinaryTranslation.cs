@@ -1,9 +1,6 @@
-﻿using Loqui;
-using Loqui.Internal;
+﻿using Loqui.Internal;
 using Noggog;
-using Noggog.Notifying;
 using System;
-using System.IO;
 
 namespace Mutagen.Bethesda.Binary
 {

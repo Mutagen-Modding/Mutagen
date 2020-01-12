@@ -1,7 +1,4 @@
-﻿using Loqui;
-using Loqui.Internal;
-using Noggog;
-using Noggog.Notifying;
+﻿using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

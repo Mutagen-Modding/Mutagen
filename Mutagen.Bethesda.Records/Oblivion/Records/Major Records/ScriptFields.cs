@@ -2,8 +2,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
-using Noggog.Notifying;
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Noggog;
 using Loqui;
-using Noggog.Notifying;
-using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Binary
 {

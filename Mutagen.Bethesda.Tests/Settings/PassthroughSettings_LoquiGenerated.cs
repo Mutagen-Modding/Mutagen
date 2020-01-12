@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using Loqui;
 using Noggog;
-using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
 using System.Xml;
 using System.Xml.Linq;

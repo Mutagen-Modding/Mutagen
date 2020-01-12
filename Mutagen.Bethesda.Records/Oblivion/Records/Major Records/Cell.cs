@@ -5,15 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using CSharpExt.Rx;
-using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
-using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
 {

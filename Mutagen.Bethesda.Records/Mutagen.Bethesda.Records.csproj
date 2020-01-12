@@ -1668,4 +1668,7 @@
     </Compile>
     <Compile Include="Skyrim\ProtocolDefinition_Skyrim.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI" Version="11.1.6" />
+  </ItemGroup>
 </Project>

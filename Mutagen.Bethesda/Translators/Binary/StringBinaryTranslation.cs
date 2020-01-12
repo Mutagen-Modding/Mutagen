@@ -1,7 +1,4 @@
-using Loqui;
-using Loqui.Internal;
 using Noggog;
-using Noggog.Notifying;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
