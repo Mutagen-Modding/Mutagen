@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda.Examples
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class MainVM
+    public partial class MainVM : ViewModel
     {
         public ObservableCollectionExtended<ViewModel> Examples { get; } = new ObservableCollectionExtended<ViewModel>();
 

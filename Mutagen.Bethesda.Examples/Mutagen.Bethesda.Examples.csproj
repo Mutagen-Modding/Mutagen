@@ -60,7 +60,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainView.xaml">
+    <Page Include="Views\ExampleListingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -72,31 +76,34 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Example Code\RecordAccessThroughFormLinksCode.cs" />
-    <Compile Include="Example Code\RecordOverrideOrDuplicationCode.cs" />
-    <Compile Include="Example GUI\MainVM.cs" />
-    <Compile Include="Example GUI\RecordAccessThroughFormLinksVM.cs" />
-    <Compile Include="Example GUI\ExampleVM.cs" />
-    <Compile Include="Example GUI\ImportComparisonVM.cs" />
-    <Compile Include="Example Code\ImportComparisonCode.cs" />
-    <Compile Include="Example GUI\PrintContentVM.cs" />
-    <Compile Include="Example Code\PrintContentCode.cs" />
-    <Compile Include="Example GUI\RecordOverrideOrDuplicationVM.cs" />
-    <Compile Include="Example GUI\SimpleOutputVM.cs" />
-    <Compile Include="MainView.xaml.cs">
+    <Compile Include="Code\RecordAccessThroughFormLinksCode.cs" />
+    <Compile Include="Code\RecordOverrideOrDuplicationCode.cs" />
+    <Compile Include="Views\ExampleListingView.xaml.cs">
+      <DependentUpon>ExampleListingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VMs\MainVM.cs" />
+    <Compile Include="VMs\RecordAccessThroughFormLinksVM.cs" />
+    <Compile Include="VMs\ExampleVM.cs" />
+    <Compile Include="VMs\ImportComparisonVM.cs" />
+    <Compile Include="Code\ImportComparisonCode.cs" />
+    <Compile Include="VMs\PrintContentVM.cs" />
+    <Compile Include="Code\PrintContentCode.cs" />
+    <Compile Include="VMs\RecordOverrideOrDuplicationVM.cs" />
+    <Compile Include="VMs\SimpleOutputVM.cs" />
+    <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Example GUI\SimpleOutputView.xaml">
+    <Page Include="Views\SimpleOutputView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Example GUI\SimpleOutputView.xaml.cs">
+    <Compile Include="Views\SimpleOutputView.xaml.cs">
       <DependentUpon>SimpleOutputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">

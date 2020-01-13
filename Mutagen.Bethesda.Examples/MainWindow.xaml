@@ -12,5 +12,5 @@
     Height="450"
     TitlebarHeight="25"
     mc:Ignorable="d">
-    <local:MainView />
+    <local:MainView ViewModel="{Binding}" />
 </Controls:MetroWindow>

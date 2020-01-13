@@ -1,14 +1,15 @@
-<UserControl
+<rxui:ReactiveUserControl
     x:Class="Mutagen.Bethesda.Examples.SimpleOutputView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Mutagen.Bethesda.Examples"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
     xmlns:t="clr-namespace:Simple.Wpf.Terminal;assembly=Simple.Wpf.Terminal"
-    d:DataContext="{d:DesignInstance local:SimpleOutputVM}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    x:TypeArguments="local:SimpleOutputVM"
     mc:Ignorable="d">
     <Grid Margin="14,14,14,8">
         <Grid.RowDefinitions>
@@ -28,44 +29,44 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock
+                x:Name="NameTextBlock"
                 Grid.Row="0"
                 Grid.Column="0"
                 FontSize="14"
-                FontWeight="SemiBold"
-                Text="{Binding Name}" />
+                FontWeight="SemiBold" />
             <TextBlock
+                x:Name="DescriptionTextBlock"
                 Grid.Row="1"
                 Grid.Column="0"
                 Margin="0,0,0,14"
                 VerticalAlignment="Bottom"
                 FontSize="10"
-                Foreground="{StaticResource ForegroundDarkBrush}"
-                Text="{Binding Description}" />
+                Foreground="{StaticResource ForegroundDarkBrush}" />
             <Button
+                x:Name="ClearButton"
                 Grid.Row="0"
                 Grid.RowSpan="2"
                 Grid.Column="1"
                 Width="100"
                 Height="30"
                 VerticalAlignment="Bottom"
-                Command="{Binding ClearCommand}"
                 Content="Clear" />
             <Button
+                x:Name="RunButton"
                 Grid.Row="0"
                 Grid.RowSpan="2"
                 Grid.Column="2"
                 Width="100"
                 Height="30"
                 VerticalAlignment="Bottom"
-                Command="{Binding RunCommand}"
                 Content="Run" />
         </Grid>
         <t:Terminal
+            x:Name="TerminalControl"
             Grid.Row="2"
             Background="Black"
             BorderBrush="{StaticResource AccentColorBrush}"
             IsReadOnly="True"
-            ItemsSource="{Binding OutputDisplay}"
             VerticalScrollBarVisibility="Auto" />
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -79,7 +80,7 @@
                 FontSize="11"
                 ToolTip="Output count">
                 <Run Foreground="{StaticResource ForegroundDarkBrush}" Text="Output count:" />
-                <Run Text="{Binding OutputDisplay.Count, Mode=OneWay}" />
+                <Run x:Name="CountRun" />
             </TextBlock>
             <TextBlock
                 Grid.Column="1"
@@ -88,8 +89,8 @@
                 FontSize="11"
                 ToolTip="Timing of the last run">
                 <Run Foreground="{StaticResource ForegroundDarkBrush}" Text="Timing:" />
-                <Run Text="{Binding LastTiming, Mode=OneWay}" />
+                <Run x:Name="TimingRun" />
             </TextBlock>
         </Grid>
     </Grid>
-</UserControl>
+</rxui:ReactiveUserControl>

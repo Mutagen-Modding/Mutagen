@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>1d0c10452c4cfe9e2c9a45038736f5da57b0fd4d</Sha>
+         <Sha>928f570a3251e5cb67f47a820718482f89829c1b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-12-2020 16:53:20</CommitDate>
-         <Description>PathPicker ported back over</Description>
+         <CommitDate>01-12-2020 18:52:43</CommitDate>
+         <Description>IViewForExt.BindToString /w observe on GUI call</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

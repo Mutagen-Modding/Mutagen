@@ -11,6 +11,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Diagnostics;
 using ReactiveUI.Fody.Helpers;
+using System.Reactive;
 
 namespace Mutagen.Bethesda.Examples
 {
@@ -20,8 +21,8 @@ namespace Mutagen.Bethesda.Examples
         public SourceList<string> Output { get; } = new SourceList<string>();
         public List<string> DelayedOutput { get; } = new List<string>();
 
-        public IReactiveCommand RunCommand { get; }
-        public IReactiveCommand ClearCommand { get; }
+        public ReactiveCommand<Unit, Unit> RunCommand { get; }
+        public ReactiveCommand<Unit, Unit> ClearCommand { get; }
 
         [Reactive]
         public string LastTiming { get; private set; }
@@ -29,7 +30,11 @@ namespace Mutagen.Bethesda.Examples
         public SimpleOutputVM(MainVM mvm)
             : base(mvm)
         {
-            this.RunCommand = ReactiveCommand.CreateFromTask(execute: Run);
+            this.RunCommand = ReactiveCommand.CreateFromTask(
+                execute: Run,
+                canExecute: this.WhenAny(x => x.MainVM.ModFilePath.InError)
+                    .Select(x => !x)
+                    .ObserveOn(RxApp.MainThreadScheduler));
             this.ClearCommand = ReactiveCommand.Create(Output.Clear);
             this.Output.Connect()
                 .Buffer(TimeSpan.FromMilliseconds(100))

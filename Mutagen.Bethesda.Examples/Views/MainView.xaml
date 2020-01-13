@@ -40,36 +40,30 @@
             <noggog:PathPicker
                 x:Name="ModFilePicker"
                 Grid.Column="1"
-                Margin="3"
-                PickerVM="{Binding ModFilePath}" />
+                Margin="3" />
         </Grid>
         <ListBox
+            x:Name="ExamplesListBox"
             Grid.Row="1"
-            Grid.Column="0"
-            ItemsSource="{Binding Examples}"
-            SelectedItem="{Binding SelectedExample}">
+            Grid.Column="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock
-                        Margin="6"
-                        Text="{Binding Name}"
-                        ToolTip="{Binding Description}" />
+                    <local:ExampleListingView ViewModel="{Binding}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Grid
             Grid.Row="1"
             Grid.Column="1"
-            Background="{StaticResource BackgroundDarkBrush}"
-            DataContext="{Binding SelectedExample}">
+            Background="{StaticResource BackgroundDarkBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="1" Content="{Binding}">
+            <ContentControl x:Name="SelectedExampleContent" Grid.Row="1">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type local:SimpleOutputVM}">
-                        <local:SimpleOutputView />
+                        <local:SimpleOutputView ViewModel="{Binding}" />
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>
