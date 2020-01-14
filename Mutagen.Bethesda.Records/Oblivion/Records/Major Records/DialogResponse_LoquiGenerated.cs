@@ -2765,7 +2765,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ResponseText,
                     header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM1_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.ActorNotes_IsSet)
             {
@@ -2773,7 +2774,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ActorNotes,
                     header: recordTypeConverter.ConvertToCustom(DialogResponse_Registration.NAM2_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

@@ -2829,7 +2829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.SourceCode,
                     header: recordTypeConverter.ConvertToCustom(ScriptFields_Registration.SCTX_HEADER),
                     nullable: false,
-                    nullTerminate: false);
+                    binaryType: StringBinaryType.Plain);
             }
             if (item.LocalVariables.HasBeenSet)
             {

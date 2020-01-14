@@ -2096,7 +2096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Data,
                     header: recordTypeConverter.ConvertToCustom(GameSettingString_Registration.DATA_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

@@ -2484,7 +2484,8 @@ namespace Mutagen.Bethesda.Internals
                     writer: writer,
                     item: item.EditorID,
                     header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

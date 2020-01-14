@@ -33,14 +33,14 @@ namespace Mutagen.Bethesda.Binary
             ModKey item,
             RecordType header,
             bool nullable,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             StringBinaryTranslation.Instance.Write(
                 writer,
                 item.ToString(),
                 header,
                 nullable,
-                nullTerminate);
+                binaryType);
         }
 
         public void Write(
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Binary
             IHasBeenSetItem<ModKey> item,
             RecordType header,
             bool nullable,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (!item.HasBeenSet) return;
             StringBinaryTranslation.Instance.Write(
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Binary
                 item.Item.ToString(),
                 header,
                 nullable,
-                nullTerminate);
+                binaryType);
         }
     }
 }

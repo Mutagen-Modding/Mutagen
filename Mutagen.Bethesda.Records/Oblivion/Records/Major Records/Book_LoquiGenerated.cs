@@ -3673,7 +3673,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(Book_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Model_IsSet)
             {
@@ -3691,7 +3692,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Icon,
                     header: recordTypeConverter.ConvertToCustom(Book_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Script.HasBeenSet)
             {
@@ -3725,7 +3727,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Description,
                     header: recordTypeConverter.ConvertToCustom(Book_Registration.DESC_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.DATADataTypeState.HasFlag(Book.DATADataType.Has))
             {

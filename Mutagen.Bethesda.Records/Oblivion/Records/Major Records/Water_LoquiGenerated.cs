@@ -6181,7 +6181,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Texture,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.TNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Opacity_IsSet)
             {
@@ -6206,7 +6207,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.MaterialID,
                     header: recordTypeConverter.ConvertToCustom(Water_Registration.MNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Sound.HasBeenSet)
             {

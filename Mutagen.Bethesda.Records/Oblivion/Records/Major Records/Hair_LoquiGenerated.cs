@@ -2563,7 +2563,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(Hair_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Model_IsSet)
             {
@@ -2581,7 +2582,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Icon,
                     header: recordTypeConverter.ConvertToCustom(Hair_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Flags_IsSet)
             {

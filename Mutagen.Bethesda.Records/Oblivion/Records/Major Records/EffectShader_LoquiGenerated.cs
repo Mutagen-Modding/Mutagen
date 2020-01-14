@@ -8814,7 +8814,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.FillTexture,
                     header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.ParticleShaderTexture_IsSet)
             {
@@ -8822,7 +8823,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ParticleShaderTexture,
                     header: recordTypeConverter.ConvertToCustom(EffectShader_Registration.ICO2_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Has))
             {

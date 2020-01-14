@@ -3462,7 +3462,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(Ammo_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Model_IsSet)
             {
@@ -3480,7 +3481,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Icon,
                     header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Enchantment.HasBeenSet)
             {

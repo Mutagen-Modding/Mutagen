@@ -2602,7 +2602,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Entry,
                     header: recordTypeConverter.ConvertToCustom(LogEntry_Registration.CNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.ResultScript_IsSet)
             {

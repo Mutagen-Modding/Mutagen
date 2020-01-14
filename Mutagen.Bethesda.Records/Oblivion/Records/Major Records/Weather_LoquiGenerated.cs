@@ -6771,7 +6771,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.TextureLowerLayer,
                     header: recordTypeConverter.ConvertToCustom(Weather_Registration.CNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.TextureUpperLayer_IsSet)
             {
@@ -6779,7 +6780,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.TextureUpperLayer,
                     header: recordTypeConverter.ConvertToCustom(Weather_Registration.DNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Model_IsSet)
             {

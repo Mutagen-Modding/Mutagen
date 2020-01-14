@@ -76,50 +76,61 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             string item)
         {
-            Write(writer, item, nullTerminate: true);
+            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
             string item,
-            bool nullTerminate)
+            StringBinaryType binaryType)
         {
-            WriteString(writer, item, nullTerminate);
+            WriteString(writer, item, binaryType);
         }
 
         public static void WriteString(
             MutagenWriter writer,
             string item,
-            bool nullTerminate)
+            StringBinaryType binaryType)
         {
-            writer.Write(item);
-            if (nullTerminate)
+            switch (binaryType)
             {
-                writer.Write((byte)0);
+                case StringBinaryType.Plain:
+                    writer.Write(item);
+                    break;
+                case StringBinaryType.NullTerminate:
+                    writer.Write(item);
+                    writer.Write((byte)0);
+                    break;
+                case StringBinaryType.PrependLength:
+                    writer.Write(item.Length);
+                    writer.Write(item);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
         public void Write(
             MutagenWriter writer,
             IHasItemGetter<string> item,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             this.Write(
                 writer,
                 item.Item,
-                nullTerminate: nullTerminate);
+                binaryType: binaryType);
         }
 
         public void Write(
             MutagenWriter writer,
             IHasBeenSetItemGetter<string> item,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
                 item.Item,
-                nullTerminate: nullTerminate);
+                binaryType: binaryType);
         }
 
         public void Write(
@@ -127,7 +138,7 @@ namespace Mutagen.Bethesda.Binary
             string item,
             RecordType header,
             bool nullable,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (item == null)
             {
@@ -142,7 +153,7 @@ namespace Mutagen.Bethesda.Binary
                 this.Write(
                     writer,
                     item,
-                    nullTerminate: nullTerminate);
+                    binaryType: binaryType);
             }
         }
 
@@ -151,7 +162,7 @@ namespace Mutagen.Bethesda.Binary
             IHasBeenSetItemGetter<string> item,
             RecordType header,
             bool nullable,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (!item.HasBeenSet) return;
             this.Write(
@@ -159,7 +170,7 @@ namespace Mutagen.Bethesda.Binary
                 item.Item,
                 header,
                 nullable,
-                nullTerminate: nullTerminate);
+                binaryType: binaryType);
         }
 
         public void Write(
@@ -167,14 +178,14 @@ namespace Mutagen.Bethesda.Binary
             IHasItemGetter<string> item,
             RecordType header,
             bool nullable,
-            bool nullTerminate = true)
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             this.Write(
                 writer,
                 item.Item,
                 header,
                 nullable,
-                nullTerminate: nullTerminate);
+                binaryType: binaryType);
         }
 
         public void Write(MutagenWriter writer, string item, long length)
@@ -183,7 +194,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Expected length was {item.Length}, but was passed {length}.");
             }
-            Write(writer, item, nullTerminate: true);
+            Write(writer, item, binaryType: StringBinaryType.NullTerminate);
         }
     }
 }

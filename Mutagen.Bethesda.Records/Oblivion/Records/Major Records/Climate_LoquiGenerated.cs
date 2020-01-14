@@ -3702,7 +3702,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.SunTexture,
                     header: recordTypeConverter.ConvertToCustom(Climate_Registration.FNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.SunGlareTexture_IsSet)
             {
@@ -3710,7 +3711,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.SunGlareTexture,
                     header: recordTypeConverter.ConvertToCustom(Climate_Registration.GNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Model_IsSet)
             {

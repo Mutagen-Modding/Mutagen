@@ -3560,7 +3560,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Icon,
                     header: recordTypeConverter.ConvertToCustom(Region_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.MapColor_IsSet)
             {

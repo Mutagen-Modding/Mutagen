@@ -2530,7 +2530,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

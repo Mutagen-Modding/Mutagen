@@ -1914,7 +1914,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.MapName,
                     header: recordTypeConverter.ConvertToCustom(RegionDataMapName_Registration.RDMP_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

@@ -2249,7 +2249,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.MaleRankTitle,
                     header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.FemaleRankTitle_IsSet)
             {
@@ -2257,7 +2258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.FemaleRankTitle,
                     header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

@@ -4040,7 +4040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Script.HasBeenSet)
             {
@@ -4108,7 +4109,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.MaleIcon,
                     header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.FemaleBipedModel_IsSet)
             {
@@ -4136,7 +4138,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.FemaleIcon,
                     header: recordTypeConverter.ConvertToCustom(ClothingAbstract_Registration.ICO2_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

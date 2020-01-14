@@ -3758,7 +3758,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Description,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DESC_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Icon_IsSet)
             {
@@ -3766,7 +3767,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Icon,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
             {
@@ -3798,7 +3800,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ApprenticeText,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ANAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.JourneymanText_IsSet)
             {
@@ -3806,7 +3809,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.JourneymanText,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.JNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.ExpertText_IsSet)
             {
@@ -3814,7 +3818,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.ExpertText,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ENAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.MasterText_IsSet)
             {
@@ -3822,7 +3827,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.MasterText,
                     header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.MNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

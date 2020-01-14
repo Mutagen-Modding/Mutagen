@@ -2120,7 +2120,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.File,
                 header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
-                nullable: false);
+                nullable: false,
+                binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius,

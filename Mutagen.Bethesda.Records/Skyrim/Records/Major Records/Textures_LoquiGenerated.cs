@@ -3116,7 +3116,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Diffuse,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX00_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.NormalOrGloss_IsSet)
             {
@@ -3124,7 +3125,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.NormalOrGloss,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX01_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.EnvironmentMaskOrSubsurfaceTint_IsSet)
             {
@@ -3132,7 +3134,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.EnvironmentMaskOrSubsurfaceTint,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX02_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.GlowOrDetailMap_IsSet)
             {
@@ -3140,7 +3143,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.GlowOrDetailMap,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX03_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Height_IsSet)
             {
@@ -3148,7 +3152,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Height,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX04_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Environment_IsSet)
             {
@@ -3156,7 +3161,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Environment,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX05_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Multilayer_IsSet)
             {
@@ -3164,7 +3170,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Multilayer,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX06_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.BacklightMaskOrSpecular_IsSet)
             {
@@ -3172,7 +3179,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.BacklightMaskOrSpecular,
                     header: recordTypeConverter.ConvertToCustom(Textures_Registration.TX07_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

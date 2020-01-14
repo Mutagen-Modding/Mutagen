@@ -10,11 +10,11 @@ namespace Mutagen.Bethesda.Generation
 {
     public class StringType : Loqui.Generation.StringType
     {
-        public bool NullTerminate;
+        public StringBinaryType BinaryType;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
-            this.NullTerminate = node.GetAttribute<bool>("nullTerminate", defaultVal: true);
+            this.BinaryType = node.GetAttribute<StringBinaryType>("binaryType", defaultVal: StringBinaryType.NullTerminate);
             await base.Load(node, requireName);
         }
     }

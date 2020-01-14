@@ -150,7 +150,7 @@
     <xs:complexType name="String">
       <xs:complexContent>
         <xs:extension base="String">
-          <xs:attribute name="nullTerminate" type="xs:boolean" />
+          <xs:attribute name="binaryType" type="StringBinaryType" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -215,6 +215,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="prependCount" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to add list count as an integer before the record data.  The counter is not put in its own subrecord
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -274,6 +281,14 @@
       <xs:enumeration value="DoNothing" />
       <xs:enumeration value="NoGeneration" />
       <xs:enumeration value="Custom" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StringBinaryType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Plain" />
+      <xs:enumeration value="NullTerminate" />
+      <xs:enumeration value="PrependLength" />
     </xs:restriction>
   </xs:simpleType>
 

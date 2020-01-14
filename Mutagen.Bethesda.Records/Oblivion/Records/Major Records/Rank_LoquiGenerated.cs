@@ -2422,7 +2422,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.MaleName,
                     header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.FemaleName_IsSet)
             {
@@ -2430,7 +2431,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.FemaleName,
                     header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Insignia_IsSet)
             {
@@ -2438,7 +2440,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Insignia,
                     header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
         }
 

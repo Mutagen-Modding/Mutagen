@@ -34,6 +34,7 @@
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Core\Structs\ModIndex.cs" />
+    <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Records\ListGroupAbstract.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />

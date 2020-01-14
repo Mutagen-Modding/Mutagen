@@ -58,10 +58,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"length: {data.Length.Value}");
                 }
-                if (!stringType.NullTerminate)
-                {
-                    args.Add($"nullTerminate: false");
-                }
+                args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");
             }
         }
 

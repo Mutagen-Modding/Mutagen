@@ -5766,7 +5766,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Name,
                     header: recordTypeConverter.ConvertToCustom(Faction_Registration.FULL_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Relations.HasBeenSet)
             {

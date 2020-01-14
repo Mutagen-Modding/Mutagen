@@ -2244,7 +2244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.File,
                     header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
-                    nullable: false);
+                    nullable: false,
+                    binaryType: StringBinaryType.NullTerminate);
             }
             if (item.Data_IsSet)
             {
