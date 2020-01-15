@@ -185,6 +185,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="counterRecType" >
+            <xs:annotation>
+              <xs:documentation>
+                Record type of a counter subrecord the list starts with.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -198,6 +205,13 @@
             <xs:annotation>
               <xs:documentation>
                 How to generate binary overlay translations.  Defaults to "binary" setting if missing
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="counterRecType" >
+            <xs:annotation>
+              <xs:documentation>
+                Record type of a counter subrecord the list starts with.
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

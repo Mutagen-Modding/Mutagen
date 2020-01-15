@@ -10,6 +10,7 @@
       <Group name="TextureSets" refName="TextureSet" />
       <Group name="Globals" refName="Global" />
       <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
     </Fields>
   </Object>
 </Loqui>

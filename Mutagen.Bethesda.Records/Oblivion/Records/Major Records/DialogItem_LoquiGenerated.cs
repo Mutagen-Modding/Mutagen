@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DialogItem_Registration : ILoquiRegistration
+    public partial class DialogItem_Registration : ILoquiRegistration
     {
         public static readonly DialogItem_Registration Instance = new DialogItem_Registration();
 

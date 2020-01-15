@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class IdleAnimation_Registration : ILoquiRegistration
+    public partial class IdleAnimation_Registration : ILoquiRegistration
     {
         public static readonly IdleAnimation_Registration Instance = new IdleAnimation_Registration();
 

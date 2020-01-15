@@ -246,6 +246,11 @@ namespace Mutagen.Bethesda.Binary
             return Reader.ReadDouble();
         }
 
+        public bool ReadBoolean()
+        {
+            return Reader.ReadUInt8() == 1;
+        }
+
         public string ReadStringUTF8(int amount)
         {
             return Reader.ReadStringUTF8(amount);

@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor, 
-            int currentPosition,
+            int? currentPosition,
             DataType dataType = null)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (!data.RecordType.HasValue)

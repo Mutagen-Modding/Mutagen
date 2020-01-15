@@ -31,6 +31,7 @@
     <Compile Include="Core\Links\ILinkingPackage.cs" />
     <Compile Include="Core\Links\ModListLinkingPackage.cs" />
     <Compile Include="Core\LoadOrder.cs" />
+    <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Core\Structs\ModIndex.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />

@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DistantLODData_Registration : ILoquiRegistration
+    public partial class DistantLODData_Registration : ILoquiRegistration
     {
         public static readonly DistantLODData_Registration Instance = new DistantLODData_Registration();
 

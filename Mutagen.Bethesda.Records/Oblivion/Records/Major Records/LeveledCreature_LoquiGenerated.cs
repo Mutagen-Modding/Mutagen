@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LeveledCreature_Registration : ILoquiRegistration
+    public partial class LeveledCreature_Registration : ILoquiRegistration
     {
         public static readonly LeveledCreature_Registration Instance = new LeveledCreature_Registration();
 

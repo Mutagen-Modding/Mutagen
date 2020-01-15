@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Eye_Registration : ILoquiRegistration
+    public partial class Eye_Registration : ILoquiRegistration
     {
         public static readonly Eye_Registration Instance = new Eye_Registration();
 

@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Registration
-    public class TestingSettings_Registration : ILoquiRegistration
+    public partial class TestingSettings_Registration : ILoquiRegistration
     {
         public static readonly TestingSettings_Registration Instance = new TestingSettings_Registration();
 

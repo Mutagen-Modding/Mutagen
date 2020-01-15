@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class ObjectBounds_Registration : ILoquiRegistration
+    public partial class ObjectBounds_Registration : ILoquiRegistration
     {
         public static readonly ObjectBounds_Registration Instance = new ObjectBounds_Registration();
 

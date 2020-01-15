@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class GenderedBodyData_Registration : ILoquiRegistration
+    public partial class GenderedBodyData_Registration : ILoquiRegistration
     {
         public static readonly GenderedBodyData_Registration Instance = new GenderedBodyData_Registration();
 

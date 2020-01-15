@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Subspace_Registration : ILoquiRegistration
+    public partial class Subspace_Registration : ILoquiRegistration
     {
         public static readonly Subspace_Registration Instance = new Subspace_Registration();
 

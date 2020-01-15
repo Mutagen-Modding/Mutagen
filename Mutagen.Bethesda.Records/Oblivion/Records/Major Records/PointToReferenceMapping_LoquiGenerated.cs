@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PointToReferenceMapping_Registration : ILoquiRegistration
+    public partial class PointToReferenceMapping_Registration : ILoquiRegistration
     {
         public static readonly PointToReferenceMapping_Registration Instance = new PointToReferenceMapping_Registration();
 

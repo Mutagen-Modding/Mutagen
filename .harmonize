@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b61f43aea16a3a7a6a205aed50384d5dd03440f3</Sha>
+         <Sha>54dbccdfa1833e3361cac1275560c3c1e91d5877</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-12-2020 01:24:41</CommitDate>
-         <Description>Namespace cleaning</Description>
+         <CommitDate>01-14-2020 18:13:07</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/dev'</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

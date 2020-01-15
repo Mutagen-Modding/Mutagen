@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            ref int currentPosition,
+            ref int? currentPosition,
             DataType dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
@@ -244,11 +244,6 @@ namespace Mutagen.Bethesda.Generation
                 }
                 loc = $"_{typeGen.Name}Location.Value";
             }
-            else if (!fieldData.Length.HasValue
-                && !gen.ExpectedLength(objGen, typeGen).HasValue)
-            {
-                throw new ArgumentException("Custom logic without trigger needs to define expected length");
-            }
             else if (dataType != null)
             {
                 loc = $"_{typeGen.Name}Location";
@@ -268,7 +263,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (!fieldData.HasTrigger)
             {
-                currentPosition += fieldData.Length ?? gen.ExpectedLength(objGen, typeGen).Value;
+                currentPosition += fieldData.Length ?? gen.ExpectedLength(objGen, typeGen);
             }
         }
 
@@ -277,7 +272,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
-            int passedLength, 
+            int? passedLength, 
             DataType data = null)
         {
             using (var args = new ArgsWrapper(fg,

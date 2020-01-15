@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PlacedCreature_Registration : ILoquiRegistration
+    public partial class PlacedCreature_Registration : ILoquiRegistration
     {
         public static readonly PlacedCreature_Registration Instance = new PlacedCreature_Registration();
 

@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Cell_Registration : ILoquiRegistration
+    public partial class Cell_Registration : ILoquiRegistration
     {
         public static readonly Cell_Registration Instance = new Cell_Registration();
 
@@ -6080,7 +6080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
             return ret;
         }

@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class CombatStyleAdvanced_Registration : ILoquiRegistration
+    public partial class CombatStyleAdvanced_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleAdvanced_Registration Instance = new CombatStyleAdvanced_Registration();
 

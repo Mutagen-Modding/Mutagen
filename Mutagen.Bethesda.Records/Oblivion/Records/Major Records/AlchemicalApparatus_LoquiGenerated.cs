@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AlchemicalApparatus_Registration : ILoquiRegistration
+    public partial class AlchemicalApparatus_Registration : ILoquiRegistration
     {
         public static readonly AlchemicalApparatus_Registration Instance = new AlchemicalApparatus_Registration();
 

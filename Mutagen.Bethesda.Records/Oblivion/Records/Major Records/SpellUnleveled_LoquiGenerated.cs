@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class SpellUnleveled_Registration : ILoquiRegistration
+    public partial class SpellUnleveled_Registration : ILoquiRegistration
     {
         public static readonly SpellUnleveled_Registration Instance = new SpellUnleveled_Registration();
 

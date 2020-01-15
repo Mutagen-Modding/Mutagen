@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class MagicEffect_Registration : ILoquiRegistration
+    public partial class MagicEffect_Registration : ILoquiRegistration
     {
         public static readonly MagicEffect_Registration Instance = new MagicEffect_Registration();
 

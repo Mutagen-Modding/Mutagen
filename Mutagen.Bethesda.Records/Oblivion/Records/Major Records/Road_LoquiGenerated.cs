@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Road_Registration : ILoquiRegistration
+    public partial class Road_Registration : ILoquiRegistration
     {
         public static readonly Road_Registration Instance = new Road_Registration();
 

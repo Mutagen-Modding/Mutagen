@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Flora_Registration : ILoquiRegistration
+    public partial class Flora_Registration : ILoquiRegistration
     {
         public static readonly Flora_Registration Instance = new Flora_Registration();
 

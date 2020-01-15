@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AnimatedObject_Registration : ILoquiRegistration
+    public partial class AnimatedObject_Registration : ILoquiRegistration
     {
         public static readonly AnimatedObject_Registration Instance = new AnimatedObject_Registration();
 

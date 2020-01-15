@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
         public BinaryGenerationType? BinaryOverlay;
         public BinaryGenerationType BinaryOverlayFallback => this.BinaryOverlay ?? this.Binary;
         public bool CustomFolder;
-        public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
+        public Dictionary<RecordType, List<ObjectGeneration>> SubLoquiTypes = new Dictionary<RecordType, List<ObjectGeneration>>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;
         public RecordTypeConverter RecordTypeConverter;
@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (!(this.SourceTypeGeneration is LoquiType loqui)) yield break;
             foreach (var subType in this.SubLoquiTypes
+                .SelectMany(x => x.Value.Select(l => new KeyValuePair<RecordType, ObjectGeneration>(x.Key, l)))
                 .GroupBy((g) => g.Value))
             {
                 yield return new KeyValuePair<IEnumerable<RecordType>, TypeGeneration>(

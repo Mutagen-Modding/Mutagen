@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Worldspace_Registration : ILoquiRegistration
+    public partial class Worldspace_Registration : ILoquiRegistration
     {
         public static readonly Worldspace_Registration Instance = new Worldspace_Registration();
 
@@ -5229,7 +5229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
             return ret;
         }

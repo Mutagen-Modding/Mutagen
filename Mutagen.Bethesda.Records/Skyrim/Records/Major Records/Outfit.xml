@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Outfit" baseClass="SkyrimMajorRecord" objType="Record" recordType="OTFT" GUID="9d434f13-1d96-4d9e-b517-bd5b3c2b7675" ID="29">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

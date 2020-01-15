@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ScriptReference_Registration : ILoquiRegistration
+    public partial class ScriptReference_Registration : ILoquiRegistration
     {
         public static readonly ScriptReference_Registration Instance = new ScriptReference_Registration();
 

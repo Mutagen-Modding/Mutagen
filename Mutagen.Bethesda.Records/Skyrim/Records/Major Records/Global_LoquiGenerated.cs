@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class Global_Registration : ILoquiRegistration
+    public partial class Global_Registration : ILoquiRegistration
     {
         public static readonly Global_Registration Instance = new Global_Registration();
 

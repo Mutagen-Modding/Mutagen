@@ -621,7 +621,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Registration
-    public class DataFolderLocations_Registration : ILoquiRegistration
+    public partial class DataFolderLocations_Registration : ILoquiRegistration
     {
         public static readonly DataFolderLocations_Registration Instance = new DataFolderLocations_Registration();
 

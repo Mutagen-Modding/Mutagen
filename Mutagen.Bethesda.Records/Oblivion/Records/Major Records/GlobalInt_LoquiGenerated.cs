@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class GlobalInt_Registration : ILoquiRegistration
+    public partial class GlobalInt_Registration : ILoquiRegistration
     {
         public static readonly GlobalInt_Registration Instance = new GlobalInt_Registration();
 

@@ -847,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class Decal_Registration : ILoquiRegistration
+    public partial class Decal_Registration : ILoquiRegistration
     {
         public static readonly Decal_Registration Instance = new Decal_Registration();
 

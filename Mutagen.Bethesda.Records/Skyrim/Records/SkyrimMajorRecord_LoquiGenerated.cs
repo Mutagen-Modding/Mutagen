@@ -258,6 +258,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => SkyrimMajorRecordCommon.Instance.GetLinks(this);
         public SkyrimMajorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -331,6 +333,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetter,
         ILoquiObject<ISkyrimMajorRecordGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         #region SkyrimMajorRecordFlags
@@ -708,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class SkyrimMajorRecord_Registration : ILoquiRegistration
+    public partial class SkyrimMajorRecord_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMajorRecord_Registration Instance = new SkyrimMajorRecord_Registration();
 
@@ -869,10 +872,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -883,10 +890,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         AACT_HEADER,
                         CLAS_HEADER,
+                        FACT_HEADER,
+                        FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
+                        OTFT_HEADER,
+                        REFR_HEADER,
                         TXST_HEADER
                     })
             );
@@ -2091,6 +2102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => SkyrimMajorRecordCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

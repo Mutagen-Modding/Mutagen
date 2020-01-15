@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Ammo_Registration : ILoquiRegistration
+    public partial class Ammo_Registration : ILoquiRegistration
     {
         public static readonly Ammo_Registration Instance = new Ammo_Registration();
 

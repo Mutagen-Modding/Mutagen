@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class ActionRecord_Registration : ILoquiRegistration
+    public partial class ActionRecord_Registration : ILoquiRegistration
     {
         public static readonly ActionRecord_Registration Instance = new ActionRecord_Registration();
 

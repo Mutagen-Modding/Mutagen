@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class ModHeader_Registration : ILoquiRegistration
+    public partial class ModHeader_Registration : ILoquiRegistration
     {
         public static readonly ModHeader_Registration Instance = new ModHeader_Registration();
 

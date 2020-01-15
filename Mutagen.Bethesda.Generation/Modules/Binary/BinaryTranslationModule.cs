@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
             this.DoErrorMasks = false;
             this.TranslationMaskParameter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
-            this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>(expectedLen: 1);
+            this._typeGenerations[typeof(BoolType)] = new BooleanBinaryTranslationGeneration();
             this._typeGenerations[typeof(CharType)] = new PrimitiveBinaryTranslationGeneration<char>(expectedLen: 1);
             this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
             this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Generation
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}CustomBinaryEndImport"))
+                        $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImportPublic"))
                     {
                         args.Add("frame: frame");
                         args.Add($"obj: {accessor}");
@@ -1537,7 +1537,7 @@ namespace Mutagen.Bethesda.Generation
 
                 fg.AppendLine();
 
-                int passedLength = 0;
+                int? passedLength = 0;
                 // Get passed length of all base classes, not including major record
                 if (obj.HasLoquiBaseObject)
                 {
@@ -1825,13 +1825,13 @@ namespace Mutagen.Bethesda.Generation
                                 switch (obj.GetObjectType())
                                 {
                                     case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.SubConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.MajorConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value.ToString("X")} + package.Meta.GroupConstants.TypeAndLengthLength;");
                                         break;
                                     case ObjectType.Mod:
                                         break;
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Generation
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                fg.AppendLine($"stream.Position += 0x{(passedLength).ToString("X")}{headerAddition};");
+                                fg.AppendLine($"stream.Position += 0x{(passedLength).Value.ToString("X")}{headerAddition};");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"ret.CustomCtor"))
@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Generation
                                 "ret.CustomEnd"))
                             {
                                 args.AddPassArg("stream");
-                                args.AddPassArg("finalPos");
+                                args.Add("finalPos: stream.Length");
                                 args.AddPassArg("offset");
                             }
                         }

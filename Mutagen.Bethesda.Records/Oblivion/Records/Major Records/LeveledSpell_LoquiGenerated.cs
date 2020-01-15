@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LeveledSpell_Registration : ILoquiRegistration
+    public partial class LeveledSpell_Registration : ILoquiRegistration
     {
         public static readonly LeveledSpell_Registration Instance = new LeveledSpell_Registration();
 

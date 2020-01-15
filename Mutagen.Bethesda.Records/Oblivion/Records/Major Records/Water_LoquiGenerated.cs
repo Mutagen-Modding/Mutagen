@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Water_Registration : ILoquiRegistration
+    public partial class Water_Registration : ILoquiRegistration
     {
         public static readonly Water_Registration Instance = new Water_Registration();
 

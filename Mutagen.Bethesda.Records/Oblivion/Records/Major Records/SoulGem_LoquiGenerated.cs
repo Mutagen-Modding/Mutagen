@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class SoulGem_Registration : ILoquiRegistration
+    public partial class SoulGem_Registration : ILoquiRegistration
     {
         public static readonly SoulGem_Registration Instance = new SoulGem_Registration();
 

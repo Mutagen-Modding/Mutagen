@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PlacedNPC_Registration : ILoquiRegistration
+    public partial class PlacedNPC_Registration : ILoquiRegistration
     {
         public static readonly PlacedNPC_Registration Instance = new PlacedNPC_Registration();
 

@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class HavokData_Registration : ILoquiRegistration
+    public partial class HavokData_Registration : ILoquiRegistration
     {
         public static readonly HavokData_Registration Instance = new HavokData_Registration();
 

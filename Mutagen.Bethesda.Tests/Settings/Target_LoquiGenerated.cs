@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Registration
-    public class Target_Registration : ILoquiRegistration
+    public partial class Target_Registration : ILoquiRegistration
     {
         public static readonly Target_Registration Instance = new Target_Registration();
 

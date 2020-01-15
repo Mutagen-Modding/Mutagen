@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AIPackageLocation_Registration : ILoquiRegistration
+    public partial class AIPackageLocation_Registration : ILoquiRegistration
     {
         public static readonly AIPackageLocation_Registration Instance = new AIPackageLocation_Registration();
 

@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class DialogTopic_Registration : ILoquiRegistration
+    public partial class DialogTopic_Registration : ILoquiRegistration
     {
         public static readonly DialogTopic_Registration Instance = new DialogTopic_Registration();
 
@@ -3216,7 +3216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
             return ret;
         }

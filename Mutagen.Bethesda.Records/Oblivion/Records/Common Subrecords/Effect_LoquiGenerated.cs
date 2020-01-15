@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Effect_Registration : ILoquiRegistration
+    public partial class Effect_Registration : ILoquiRegistration
     {
         public static readonly Effect_Registration Instance = new Effect_Registration();
 

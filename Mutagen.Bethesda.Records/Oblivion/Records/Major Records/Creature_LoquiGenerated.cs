@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Creature_Registration : ILoquiRegistration
+    public partial class Creature_Registration : ILoquiRegistration
     {
         public static readonly Creature_Registration Instance = new Creature_Registration();
 

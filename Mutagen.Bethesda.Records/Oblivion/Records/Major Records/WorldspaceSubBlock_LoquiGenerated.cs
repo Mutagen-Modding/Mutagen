@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class WorldspaceSubBlock_Registration : ILoquiRegistration
+    public partial class WorldspaceSubBlock_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceSubBlock_Registration Instance = new WorldspaceSubBlock_Registration();
 

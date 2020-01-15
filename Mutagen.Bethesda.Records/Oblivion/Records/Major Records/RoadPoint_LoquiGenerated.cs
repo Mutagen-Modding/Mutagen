@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RoadPoint_Registration : ILoquiRegistration
+    public partial class RoadPoint_Registration : ILoquiRegistration
     {
         public static readonly RoadPoint_Registration Instance = new RoadPoint_Registration();
 

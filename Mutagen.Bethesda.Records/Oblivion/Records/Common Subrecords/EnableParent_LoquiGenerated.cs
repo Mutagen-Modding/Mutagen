@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class EnableParent_Registration : ILoquiRegistration
+    public partial class EnableParent_Registration : ILoquiRegistration
     {
         public static readonly EnableParent_Registration Instance = new EnableParent_Registration();
 

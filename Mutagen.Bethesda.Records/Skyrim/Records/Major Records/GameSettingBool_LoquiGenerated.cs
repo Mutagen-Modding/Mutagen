@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class GameSettingBool_Registration : ILoquiRegistration
+    public partial class GameSettingBool_Registration : ILoquiRegistration
     {
         public static readonly GameSettingBool_Registration Instance = new GameSettingBool_Registration();
 

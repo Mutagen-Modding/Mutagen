@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class PathGrid_Registration : ILoquiRegistration
+    public partial class PathGrid_Registration : ILoquiRegistration
     {
         public static readonly PathGrid_Registration Instance = new PathGrid_Registration();
 

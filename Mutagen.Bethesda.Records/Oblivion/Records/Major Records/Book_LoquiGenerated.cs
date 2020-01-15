@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Book_Registration : ILoquiRegistration
+    public partial class Book_Registration : ILoquiRegistration
     {
         public static readonly Book_Registration Instance = new Book_Registration();
 

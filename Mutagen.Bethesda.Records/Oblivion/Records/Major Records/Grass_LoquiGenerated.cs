@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Grass_Registration : ILoquiRegistration
+    public partial class Grass_Registration : ILoquiRegistration
     {
         public static readonly Grass_Registration Instance = new Grass_Registration();
 

@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class BaseLayer_Registration : ILoquiRegistration
+    public partial class BaseLayer_Registration : ILoquiRegistration
     {
         public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
 

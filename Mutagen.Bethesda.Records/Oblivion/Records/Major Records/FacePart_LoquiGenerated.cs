@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class FacePart_Registration : ILoquiRegistration
+    public partial class FacePart_Registration : ILoquiRegistration
     {
         public static readonly FacePart_Registration Instance = new FacePart_Registration();
 

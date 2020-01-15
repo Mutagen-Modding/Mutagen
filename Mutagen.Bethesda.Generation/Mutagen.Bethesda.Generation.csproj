@@ -74,6 +74,7 @@
     <Compile Include="Fields\ZeroType.cs" />
     <Compile Include="Modules\Binary\ArrayBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
+    <Compile Include="Modules\Binary\BooleanBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ByteArrayBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ByteBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ColorBinaryTranslationGeneration.cs" />

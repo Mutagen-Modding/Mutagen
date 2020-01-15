@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RaceHair_Registration : ILoquiRegistration
+    public partial class RaceHair_Registration : ILoquiRegistration
     {
         public static readonly RaceHair_Registration Instance = new RaceHair_Registration();
 

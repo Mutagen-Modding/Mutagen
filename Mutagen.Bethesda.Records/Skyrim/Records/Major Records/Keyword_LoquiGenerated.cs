@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class Keyword_Registration : ILoquiRegistration
+    public partial class Keyword_Registration : ILoquiRegistration
     {
         public static readonly Keyword_Registration Instance = new Keyword_Registration();
 

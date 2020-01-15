@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #endregion
 
     #region Registration
-    public class PassthroughSettings_Registration : ILoquiRegistration
+    public partial class PassthroughSettings_Registration : ILoquiRegistration
     {
         public static readonly PassthroughSettings_Registration Instance = new PassthroughSettings_Registration();
 

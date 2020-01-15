@@ -825,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class CellBlock_Registration : ILoquiRegistration
+    public partial class CellBlock_Registration : ILoquiRegistration
     {
         public static readonly CellBlock_Registration Instance = new CellBlock_Registration();
 

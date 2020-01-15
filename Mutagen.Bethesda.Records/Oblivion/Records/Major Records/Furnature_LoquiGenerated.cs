@@ -866,7 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Furnature_Registration : ILoquiRegistration
+    public partial class Furnature_Registration : ILoquiRegistration
     {
         public static readonly Furnature_Registration Instance = new Furnature_Registration();
 

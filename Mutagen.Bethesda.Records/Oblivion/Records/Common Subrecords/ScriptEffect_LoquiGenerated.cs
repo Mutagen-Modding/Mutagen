@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class ScriptEffect_Registration : ILoquiRegistration
+    public partial class ScriptEffect_Registration : ILoquiRegistration
     {
         public static readonly ScriptEffect_Registration Instance = new ScriptEffect_Registration();
 

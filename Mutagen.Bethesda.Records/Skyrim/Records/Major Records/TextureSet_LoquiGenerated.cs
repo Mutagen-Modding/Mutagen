@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class TextureSet_Registration : ILoquiRegistration
+    public partial class TextureSet_Registration : ILoquiRegistration
     {
         public static readonly TextureSet_Registration Instance = new TextureSet_Registration();
 

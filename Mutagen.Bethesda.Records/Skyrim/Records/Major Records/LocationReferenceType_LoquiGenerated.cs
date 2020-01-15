@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class LocationReferenceType_Registration : ILoquiRegistration
+    public partial class LocationReferenceType_Registration : ILoquiRegistration
     {
         public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 

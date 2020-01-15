@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class TeleportDestination_Registration : ILoquiRegistration
+    public partial class TeleportDestination_Registration : ILoquiRegistration
     {
         public static readonly TeleportDestination_Registration Instance = new TeleportDestination_Registration();
 

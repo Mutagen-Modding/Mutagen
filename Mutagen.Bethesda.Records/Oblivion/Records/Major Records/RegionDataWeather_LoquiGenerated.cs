@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class RegionDataWeather_Registration : ILoquiRegistration
+    public partial class RegionDataWeather_Registration : ILoquiRegistration
     {
         public static readonly RegionDataWeather_Registration Instance = new RegionDataWeather_Registration();
 

@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class LoadScreen_Registration : ILoquiRegistration
+    public partial class LoadScreen_Registration : ILoquiRegistration
     {
         public static readonly LoadScreen_Registration Instance = new LoadScreen_Registration();
 

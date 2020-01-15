@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Sound_Registration : ILoquiRegistration
+    public partial class Sound_Registration : ILoquiRegistration
     {
         public static readonly Sound_Registration Instance = new Sound_Registration();
 

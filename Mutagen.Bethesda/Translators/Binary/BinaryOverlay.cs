@@ -246,6 +246,162 @@ namespace Mutagen.Bethesda.Binary
             return ret.ToArray();
         }
 
+        public static int[] ParseRecordLocations(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            ICollection<RecordType> triggers,
+            ICollection<RecordType> includeTriggers,
+            RecordConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete && stream.Position < finalPos)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                var trigger = triggers.Contains(recType);
+                var includeTrigger = includeTriggers.Contains(recType);
+                if (!trigger && !includeTrigger) break;
+                if (trigger)
+                {
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] ParseRecordLocations(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            RecordType trigger,
+            ICollection<RecordType> includeTriggers,
+            RecordConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete && stream.Position < finalPos)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                var isTrigger = trigger == recType;
+                var includeTrigger = includeTriggers.Contains(recType);
+                if (!isTrigger && !includeTrigger) break;
+                if (isTrigger)
+                {
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] ParseRecordLocations(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            ICollection<RecordType> triggers,
+            RecordType includeTrigger,
+            RecordConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete && stream.Position < finalPos)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                var trigger = triggers.Contains(recType);
+                var isIncludeTrigger = recType == includeTrigger;
+                if (!trigger && !isIncludeTrigger) break;
+                if (trigger)
+                {
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] ParseRecordLocations(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            RecordType trigger,
+            RecordType includeTrigger,
+            RecordConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            while (!stream.Complete && stream.Position < finalPos)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                var isTrigger = trigger == recType;
+                var isIncludeTrigger = includeTrigger == recType;
+                if (!isTrigger && !isIncludeTrigger) break;
+                if (isTrigger)
+                {
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
         public delegate T Factory<T>(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package);

@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Enchantment_Registration : ILoquiRegistration
+    public partial class Enchantment_Registration : ILoquiRegistration
     {
         public static readonly Enchantment_Registration Instance = new Enchantment_Registration();
 

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
             Accessor dataAccessor, 
-            int currentPosition,
+            int? currentPosition,
             DataType dataType)
         {
             var data = typeGen.GetFieldData();

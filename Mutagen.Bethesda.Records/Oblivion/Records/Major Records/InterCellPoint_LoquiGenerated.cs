@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class InterCellPoint_Registration : ILoquiRegistration
+    public partial class InterCellPoint_Registration : ILoquiRegistration
     {
         public static readonly InterCellPoint_Registration Instance = new InterCellPoint_Registration();
 

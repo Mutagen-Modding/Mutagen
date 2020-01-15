@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class SkillRecord_Registration : ILoquiRegistration
+    public partial class SkillRecord_Registration : ILoquiRegistration
     {
         public static readonly SkillRecord_Registration Instance = new SkillRecord_Registration();
 

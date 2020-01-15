@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Registration
-    public class MasterReference_Registration : ILoquiRegistration
+    public partial class MasterReference_Registration : ILoquiRegistration
     {
         public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
 

@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class SigilStone_Registration : ILoquiRegistration
+    public partial class SigilStone_Registration : ILoquiRegistration
     {
         public static readonly SigilStone_Registration Instance = new SigilStone_Registration();
 

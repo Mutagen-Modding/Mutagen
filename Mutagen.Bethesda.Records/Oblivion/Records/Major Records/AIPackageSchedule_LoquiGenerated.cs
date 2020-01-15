@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class AIPackageSchedule_Registration : ILoquiRegistration
+    public partial class AIPackageSchedule_Registration : ILoquiRegistration
     {
         public static readonly AIPackageSchedule_Registration Instance = new AIPackageSchedule_Registration();
 

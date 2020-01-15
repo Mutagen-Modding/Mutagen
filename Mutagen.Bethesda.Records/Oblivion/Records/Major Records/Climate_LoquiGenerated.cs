@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Climate_Registration : ILoquiRegistration
+    public partial class Climate_Registration : ILoquiRegistration
     {
         public static readonly Climate_Registration Instance = new Climate_Registration();
 

@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class GameSettingFloat_Registration : ILoquiRegistration
+    public partial class GameSettingFloat_Registration : ILoquiRegistration
     {
         public static readonly GameSettingFloat_Registration Instance = new GameSettingFloat_Registration();
 

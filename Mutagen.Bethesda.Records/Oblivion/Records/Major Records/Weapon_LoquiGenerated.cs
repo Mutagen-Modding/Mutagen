@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Weapon_Registration : ILoquiRegistration
+    public partial class Weapon_Registration : ILoquiRegistration
     {
         public static readonly Weapon_Registration Instance = new Weapon_Registration();
 

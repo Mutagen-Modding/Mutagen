@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Landscape_Registration : ILoquiRegistration
+    public partial class Landscape_Registration : ILoquiRegistration
     {
         public static readonly Landscape_Registration Instance = new Landscape_Registration();
 

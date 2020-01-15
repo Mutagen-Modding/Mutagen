@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class GlobalShort_Registration : ILoquiRegistration
+    public partial class GlobalShort_Registration : ILoquiRegistration
     {
         public static readonly GlobalShort_Registration Instance = new GlobalShort_Registration();
 

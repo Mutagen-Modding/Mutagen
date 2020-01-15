@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class Door_Registration : ILoquiRegistration
+    public partial class Door_Registration : ILoquiRegistration
     {
         public static readonly Door_Registration Instance = new Door_Registration();
 

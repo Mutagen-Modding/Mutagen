@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int passedLength,
+            int? passedLength,
             DataType data = null)
         {
         }
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public virtual int GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public virtual int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
             if (!data.HasTrigger)

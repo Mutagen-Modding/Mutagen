@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class MapData_Registration : ILoquiRegistration
+    public partial class MapData_Registration : ILoquiRegistration
     {
         public static readonly MapData_Registration Instance = new MapData_Registration();
 

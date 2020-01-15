@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int currentPosition,
+            int? currentPosition,
             DataType dataType = null)
         {
             var data = typeGen.GetFieldData();

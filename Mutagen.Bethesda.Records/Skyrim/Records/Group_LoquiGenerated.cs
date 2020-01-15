@@ -296,6 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -411,6 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<IGroupGetter<T>>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -894,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public class Group_Registration : ILoquiRegistration
+    public partial class Group_Registration : ILoquiRegistration
     {
         public static readonly Group_Registration Instance = new Group_Registration();
 
@@ -1423,6 +1426,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IGroupGetter<T> obj)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, ILinkContainer>()
+                .SelectMany((f) => f.Links))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -2688,6 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGroupGetter<T>)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => GroupCommon<T>.Instance.GetLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
