@@ -1302,17 +1302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -1340,80 +1332,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ScriptParse))
-                    {
-                        item.Script.FormKey = ScriptParse;
-                    }
-                    else
-                    {
-                        item.Script.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
                 }
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.OpenSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey OpenSoundParse))
-                    {
-                        item.OpenSound.FormKey = OpenSoundParse;
-                    }
-                    else
-                    {
-                        item.OpenSound.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
                 }
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CloseSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey CloseSoundParse))
-                    {
-                        item.CloseSound.FormKey = CloseSoundParse;
-                    }
-                    else
-                    {
-                        item.CloseSound.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
                 }
                 case 0x4D414E42: // BNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.LoopSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey LoopSoundParse))
-                    {
-                        item.LoopSound.FormKey = LoopSoundParse;
-                    }
-                    else
-                    {
-                        item.LoopSound.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
                 }
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Door.DoorFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Door.DoorFlag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
                 }
                 case 0x4D414E54: // TNAM
@@ -2373,17 +2328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2399,18 +2346,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Door_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2426,17 +2365,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Script);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.Script.FormKey = ScriptParse;
-                        }
-                        else
-                        {
-                            item.Script.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2452,17 +2384,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.OpenSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.OpenSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey OpenSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.OpenSound.FormKey = OpenSoundParse;
-                        }
-                        else
-                        {
-                            item.OpenSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2478,17 +2403,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.CloseSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.CloseSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey CloseSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.CloseSound.FormKey = CloseSoundParse;
-                        }
-                        else
-                        {
-                            item.CloseSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2504,17 +2422,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.LoopSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey LoopSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.LoopSound.FormKey = LoopSoundParse;
-                        }
-                        else
-                        {
-                            item.LoopSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2530,17 +2441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Door_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Door.DoorFlag>.Instance.Parse(
                             node: node,
-                            item: out Door.DoorFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Door.DoorFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

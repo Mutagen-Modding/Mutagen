@@ -975,16 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             item.PointID = frame.ReadInt32();
-            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Float PointParse))
-            {
-                item.Point = PointParse;
-            }
-            else
-            {
-                item.Point = default(P3Float);
-            }
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1378,17 +1369,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)InterCellPoint_FieldIndex.PointID);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.PointID = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 PointIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.PointID = PointIDParse;
-                        }
-                        else
-                        {
-                            item.PointID = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1404,17 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)InterCellPoint_FieldIndex.Point);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Point = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float PointParse,
-                            errorMask: errorMask))
-                        {
-                            item.Point = PointParse;
-                        }
-                        else
-                        {
-                            item.Point = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

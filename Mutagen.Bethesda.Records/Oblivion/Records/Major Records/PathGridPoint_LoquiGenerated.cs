@@ -1038,27 +1038,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Float PointParse))
-            {
-                item.Point = PointParse;
-            }
-            else
-            {
-                item.Point = default(P3Float);
-            }
+            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.NumConnections = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffBytesParse))
-            {
-                item.FluffBytes = FluffBytesParse;
-            }
-            else
-            {
-                item.FluffBytes = default(Byte[]);
-            }
+            item.FluffBytes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
         public void CopyInFromBinary(
@@ -1533,17 +1515,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PathGridPoint_FieldIndex.Point);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Point = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float PointParse,
-                            errorMask: errorMask))
-                        {
-                            item.Point = PointParse;
-                        }
-                        else
-                        {
-                            item.Point = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1559,17 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PathGridPoint_FieldIndex.NumConnections);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.NumConnections = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte NumConnectionsParse,
-                            errorMask: errorMask))
-                        {
-                            item.NumConnections = NumConnectionsParse;
-                        }
-                        else
-                        {
-                            item.NumConnections = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1585,17 +1551,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PathGridPoint_FieldIndex.FluffBytes);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.FluffBytes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffBytesParse,
-                            errorMask: errorMask))
-                        {
-                            item.FluffBytes = FluffBytesParse;
-                        }
-                        else
-                        {
-                            item.FluffBytes = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

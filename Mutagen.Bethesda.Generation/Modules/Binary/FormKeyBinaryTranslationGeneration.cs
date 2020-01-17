@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Generation
                 throw new NotImplementedException();
             }
             var posStr = dataType == null ? $"{currentPosition}" : $"_{dataType.GetFieldData().RecordType}Location + {currentPosition}";
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength(objGen, typeGen).Value}), this._package.MasterReferences);");
+            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({posStr}, {this.ExpectedLength(objGen, typeGen).Value}), this._package.MasterReferences);");
         }
     }
 }

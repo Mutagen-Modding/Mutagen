@@ -1102,17 +1102,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.IdleAnimation.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey IdleAnimationParse))
-                    {
-                        item.IdleAnimation.FormKey = IdleAnimationParse;
-                    }
-                    else
-                    {
-                        item.IdleAnimation.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
                 }
                 default:
@@ -1747,18 +1740,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AnimatedObject_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)AnimatedObject_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1774,17 +1759,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.IdleAnimation.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey IdleAnimationParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleAnimation.FormKey = IdleAnimationParse;
-                        }
-                        else
-                        {
-                            item.IdleAnimation.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

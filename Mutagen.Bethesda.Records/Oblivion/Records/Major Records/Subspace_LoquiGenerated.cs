@@ -1132,36 +1132,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DNAMDataTypeState = Subspace.DNAMDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single XParse))
-                    {
-                        item.X = XParse;
-                    }
-                    else
-                    {
-                        item.X = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single YParse))
-                    {
-                        item.Y = YParse;
-                    }
-                    else
-                    {
-                        item.Y = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ZParse))
-                    {
-                        item.Z = ZParse;
-                    }
-                    else
-                    {
-                        item.Z = default(Single);
-                    }
+                    item.X = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Y = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Z = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Z);
                 }
                 default:
@@ -1776,17 +1749,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Subspace_FieldIndex.X);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.X = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single XParse,
-                            errorMask: errorMask))
-                        {
-                            item.X = XParse;
-                        }
-                        else
-                        {
-                            item.X = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1803,17 +1768,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Subspace_FieldIndex.Y);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Y = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single YParse,
-                            errorMask: errorMask))
-                        {
-                            item.Y = YParse;
-                        }
-                        else
-                        {
-                            item.Y = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1829,17 +1786,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Subspace_FieldIndex.Z);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Z = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ZParse,
-                            errorMask: errorMask))
-                        {
-                            item.Z = ZParse;
-                        }
-                        else
-                        {
-                            item.Z = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1855,17 +1804,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Subspace_FieldIndex.DNAMDataTypeState);
-                        if (EnumXmlTranslation<Subspace.DNAMDataType>.Instance.Parse(
+                        item.DNAMDataTypeState = EnumXmlTranslation<Subspace.DNAMDataType>.Instance.Parse(
                             node: node,
-                            item: out Subspace.DNAMDataType DNAMDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DNAMDataTypeState = DNAMDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DNAMDataTypeState = default(Subspace.DNAMDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

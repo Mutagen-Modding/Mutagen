@@ -1003,36 +1003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown0Parse))
-            {
-                item.Unknown0 = Unknown0Parse;
-            }
-            else
-            {
-                item.Unknown0 = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown1Parse))
-            {
-                item.Unknown1 = Unknown1Parse;
-            }
-            else
-            {
-                item.Unknown1 = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single Unknown2Parse))
-            {
-                item.Unknown2 = Unknown2Parse;
-            }
-            else
-            {
-                item.Unknown2 = default(Single);
-            }
+            item.Unknown0 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Unknown1 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Unknown2 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1450,17 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown0);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Unknown0 = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single Unknown0Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown0 = Unknown0Parse;
-                        }
-                        else
-                        {
-                            item.Unknown0 = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1476,17 +1441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown1);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Unknown1 = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single Unknown1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown1 = Unknown1Parse;
-                        }
-                        else
-                        {
-                            item.Unknown1 = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1502,17 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DistantLODData_FieldIndex.Unknown2);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Unknown2 = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single Unknown2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown2 = Unknown2Parse;
-                        }
-                        else
-                        {
-                            item.Unknown2 = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

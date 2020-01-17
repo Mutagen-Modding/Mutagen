@@ -985,17 +985,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Item.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey ItemParse))
-            {
-                item.Item.FormKey = ItemParse;
-            }
-            else
-            {
-                item.Item.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Count = frame.ReadUInt32();
         }
         
@@ -1394,17 +1387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Item.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ItemParse,
-                            errorMask: errorMask))
-                        {
-                            item.Item.FormKey = ItemParse;
-                        }
-                        else
-                        {
-                            item.Item.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1420,17 +1406,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ContainerItem_FieldIndex.Count);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Count = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

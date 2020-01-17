@@ -1003,16 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single VersionParse))
-            {
-                item.Version = VersionParse;
-            }
-            else
-            {
-                item.Version = default(Single);
-            }
+            item.Version = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.NumRecords = frame.ReadInt32();
             item.NextObjectID = frame.ReadUInt32();
         }
@@ -1432,17 +1423,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ModStats_FieldIndex.Version);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Version = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single VersionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Version = VersionParse;
-                        }
-                        else
-                        {
-                            item.Version = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1458,17 +1441,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ModStats_FieldIndex.NumRecords);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.NumRecords = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 NumRecordsParse,
-                            errorMask: errorMask))
-                        {
-                            item.NumRecords = NumRecordsParse;
-                        }
-                        else
-                        {
-                            item.NumRecords = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1484,17 +1459,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ModStats_FieldIndex.NextObjectID);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.NextObjectID = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 NextObjectIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.NextObjectID = NextObjectIDParse;
-                        }
-                        else
-                        {
-                            item.NextObjectID = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

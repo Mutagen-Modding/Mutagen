@@ -1032,17 +1032,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x504D4452: // RDMP
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.MapName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MapNameParse))
-                    {
-                        item.MapName = MapNameParse;
-                    }
-                    else
-                    {
-                        item.MapName = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)RegionDataMapName_FieldIndex.MapName);
                 }
                 default:
@@ -1535,17 +1527,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionDataMapName_FieldIndex.MapName);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.MapName = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String MapNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapName = MapNameParse;
-                        }
-                        else
-                        {
-                            item.MapName = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

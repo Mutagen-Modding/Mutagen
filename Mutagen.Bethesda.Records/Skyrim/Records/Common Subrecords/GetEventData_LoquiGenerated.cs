@@ -1090,38 +1090,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = frame.ReadUInt16();
             item.EventFunction = frame.ReadUInt16();
             item.EventMember = frame.ReadUInt16();
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Parameter3.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey Parameter3Parse))
-            {
-                item.Parameter3.FormKey = Parameter3Parse;
-            }
-            else
-            {
-                item.Parameter3.FormKey = FormKey.NULL;
-            }
-            if (EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Condition.RunOnType RunOnTypeParse))
-            {
-                item.RunOnType = RunOnTypeParse;
-            }
-            else
-            {
-                item.RunOnType = default(Condition.RunOnType);
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey ReferenceParse))
-            {
-                item.Reference.FormKey = ReferenceParse;
-            }
-            else
-            {
-                item.Reference.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Unknown3 = frame.ReadInt32();
         }
         
@@ -1668,17 +1645,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown2);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 Unknown2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown2 = Unknown2Parse;
-                        }
-                        else
-                        {
-                            item.Unknown2 = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1694,17 +1663,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.EventFunction);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.EventFunction = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 EventFunctionParse,
-                            errorMask: errorMask))
-                        {
-                            item.EventFunction = EventFunctionParse;
-                        }
-                        else
-                        {
-                            item.EventFunction = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1720,17 +1681,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.EventMember);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.EventMember = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 EventMemberParse,
-                            errorMask: errorMask))
-                        {
-                            item.EventMember = EventMemberParse;
-                        }
-                        else
-                        {
-                            item.EventMember = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1746,17 +1699,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Parameter3);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Parameter3.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey Parameter3Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Parameter3.FormKey = Parameter3Parse;
-                        }
-                        else
-                        {
-                            item.Parameter3.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1772,17 +1718,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.RunOnType);
-                        if (EnumXmlTranslation<Condition.RunOnType>.Instance.Parse(
+                        item.RunOnType = EnumXmlTranslation<Condition.RunOnType>.Instance.Parse(
                             node: node,
-                            item: out Condition.RunOnType RunOnTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RunOnType = RunOnTypeParse;
-                        }
-                        else
-                        {
-                            item.RunOnType = default(Condition.RunOnType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1798,17 +1736,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Reference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reference.FormKey = ReferenceParse;
-                        }
-                        else
-                        {
-                            item.Reference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1824,17 +1755,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GetEventData_FieldIndex.Unknown3);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown3 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 Unknown3Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown3 = Unknown3Parse;
-                        }
-                        else
-                        {
-                            item.Unknown3 = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

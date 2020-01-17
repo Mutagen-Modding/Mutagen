@@ -985,27 +985,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey SoundParse))
-            {
-                item.Sound.FormKey = SoundParse;
-            }
-            else
-            {
-                item.Sound.FormKey = FormKey.NULL;
-            }
-            if (EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out WeatherSound.SoundType TypeParse))
-            {
-                item.Type = TypeParse;
-            }
-            else
-            {
-                item.Type = default(WeatherSound.SoundType);
-            }
+                defaultVal: FormKey.NULL);
+            item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public void CopyInFromBinary(
@@ -1403,17 +1387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey SoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sound.FormKey = SoundParse;
-                        }
-                        else
-                        {
-                            item.Sound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1429,17 +1406,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherSound_FieldIndex.Type);
-                        if (EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<WeatherSound.SoundType>.Instance.Parse(
                             node: node,
-                            item: out WeatherSound.SoundType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(WeatherSound.SoundType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

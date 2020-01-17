@@ -2272,17 +2272,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Flags);
-                        if (EnumXmlTranslation<AIPackage.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<AIPackage.Flag>.Instance.Parse(
                             node: node,
-                            item: out AIPackage.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(AIPackage.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2299,17 +2291,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.GeneralType);
-                        if (EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
+                        item.GeneralType = EnumXmlTranslation<AIPackage.GeneralTypeEnum>.Instance.Parse(
                             node: node,
-                            item: out AIPackage.GeneralTypeEnum GeneralTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GeneralType = GeneralTypeParse;
-                        }
-                        else
-                        {
-                            item.GeneralType = default(AIPackage.GeneralTypeEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2325,18 +2309,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Location);
-                        if (LoquiXmlTranslation<AIPackageLocation>.Instance.Parse(
+                        item.Location = LoquiXmlTranslation<AIPackageLocation>.Instance.Parse(
                             node: node,
-                            item: out AIPackageLocation LocationParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location)))
-                        {
-                            item.Location = LocationParse;
-                        }
-                        else
-                        {
-                            item.Location = default(AIPackageLocation);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Location));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2352,18 +2328,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Schedule);
-                        if (LoquiXmlTranslation<AIPackageSchedule>.Instance.Parse(
+                        item.Schedule = LoquiXmlTranslation<AIPackageSchedule>.Instance.Parse(
                             node: node,
-                            item: out AIPackageSchedule ScheduleParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule)))
-                        {
-                            item.Schedule = ScheduleParse;
-                        }
-                        else
-                        {
-                            item.Schedule = default(AIPackageSchedule);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2379,18 +2347,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.Target);
-                        if (LoquiXmlTranslation<AIPackageTarget>.Instance.Parse(
+                        item.Target = LoquiXmlTranslation<AIPackageTarget>.Instance.Parse(
                             node: node,
-                            item: out AIPackageTarget TargetParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target)))
-                        {
-                            item.Target = TargetParse;
-                        }
-                        else
-                        {
-                            item.Target = default(AIPackageTarget);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)AIPackage_FieldIndex.Target));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2434,17 +2394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackage_FieldIndex.PKDTDataTypeState);
-                        if (EnumXmlTranslation<AIPackage.PKDTDataType>.Instance.Parse(
+                        item.PKDTDataTypeState = EnumXmlTranslation<AIPackage.PKDTDataType>.Instance.Parse(
                             node: node,
-                            item: out AIPackage.PKDTDataType PKDTDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.PKDTDataTypeState = PKDTDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.PKDTDataTypeState = default(AIPackage.PKDTDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

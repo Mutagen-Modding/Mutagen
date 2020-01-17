@@ -1286,61 +1286,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] UnknownParse))
-                    {
-                        item.Unknown = UnknownParse;
-                    }
-                    else
-                    {
-                        item.Unknown = default(Byte[]);
-                    }
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Unknown);
                 }
                 case 0x4C4D4E56: // VNML
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexNormalsParse))
-                    {
-                        item.VertexNormals = VertexNormalsParse;
-                    }
-                    else
-                    {
-                        item.VertexNormals = default(Byte[]);
-                    }
+                    item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
                 }
                 case 0x54474856: // VHGT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexHeightMapParse))
-                    {
-                        item.VertexHeightMap = VertexHeightMapParse;
-                    }
-                    else
-                    {
-                        item.VertexHeightMap = default(Byte[]);
-                    }
+                    item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
                 }
                 case 0x524C4356: // VCLR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] VertexColorsParse))
-                    {
-                        item.VertexColors = VertexColorsParse;
-                    }
-                    else
-                    {
-                        item.VertexColors = default(Byte[]);
-                    }
+                    item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
                 }
                 case 0x54585442: // BTXT
@@ -2281,17 +2245,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.Unknown);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2307,17 +2263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.VertexNormals = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] VertexNormalsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexNormals = VertexNormalsParse;
-                        }
-                        else
-                        {
-                            item.VertexNormals = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2333,17 +2281,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.VertexHeightMap = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] VertexHeightMapParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexHeightMap = VertexHeightMapParse;
-                        }
-                        else
-                        {
-                            item.VertexHeightMap = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2359,17 +2299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.VertexColors = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] VertexColorsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VertexColors = VertexColorsParse;
-                        }
-                        else
-                        {
-                            item.VertexColors = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

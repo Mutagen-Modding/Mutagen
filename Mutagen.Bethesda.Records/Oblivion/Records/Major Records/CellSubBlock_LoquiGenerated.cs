@@ -1107,26 +1107,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             item.BlockNumber = frame.ReadInt32();
-            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out GroupTypeEnum GroupTypeParse))
-            {
-                item.GroupType = GroupTypeParse;
-            }
-            else
-            {
-                item.GroupType = default(GroupTypeEnum);
-            }
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Byte[] LastModifiedParse))
-            {
-                item.LastModified = LastModifiedParse;
-            }
-            else
-            {
-                item.LastModified = default(Byte[]);
-            }
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
@@ -1716,17 +1698,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellSubBlock_FieldIndex.BlockNumber);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.BlockNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 BlockNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNumber = BlockNumberParse;
-                        }
-                        else
-                        {
-                            item.BlockNumber = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1742,17 +1716,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellSubBlock_FieldIndex.GroupType);
-                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
-                            item: out GroupTypeEnum GroupTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupType = GroupTypeParse;
-                        }
-                        else
-                        {
-                            item.GroupType = default(GroupTypeEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1768,17 +1734,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellSubBlock_FieldIndex.LastModified);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.LastModified = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] LastModifiedParse,
-                            errorMask: errorMask))
-                        {
-                            item.LastModified = LastModifiedParse;
-                        }
-                        else
-                        {
-                            item.LastModified = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

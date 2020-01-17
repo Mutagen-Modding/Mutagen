@@ -23,6 +23,29 @@ namespace Mutagen.Bethesda.Binary
             return false;
         }
 
+        public FormKey Parse(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
+            {
+                return id;
+            }
+            return FormKey.NULL;
+        }
+
+        public FormKey Parse(
+            MutagenFrame frame,
+            MasterReferences masterReferences,
+            FormKey defaultVal)
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id, masterReferences))
+            {
+                return id;
+            }
+            return defaultVal;
+        }
+
         public bool Parse<T>(
             MutagenFrame frame,
             out IFormIDLink<T> item,

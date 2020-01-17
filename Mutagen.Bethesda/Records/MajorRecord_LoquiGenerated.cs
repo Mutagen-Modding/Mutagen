@@ -1232,17 +1232,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.FormKey);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey FormKeyParse,
-                            errorMask: errorMask))
-                        {
-                            item.FormKey = FormKeyParse;
-                        }
-                        else
-                        {
-                            item.FormKey = default(FormKey);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1322,17 +1314,9 @@ namespace Mutagen.Bethesda.Internals
             ErrorMaskBuilder errorMask)
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
-            if (Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
+            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
                 frame: frame,
-                masterReferences: masterReferences,
-                item: out FormKey FormKeyParse))
-            {
-                item.FormKey = FormKeyParse;
-            }
-            else
-            {
-                item.FormKey = default(FormKey);
-            }
+                masterReferences: masterReferences);
             item.Version = frame.ReadUInt32();
         }
         
@@ -1351,17 +1335,9 @@ namespace Mutagen.Bethesda.Internals
                 case 0x44494445: // EDID
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EditorIDParse))
-                    {
-                        item.EditorID = EditorIDParse;
-                    }
-                    else
-                    {
-                        item.EditorID = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 }
                 default:
@@ -1868,17 +1844,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.MajorRecordFlagsRaw = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 MajorRecordFlagsRawParse,
-                            errorMask: errorMask))
-                        {
-                            item.MajorRecordFlagsRaw = MajorRecordFlagsRawParse;
-                        }
-                        else
-                        {
-                            item.MajorRecordFlagsRaw = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1894,17 +1862,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Version = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 VersionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Version = VersionParse;
-                        }
-                        else
-                        {
-                            item.Version = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1920,17 +1880,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MajorRecord_FieldIndex.EditorID);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.EditorID = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String EditorIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.EditorID = EditorIDParse;
-                        }
-                        else
-                        {
-                            item.EditorID = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2655,7 +2607,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences);
         public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4));
         #region EditorID
         private int? _EditorIDLocation;

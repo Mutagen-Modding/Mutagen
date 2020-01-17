@@ -1055,47 +1055,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Model_FieldIndex.File) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FileParse))
-                    {
-                        item.File = FileParse;
-                    }
-                    else
-                    {
-                        item.File = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.File);
                 }
                 case 0x42444F4D: // MODB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single BoundRadiusParse))
-                    {
-                        item.BoundRadius = BoundRadiusParse;
-                    }
-                    else
-                    {
-                        item.BoundRadius = default(Single);
-                    }
+                    item.BoundRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.BoundRadius);
                 }
                 case 0x54444F4D: // MODT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] HashesParse))
-                    {
-                        item.Hashes = HashesParse;
-                    }
-                    else
-                    {
-                        item.Hashes = default(Byte[]);
-                    }
+                    item.Hashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.Hashes);
                 }
                 default:
@@ -1545,17 +1519,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.File);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.File = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1571,17 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.BoundRadius);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.BoundRadius = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single BoundRadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.BoundRadius = BoundRadiusParse;
-                        }
-                        else
-                        {
-                            item.BoundRadius = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1597,17 +1555,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Model_FieldIndex.Hashes);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Hashes = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] HashesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Hashes = HashesParse;
-                        }
-                        else
-                        {
-                            item.Hashes = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

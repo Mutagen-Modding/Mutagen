@@ -1170,52 +1170,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.SLSDDataTypeState = LocalVariable.SLSDDataType.Has;
                     }
                     item.Index = dataFrame.ReadInt32();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(12),
-                        item: out Byte[] FluffParse))
-                    {
-                        item.Fluff = FluffParse;
-                    }
-                    else
-                    {
-                        item.Fluff = default(Byte[]);
-                    }
-                    if (EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Script.LocalVariableFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Script.LocalVariableFlag);
-                    }
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Byte[] Fluff2Parse))
-                    {
-                        item.Fluff2 = Fluff2Parse;
-                    }
-                    else
-                    {
-                        item.Fluff2 = default(Byte[]);
-                    }
+                    item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(12));
+                    item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Fluff2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Fluff2);
                 }
                 case 0x52564353: // SCVR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
                 }
                 default:
@@ -1731,17 +1696,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.Index);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Index = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 IndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.Index = IndexParse;
-                        }
-                        else
-                        {
-                            item.Index = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1758,17 +1715,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1784,17 +1733,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Script.LocalVariableFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Script.LocalVariableFlag>.Instance.Parse(
                             node: node,
-                            item: out Script.LocalVariableFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Script.LocalVariableFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1810,17 +1751,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.Fluff2);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1836,17 +1769,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1862,17 +1787,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LocalVariable_FieldIndex.SLSDDataTypeState);
-                        if (EnumXmlTranslation<LocalVariable.SLSDDataType>.Instance.Parse(
+                        item.SLSDDataTypeState = EnumXmlTranslation<LocalVariable.SLSDDataType>.Instance.Parse(
                             node: node,
-                            item: out LocalVariable.SLSDDataType SLSDDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.SLSDDataTypeState = SLSDDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.SLSDDataTypeState = default(LocalVariable.SLSDDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

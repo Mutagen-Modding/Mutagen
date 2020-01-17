@@ -34,11 +34,12 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(MutagenFrame frame, out T item)
         {
             item = ParseValue(frame);
-            if (item == null)
-            {
-                throw new ArgumentException("Value was unexpectedly null.");
-            }
             return true;
+        }
+
+        public T Parse(MutagenFrame frame)
+        {
+            return ParseValue(frame);
         }
 
         public abstract void Write(MutagenWriter writer, T item);

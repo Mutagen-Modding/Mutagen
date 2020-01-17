@@ -1057,17 +1057,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DataParse))
-                    {
-                        item.Data = DataParse;
-                    }
-                    else
-                    {
-                        item.Data = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
                 }
                 default:
@@ -1727,17 +1719,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GameSettingString_FieldIndex.Data);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Data = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

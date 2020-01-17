@@ -995,17 +995,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey ReferenceParse))
-            {
-                item.Reference.FormKey = ReferenceParse;
-            }
-            else
-            {
-                item.Reference.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.ParseRepeatedItem(
                 frame: frame,
                 item: item.Points,
@@ -1446,17 +1439,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PointToReferenceMapping_FieldIndex.Reference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reference.FormKey = ReferenceParse;
-                        }
-                        else
-                        {
-                            item.Reference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1627,17 +1627,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags);
-                        if (EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Parse(
+                        item.OblivionMajorRecordFlags = EnumXmlTranslation<OblivionMajorRecord.OblivionMajorRecordFlag>.Instance.Parse(
                             node: node,
-                            item: out OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.OblivionMajorRecordFlags = OblivionMajorRecordFlagsParse;
-                        }
-                        else
-                        {
-                            item.OblivionMajorRecordFlags = default(OblivionMajorRecord.OblivionMajorRecordFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

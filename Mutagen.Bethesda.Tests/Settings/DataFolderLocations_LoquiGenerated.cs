@@ -1209,17 +1209,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Oblivion);
-                            if (StringXmlTranslation.Instance.Parse(
+                            item.Oblivion = StringXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out String OblivionParse,
-                                errorMask: errorMask))
-                            {
-                                item.Oblivion = OblivionParse;
-                            }
-                            else
-                            {
-                                item.Oblivion = default(String);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1238,17 +1230,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.Skyrim);
-                            if (StringXmlTranslation.Instance.Parse(
+                            item.Skyrim = StringXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out String SkyrimParse,
-                                errorMask: errorMask))
-                            {
-                                item.Skyrim = SkyrimParse;
-                            }
-                            else
-                            {
-                                item.Skyrim = default(String);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)

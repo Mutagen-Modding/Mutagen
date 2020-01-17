@@ -985,17 +985,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Race.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey RaceParse))
-            {
-                item.Race.FormKey = RaceParse;
-            }
-            else
-            {
-                item.Race.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Modifier = frame.ReadInt32();
         }
         
@@ -1394,17 +1387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RaceRelation_FieldIndex.Race);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Race.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey RaceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Race.FormKey = RaceParse;
-                        }
-                        else
-                        {
-                            item.Race.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1420,17 +1406,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RaceRelation_FieldIndex.Modifier);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Modifier = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ModifierParse,
-                            errorMask: errorMask))
-                        {
-                            item.Modifier = ModifierParse;
-                        }
-                        else
-                        {
-                            item.Modifier = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

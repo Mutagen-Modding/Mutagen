@@ -1901,17 +1901,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
                 case 0x4D414E58: // XNAM
@@ -1936,112 +1928,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Faction.FactionFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Faction.FactionFlag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
                 case 0x4C49414A: // JAIL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PrisonMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey PrisonMarkerParse))
-                    {
-                        item.PrisonMarker.FormKey = PrisonMarkerParse;
-                    }
-                    else
-                    {
-                        item.PrisonMarker.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PrisonMarker);
                 }
                 case 0x54494157: // WAIT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.FollowerWaitMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey FollowerWaitMarkerParse))
-                    {
-                        item.FollowerWaitMarker.FormKey = FollowerWaitMarkerParse;
-                    }
-                    else
-                    {
-                        item.FollowerWaitMarker.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
                 }
                 case 0x4C4F5453: // STOL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.EvidenceChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey EvidenceChestParse))
-                    {
-                        item.EvidenceChest.FormKey = EvidenceChestParse;
-                    }
-                    else
-                    {
-                        item.EvidenceChest.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.EvidenceChest);
                 }
                 case 0x4E434C50: // PLCN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PlayerBelongingsChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey PlayerBelongingsChestParse))
-                    {
-                        item.PlayerBelongingsChest.FormKey = PlayerBelongingsChestParse;
-                    }
-                    else
-                    {
-                        item.PlayerBelongingsChest.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerBelongingsChest);
                 }
                 case 0x52475243: // CRGR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CrimeGroup.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey CrimeGroupParse))
-                    {
-                        item.CrimeGroup.FormKey = CrimeGroupParse;
-                    }
-                    else
-                    {
-                        item.CrimeGroup.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGroup);
                 }
                 case 0x54554F4A: // JOUT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.JailOutfit.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey JailOutfitParse))
-                    {
-                        item.JailOutfit.FormKey = JailOutfitParse;
-                    }
-                    else
-                    {
-                        item.JailOutfit.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
                 }
                 case 0x41565243: // CRVA
@@ -2064,16 +2005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.CRVADataTypeState |= Faction.CRVADataType.Break0;
                         return TryGet<int?>.Succeed((int)Faction_FieldIndex.UnknownCrimeValue);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single StealMultCrimeValueParse))
-                    {
-                        item.StealMultCrimeValue = StealMultCrimeValueParse;
-                    }
-                    else
-                    {
-                        item.StealMultCrimeValue = default(Single);
-                    }
+                    item.StealMultCrimeValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CRVADataTypeState |= Faction.CRVADataType.Break1;
@@ -2107,33 +2039,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444E4556: // VEND
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.VendorList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey VendorListParse))
-                    {
-                        item.VendorList.FormKey = VendorListParse;
-                    }
-                    else
-                    {
-                        item.VendorList.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorList);
                 }
                 case 0x434E4556: // VENC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.VendorChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey VendorChestParse))
-                    {
-                        item.VendorChest.FormKey = VendorChestParse;
-                    }
-                    else
-                    {
-                        item.VendorChest.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorChest);
                 }
                 case 0x564E4556: // VENV
@@ -3811,17 +3729,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3865,17 +3775,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
                             node: node,
-                            item: out Faction.FactionFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Faction.FactionFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3891,17 +3793,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.PrisonMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey PrisonMarkerParse,
-                            errorMask: errorMask))
-                        {
-                            item.PrisonMarker.FormKey = PrisonMarkerParse;
-                        }
-                        else
-                        {
-                            item.PrisonMarker.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3917,17 +3812,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.FollowerWaitMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey FollowerWaitMarkerParse,
-                            errorMask: errorMask))
-                        {
-                            item.FollowerWaitMarker.FormKey = FollowerWaitMarkerParse;
-                        }
-                        else
-                        {
-                            item.FollowerWaitMarker.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3943,17 +3831,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.EvidenceChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey EvidenceChestParse,
-                            errorMask: errorMask))
-                        {
-                            item.EvidenceChest.FormKey = EvidenceChestParse;
-                        }
-                        else
-                        {
-                            item.EvidenceChest.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3969,17 +3850,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.PlayerBelongingsChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey PlayerBelongingsChestParse,
-                            errorMask: errorMask))
-                        {
-                            item.PlayerBelongingsChest.FormKey = PlayerBelongingsChestParse;
-                        }
-                        else
-                        {
-                            item.PlayerBelongingsChest.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3995,17 +3869,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.CrimeGroup.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey CrimeGroupParse,
-                            errorMask: errorMask))
-                        {
-                            item.CrimeGroup.FormKey = CrimeGroupParse;
-                        }
-                        else
-                        {
-                            item.CrimeGroup.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4021,17 +3888,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.JailOutfit.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey JailOutfitParse,
-                            errorMask: errorMask))
-                        {
-                            item.JailOutfit.FormKey = JailOutfitParse;
-                        }
-                        else
-                        {
-                            item.JailOutfit.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4047,17 +3907,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.ArrestCrimeValue);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.ArrestCrimeValue = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean ArrestCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ArrestCrimeValue = ArrestCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.ArrestCrimeValue = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4074,17 +3926,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.AttackOnSightCrimeValue);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.AttackOnSightCrimeValue = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean AttackOnSightCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackOnSightCrimeValue = AttackOnSightCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.AttackOnSightCrimeValue = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4100,17 +3944,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.MurderCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.MurderCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 MurderCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.MurderCrimeValue = MurderCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.MurderCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4126,17 +3962,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.AssaultCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.AssaultCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 AssaultCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.AssaultCrimeValue = AssaultCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.AssaultCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4152,17 +3980,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.TrespassCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.TrespassCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 TrespassCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.TrespassCrimeValue = TrespassCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.TrespassCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4178,17 +3998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.PickpocketCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.PickpocketCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 PickpocketCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.PickpocketCrimeValue = PickpocketCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.PickpocketCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4204,17 +4016,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.UnknownCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.UnknownCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 UnknownCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnknownCrimeValue = UnknownCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.UnknownCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4230,17 +4034,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.StealMultCrimeValue);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.StealMultCrimeValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single StealMultCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.StealMultCrimeValue = StealMultCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.StealMultCrimeValue = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4257,17 +4053,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.EscapeCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.EscapeCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 EscapeCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.EscapeCrimeValue = EscapeCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.EscapeCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4284,17 +4072,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.WerewolfCrimeValue);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.WerewolfCrimeValue = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 WerewolfCrimeValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.WerewolfCrimeValue = WerewolfCrimeValueParse;
-                        }
-                        else
-                        {
-                            item.WerewolfCrimeValue = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4338,17 +4118,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.VendorList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey VendorListParse,
-                            errorMask: errorMask))
-                        {
-                            item.VendorList.FormKey = VendorListParse;
-                        }
-                        else
-                        {
-                            item.VendorList.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4364,17 +4137,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.VendorChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey VendorChestParse,
-                            errorMask: errorMask))
-                        {
-                            item.VendorChest.FormKey = VendorChestParse;
-                        }
-                        else
-                        {
-                            item.VendorChest.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4390,18 +4156,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
-                        if (LoquiXmlTranslation<VendorValues>.Instance.Parse(
+                        item.VendorValues = LoquiXmlTranslation<VendorValues>.Instance.Parse(
                             node: node,
-                            item: out VendorValues VendorValuesParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues)))
-                        {
-                            item.VendorValues = VendorValuesParse;
-                        }
-                        else
-                        {
-                            item.VendorValues = default(VendorValues);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorValues));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4417,18 +4175,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
-                        if (LoquiXmlTranslation<VendorLocation>.Instance.Parse(
+                        item.VendorLocation = LoquiXmlTranslation<VendorLocation>.Instance.Parse(
                             node: node,
-                            item: out VendorLocation VendorLocationParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation)))
-                        {
-                            item.VendorLocation = VendorLocationParse;
-                        }
-                        else
-                        {
-                            item.VendorLocation = default(VendorLocation);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4472,17 +4222,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.CRVADataTypeState);
-                        if (EnumXmlTranslation<Faction.CRVADataType>.Instance.Parse(
+                        item.CRVADataTypeState = EnumXmlTranslation<Faction.CRVADataType>.Instance.Parse(
                             node: node,
-                            item: out Faction.CRVADataType CRVADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.CRVADataTypeState = CRVADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.CRVADataTypeState = default(Faction.CRVADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

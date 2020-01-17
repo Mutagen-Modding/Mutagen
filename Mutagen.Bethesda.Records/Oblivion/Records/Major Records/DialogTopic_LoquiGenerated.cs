@@ -1278,32 +1278,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out DialogType DialogTypeParse))
-                    {
-                        item.DialogType = DialogTypeParse;
-                    }
-                    else
-                    {
-                        item.DialogType = default(DialogType);
-                    }
+                    item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
                 }
                 default:
@@ -2213,17 +2196,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2239,17 +2214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.DialogType);
-                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
+                        item.DialogType = EnumXmlTranslation<DialogType>.Instance.Parse(
                             node: node,
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2265,17 +2232,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Timestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] TimestampParse,
-                            errorMask: errorMask))
-                        {
-                            item.Timestamp = TimestampParse;
-                        }
-                        else
-                        {
-                            item.Timestamp = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

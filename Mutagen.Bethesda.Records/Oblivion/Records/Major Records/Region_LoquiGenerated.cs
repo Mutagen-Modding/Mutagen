@@ -1438,49 +1438,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Icon);
                 }
                 case 0x524C4352: // RCLR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    item.MapColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true,
-                        item: out Color MapColorParse))
-                    {
-                        item.MapColor = MapColorParse;
-                    }
-                    else
-                    {
-                        item.MapColor = default(Color);
-                    }
+                        extraByte: true);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Worldspace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey WorldspaceParse))
-                    {
-                        item.Worldspace.FormKey = WorldspaceParse;
-                    }
-                    else
-                    {
-                        item.Worldspace.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
                 }
                 case 0x494C5052: // RPLI
@@ -2609,17 +2586,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2635,17 +2604,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.MapColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.MapColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color MapColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.MapColor = MapColorParse;
-                        }
-                        else
-                        {
-                            item.MapColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2661,17 +2622,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Worldspace.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey WorldspaceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Worldspace.FormKey = WorldspaceParse;
-                        }
-                        else
-                        {
-                            item.Worldspace.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2715,18 +2669,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Objects);
-                        if (LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
+                        item.Objects = LoquiXmlTranslation<RegionDataObjects>.Instance.Parse(
                             node: node,
-                            item: out RegionDataObjects ObjectsParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects)))
-                        {
-                            item.Objects = ObjectsParse;
-                        }
-                        else
-                        {
-                            item.Objects = default(RegionDataObjects);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2742,18 +2688,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Weather);
-                        if (LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
+                        item.Weather = LoquiXmlTranslation<RegionDataWeather>.Instance.Parse(
                             node: node,
-                            item: out RegionDataWeather WeatherParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather)))
-                        {
-                            item.Weather = WeatherParse;
-                        }
-                        else
-                        {
-                            item.Weather = default(RegionDataWeather);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2769,18 +2707,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.MapName);
-                        if (LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
+                        item.MapName = LoquiXmlTranslation<RegionDataMapName>.Instance.Parse(
                             node: node,
-                            item: out RegionDataMapName MapNameParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName)))
-                        {
-                            item.MapName = MapNameParse;
-                        }
-                        else
-                        {
-                            item.MapName = default(RegionDataMapName);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.MapName));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2796,18 +2726,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
-                        if (LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
+                        item.Grasses = LoquiXmlTranslation<RegionDataGrasses>.Instance.Parse(
                             node: node,
-                            item: out RegionDataGrasses GrassesParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses)))
-                        {
-                            item.Grasses = GrassesParse;
-                        }
-                        else
-                        {
-                            item.Grasses = default(RegionDataGrasses);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2823,18 +2745,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
-                        if (LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
+                        item.Sounds = LoquiXmlTranslation<RegionDataSounds>.Instance.Parse(
                             node: node,
-                            item: out RegionDataSounds SoundsParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds)))
-                        {
-                            item.Sounds = SoundsParse;
-                        }
-                        else
-                        {
-                            item.Sounds = default(RegionDataSounds);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

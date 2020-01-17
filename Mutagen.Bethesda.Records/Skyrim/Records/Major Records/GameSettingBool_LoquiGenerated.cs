@@ -1720,17 +1720,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GameSettingBool_FieldIndex.Data);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.Data = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

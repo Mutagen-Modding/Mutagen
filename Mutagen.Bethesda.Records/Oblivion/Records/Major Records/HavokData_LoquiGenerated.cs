@@ -1003,16 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out HavokData.MaterialType MaterialParse))
-            {
-                item.Material = MaterialParse;
-            }
-            else
-            {
-                item.Material = default(HavokData.MaterialType);
-            }
+            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Friction = frame.ReadUInt8();
             item.Restitution = frame.ReadUInt8();
         }
@@ -1432,17 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)HavokData_FieldIndex.Material);
-                        if (EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
+                        item.Material = EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
                             node: node,
-                            item: out HavokData.MaterialType MaterialParse,
-                            errorMask: errorMask))
-                        {
-                            item.Material = MaterialParse;
-                        }
-                        else
-                        {
-                            item.Material = default(HavokData.MaterialType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1458,17 +1441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)HavokData_FieldIndex.Friction);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Friction = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte FrictionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Friction = FrictionParse;
-                        }
-                        else
-                        {
-                            item.Friction = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1484,17 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)HavokData_FieldIndex.Restitution);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Restitution = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte RestitutionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Restitution = RestitutionParse;
-                        }
-                        else
-                        {
-                            item.Restitution = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

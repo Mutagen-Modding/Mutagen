@@ -1040,37 +1040,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder errorMask)
         {
             item.LockLevel = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Key.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey KeyParse))
-            {
-                item.Key.FormKey = KeyParse;
-            }
-            else
-            {
-                item.Key.FormKey = FormKey.NULL;
-            }
-            if (EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out LockInformation.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(LockInformation.Flag);
-            }
+                defaultVal: FormKey.NULL);
+            item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public void CopyInFromBinary(
@@ -1510,17 +1485,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LockInformation_FieldIndex.LockLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.LockLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte LockLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.LockLevel = LockLevelParse;
-                        }
-                        else
-                        {
-                            item.LockLevel = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1536,17 +1503,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LockInformation_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1562,17 +1521,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LockInformation_FieldIndex.Key);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Key.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey KeyParse,
-                            errorMask: errorMask))
-                        {
-                            item.Key.FormKey = KeyParse;
-                        }
-                        else
-                        {
-                            item.Key.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1588,17 +1540,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LockInformation_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<LockInformation.Flag>.Instance.Parse(
                             node: node,
-                            item: out LockInformation.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LockInformation.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -980,26 +980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Int16 FirstParse))
-            {
-                item.First = FirstParse;
-            }
-            else
-            {
-                item.First = default(P3Int16);
-            }
-            if (Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Int16 SecondParse))
-            {
-                item.Second = SecondParse;
-            }
-            else
-            {
-                item.Second = default(P3Int16);
-            }
+            item.First = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Second = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1396,17 +1378,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ObjectBounds_FieldIndex.First);
-                        if (P3Int16XmlTranslation.Instance.Parse(
+                        item.First = P3Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Int16 FirstParse,
-                            errorMask: errorMask))
-                        {
-                            item.First = FirstParse;
-                        }
-                        else
-                        {
-                            item.First = default(P3Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1422,17 +1396,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ObjectBounds_FieldIndex.Second);
-                        if (P3Int16XmlTranslation.Instance.Parse(
+                        item.Second = P3Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Int16 SecondParse,
-                            errorMask: errorMask))
-                        {
-                            item.Second = SecondParse;
-                        }
-                        else
-                        {
-                            item.Second = default(P3Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

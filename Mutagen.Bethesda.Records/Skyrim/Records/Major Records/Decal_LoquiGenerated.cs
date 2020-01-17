@@ -1189,99 +1189,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MinWidthParse))
-            {
-                item.MinWidth = MinWidthParse;
-            }
-            else
-            {
-                item.MinWidth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MaxWidthParse))
-            {
-                item.MaxWidth = MaxWidthParse;
-            }
-            else
-            {
-                item.MaxWidth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MinHeightParse))
-            {
-                item.MinHeight = MinHeightParse;
-            }
-            else
-            {
-                item.MinHeight = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single MaxHeightParse))
-            {
-                item.MaxHeight = MaxHeightParse;
-            }
-            else
-            {
-                item.MaxHeight = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DepthParse))
-            {
-                item.Depth = DepthParse;
-            }
-            else
-            {
-                item.Depth = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ShininessParse))
-            {
-                item.Shininess = ShininessParse;
-            }
-            else
-            {
-                item.Shininess = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ParallaxScaleParse))
-            {
-                item.ParallaxScale = ParallaxScaleParse;
-            }
-            else
-            {
-                item.ParallaxScale = default(Single);
-            }
+            item.MinWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Depth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Shininess = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ParallaxScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ParallaxPasses = frame.ReadUInt8();
-            if (EnumBinaryTranslation<Decal.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Decal.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(Decal.Flag);
-            }
+            item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Unknown = frame.ReadUInt16();
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color ColorParse))
-            {
-                item.Color = ColorParse;
-            }
-            else
-            {
-                item.Color = default(Color);
-            }
+                extraByte: true);
         }
         
         public void CopyInFromBinary(
@@ -1867,17 +1787,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.MinWidth);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.MinWidth = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single MinWidthParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinWidth = MinWidthParse;
-                        }
-                        else
-                        {
-                            item.MinWidth = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1893,17 +1805,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.MaxWidth);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.MaxWidth = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single MaxWidthParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxWidth = MaxWidthParse;
-                        }
-                        else
-                        {
-                            item.MaxWidth = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1919,17 +1823,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.MinHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.MinHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single MinHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinHeight = MinHeightParse;
-                        }
-                        else
-                        {
-                            item.MinHeight = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1945,17 +1841,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.MaxHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.MaxHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single MaxHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxHeight = MaxHeightParse;
-                        }
-                        else
-                        {
-                            item.MaxHeight = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1971,17 +1859,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.Depth);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Depth = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DepthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Depth = DepthParse;
-                        }
-                        else
-                        {
-                            item.Depth = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1997,17 +1877,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.Shininess);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Shininess = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ShininessParse,
-                            errorMask: errorMask))
-                        {
-                            item.Shininess = ShininessParse;
-                        }
-                        else
-                        {
-                            item.Shininess = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2023,17 +1895,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxScale);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ParallaxScale = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ParallaxScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParallaxScale = ParallaxScaleParse;
-                        }
-                        else
-                        {
-                            item.ParallaxScale = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2049,17 +1913,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.ParallaxPasses);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.ParallaxPasses = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ParallaxPassesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParallaxPasses = ParallaxPassesParse;
-                        }
-                        else
-                        {
-                            item.ParallaxPasses = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2075,17 +1931,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Decal.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Decal.Flag>.Instance.Parse(
                             node: node,
-                            item: out Decal.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Decal.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2101,17 +1949,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.Unknown);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2127,17 +1967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Decal_FieldIndex.Color);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color ColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.Color = ColorParse;
-                        }
-                        else
-                        {
-                            item.Color = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

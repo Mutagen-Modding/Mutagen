@@ -1143,33 +1143,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
                 }
                 case 0x43534544: // DESC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
                 }
                 case 0x4D414E4C: // LNAM
@@ -1905,17 +1889,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LoadScreen_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1931,17 +1907,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LoadScreen_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1170,16 +1170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Flags) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out LogEntry.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(LogEntry.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<LogEntry.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Flags);
                 }
                 case 0x41445443: // CTDA
@@ -1207,17 +1198,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Entry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Entry = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EntryParse))
-                    {
-                        item.Entry = EntryParse;
-                    }
-                    else
-                    {
-                        item.Entry = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.Entry);
                 }
                 case 0x52484353: // SCHR
@@ -1854,17 +1837,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LogEntry.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<LogEntry.Flag>.Instance.Parse(
                             node: node,
-                            item: out LogEntry.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LogEntry.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1908,17 +1883,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.Entry);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Entry = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String EntryParse,
-                            errorMask: errorMask))
-                        {
-                            item.Entry = EntryParse;
-                        }
-                        else
-                        {
-                            item.Entry = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1934,18 +1901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LogEntry_FieldIndex.ResultScript);
-                        if (LoquiXmlTranslation<ScriptFields>.Instance.Parse(
+                        item.ResultScript = LoquiXmlTranslation<ScriptFields>.Instance.Parse(
                             node: node,
-                            item: out ScriptFields ResultScriptParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript)))
-                        {
-                            item.ResultScript = ResultScriptParse;
-                        }
-                        else
-                        {
-                            item.ResultScript = default(ScriptFields);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

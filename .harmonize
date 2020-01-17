@@ -11,10 +11,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>54dbccdfa1833e3361cac1275560c3c1e91d5877</Sha>
+         <Sha>8fae05370061045f4a71c956ac1889cfe6dbcb08</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-14-2020 18:13:07</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/dev'</Description>
+         <CommitDate>01-17-2020 17:53:40</CommitDate>
+         <Description>TranslationGeneration improvements to allow for no if statement</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

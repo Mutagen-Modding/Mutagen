@@ -1131,26 +1131,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.BlockNumberY = frame.ReadInt16();
             item.BlockNumberX = frame.ReadInt16();
-            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out GroupTypeEnum GroupTypeParse))
-            {
-                item.GroupType = GroupTypeParse;
-            }
-            else
-            {
-                item.GroupType = default(GroupTypeEnum);
-            }
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Byte[] LastModifiedParse))
-            {
-                item.LastModified = LastModifiedParse;
-            }
-            else
-            {
-                item.LastModified = default(Byte[]);
-            }
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
@@ -1761,17 +1743,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberY);
-                        if (Int16XmlTranslation.Instance.Parse(
+                        item.BlockNumberY = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int16 BlockNumberYParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNumberY = BlockNumberYParse;
-                        }
-                        else
-                        {
-                            item.BlockNumberY = default(Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1787,17 +1761,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.BlockNumberX);
-                        if (Int16XmlTranslation.Instance.Parse(
+                        item.BlockNumberX = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int16 BlockNumberXParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockNumberX = BlockNumberXParse;
-                        }
-                        else
-                        {
-                            item.BlockNumberX = default(Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1813,17 +1779,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.GroupType);
-                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
-                            item: out GroupTypeEnum GroupTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupType = GroupTypeParse;
-                        }
-                        else
-                        {
-                            item.GroupType = default(GroupTypeEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1839,17 +1797,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WorldspaceSubBlock_FieldIndex.LastModified);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.LastModified = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] LastModifiedParse,
-                            errorMask: errorMask))
-                        {
-                            item.LastModified = LastModifiedParse;
-                        }
-                        else
-                        {
-                            item.LastModified = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

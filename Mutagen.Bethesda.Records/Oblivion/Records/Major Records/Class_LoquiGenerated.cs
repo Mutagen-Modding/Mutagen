@@ -1387,49 +1387,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
@@ -1450,16 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 frame: r.SpawnWithLength(4),
                                 item: out listSubItem);
                         });
-                    if (EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Class.SpecializationFlag SpecializationParse))
-                    {
-                        item.Specialization = SpecializationParse;
-                    }
-                    else
-                    {
-                        item.Specialization = default(Class.SpecializationFlag);
-                    }
+                    item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.ParseRepeatedItem(
                         frame: frame,
                         amount: 7,
@@ -1470,26 +1437,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 frame: r.SpawnWithLength(4),
                                 item: out listSubItem);
                         });
-                    if (EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ClassFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(ClassFlag);
-                    }
-                    if (EnumBinaryTranslation<ClassService>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ClassService ClassServicesParse))
-                    {
-                        item.ClassServices = ClassServicesParse;
-                    }
-                    else
-                    {
-                        item.ClassServices = default(ClassService);
-                    }
+                    item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Class.DATADataType.Break0;
@@ -2426,17 +2375,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2452,17 +2393,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2478,17 +2411,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2533,17 +2458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Specialization);
-                        if (EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        item.Specialization = EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
                             node: node,
-                            item: out Class.SpecializationFlag SpecializationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Specialization = SpecializationParse;
-                        }
-                        else
-                        {
-                            item.Specialization = default(Class.SpecializationFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2587,17 +2504,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Flags);
-                        if (EnumXmlTranslation<ClassFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<ClassFlag>.Instance.Parse(
                             node: node,
-                            item: out ClassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(ClassFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2613,17 +2522,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.ClassServices);
-                        if (EnumXmlTranslation<ClassService>.Instance.Parse(
+                        item.ClassServices = EnumXmlTranslation<ClassService>.Instance.Parse(
                             node: node,
-                            item: out ClassService ClassServicesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ClassServices = ClassServicesParse;
-                        }
-                        else
-                        {
-                            item.ClassServices = default(ClassService);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2639,18 +2540,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Training);
-                        if (LoquiXmlTranslation<ClassTraining>.Instance.Parse(
+                        item.Training = LoquiXmlTranslation<ClassTraining>.Instance.Parse(
                             node: node,
-                            item: out ClassTraining TrainingParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training)))
-                        {
-                            item.Training = TrainingParse;
-                        }
-                        else
-                        {
-                            item.Training = default(ClassTraining);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Training));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2667,17 +2560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out Class.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(Class.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

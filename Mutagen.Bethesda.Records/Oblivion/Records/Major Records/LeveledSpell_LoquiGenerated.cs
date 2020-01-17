@@ -1154,16 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x464C564C: // LVLF
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out LeveledFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(LeveledFlag);
-                    }
+                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Flags);
                 }
                 case 0x4F4C564C: // LVLO
@@ -1973,17 +1964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledSpell_FieldIndex.ChanceNone);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.ChanceNone = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ChanceNoneParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChanceNone = ChanceNoneParse;
-                        }
-                        else
-                        {
-                            item.ChanceNone = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1999,17 +1982,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledSpell_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                             node: node,
-                            item: out LeveledFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LeveledFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

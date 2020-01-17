@@ -1710,17 +1710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GlobalInt_FieldIndex.Data);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Data = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1256,70 +1256,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.TRDTDataTypeState = DialogResponse.TRDTDataType.Has;
                     }
-                    if (EnumBinaryTranslation<EmotionType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out EmotionType EmotionParse))
-                    {
-                        item.Emotion = EmotionParse;
-                    }
-                    else
-                    {
-                        item.Emotion = default(EmotionType);
-                    }
+                    item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.EmotionValue = dataFrame.ReadInt32();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Byte[] Fluff1Parse))
-                    {
-                        item.Fluff1 = Fluff1Parse;
-                    }
-                    else
-                    {
-                        item.Fluff1 = default(Byte[]);
-                    }
+                    item.Fluff1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ResponseNumber = dataFrame.ReadUInt8();
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(3),
-                        item: out Byte[] Fluff2Parse))
-                    {
-                        item.Fluff2 = Fluff2Parse;
-                    }
-                    else
-                    {
-                        item.Fluff2 = default(Byte[]);
-                    }
+                    item.Fluff2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Fluff2);
                 }
                 case 0x314D414E: // NAM1
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.ResponseText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ResponseTextParse))
-                    {
-                        item.ResponseText = ResponseTextParse;
-                    }
-                    else
-                    {
-                        item.ResponseText = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
                 }
                 case 0x324D414E: // NAM2
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.ActorNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String ActorNotesParse))
-                    {
-                        item.ActorNotes = ActorNotesParse;
-                    }
-                    else
-                    {
-                        item.ActorNotes = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
                 }
                 default:
@@ -1906,17 +1863,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
-                        if (EnumXmlTranslation<EmotionType>.Instance.Parse(
+                        item.Emotion = EnumXmlTranslation<EmotionType>.Instance.Parse(
                             node: node,
-                            item: out EmotionType EmotionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Emotion = EmotionParse;
-                        }
-                        else
-                        {
-                            item.Emotion = default(EmotionType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1933,17 +1882,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.EmotionValue);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.EmotionValue = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 EmotionValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.EmotionValue = EmotionValueParse;
-                        }
-                        else
-                        {
-                            item.EmotionValue = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1959,17 +1900,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff1);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] Fluff1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff1 = Fluff1Parse;
-                        }
-                        else
-                        {
-                            item.Fluff1 = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1985,17 +1918,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseNumber);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.ResponseNumber = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ResponseNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.ResponseNumber = ResponseNumberParse;
-                        }
-                        else
-                        {
-                            item.ResponseNumber = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2011,17 +1936,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.Fluff2);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2037,17 +1954,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.ResponseText);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.ResponseText = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String ResponseTextParse,
-                            errorMask: errorMask))
-                        {
-                            item.ResponseText = ResponseTextParse;
-                        }
-                        else
-                        {
-                            item.ResponseText = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2063,17 +1972,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.ActorNotes);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.ActorNotes = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String ActorNotesParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActorNotes = ActorNotesParse;
-                        }
-                        else
-                        {
-                            item.ActorNotes = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2089,17 +1990,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogResponse_FieldIndex.TRDTDataTypeState);
-                        if (EnumXmlTranslation<DialogResponse.TRDTDataType>.Instance.Parse(
+                        item.TRDTDataTypeState = EnumXmlTranslation<DialogResponse.TRDTDataType>.Instance.Parse(
                             node: node,
-                            item: out DialogResponse.TRDTDataType TRDTDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.TRDTDataTypeState = TRDTDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.TRDTDataTypeState = default(DialogResponse.TRDTDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

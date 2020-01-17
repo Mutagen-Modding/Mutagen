@@ -1155,36 +1155,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ComparisonValueParse))
-            {
-                item.ComparisonValue = ComparisonValueParse;
-            }
-            else
-            {
-                item.ComparisonValue = default(Single);
-            }
-            if (EnumBinaryTranslation<Function>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Function FunctionParse))
-            {
-                item.Function = FunctionParse;
-            }
-            else
-            {
-                item.Function = default(Function);
-            }
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.FirstParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();
             item.ThirdParameter = frame.ReadInt32();
@@ -1710,17 +1683,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
-                        if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
+                        item.CompareOperator = EnumXmlTranslation<CompareOperator>.Instance.Parse(
                             node: node,
-                            item: out CompareOperator CompareOperatorParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompareOperator = CompareOperatorParse;
-                        }
-                        else
-                        {
-                            item.CompareOperator = default(CompareOperator);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1736,17 +1701,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Condition.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Condition.Flag>.Instance.Parse(
                             node: node,
-                            item: out Condition.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Condition.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1762,17 +1719,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1788,17 +1737,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.ComparisonValue);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ComparisonValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ComparisonValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ComparisonValue = ComparisonValueParse;
-                        }
-                        else
-                        {
-                            item.ComparisonValue = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1814,17 +1755,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.Function);
-                        if (EnumXmlTranslation<Function>.Instance.Parse(
+                        item.Function = EnumXmlTranslation<Function>.Instance.Parse(
                             node: node,
-                            item: out Function FunctionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Function = FunctionParse;
-                        }
-                        else
-                        {
-                            item.Function = default(Function);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1840,17 +1773,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.FirstParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.FirstParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 FirstParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.FirstParameter = FirstParameterParse;
-                        }
-                        else
-                        {
-                            item.FirstParameter = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1866,17 +1791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.SecondParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.SecondParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 SecondParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.SecondParameter = SecondParameterParse;
-                        }
-                        else
-                        {
-                            item.SecondParameter = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1892,17 +1809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.ThirdParameter);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.ThirdParameter = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ThirdParameterParse,
-                            errorMask: errorMask))
-                        {
-                            item.ThirdParameter = ThirdParameterParse;
-                        }
-                        else
-                        {
-                            item.ThirdParameter = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

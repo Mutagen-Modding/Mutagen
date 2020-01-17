@@ -1401,17 +1401,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -1439,33 +1431,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icon);
                 }
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ScriptParse))
-                    {
-                        item.Script.FormKey = ScriptParse;
-                    }
-                    else
-                    {
-                        item.Script.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Script);
                 }
                 case 0x41544144: // DATA
@@ -1477,46 +1454,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState = SoulGem.DATADataType.Has;
                     }
                     item.Value = dataFrame.ReadUInt32();
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WeightParse))
-                    {
-                        item.Weight = WeightParse;
-                    }
-                    else
-                    {
-                        item.Weight = default(Single);
-                    }
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Weight);
                 }
                 case 0x4C554F53: // SOUL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out SoulLevel ContainedSoulParse))
-                    {
-                        item.ContainedSoul = ContainedSoulParse;
-                    }
-                    else
-                    {
-                        item.ContainedSoul = default(SoulLevel);
-                    }
+                    item.ContainedSoul = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
                 }
                 case 0x50434C53: // SLCP
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out SoulLevel MaximumCapacityParse))
-                    {
-                        item.MaximumCapacity = MaximumCapacityParse;
-                    }
-                    else
-                    {
-                        item.MaximumCapacity = default(SoulLevel);
-                    }
+                    item.MaximumCapacity = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.MaximumCapacity);
                 }
                 default:
@@ -2491,17 +2441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2517,18 +2459,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2544,17 +2478,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2570,17 +2496,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Script);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.Script.FormKey = ScriptParse;
-                        }
-                        else
-                        {
-                            item.Script.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2596,17 +2515,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2623,17 +2534,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2649,17 +2552,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
-                        if (EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                        item.ContainedSoul = EnumXmlTranslation<SoulLevel>.Instance.Parse(
                             node: node,
-                            item: out SoulLevel ContainedSoulParse,
-                            errorMask: errorMask))
-                        {
-                            item.ContainedSoul = ContainedSoulParse;
-                        }
-                        else
-                        {
-                            item.ContainedSoul = default(SoulLevel);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2675,17 +2570,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
-                        if (EnumXmlTranslation<SoulLevel>.Instance.Parse(
+                        item.MaximumCapacity = EnumXmlTranslation<SoulLevel>.Instance.Parse(
                             node: node,
-                            item: out SoulLevel MaximumCapacityParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumCapacity = MaximumCapacityParse;
-                        }
-                        else
-                        {
-                            item.MaximumCapacity = default(SoulLevel);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2701,17 +2588,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoulGem_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<SoulGem.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<SoulGem.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out SoulGem.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(SoulGem.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

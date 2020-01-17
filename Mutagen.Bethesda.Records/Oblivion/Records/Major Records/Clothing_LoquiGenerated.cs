@@ -1123,16 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState = Clothing.DATADataType.Has;
                     }
                     item.Value = dataFrame.ReadUInt32();
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WeightParse))
-                    {
-                        item.Weight = WeightParse;
-                    }
-                    else
-                    {
-                        item.Weight = default(Single);
-                    }
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)Clothing_FieldIndex.Weight);
                 }
                 default:
@@ -1900,17 +1891,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Clothing_FieldIndex.Value);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 ValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.Value = ValueParse;
-                        }
-                        else
-                        {
-                            item.Value = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1927,17 +1910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Clothing_FieldIndex.Weight);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weight = WeightParse;
-                        }
-                        else
-                        {
-                            item.Weight = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1953,17 +1928,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Clothing_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<Clothing.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<Clothing.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out Clothing.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(Clothing.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1057,16 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             item.FrequencyAdjustment = frame.ReadInt8();
             frame.Position += 1;
-            if (EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out SoundData.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(SoundData.Flag);
-            }
+            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public void CopyInFromBinary(
@@ -1518,17 +1509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundData_FieldIndex.MinimumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.MinimumAttenuationDistance = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 MinimumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinimumAttenuationDistance = MinimumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MinimumAttenuationDistance = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1544,17 +1527,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundData_FieldIndex.MaximumAttenuationDistance);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.MaximumAttenuationDistance = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 MaximumAttenuationDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumAttenuationDistance = MaximumAttenuationDistanceParse;
-                        }
-                        else
-                        {
-                            item.MaximumAttenuationDistance = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1570,17 +1545,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundData_FieldIndex.FrequencyAdjustment);
-                        if (Int8XmlTranslation.Instance.Parse(
+                        item.FrequencyAdjustment = Int8XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out SByte FrequencyAdjustmentParse,
-                            errorMask: errorMask))
-                        {
-                            item.FrequencyAdjustment = FrequencyAdjustmentParse;
-                        }
-                        else
-                        {
-                            item.FrequencyAdjustment = default(SByte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1596,17 +1563,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundData_FieldIndex.Flags);
-                        if (EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
                             node: node,
-                            item: out SoundData.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(SoundData.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1518,17 +1518,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags);
-                        if (EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Parse(
+                        item.SkyrimMajorRecordFlags = EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Parse(
                             node: node,
-                            item: out SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.SkyrimMajorRecordFlags = SkyrimMajorRecordFlagsParse;
-                        }
-                        else
-                        {
-                            item.SkyrimMajorRecordFlags = default(SkyrimMajorRecord.SkyrimMajorRecordFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1544,17 +1536,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.FormVersion);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.FormVersion = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 FormVersionParse,
-                            errorMask: errorMask))
-                        {
-                            item.FormVersion = FormVersionParse;
-                        }
-                        else
-                        {
-                            item.FormVersion = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1570,17 +1554,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.Version2);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Version2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 Version2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Version2 = Version2Parse;
-                        }
-                        else
-                        {
-                            item.Version2 = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -977,16 +977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ComparisonValueParse))
-            {
-                item.ComparisonValue = ComparisonValueParse;
-            }
-            else
-            {
-                item.ComparisonValue = default(Single);
-            }
+            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             ConditionFloatBinaryCreateTranslation.FillBinaryDataCustomPublic(
                 frame: frame,
                 item: item,
@@ -1478,17 +1469,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ConditionFloat_FieldIndex.ComparisonValue);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ComparisonValue = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ComparisonValueParse,
-                            errorMask: errorMask))
-                        {
-                            item.ComparisonValue = ComparisonValueParse;
-                        }
-                        else
-                        {
-                            item.ComparisonValue = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1504,18 +1487,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ConditionFloat_FieldIndex.Data);
-                        if (LoquiXmlTranslation<ConditionData>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<ConditionData>.Instance.Parse(
                             node: node,
-                            item: out ConditionData DataParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ConditionFloat_FieldIndex.Data)))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(ConditionData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)ConditionFloat_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

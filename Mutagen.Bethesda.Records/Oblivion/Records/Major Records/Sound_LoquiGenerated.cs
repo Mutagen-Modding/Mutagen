@@ -1106,17 +1106,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.File = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FileParse))
-                    {
-                        item.File = FileParse;
-                    }
-                    else
-                    {
-                        item.File = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Sound_FieldIndex.File);
                 }
                 case 0x44444E53: // SNDD
@@ -1801,17 +1793,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.File);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.File = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String FileParse,
-                            errorMask: errorMask))
-                        {
-                            item.File = FileParse;
-                        }
-                        else
-                        {
-                            item.File = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1827,18 +1811,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Sound_FieldIndex.Data);
-                        if (LoquiXmlTranslation<SoundData>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<SoundData>.Instance.Parse(
                             node: node,
-                            item: out SoundData DataParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data)))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(SoundData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Sound_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

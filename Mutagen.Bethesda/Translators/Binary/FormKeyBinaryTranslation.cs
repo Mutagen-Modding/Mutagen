@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static FormKeyBinaryTranslation Instance = new FormKeyBinaryTranslation();
 
-        public static FormKey Parse(
+        public FormKey Parse(
             ReadOnlySpan<byte> span,
             MasterReferences masterReferences)
         {
@@ -38,6 +38,15 @@ namespace Mutagen.Bethesda.Binary
                 frame.ReadSpan(4),
                 masterReferences);
             return true;
+        }
+
+        public FormKey Parse(
+            MutagenFrame frame,
+            MasterReferences masterReferences)
+        {
+            return Parse(
+                frame.ReadSpan(4),
+                masterReferences);
         }
 
         public void Write(

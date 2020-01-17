@@ -1057,16 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out CreatureSound.CreatureSoundType SoundTypeParse))
-                    {
-                        item.SoundType = SoundTypeParse;
-                    }
-                    else
-                    {
-                        item.SoundType = default(CreatureSound.CreatureSoundType);
-                    }
+                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
                 }
                 case 0x49445343: // CSDI
@@ -1584,17 +1575,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CreatureSound_FieldIndex.SoundType);
-                        if (EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
+                        item.SoundType = EnumXmlTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(
                             node: node,
-                            item: out CreatureSound.CreatureSoundType SoundTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SoundType = SoundTypeParse;
-                        }
-                        else
-                        {
-                            item.SoundType = default(CreatureSound.CreatureSoundType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

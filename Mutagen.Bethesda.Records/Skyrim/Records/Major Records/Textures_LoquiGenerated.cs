@@ -1397,136 +1397,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Diffuse) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Diffuse = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DiffuseParse))
-                    {
-                        item.Diffuse = DiffuseParse;
-                    }
-                    else
-                    {
-                        item.Diffuse = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.Diffuse);
                 }
                 case 0x31305854: // TX01
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.NormalOrGloss) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.NormalOrGloss = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NormalOrGlossParse))
-                    {
-                        item.NormalOrGloss = NormalOrGlossParse;
-                    }
-                    else
-                    {
-                        item.NormalOrGloss = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.NormalOrGloss);
                 }
                 case 0x32305854: // TX02
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.EnvironmentMaskOrSubsurfaceTint = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EnvironmentMaskOrSubsurfaceTintParse))
-                    {
-                        item.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTintParse;
-                    }
-                    else
-                    {
-                        item.EnvironmentMaskOrSubsurfaceTint = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
                 }
                 case 0x33305854: // TX03
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.GlowOrDetailMap) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.GlowOrDetailMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String GlowOrDetailMapParse))
-                    {
-                        item.GlowOrDetailMap = GlowOrDetailMapParse;
-                    }
-                    else
-                    {
-                        item.GlowOrDetailMap = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.GlowOrDetailMap);
                 }
                 case 0x34305854: // TX04
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Height) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Height = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String HeightParse))
-                    {
-                        item.Height = HeightParse;
-                    }
-                    else
-                    {
-                        item.Height = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.Height);
                 }
                 case 0x35305854: // TX05
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Environment) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Environment = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String EnvironmentParse))
-                    {
-                        item.Environment = EnvironmentParse;
-                    }
-                    else
-                    {
-                        item.Environment = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.Environment);
                 }
                 case 0x36305854: // TX06
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.Multilayer) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Multilayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MultilayerParse))
-                    {
-                        item.Multilayer = MultilayerParse;
-                    }
-                    else
-                    {
-                        item.Multilayer = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.Multilayer);
                 }
                 case 0x37305854: // TX07
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Textures_FieldIndex.BacklightMaskOrSpecular) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.BacklightMaskOrSpecular = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String BacklightMaskOrSpecularParse))
-                    {
-                        item.BacklightMaskOrSpecular = BacklightMaskOrSpecularParse;
-                    }
-                    else
-                    {
-                        item.BacklightMaskOrSpecular = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Textures_FieldIndex.BacklightMaskOrSpecular);
                 }
                 default:
@@ -2284,17 +2220,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.Diffuse);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Diffuse = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String DiffuseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Diffuse = DiffuseParse;
-                        }
-                        else
-                        {
-                            item.Diffuse = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2310,17 +2238,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.NormalOrGloss);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.NormalOrGloss = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NormalOrGlossParse,
-                            errorMask: errorMask))
-                        {
-                            item.NormalOrGloss = NormalOrGlossParse;
-                        }
-                        else
-                        {
-                            item.NormalOrGloss = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2336,17 +2256,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.EnvironmentMaskOrSubsurfaceTint = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String EnvironmentMaskOrSubsurfaceTintParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnvironmentMaskOrSubsurfaceTint = EnvironmentMaskOrSubsurfaceTintParse;
-                        }
-                        else
-                        {
-                            item.EnvironmentMaskOrSubsurfaceTint = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2362,17 +2274,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.GlowOrDetailMap);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.GlowOrDetailMap = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String GlowOrDetailMapParse,
-                            errorMask: errorMask))
-                        {
-                            item.GlowOrDetailMap = GlowOrDetailMapParse;
-                        }
-                        else
-                        {
-                            item.GlowOrDetailMap = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2388,17 +2292,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.Height);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Height = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String HeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Height = HeightParse;
-                        }
-                        else
-                        {
-                            item.Height = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2414,17 +2310,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.Environment);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Environment = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String EnvironmentParse,
-                            errorMask: errorMask))
-                        {
-                            item.Environment = EnvironmentParse;
-                        }
-                        else
-                        {
-                            item.Environment = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2440,17 +2328,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.Multilayer);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Multilayer = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String MultilayerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Multilayer = MultilayerParse;
-                        }
-                        else
-                        {
-                            item.Multilayer = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2466,17 +2346,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Textures_FieldIndex.BacklightMaskOrSpecular);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.BacklightMaskOrSpecular = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String BacklightMaskOrSpecularParse,
-                            errorMask: errorMask))
-                        {
-                            item.BacklightMaskOrSpecular = BacklightMaskOrSpecularParse;
-                        }
-                        else
-                        {
-                            item.BacklightMaskOrSpecular = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -2255,17 +2255,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E54: // TNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Texture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String TextureParse))
-                    {
-                        item.Texture = TextureParse;
-                    }
-                    else
-                    {
-                        item.Texture = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
                 }
                 case 0x4D414E41: // ANAM
@@ -2277,48 +2269,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<Water.Flag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Water.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Water.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
                 }
                 case 0x4D414E4D: // MNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.MaterialID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MaterialIDParse))
-                    {
-                        item.MaterialID = MaterialIDParse;
-                    }
-                    else
-                    {
-                        item.MaterialID = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
                 }
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey SoundParse))
-                    {
-                        item.Sound.FormKey = SoundParse;
-                    }
-                    else
-                    {
-                        item.Sound.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
                 }
                 case 0x41544144: // DATA
@@ -2339,106 +2307,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState |= Water.DATADataType.Break0;
                         return TryGet<int?>.Succeed(null);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WindVelocityParse))
-                    {
-                        item.WindVelocity = WindVelocityParse;
-                    }
-                    else
-                    {
-                        item.WindVelocity = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WindDirectionParse))
-                    {
-                        item.WindDirection = WindDirectionParse;
-                    }
-                    else
-                    {
-                        item.WindDirection = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WaveAmplitudeParse))
-                    {
-                        item.WaveAmplitude = WaveAmplitudeParse;
-                    }
-                    else
-                    {
-                        item.WaveAmplitude = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WaveFrequencyParse))
-                    {
-                        item.WaveFrequency = WaveFrequencyParse;
-                    }
-                    else
-                    {
-                        item.WaveFrequency = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single SunPowerParse))
-                    {
-                        item.SunPower = SunPowerParse;
-                    }
-                    else
-                    {
-                        item.SunPower = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ReflectivityAmountParse))
-                    {
-                        item.ReflectivityAmount = ReflectivityAmountParse;
-                    }
-                    else
-                    {
-                        item.ReflectivityAmount = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FresnelAmountParse))
-                    {
-                        item.FresnelAmount = FresnelAmountParse;
-                    }
-                    else
-                    {
-                        item.FresnelAmount = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ScrollXSpeedParse))
-                    {
-                        item.ScrollXSpeed = ScrollXSpeedParse;
-                    }
-                    else
-                    {
-                        item.ScrollXSpeed = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ScrollYSpeedParse))
-                    {
-                        item.ScrollYSpeed = ScrollYSpeedParse;
-                    }
-                    else
-                    {
-                        item.ScrollYSpeed = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single FogDistanceNearPlaneParse))
-                    {
-                        item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
-                    }
-                    else
-                    {
-                        item.FogDistanceNearPlane = default(Single);
-                    }
+                    item.WindVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WindDirection = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaveAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WaveFrequency = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SunPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ReflectivityAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FresnelAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ScrollXSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ScrollYSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     WaterBinaryCreateTranslation.FillBinaryBloodCustomLogicCustomPublic(
                         frame: dataFrame,
                         item: item,
@@ -2449,49 +2327,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState |= Water.DATADataType.Break1;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.FogDistanceNearPlane);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item.FogDistanceFarPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ShallowColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        item: out Single FogDistanceFarPlaneParse))
-                    {
-                        item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
-                    }
-                    else
-                    {
-                        item.FogDistanceFarPlane = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        extraByte: true);
+                    item.DeepColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        extraByte: true,
-                        item: out Color ShallowColorParse))
-                    {
-                        item.ShallowColor = ShallowColorParse;
-                    }
-                    else
-                    {
-                        item.ShallowColor = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        extraByte: true);
+                    item.ReflectionColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        extraByte: true,
-                        item: out Color DeepColorParse))
-                    {
-                        item.DeepColor = DeepColorParse;
-                    }
-                    else
-                    {
-                        item.DeepColor = default(Color);
-                    }
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true,
-                        item: out Color ReflectionColorParse))
-                    {
-                        item.ReflectionColor = ReflectionColorParse;
-                    }
-                    else
-                    {
-                        item.ReflectionColor = default(Color);
-                    }
+                        extraByte: true);
                     item.TextureBlend = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
                     WaterBinaryCreateTranslation.FillBinaryOilCustomLogicCustomPublic(
@@ -2504,66 +2349,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState |= Water.DATADataType.Break2;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.TextureBlend);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RainSimulatorForceParse))
-                    {
-                        item.RainSimulatorForce = RainSimulatorForceParse;
-                    }
-                    else
-                    {
-                        item.RainSimulatorForce = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RainSimulatorVelocityParse))
-                    {
-                        item.RainSimulatorVelocity = RainSimulatorVelocityParse;
-                    }
-                    else
-                    {
-                        item.RainSimulatorVelocity = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RainSimulatorFalloffParse))
-                    {
-                        item.RainSimulatorFalloff = RainSimulatorFalloffParse;
-                    }
-                    else
-                    {
-                        item.RainSimulatorFalloff = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RainSimulatorDampnerParse))
-                    {
-                        item.RainSimulatorDampner = RainSimulatorDampnerParse;
-                    }
-                    else
-                    {
-                        item.RainSimulatorDampner = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RainSimulatorStartingSizeParse))
-                    {
-                        item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
-                    }
-                    else
-                    {
-                        item.RainSimulatorStartingSize = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DisplacementSimulatorForceParse))
-                    {
-                        item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
-                    }
-                    else
-                    {
-                        item.DisplacementSimulatorForce = default(Single);
-                    }
+                    item.RainSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RainSimulatorVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RainSimulatorFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RainSimulatorDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RainSimulatorStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     WaterBinaryCreateTranslation.FillBinaryOddExtraBytesCustomPublic(
                         frame: dataFrame,
                         item: item,
@@ -2574,46 +2365,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.DATADataTypeState |= Water.DATADataType.Break3;
                         return TryGet<int?>.Succeed((int)Water_FieldIndex.DisplacementSimulatorForce);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DisplacementSimulatorVelocityParse))
-                    {
-                        item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
-                    }
-                    else
-                    {
-                        item.DisplacementSimulatorVelocity = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DisplacementSimulatorFalloffParse))
-                    {
-                        item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
-                    }
-                    else
-                    {
-                        item.DisplacementSimulatorFalloff = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DisplacementSimulatorDampnerParse))
-                    {
-                        item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
-                    }
-                    else
-                    {
-                        item.DisplacementSimulatorDampner = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DisplacementSimulatorStartingSizeParse))
-                    {
-                        item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
-                    }
-                    else
-                    {
-                        item.DisplacementSimulatorStartingSize = default(Single);
-                    }
+                    item.DisplacementSimulatorVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementSimulatorFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementSimulatorDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DisplacementSimulatorStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Damage = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
                 }
@@ -4064,17 +3819,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.Texture);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Texture = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String TextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.Texture = TextureParse;
-                        }
-                        else
-                        {
-                            item.Texture = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4090,17 +3837,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.Opacity);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Opacity = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte OpacityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Opacity = OpacityParse;
-                        }
-                        else
-                        {
-                            item.Opacity = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4116,17 +3855,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Water.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Water.Flag>.Instance.Parse(
                             node: node,
-                            item: out Water.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Water.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4142,17 +3873,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.MaterialID);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.MaterialID = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String MaterialIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaterialID = MaterialIDParse;
-                        }
-                        else
-                        {
-                            item.MaterialID = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4168,17 +3891,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.Sound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey SoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sound.FormKey = SoundParse;
-                        }
-                        else
-                        {
-                            item.Sound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4194,17 +3910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WindVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WindVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindVelocity = WindVelocityParse;
-                        }
-                        else
-                        {
-                            item.WindVelocity = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4221,17 +3929,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WindDirection = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WindDirectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.WindDirection = WindDirectionParse;
-                        }
-                        else
-                        {
-                            item.WindDirection = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4247,17 +3947,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WaveAmplitude = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WaveAmplitudeParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveAmplitude = WaveAmplitudeParse;
-                        }
-                        else
-                        {
-                            item.WaveAmplitude = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4273,17 +3965,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WaveFrequency = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WaveFrequencyParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaveFrequency = WaveFrequencyParse;
-                        }
-                        else
-                        {
-                            item.WaveFrequency = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4299,17 +3983,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.SunPower = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single SunPowerParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunPower = SunPowerParse;
-                        }
-                        else
-                        {
-                            item.SunPower = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4325,17 +4001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ReflectivityAmount = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ReflectivityAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectivityAmount = ReflectivityAmountParse;
-                        }
-                        else
-                        {
-                            item.ReflectivityAmount = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4351,17 +4019,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FresnelAmount = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FresnelAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.FresnelAmount = FresnelAmountParse;
-                        }
-                        else
-                        {
-                            item.FresnelAmount = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4377,17 +4037,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ScrollXSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ScrollXSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollXSpeed = ScrollXSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollXSpeed = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4403,17 +4055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ScrollYSpeed = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ScrollYSpeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.ScrollYSpeed = ScrollYSpeedParse;
-                        }
-                        else
-                        {
-                            item.ScrollYSpeed = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4429,17 +4073,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FogDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FogDistanceNearPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceNearPlane = FogDistanceNearPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceNearPlane = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4455,17 +4091,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FogDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FogDistanceFarPlaneParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogDistanceFarPlane = FogDistanceFarPlaneParse;
-                        }
-                        else
-                        {
-                            item.FogDistanceFarPlane = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4482,17 +4110,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.ShallowColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color ShallowColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ShallowColor = ShallowColorParse;
-                        }
-                        else
-                        {
-                            item.ShallowColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4508,17 +4128,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.DeepColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color DeepColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DeepColor = DeepColorParse;
-                        }
-                        else
-                        {
-                            item.DeepColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4534,17 +4146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.ReflectionColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color ReflectionColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ReflectionColor = ReflectionColorParse;
-                        }
-                        else
-                        {
-                            item.ReflectionColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4560,17 +4164,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.TextureBlend = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte TextureBlendParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureBlend = TextureBlendParse;
-                        }
-                        else
-                        {
-                            item.TextureBlend = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4586,17 +4182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RainSimulatorForce = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RainSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorForce = RainSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorForce = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4613,17 +4201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RainSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RainSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorVelocity = RainSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorVelocity = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4639,17 +4219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RainSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RainSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorFalloff = RainSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorFalloff = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4665,17 +4237,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RainSimulatorDampner = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RainSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorDampner = RainSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorDampner = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4691,17 +4255,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RainSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RainSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RainSimulatorStartingSize = RainSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.RainSimulatorStartingSize = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4717,17 +4273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DisplacementSimulatorForce = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DisplacementSimulatorForceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorForce = DisplacementSimulatorForceParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorForce = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4743,17 +4291,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DisplacementSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DisplacementSimulatorVelocityParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorVelocity = DisplacementSimulatorVelocityParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorVelocity = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4770,17 +4310,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DisplacementSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DisplacementSimulatorFalloffParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorFalloff = DisplacementSimulatorFalloffParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorFalloff = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4796,17 +4328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DisplacementSimulatorDampner = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DisplacementSimulatorDampnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorDampner = DisplacementSimulatorDampnerParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorDampner = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4822,17 +4346,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DisplacementSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DisplacementSimulatorStartingSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSizeParse;
-                        }
-                        else
-                        {
-                            item.DisplacementSimulatorStartingSize = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4848,17 +4364,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Damage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 DamageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Damage = DamageParse;
-                        }
-                        else
-                        {
-                            item.Damage = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4874,18 +4382,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
-                        if (LoquiXmlTranslation<RelatedWaters>.Instance.Parse(
+                        item.RelatedWaters = LoquiXmlTranslation<RelatedWaters>.Instance.Parse(
                             node: node,
-                            item: out RelatedWaters RelatedWatersParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters)))
-                        {
-                            item.RelatedWaters = RelatedWatersParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaters = default(RelatedWaters);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4901,17 +4401,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<Water.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<Water.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out Water.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(Water.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

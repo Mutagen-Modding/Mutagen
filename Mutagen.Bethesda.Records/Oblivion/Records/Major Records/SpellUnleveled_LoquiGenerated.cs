@@ -1215,37 +1215,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.SPITDataTypeState = SpellUnleveled.SPITDataType.Has;
                     }
-                    if (EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellType TypeParse))
-                    {
-                        item.Type = TypeParse;
-                    }
-                    else
-                    {
-                        item.Type = default(Spell.SpellType);
-                    }
+                    item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Cost = dataFrame.ReadUInt32();
-                    if (EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellLevel LevelParse))
-                    {
-                        item.Level = LevelParse;
-                    }
-                    else
-                    {
-                        item.Level = default(Spell.SpellLevel);
-                    }
-                    if (EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Spell.SpellFlag FlagParse))
-                    {
-                        item.Flag = FlagParse;
-                    }
-                    else
-                    {
-                        item.Flag = default(Spell.SpellFlag);
-                    }
+                    item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Flag);
                 }
                 case 0x44494645: // EFID
@@ -2139,17 +2112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Type);
-                        if (EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<Spell.SpellType>.Instance.Parse(
                             node: node,
-                            item: out Spell.SpellType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Spell.SpellType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2166,17 +2131,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Cost);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Cost = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 CostParse,
-                            errorMask: errorMask))
-                        {
-                            item.Cost = CostParse;
-                        }
-                        else
-                        {
-                            item.Cost = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2192,17 +2149,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Level);
-                        if (EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
+                        item.Level = EnumXmlTranslation<Spell.SpellLevel>.Instance.Parse(
                             node: node,
-                            item: out Spell.SpellLevel LevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.Level = LevelParse;
-                        }
-                        else
-                        {
-                            item.Level = default(Spell.SpellLevel);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2218,17 +2167,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.Flag);
-                        if (EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
+                        item.Flag = EnumXmlTranslation<Spell.SpellFlag>.Instance.Parse(
                             node: node,
-                            item: out Spell.SpellFlag FlagParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flag = FlagParse;
-                        }
-                        else
-                        {
-                            item.Flag = default(Spell.SpellFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2272,17 +2213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SpellUnleveled_FieldIndex.SPITDataTypeState);
-                        if (EnumXmlTranslation<SpellUnleveled.SPITDataType>.Instance.Parse(
+                        item.SPITDataTypeState = EnumXmlTranslation<SpellUnleveled.SPITDataType>.Instance.Parse(
                             node: node,
-                            item: out SpellUnleveled.SPITDataType SPITDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.SPITDataTypeState = SPITDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.SPITDataTypeState = default(SpellUnleveled.SPITDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

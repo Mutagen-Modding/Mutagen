@@ -1008,37 +1008,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out AIPackageLocation.LocationType TypeParse))
-            {
-                item.Type = TypeParse;
-            }
-            else
-            {
-                item.Type = default(AIPackageLocation.LocationType);
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LocationReference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey LocationReferenceParse))
-            {
-                item.LocationReference.FormKey = LocationReferenceParse;
-            }
-            else
-            {
-                item.LocationReference.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single RadiusParse))
-            {
-                item.Radius = RadiusParse;
-            }
-            else
-            {
-                item.Radius = default(Single);
-            }
+                defaultVal: FormKey.NULL);
+            item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1457,17 +1432,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Type);
-                        if (EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<AIPackageLocation.LocationType>.Instance.Parse(
                             node: node,
-                            item: out AIPackageLocation.LocationType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(AIPackageLocation.LocationType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1483,17 +1450,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.LocationReference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.LocationReference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey LocationReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.LocationReference.FormKey = LocationReferenceParse;
-                        }
-                        else
-                        {
-                            item.LocationReference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1509,17 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageLocation_FieldIndex.Radius);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Radius = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

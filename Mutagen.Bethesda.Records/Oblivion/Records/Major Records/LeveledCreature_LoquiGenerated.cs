@@ -1206,16 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x464C564C: // LVLF
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out LeveledFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(LeveledFlag);
-                    }
+                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Flags);
                 }
                 case 0x4F4C564C: // LVLO
@@ -1240,33 +1231,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ScriptParse))
-                    {
-                        item.Script.FormKey = ScriptParse;
-                    }
-                    else
-                    {
-                        item.Script.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
                 }
                 case 0x4D414E54: // TNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Template.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey TemplateParse))
-                    {
-                        item.Template.FormKey = TemplateParse;
-                    }
-                    else
-                    {
-                        item.Template.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
                 default:
@@ -2145,17 +2122,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.ChanceNone);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.ChanceNone = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ChanceNoneParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChanceNone = ChanceNoneParse;
-                        }
-                        else
-                        {
-                            item.ChanceNone = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2171,17 +2140,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Flags);
-                        if (EnumXmlTranslation<LeveledFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                             node: node,
-                            item: out LeveledFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(LeveledFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2225,17 +2186,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.Script.FormKey = ScriptParse;
-                        }
-                        else
-                        {
-                            item.Script.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2251,17 +2205,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Template.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey TemplateParse,
-                            errorMask: errorMask))
-                        {
-                            item.Template.FormKey = TemplateParse;
-                        }
-                        else
-                        {
-                            item.Template.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

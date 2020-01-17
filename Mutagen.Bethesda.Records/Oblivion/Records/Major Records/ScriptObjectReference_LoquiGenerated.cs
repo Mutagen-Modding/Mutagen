@@ -968,17 +968,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ReferenceParse))
-                    {
-                        item.Reference.FormKey = ReferenceParse;
-                    }
-                    else
-                    {
-                        item.Reference.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
                 }
                 default:
@@ -1403,17 +1396,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reference.FormKey = ReferenceParse;
-                        }
-                        else
-                        {
-                            item.Reference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

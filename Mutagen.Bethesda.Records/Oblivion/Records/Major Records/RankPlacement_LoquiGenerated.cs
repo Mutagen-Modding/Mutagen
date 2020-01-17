@@ -1016,28 +1016,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey FactionParse))
-            {
-                item.Faction.FormKey = FactionParse;
-            }
-            else
-            {
-                item.Faction.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Rank = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
         public void CopyInFromBinary(
@@ -1456,17 +1440,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey FactionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Faction.FormKey = FactionParse;
-                        }
-                        else
-                        {
-                            item.Faction.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1482,17 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RankPlacement_FieldIndex.Rank);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Rank = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte RankParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rank = RankParse;
-                        }
-                        else
-                        {
-                            item.Rank = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1508,17 +1477,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1197,17 +1197,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
                 }
                 case 0x4D414E48: // HNAM
@@ -2019,17 +2011,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2045,18 +2029,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.Havok);
-                        if (LoquiXmlTranslation<HavokData>.Instance.Parse(
+                        item.Havok = LoquiXmlTranslation<HavokData>.Instance.Parse(
                             node: node,
-                            item: out HavokData HavokParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok)))
-                        {
-                            item.Havok = HavokParse;
-                        }
-                        else
-                        {
-                            item.Havok = default(HavokData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)LandTexture_FieldIndex.Havok));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2072,17 +2048,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LandTexture_FieldIndex.TextureSpecularExponent);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.TextureSpecularExponent = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte TextureSpecularExponentParse,
-                            errorMask: errorMask))
-                        {
-                            item.TextureSpecularExponent = TextureSpecularExponentParse;
-                        }
-                        else
-                        {
-                            item.TextureSpecularExponent = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

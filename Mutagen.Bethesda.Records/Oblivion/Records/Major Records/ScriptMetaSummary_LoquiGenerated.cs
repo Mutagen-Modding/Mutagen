@@ -1076,16 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.RefCount = frame.ReadUInt32();
             ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustomPublic(
                 frame: frame,
@@ -1093,16 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 masterReferences: masterReferences,
                 errorMask: errorMask);
             item.VariableCount = frame.ReadUInt32();
-            if (EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out ScriptFields.ScriptType TypeParse))
-            {
-                item.Type = TypeParse;
-            }
-            else
-            {
-                item.Type = default(ScriptFields.ScriptType);
-            }
+            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public void CopyInFromBinary(
@@ -1549,17 +1531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1575,17 +1549,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.RefCount);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.RefCount = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 RefCountParse,
-                            errorMask: errorMask))
-                        {
-                            item.RefCount = RefCountParse;
-                        }
-                        else
-                        {
-                            item.RefCount = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1601,17 +1567,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.VariableCount);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.VariableCount = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 VariableCountParse,
-                            errorMask: errorMask))
-                        {
-                            item.VariableCount = VariableCountParse;
-                        }
-                        else
-                        {
-                            item.VariableCount = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1627,17 +1585,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Type);
-                        if (EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<ScriptFields.ScriptType>.Instance.Parse(
                             node: node,
-                            item: out ScriptFields.ScriptType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(ScriptFields.ScriptType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

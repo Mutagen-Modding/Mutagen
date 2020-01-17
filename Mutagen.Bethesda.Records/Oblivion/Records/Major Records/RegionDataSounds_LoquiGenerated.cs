@@ -1071,16 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x444D4452: // RDMD
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out MusicType MusicTypeParse))
-                    {
-                        item.MusicType = MusicTypeParse;
-                    }
-                    else
-                    {
-                        item.MusicType = default(MusicType);
-                    }
+                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.MusicType);
                 }
                 case 0x44534452: // RDSD
@@ -1680,17 +1671,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionDataSounds_FieldIndex.MusicType);
-                        if (EnumXmlTranslation<MusicType>.Instance.Parse(
+                        item.MusicType = EnumXmlTranslation<MusicType>.Instance.Parse(
                             node: node,
-                            item: out MusicType MusicTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MusicType = MusicTypeParse;
-                        }
-                        else
-                        {
-                            item.MusicType = default(MusicType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

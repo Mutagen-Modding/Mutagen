@@ -32,13 +32,13 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public T Parse(MutagenFrame frame)
+        public T Parse(MutagenFrame frame, T defaultVal = default)
         {
             if (Parse(frame, out var item))
             {
                 return item;
             }
-            return default(T);
+            return defaultVal;
         }
 
         public bool Parse(MutagenFrame frame, out T item)

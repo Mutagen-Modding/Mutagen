@@ -1045,17 +1045,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey SoundParse))
-                    {
-                        item.Sound.FormKey = SoundParse;
-                    }
-                    else
-                    {
-                        item.Sound.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
                 }
                 case 0x43445343: // CSDC
@@ -1514,17 +1507,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundItem_FieldIndex.Sound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey SoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sound.FormKey = SoundParse;
-                        }
-                        else
-                        {
-                            item.Sound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1540,17 +1526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundItem_FieldIndex.Chance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Chance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

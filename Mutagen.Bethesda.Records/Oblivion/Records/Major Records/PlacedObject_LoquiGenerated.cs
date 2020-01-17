@@ -2145,47 +2145,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x454D414E: // NAME
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Base.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey BaseParse))
-                    {
-                        item.Base.FormKey = BaseParse;
-                    }
-                    else
-                    {
-                        item.Base.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
                 }
                 case 0x49435058: // XPCI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] XPCIFluffParse))
-                    {
-                        item.XPCIFluff = XPCIFluffParse;
-                    }
-                    else
-                    {
-                        item.XPCIFluff = default(Byte[]);
-                    }
+                    item.XPCIFluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XPCIFluff);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] FULLFluffParse))
-                    {
-                        item.FULLFluff = FULLFluffParse;
-                    }
-                    else
-                    {
-                        item.FULLFluff = default(Byte[]);
-                    }
+                    item.FULLFluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FULLFluff);
                 }
                 case 0x4C455458: // XTEL
@@ -2235,17 +2210,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4E574F58: // XOWN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Owner.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey OwnerParse))
-                    {
-                        item.Owner.FormKey = OwnerParse;
-                    }
-                    else
-                    {
-                        item.Owner.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
@@ -2257,17 +2225,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x424C4758: // XGLB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.GlobalVariable.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey GlobalVariableParse))
-                    {
-                        item.GlobalVariable.FormKey = GlobalVariableParse;
-                    }
-                    else
-                    {
-                        item.GlobalVariable.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.GlobalVariable);
                 }
                 case 0x50534558: // XESP
@@ -2295,17 +2256,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x47525458: // XTRG
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Target.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey TargetParse))
-                    {
-                        item.Target.FormKey = TargetParse;
-                    }
-                    else
-                    {
-                        item.Target.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Target);
                 }
                 case 0x44455358: // XSED
@@ -2339,16 +2293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x47484358: // XCHG
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single ChargeParse))
-                    {
-                        item.Charge = ChargeParse;
-                    }
-                    else
-                    {
-                        item.Charge = default(Single);
-                    }
+                    item.Charge = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
                 }
                 case 0x544C4858: // XHLT
@@ -2366,32 +2311,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D545258: // XRTM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Unknown.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey UnknownParse))
-                    {
-                        item.Unknown.FormKey = UnknownParse;
-                    }
-                    else
-                    {
-                        item.Unknown.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Unknown);
                 }
                 case 0x54434158: // XACT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out PlacedObject.ActionFlag ActionFlagsParse))
-                    {
-                        item.ActionFlags = ActionFlagsParse;
-                    }
-                    else
-                    {
-                        item.ActionFlags = default(PlacedObject.ActionFlag);
-                    }
+                    item.ActionFlags = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActionFlags);
                 }
                 case 0x544E4358: // XCNT
@@ -2435,47 +2364,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x44475258: // XRGD
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] RagdollDataParse))
-                    {
-                        item.RagdollData = RagdollDataParse;
-                    }
-                    else
-                    {
-                        item.RagdollData = default(Byte[]);
-                    }
+                    item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
                 }
                 case 0x4C435358: // XSCL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single ScaleParse))
-                    {
-                        item.Scale = ScaleParse;
-                    }
-                    else
-                    {
-                        item.Scale = default(Single);
-                    }
+                    item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
                 }
                 case 0x4C4F5358: // XSOL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ContainedSoul.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ContainedSoulParse))
-                    {
-                        item.ContainedSoul.FormKey = ContainedSoulParse;
-                    }
-                    else
-                    {
-                        item.ContainedSoul.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ContainedSoul);
                 }
                 case 0x41544144: // DATA
@@ -2486,26 +2390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DATADataTypeState = PlacedObject.DATADataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out P3Float PositionParse))
-                    {
-                        item.Position = PositionParse;
-                    }
-                    else
-                    {
-                        item.Position = default(P3Float);
-                    }
-                    if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out P3Float RotationParse))
-                    {
-                        item.Rotation = RotationParse;
-                    }
-                    else
-                    {
-                        item.Rotation = default(P3Float);
-                    }
+                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
                 }
                 default:
@@ -4270,17 +4156,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Base);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Base.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey BaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Base.FormKey = BaseParse;
-                        }
-                        else
-                        {
-                            item.Base.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4296,17 +4175,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.XPCIFluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.XPCIFluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] XPCIFluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.XPCIFluff = XPCIFluffParse;
-                        }
-                        else
-                        {
-                            item.XPCIFluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4322,17 +4193,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.FULLFluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.FULLFluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FULLFluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.FULLFluff = FULLFluffParse;
-                        }
-                        else
-                        {
-                            item.FULLFluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4348,18 +4211,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.TeleportDestination);
-                        if (LoquiXmlTranslation<TeleportDestination>.Instance.Parse(
+                        item.TeleportDestination = LoquiXmlTranslation<TeleportDestination>.Instance.Parse(
                             node: node,
-                            item: out TeleportDestination TeleportDestinationParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination)))
-                        {
-                            item.TeleportDestination = TeleportDestinationParse;
-                        }
-                        else
-                        {
-                            item.TeleportDestination = default(TeleportDestination);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4375,18 +4230,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Lock);
-                        if (LoquiXmlTranslation<LockInformation>.Instance.Parse(
+                        item.Lock = LoquiXmlTranslation<LockInformation>.Instance.Parse(
                             node: node,
-                            item: out LockInformation LockParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock)))
-                        {
-                            item.Lock = LockParse;
-                        }
-                        else
-                        {
-                            item.Lock = default(LockInformation);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4402,17 +4249,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Owner);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Owner.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey OwnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Owner.FormKey = OwnerParse;
-                        }
-                        else
-                        {
-                            item.Owner.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4428,17 +4268,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.FactionRank);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.FactionRank = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 FactionRankParse,
-                            errorMask: errorMask))
-                        {
-                            item.FactionRank = FactionRankParse;
-                        }
-                        else
-                        {
-                            item.FactionRank = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4454,17 +4286,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.GlobalVariable);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.GlobalVariable.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey GlobalVariableParse,
-                            errorMask: errorMask))
-                        {
-                            item.GlobalVariable.FormKey = GlobalVariableParse;
-                        }
-                        else
-                        {
-                            item.GlobalVariable.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4480,18 +4305,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.EnableParent);
-                        if (LoquiXmlTranslation<EnableParent>.Instance.Parse(
+                        item.EnableParent = LoquiXmlTranslation<EnableParent>.Instance.Parse(
                             node: node,
-                            item: out EnableParent EnableParentParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent)))
-                        {
-                            item.EnableParent = EnableParentParse;
-                        }
-                        else
-                        {
-                            item.EnableParent = default(EnableParent);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4507,17 +4324,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Target);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey TargetParse,
-                            errorMask: errorMask))
-                        {
-                            item.Target.FormKey = TargetParse;
-                        }
-                        else
-                        {
-                            item.Target.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4533,17 +4343,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.SpeedTreeSeed);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.SpeedTreeSeed = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SpeedTreeSeedParse,
-                            errorMask: errorMask))
-                        {
-                            item.SpeedTreeSeed = SpeedTreeSeedParse;
-                        }
-                        else
-                        {
-                            item.SpeedTreeSeed = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4559,18 +4361,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.DistantLODData);
-                        if (LoquiXmlTranslation<DistantLODData>.Instance.Parse(
+                        item.DistantLODData = LoquiXmlTranslation<DistantLODData>.Instance.Parse(
                             node: node,
-                            item: out DistantLODData DistantLODDataParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData)))
-                        {
-                            item.DistantLODData = DistantLODDataParse;
-                        }
-                        else
-                        {
-                            item.DistantLODData = default(DistantLODData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.DistantLODData));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4586,17 +4380,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Charge);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Charge = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ChargeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Charge = ChargeParse;
-                        }
-                        else
-                        {
-                            item.Charge = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4612,17 +4398,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Health);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Health = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 HealthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Health = HealthParse;
-                        }
-                        else
-                        {
-                            item.Health = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4638,17 +4416,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.LevelModifier);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.LevelModifier = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 LevelModifierParse,
-                            errorMask: errorMask))
-                        {
-                            item.LevelModifier = LevelModifierParse;
-                        }
-                        else
-                        {
-                            item.LevelModifier = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4664,17 +4434,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Unknown);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Unknown.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown.FormKey = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4690,17 +4453,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.ActionFlags);
-                        if (EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Parse(
+                        item.ActionFlags = EnumXmlTranslation<PlacedObject.ActionFlag>.Instance.Parse(
                             node: node,
-                            item: out PlacedObject.ActionFlag ActionFlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.ActionFlags = ActionFlagsParse;
-                        }
-                        else
-                        {
-                            item.ActionFlags = default(PlacedObject.ActionFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4716,17 +4471,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Count);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Count = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4742,18 +4489,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.MapMarker);
-                        if (LoquiXmlTranslation<MapMarker>.Instance.Parse(
+                        item.MapMarker = LoquiXmlTranslation<MapMarker>.Instance.Parse(
                             node: node,
-                            item: out MapMarker MapMarkerParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker)))
-                        {
-                            item.MapMarker = MapMarkerParse;
-                        }
-                        else
-                        {
-                            item.MapMarker = default(MapMarker);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4769,17 +4508,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.OpenByDefault);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.OpenByDefault = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean OpenByDefaultParse,
-                            errorMask: errorMask))
-                        {
-                            item.OpenByDefault = OpenByDefaultParse;
-                        }
-                        else
-                        {
-                            item.OpenByDefault = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4795,17 +4526,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.RagdollData);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.RagdollData = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] RagdollDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.RagdollData = RagdollDataParse;
-                        }
-                        else
-                        {
-                            item.RagdollData = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4821,17 +4544,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Scale);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Scale = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ScaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Scale = ScaleParse;
-                        }
-                        else
-                        {
-                            item.Scale = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4847,17 +4562,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.ContainedSoul);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.ContainedSoul.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ContainedSoulParse,
-                            errorMask: errorMask))
-                        {
-                            item.ContainedSoul.FormKey = ContainedSoulParse;
-                        }
-                        else
-                        {
-                            item.ContainedSoul.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4873,17 +4581,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Position = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float PositionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Position = PositionParse;
-                        }
-                        else
-                        {
-                            item.Position = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4900,17 +4600,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.Rotation = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4926,17 +4618,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)PlacedObject_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out PlacedObject.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(PlacedObject.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1295,16 +1295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E44: // DNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out TextureSet.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(TextureSet.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
                 }
                 default:
@@ -2075,18 +2066,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
-                        if (LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
                             node: node,
-                            item: out ObjectBounds ObjectBoundsParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds)))
-                        {
-                            item.ObjectBounds = ObjectBoundsParse;
-                        }
-                        else
-                        {
-                            item.ObjectBounds = default(ObjectBounds);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2102,18 +2085,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
-                        if (LoquiXmlTranslation<Textures>.Instance.Parse(
+                        item.Textures = LoquiXmlTranslation<Textures>.Instance.Parse(
                             node: node,
-                            item: out Textures TexturesParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures)))
-                        {
-                            item.Textures = TexturesParse;
-                        }
-                        else
-                        {
-                            item.Textures = default(Textures);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2129,18 +2104,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
-                        if (LoquiXmlTranslation<Decal>.Instance.Parse(
+                        item.Decal = LoquiXmlTranslation<Decal>.Instance.Parse(
                             node: node,
-                            item: out Decal DecalParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal)))
-                        {
-                            item.Decal = DecalParse;
-                        }
-                        else
-                        {
-                            item.Decal = default(Decal);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2156,17 +2123,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
-                        if (EnumXmlTranslation<TextureSet.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<TextureSet.Flag>.Instance.Parse(
                             node: node,
-                            item: out TextureSet.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(TextureSet.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

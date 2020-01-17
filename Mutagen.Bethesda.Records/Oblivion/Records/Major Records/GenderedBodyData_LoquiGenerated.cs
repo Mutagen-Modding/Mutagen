@@ -1593,18 +1593,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Male);
-                        if (LoquiXmlTranslation<BodyData>.Instance.Parse(
+                        item.Male = LoquiXmlTranslation<BodyData>.Instance.Parse(
                             node: node,
-                            item: out BodyData MaleParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male)))
-                        {
-                            item.Male = MaleParse;
-                        }
-                        else
-                        {
-                            item.Male = default(BodyData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Male));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1620,18 +1612,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GenderedBodyData_FieldIndex.Female);
-                        if (LoquiXmlTranslation<BodyData>.Instance.Parse(
+                        item.Female = LoquiXmlTranslation<BodyData>.Instance.Parse(
                             node: node,
-                            item: out BodyData FemaleParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Female)))
-                        {
-                            item.Female = FemaleParse;
-                        }
-                        else
-                        {
-                            item.Female = default(BodyData);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)GenderedBodyData_FieldIndex.Female));
                     }
                     catch (Exception ex)
                     when (errorMask != null)

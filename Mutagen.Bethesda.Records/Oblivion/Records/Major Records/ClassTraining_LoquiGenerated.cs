@@ -1006,27 +1006,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<Skill>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Skill TrainedSkillParse))
-            {
-                item.TrainedSkill = TrainedSkillParse;
-            }
-            else
-            {
-                item.TrainedSkill = default(Skill);
-            }
+            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.MaximumTrainingLevel = frame.ReadUInt8();
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(2),
-                item: out Byte[] FluffParse))
-            {
-                item.Fluff = FluffParse;
-            }
-            else
-            {
-                item.Fluff = default(Byte[]);
-            }
+            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
         }
         
         public void CopyInFromBinary(
@@ -1441,17 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ClassTraining_FieldIndex.TrainedSkill);
-                        if (EnumXmlTranslation<Skill>.Instance.Parse(
+                        item.TrainedSkill = EnumXmlTranslation<Skill>.Instance.Parse(
                             node: node,
-                            item: out Skill TrainedSkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.TrainedSkill = TrainedSkillParse;
-                        }
-                        else
-                        {
-                            item.TrainedSkill = default(Skill);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1467,17 +1441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ClassTraining_FieldIndex.MaximumTrainingLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MaximumTrainingLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MaximumTrainingLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaximumTrainingLevel = MaximumTrainingLevelParse;
-                        }
-                        else
-                        {
-                            item.MaximumTrainingLevel = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1493,17 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] FluffParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff = FluffParse;
-                        }
-                        else
-                        {
-                            item.Fluff = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

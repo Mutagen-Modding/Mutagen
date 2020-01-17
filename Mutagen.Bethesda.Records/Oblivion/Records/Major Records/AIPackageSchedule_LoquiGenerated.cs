@@ -1049,26 +1049,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<Month>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Month MonthParse))
-            {
-                item.Month = MonthParse;
-            }
-            else
-            {
-                item.Month = default(Month);
-            }
-            if (EnumBinaryTranslation<Weekday>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out Weekday DayOfWeekParse))
-            {
-                item.DayOfWeek = DayOfWeekParse;
-            }
-            else
-            {
-                item.DayOfWeek = default(Weekday);
-            }
+            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Day = frame.ReadUInt8();
             item.Time = frame.ReadUInt8();
             item.Duration = frame.ReadInt32();
@@ -1531,17 +1513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Month);
-                        if (EnumXmlTranslation<Month>.Instance.Parse(
+                        item.Month = EnumXmlTranslation<Month>.Instance.Parse(
                             node: node,
-                            item: out Month MonthParse,
-                            errorMask: errorMask))
-                        {
-                            item.Month = MonthParse;
-                        }
-                        else
-                        {
-                            item.Month = default(Month);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1557,17 +1531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.DayOfWeek);
-                        if (EnumXmlTranslation<Weekday>.Instance.Parse(
+                        item.DayOfWeek = EnumXmlTranslation<Weekday>.Instance.Parse(
                             node: node,
-                            item: out Weekday DayOfWeekParse,
-                            errorMask: errorMask))
-                        {
-                            item.DayOfWeek = DayOfWeekParse;
-                        }
-                        else
-                        {
-                            item.DayOfWeek = default(Weekday);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1583,17 +1549,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Day);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Day = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte DayParse,
-                            errorMask: errorMask))
-                        {
-                            item.Day = DayParse;
-                        }
-                        else
-                        {
-                            item.Day = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1609,17 +1567,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Time);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Time = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte TimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Time = TimeParse;
-                        }
-                        else
-                        {
-                            item.Time = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1635,17 +1585,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageSchedule_FieldIndex.Duration);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Duration = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 DurationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Duration = DurationParse;
-                        }
-                        else
-                        {
-                            item.Duration = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

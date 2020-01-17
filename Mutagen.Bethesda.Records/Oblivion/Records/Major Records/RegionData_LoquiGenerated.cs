@@ -1012,17 +1012,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
-                        if (EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
+                        item.DataType = EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
                             node: node,
-                            item: out RegionData.RegionDataType DataTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DataType = DataTypeParse;
-                        }
-                        else
-                        {
-                            item.DataType = default(RegionData.RegionDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1103,26 +1095,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RDATDataTypeState = RegionData.RDATDataType.Has;
                     }
-                    if (EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out RegionData.RegionDataType DataTypeParse))
-                    {
-                        item.DataType = DataTypeParse;
-                    }
-                    else
-                    {
-                        item.DataType = default(RegionData.RegionDataType);
-                    }
-                    if (EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out RegionData.RegionDataFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(RegionData.RegionDataFlag);
-                    }
+                    item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Priority = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
@@ -1573,17 +1547,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
-                        if (EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
                             node: node,
-                            item: out RegionData.RegionDataFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(RegionData.RegionDataFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1599,17 +1565,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Priority = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PriorityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Priority = PriorityParse;
-                        }
-                        else
-                        {
-                            item.Priority = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1625,17 +1583,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionData_FieldIndex.RDATDataTypeState);
-                        if (EnumXmlTranslation<RegionData.RDATDataType>.Instance.Parse(
+                        item.RDATDataTypeState = EnumXmlTranslation<RegionData.RDATDataType>.Instance.Parse(
                             node: node,
-                            item: out RegionData.RDATDataType RDATDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.RDATDataTypeState = RDATDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.RDATDataTypeState = default(RegionData.RDATDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

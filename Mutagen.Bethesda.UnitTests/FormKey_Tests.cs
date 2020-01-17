@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.UnitTests
                 0x12,
                 1
             };
-            var formKey = FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters());
+            var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
         }
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.UnitTests
                 0x34,
                 0x12,
             };
-            Assert.Throws<ArgumentOutOfRangeException>(() => FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters()));
+            Assert.Throws<ArgumentOutOfRangeException>(() => FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters()));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.UnitTests
                 1,
                 0x99
             };
-            var formKey = FormKeyBinaryTranslation.Parse(b.AsSpan(), TypicalMasters());
+            var formKey = FormKeyBinaryTranslation.Instance.Parse(b.AsSpan(), TypicalMasters());
             Assert.Equal(TargetModKey(), formKey.ModKey);
             Assert.Equal((uint)0x123456, formKey.ID);
         }

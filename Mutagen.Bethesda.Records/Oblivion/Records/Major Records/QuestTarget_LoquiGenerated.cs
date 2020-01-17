@@ -1084,27 +1084,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.QSTADataTypeState = QuestTarget.QSTADataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Target.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: out FormKey TargetParse))
-                    {
-                        item.Target.FormKey = TargetParse;
-                    }
-                    else
-                    {
-                        item.Target.FormKey = FormKey.NULL;
-                    }
-                    if (EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out QuestTarget.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(QuestTarget.Flag);
-                    }
+                        defaultVal: FormKey.NULL);
+                    item.Flags = EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)QuestTarget_FieldIndex.Flags);
                 }
                 case 0x41445443: // CTDA
@@ -1634,17 +1618,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)QuestTarget_FieldIndex.Target);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey TargetParse,
-                            errorMask: errorMask))
-                        {
-                            item.Target.FormKey = TargetParse;
-                        }
-                        else
-                        {
-                            item.Target.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1661,17 +1638,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)QuestTarget_FieldIndex.Flags);
-                        if (EnumXmlTranslation<QuestTarget.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<QuestTarget.Flag>.Instance.Parse(
                             node: node,
-                            item: out QuestTarget.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(QuestTarget.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1715,17 +1684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)QuestTarget_FieldIndex.QSTADataTypeState);
-                        if (EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Parse(
+                        item.QSTADataTypeState = EnumXmlTranslation<QuestTarget.QSTADataType>.Instance.Parse(
                             node: node,
-                            item: out QuestTarget.QSTADataType QSTADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.QSTADataTypeState = QSTADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.QSTADataTypeState = default(QuestTarget.QSTADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

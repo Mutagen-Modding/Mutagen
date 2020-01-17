@@ -1129,34 +1129,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.MaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MaleRankTitleParse))
-                    {
-                        item.MaleRankTitle = MaleRankTitleParse;
-                    }
-                    else
-                    {
-                        item.MaleRankTitle = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
                 }
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.FemaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FemaleRankTitleParse))
-                    {
-                        item.FemaleRankTitle = FemaleRankTitleParse;
-                    }
-                    else
-                    {
-                        item.FemaleRankTitle = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
                 }
                 default:
@@ -1664,17 +1648,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.RankID);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.RankID = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 RankIDParse,
-                            errorMask: errorMask))
-                        {
-                            item.RankID = RankIDParse;
-                        }
-                        else
-                        {
-                            item.RankID = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1690,17 +1666,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.MaleRankTitle);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.MaleRankTitle = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String MaleRankTitleParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleRankTitle = MaleRankTitleParse;
-                        }
-                        else
-                        {
-                            item.MaleRankTitle = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1716,17 +1684,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.FemaleRankTitle);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.FemaleRankTitle = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String FemaleRankTitleParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleRankTitle = FemaleRankTitleParse;
-                        }
-                        else
-                        {
-                            item.FemaleRankTitle = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

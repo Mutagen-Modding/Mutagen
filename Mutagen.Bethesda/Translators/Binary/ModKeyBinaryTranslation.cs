@@ -19,8 +19,23 @@ namespace Mutagen.Bethesda.Binary
                 item = default;
                 return false;
             }
-            
+
             return ModKey.TryFactory(str, out item);
+        }
+
+        public ModKey Parse(MutagenFrame frame)
+        {
+            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
+            {
+                return ModKey.NULL;
+            }
+
+            if (!ModKey.TryFactory(str, out var item))
+            {
+                return ModKey.NULL;
+            }
+
+            return item;
         }
 
         public void Write(MutagenWriter writer, ModKey item, long length)

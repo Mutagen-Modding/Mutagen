@@ -1057,16 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x56544C46: // FLTV
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single DataParse))
-                    {
-                        item.Data = DataParse;
-                    }
-                    else
-                    {
-                        item.Data = default(Single);
-                    }
+                    item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
                 }
                 default:
@@ -1726,17 +1717,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GlobalFloat_FieldIndex.Data);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Data = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

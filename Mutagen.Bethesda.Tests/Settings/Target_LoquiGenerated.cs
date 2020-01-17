@@ -1475,17 +1475,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.Do);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.Do = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean DoParse,
-                                errorMask: errorMask))
-                            {
-                                item.Do = DoParse;
-                            }
-                            else
-                            {
-                                item.Do = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1504,17 +1496,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.Path);
-                            if (StringXmlTranslation.Instance.Parse(
+                            item.Path = StringXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out String PathParse,
-                                errorMask: errorMask))
-                            {
-                                item.Path = PathParse;
-                            }
-                            else
-                            {
-                                item.Path = default(String);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1533,17 +1517,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.NumMasters);
-                            if (ByteXmlTranslation.Instance.Parse(
+                            item.NumMasters = ByteXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Byte NumMastersParse,
-                                errorMask: errorMask))
-                            {
-                                item.NumMasters = NumMastersParse;
-                            }
-                            else
-                            {
-                                item.NumMasters = default(Byte);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1562,17 +1538,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.GameMode);
-                            if (EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Parse(
+                            item.GameMode = EnumXmlTranslation<Mutagen.Bethesda.GameMode>.Instance.Parse(
                                 node: node,
-                                item: out Mutagen.Bethesda.GameMode GameModeParse,
-                                errorMask: errorMask))
-                            {
-                                item.GameMode = GameModeParse;
-                            }
-                            else
-                            {
-                                item.GameMode = default(Mutagen.Bethesda.GameMode);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1591,17 +1559,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
-                            if (ByteXmlTranslation.Instance.Parse(
+                            item.ExpectedBaseGroupCount = ByteXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Byte ExpectedBaseGroupCountParse,
-                                errorMask: errorMask))
-                            {
-                                item.ExpectedBaseGroupCount = ExpectedBaseGroupCountParse;
-                            }
-                            else
-                            {
-                                item.ExpectedBaseGroupCount = default(Byte);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1620,18 +1580,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)Target_FieldIndex.Interest);
-                            if (LoquiXmlTranslation<RecordInterest>.Instance.Parse(
+                            item.Interest = LoquiXmlTranslation<RecordInterest>.Instance.Parse(
                                 node: node,
-                                item: out RecordInterest InterestParse,
                                 errorMask: errorMask,
-                                translationMask: translationMask?.GetSubCrystal((int)Target_FieldIndex.Interest)))
-                            {
-                                item.Interest = InterestParse;
-                            }
-                            else
-                            {
-                                item.Interest = default(RecordInterest);
-                            }
+                                translationMask: translationMask?.GetSubCrystal((int)Target_FieldIndex.Interest));
                         }
                         catch (Exception ex)
                         when (errorMask != null)

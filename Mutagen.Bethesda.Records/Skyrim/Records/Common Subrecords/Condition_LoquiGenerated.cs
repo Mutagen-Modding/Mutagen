@@ -974,16 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                frame: frame.SpawnWithLength(3),
-                item: out Byte[] Unknown1Parse))
-            {
-                item.Unknown1 = Unknown1Parse;
-            }
-            else
-            {
-                item.Unknown1 = default(Byte[]);
-            }
+            item.Unknown1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
         public void CopyInFromBinary(
@@ -1390,17 +1381,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.CompareOperator);
-                        if (EnumXmlTranslation<CompareOperator>.Instance.Parse(
+                        item.CompareOperator = EnumXmlTranslation<CompareOperator>.Instance.Parse(
                             node: node,
-                            item: out CompareOperator CompareOperatorParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompareOperator = CompareOperatorParse;
-                        }
-                        else
-                        {
-                            item.CompareOperator = default(CompareOperator);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1416,17 +1399,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Condition.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Condition.Flag>.Instance.Parse(
                             node: node,
-                            item: out Condition.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Condition.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1442,17 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Condition_FieldIndex.Unknown1);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown1 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] Unknown1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown1 = Unknown1Parse;
-                        }
-                        else
-                        {
-                            item.Unknown1 = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

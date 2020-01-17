@@ -1542,17 +1542,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionArea_FieldIndex.EdgeFallOff);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.EdgeFallOff = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 EdgeFallOffParse,
-                            errorMask: errorMask))
-                        {
-                            item.EdgeFallOff = EdgeFallOffParse;
-                        }
-                        else
-                        {
-                            item.EdgeFallOff = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

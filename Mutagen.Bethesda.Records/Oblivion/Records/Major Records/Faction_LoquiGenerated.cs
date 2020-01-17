@@ -1234,17 +1234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
                 }
                 case 0x4D414E58: // XNAM
@@ -1269,31 +1261,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Faction.FactionFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Faction.FactionFlag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
                 }
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single CrimeGoldMultiplierParse))
-                    {
-                        item.CrimeGoldMultiplier = CrimeGoldMultiplierParse;
-                    }
-                    else
-                    {
-                        item.CrimeGoldMultiplier = default(Single);
-                    }
+                    item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
                 }
                 case 0x4D414E52: // RNAM
@@ -2167,17 +2141,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2221,17 +2187,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
                             node: node,
-                            item: out Faction.FactionFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Faction.FactionFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2247,17 +2205,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGoldMultiplier);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.CrimeGoldMultiplier = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single CrimeGoldMultiplierParse,
-                            errorMask: errorMask))
-                        {
-                            item.CrimeGoldMultiplier = CrimeGoldMultiplierParse;
-                        }
-                        else
-                        {
-                            item.CrimeGoldMultiplier = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

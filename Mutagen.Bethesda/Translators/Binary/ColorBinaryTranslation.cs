@@ -27,6 +27,17 @@ namespace Mutagen.Bethesda.Binary
                 out item);
         }
 
+        public Color Parse(
+            MutagenFrame frame,
+            bool extraByte)
+        {
+            if (!extraByte)
+            {
+                throw new NotImplementedException();
+            }
+            return this.ParseValue(frame);
+        }
+
         public void ParseInto(
             MutagenFrame frame,
             IHasItem<Color> item,

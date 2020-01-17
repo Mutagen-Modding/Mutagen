@@ -1268,17 +1268,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TargetGroup_FieldIndex.Do);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.Do = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean DoParse,
-                                errorMask: errorMask))
-                            {
-                                item.Do = DoParse;
-                            }
-                            else
-                            {
-                                item.Do = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)

@@ -1003,16 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse))
-            {
-                item.ObjectType = ObjectTypeParse;
-            }
-            else
-            {
-                item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-            }
+            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Object = frame.ReadInt32();
             item.Count = frame.ReadInt32();
         }
@@ -1432,17 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.ObjectType);
-                        if (EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
+                        item.ObjectType = EnumXmlTranslation<AIPackageTarget.ObjectTypeEnum>.Instance.Parse(
                             node: node,
-                            item: out AIPackageTarget.ObjectTypeEnum ObjectTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.ObjectType = ObjectTypeParse;
-                        }
-                        else
-                        {
-                            item.ObjectType = default(AIPackageTarget.ObjectTypeEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1458,17 +1441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Object);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Object = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ObjectParse,
-                            errorMask: errorMask))
-                        {
-                            item.Object = ObjectParse;
-                        }
-                        else
-                        {
-                            item.Object = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1484,17 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AIPackageTarget_FieldIndex.Count);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Count = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 CountParse,
-                            errorMask: errorMask))
-                        {
-                            item.Count = CountParse;
-                        }
-                        else
-                        {
-                            item.Count = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

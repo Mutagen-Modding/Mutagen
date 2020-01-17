@@ -1519,17 +1519,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StaticAttenuation);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.StaticAttenuation = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single StaticAttenuationParse,
-                            errorMask: errorMask))
-                        {
-                            item.StaticAttenuation = StaticAttenuationParse;
-                        }
-                        else
-                        {
-                            item.StaticAttenuation = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1545,17 +1537,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StopTime);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.StopTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single StopTimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.StopTime = StopTimeParse;
-                        }
-                        else
-                        {
-                            item.StopTime = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1571,17 +1555,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SoundDataExtended_FieldIndex.StartTime);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.StartTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single StartTimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.StartTime = StartTimeParse;
-                        }
-                        else
-                        {
-                            item.StartTime = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

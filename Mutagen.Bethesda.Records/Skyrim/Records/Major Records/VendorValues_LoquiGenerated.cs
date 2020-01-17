@@ -1558,17 +1558,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.StartHour);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.StartHour = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 StartHourParse,
-                            errorMask: errorMask))
-                        {
-                            item.StartHour = StartHourParse;
-                        }
-                        else
-                        {
-                            item.StartHour = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1584,17 +1576,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.EndHour);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.EndHour = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 EndHourParse,
-                            errorMask: errorMask))
-                        {
-                            item.EndHour = EndHourParse;
-                        }
-                        else
-                        {
-                            item.EndHour = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1610,17 +1594,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.Radius);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Radius = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1636,17 +1612,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.OnlyBuysStolenItems);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.OnlyBuysStolenItems = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean OnlyBuysStolenItemsParse,
-                            errorMask: errorMask))
-                        {
-                            item.OnlyBuysStolenItems = OnlyBuysStolenItemsParse;
-                        }
-                        else
-                        {
-                            item.OnlyBuysStolenItems = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1662,17 +1630,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.NotSellBuy);
-                        if (BooleanXmlTranslation.Instance.Parse(
+                        item.NotSellBuy = BooleanXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Boolean NotSellBuyParse,
-                            errorMask: errorMask))
-                        {
-                            item.NotSellBuy = NotSellBuyParse;
-                        }
-                        else
-                        {
-                            item.NotSellBuy = default(Boolean);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1688,17 +1648,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

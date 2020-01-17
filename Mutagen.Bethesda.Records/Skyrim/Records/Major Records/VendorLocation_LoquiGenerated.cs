@@ -1008,27 +1008,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<VendorLocation.LocationType>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out VendorLocation.LocationType TypeParse))
-            {
-                item.Type = TypeParse;
-            }
-            else
-            {
-                item.Type = default(VendorLocation.LocationType);
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Type = EnumBinaryTranslation<VendorLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey ReferenceParse))
-            {
-                item.Reference.FormKey = ReferenceParse;
-            }
-            else
-            {
-                item.Reference.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Radius = frame.ReadUInt32();
         }
         
@@ -1448,17 +1432,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorLocation_FieldIndex.Type);
-                        if (EnumXmlTranslation<VendorLocation.LocationType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<VendorLocation.LocationType>.Instance.Parse(
                             node: node,
-                            item: out VendorLocation.LocationType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(VendorLocation.LocationType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1474,17 +1450,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorLocation_FieldIndex.Reference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reference.FormKey = ReferenceParse;
-                        }
-                        else
-                        {
-                            item.Reference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1500,17 +1469,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)VendorLocation_FieldIndex.Radius);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.Radius = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 RadiusParse,
-                            errorMask: errorMask))
-                        {
-                            item.Radius = RadiusParse;
-                        }
-                        else
-                        {
-                            item.Radius = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

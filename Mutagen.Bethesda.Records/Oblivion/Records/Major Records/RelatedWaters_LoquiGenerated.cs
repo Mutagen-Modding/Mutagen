@@ -1012,39 +1012,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.RelatedWaterDaytime.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey RelatedWaterDaytimeParse))
-            {
-                item.RelatedWaterDaytime.FormKey = RelatedWaterDaytimeParse;
-            }
-            else
-            {
-                item.RelatedWaterDaytime.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.RelatedWaterNighttime.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey RelatedWaterNighttimeParse))
-            {
-                item.RelatedWaterNighttime.FormKey = RelatedWaterNighttimeParse;
-            }
-            else
-            {
-                item.RelatedWaterNighttime.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.RelatedWaterUnderwater.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey RelatedWaterUnderwaterParse))
-            {
-                item.RelatedWaterUnderwater.FormKey = RelatedWaterUnderwaterParse;
-            }
-            else
-            {
-                item.RelatedWaterUnderwater.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
         }
         
         public void CopyInFromBinary(
@@ -1465,17 +1444,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterDaytime);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.RelatedWaterDaytime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey RelatedWaterDaytimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RelatedWaterDaytime.FormKey = RelatedWaterDaytimeParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaterDaytime.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1491,17 +1463,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterNighttime);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.RelatedWaterNighttime.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey RelatedWaterNighttimeParse,
-                            errorMask: errorMask))
-                        {
-                            item.RelatedWaterNighttime.FormKey = RelatedWaterNighttimeParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaterNighttime.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1517,17 +1482,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.RelatedWaterUnderwater.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey RelatedWaterUnderwaterParse,
-                            errorMask: errorMask))
-                        {
-                            item.RelatedWaterUnderwater.FormKey = RelatedWaterUnderwaterParse;
-                        }
-                        else
-                        {
-                            item.RelatedWaterUnderwater.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

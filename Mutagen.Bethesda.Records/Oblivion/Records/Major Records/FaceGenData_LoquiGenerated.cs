@@ -1122,48 +1122,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] SymmetricGeometryParse))
-                    {
-                        item.SymmetricGeometry = SymmetricGeometryParse;
-                    }
-                    else
-                    {
-                        item.SymmetricGeometry = default(Byte[]);
-                    }
+                    item.SymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricGeometry);
                 }
                 case 0x41474746: // FGGA
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] AsymmetricGeometryParse))
-                    {
-                        item.AsymmetricGeometry = AsymmetricGeometryParse;
-                    }
-                    else
-                    {
-                        item.AsymmetricGeometry = default(Byte[]);
-                    }
+                    item.AsymmetricGeometry = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.AsymmetricGeometry);
                 }
                 case 0x53544746: // FGTS
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] SymmetricTextureParse))
-                    {
-                        item.SymmetricTexture = SymmetricTextureParse;
-                    }
-                    else
-                    {
-                        item.SymmetricTexture = default(Byte[]);
-                    }
+                    item.SymmetricTexture = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)FaceGenData_FieldIndex.SymmetricTexture);
                 }
                 default:
@@ -1671,17 +1644,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricGeometry);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.SymmetricGeometry = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] SymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricGeometry = SymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.SymmetricGeometry = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1697,17 +1662,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.AsymmetricGeometry);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.AsymmetricGeometry = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] AsymmetricGeometryParse,
-                            errorMask: errorMask))
-                        {
-                            item.AsymmetricGeometry = AsymmetricGeometryParse;
-                        }
-                        else
-                        {
-                            item.AsymmetricGeometry = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1723,17 +1680,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FaceGenData_FieldIndex.SymmetricTexture);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.SymmetricTexture = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] SymmetricTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SymmetricTexture = SymmetricTextureParse;
-                        }
-                        else
-                        {
-                            item.SymmetricTexture = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

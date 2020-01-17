@@ -1720,17 +1720,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GlobalShort_FieldIndex.Data);
-                        if (Int16XmlTranslation.Instance.Parse(
+                        item.Data = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int16 DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

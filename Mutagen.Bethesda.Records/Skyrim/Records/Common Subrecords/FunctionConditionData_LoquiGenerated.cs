@@ -1978,17 +1978,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Function);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Function = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 FunctionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Function = FunctionParse;
-                        }
-                        else
-                        {
-                            item.Function = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2004,17 +1996,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown2);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 Unknown2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown2 = Unknown2Parse;
-                        }
-                        else
-                        {
-                            item.Unknown2 = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2030,17 +2014,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneRecord);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.ParameterOneRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ParameterOneRecordParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterOneRecord.FormKey = ParameterOneRecordParse;
-                        }
-                        else
-                        {
-                            item.ParameterOneRecord.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2056,17 +2033,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneNumber);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.ParameterOneNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ParameterOneNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterOneNumber = ParameterOneNumberParse;
-                        }
-                        else
-                        {
-                            item.ParameterOneNumber = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2082,17 +2051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterOneString);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.ParameterOneString = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String ParameterOneStringParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterOneString = ParameterOneStringParse;
-                        }
-                        else
-                        {
-                            item.ParameterOneString = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2108,17 +2069,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoRecord);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.ParameterTwoRecord.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ParameterTwoRecordParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterTwoRecord.FormKey = ParameterTwoRecordParse;
-                        }
-                        else
-                        {
-                            item.ParameterTwoRecord.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2134,17 +2088,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoNumber);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.ParameterTwoNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ParameterTwoNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterTwoNumber = ParameterTwoNumberParse;
-                        }
-                        else
-                        {
-                            item.ParameterTwoNumber = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2160,17 +2106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.ParameterTwoString);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.ParameterTwoString = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String ParameterTwoStringParse,
-                            errorMask: errorMask))
-                        {
-                            item.ParameterTwoString = ParameterTwoStringParse;
-                        }
-                        else
-                        {
-                            item.ParameterTwoString = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2186,17 +2124,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown3);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown3 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 Unknown3Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown3 = Unknown3Parse;
-                        }
-                        else
-                        {
-                            item.Unknown3 = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2212,17 +2142,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown4);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown4 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 Unknown4Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown4 = Unknown4Parse;
-                        }
-                        else
-                        {
-                            item.Unknown4 = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2238,17 +2160,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)FunctionConditionData_FieldIndex.Unknown5);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown5 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 Unknown5Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown5 = Unknown5Parse;
-                        }
-                        else
-                        {
-                            item.Unknown5 = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

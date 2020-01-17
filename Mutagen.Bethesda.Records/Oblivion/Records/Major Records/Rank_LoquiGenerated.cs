@@ -1184,51 +1184,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleName) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.MaleName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String MaleNameParse))
-                    {
-                        item.MaleName = MaleNameParse;
-                    }
-                    else
-                    {
-                        item.MaleName = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleName);
                 }
                 case 0x4D414E46: // FNAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleName) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.FemaleName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String FemaleNameParse))
-                    {
-                        item.FemaleName = FemaleNameParse;
-                    }
-                    else
-                    {
-                        item.FemaleName = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleName);
                 }
                 case 0x4D414E49: // INAM
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String InsigniaParse))
-                    {
-                        item.Insignia = InsigniaParse;
-                    }
-                    else
-                    {
-                        item.Insignia = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 }
                 default:
@@ -1786,17 +1762,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.RankNumber = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 RankNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.RankNumber = RankNumberParse;
-                        }
-                        else
-                        {
-                            item.RankNumber = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1812,17 +1780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.MaleName);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.MaleName = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String MaleNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaleName = MaleNameParse;
-                        }
-                        else
-                        {
-                            item.MaleName = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1838,17 +1798,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.FemaleName);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.FemaleName = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String FemaleNameParse,
-                            errorMask: errorMask))
-                        {
-                            item.FemaleName = FemaleNameParse;
-                        }
-                        else
-                        {
-                            item.FemaleName = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1864,17 +1816,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Insignia = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String InsigniaParse,
-                            errorMask: errorMask))
-                        {
-                            item.Insignia = InsigniaParse;
-                        }
-                        else
-                        {
-                            item.Insignia = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

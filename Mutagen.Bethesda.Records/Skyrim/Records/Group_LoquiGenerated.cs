@@ -1190,16 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 masterReferences: masterReferences,
                 errorMask: errorMask);
-            if (EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out GroupTypeEnum GroupTypeParse))
-            {
-                item.GroupType = GroupTypeParse;
-            }
-            else
-            {
-                item.GroupType = default(GroupTypeEnum);
-            }
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
         }
@@ -1790,17 +1781,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Group_FieldIndex.GroupType);
-                        if (EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
+                        item.GroupType = EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                             node: node,
-                            item: out GroupTypeEnum GroupTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupType = GroupTypeParse;
-                        }
-                        else
-                        {
-                            item.GroupType = default(GroupTypeEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1816,17 +1799,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Group_FieldIndex.LastModified);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.LastModified = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 LastModifiedParse,
-                            errorMask: errorMask))
-                        {
-                            item.LastModified = LastModifiedParse;
-                        }
-                        else
-                        {
-                            item.LastModified = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1842,17 +1817,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Group_FieldIndex.Unknown);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

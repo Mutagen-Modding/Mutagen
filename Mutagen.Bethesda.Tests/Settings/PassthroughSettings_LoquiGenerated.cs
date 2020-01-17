@@ -1474,17 +1474,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.ReuseCaches = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean ReuseCachesParse,
-                                errorMask: errorMask))
-                            {
-                                item.ReuseCaches = ReuseCachesParse;
-                            }
-                            else
-                            {
-                                item.ReuseCaches = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1503,17 +1495,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReorderRecords);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.ReorderRecords = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean ReorderRecordsParse,
-                                errorMask: errorMask))
-                            {
-                                item.ReorderRecords = ReorderRecordsParse;
-                            }
-                            else
-                            {
-                                item.ReorderRecords = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1532,17 +1516,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.DeleteCachesAfter);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.DeleteCachesAfter = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean DeleteCachesAfterParse,
-                                errorMask: errorMask))
-                            {
-                                item.DeleteCachesAfter = DeleteCachesAfterParse;
-                            }
-                            else
-                            {
-                                item.DeleteCachesAfter = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1561,17 +1537,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestNormal);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestNormal = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestNormalParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestNormal = TestNormalParse;
-                            }
-                            else
-                            {
-                                item.TestNormal = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1590,17 +1558,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestBinaryOverlay);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestBinaryOverlay = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestBinaryOverlayParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestBinaryOverlay = TestBinaryOverlayParse;
-                            }
-                            else
-                            {
-                                item.TestBinaryOverlay = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1619,17 +1579,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestImport);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestImport = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestImportParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestImport = TestImportParse;
-                            }
-                            else
-                            {
-                                item.TestImport = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1648,17 +1600,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestFolder);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestFolder = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestFolderParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestFolder = TestFolderParse;
-                            }
-                            else
-                            {
-                                item.TestFolder = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1677,17 +1621,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.TestCopyIn);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestCopyIn = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestCopyInParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestCopyIn = TestCopyInParse;
-                            }
-                            else
-                            {
-                                item.TestCopyIn = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)

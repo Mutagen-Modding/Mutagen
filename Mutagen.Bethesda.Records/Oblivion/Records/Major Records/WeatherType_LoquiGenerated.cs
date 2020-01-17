@@ -1022,50 +1022,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item.Sunrise = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color SunriseParse))
-            {
-                item.Sunrise = SunriseParse;
-            }
-            else
-            {
-                item.Sunrise = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            item.Day = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color DayParse))
-            {
-                item.Day = DayParse;
-            }
-            else
-            {
-                item.Day = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            item.Sunset = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color SunsetParse))
-            {
-                item.Sunset = SunsetParse;
-            }
-            else
-            {
-                item.Sunset = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            item.Night = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color NightParse))
-            {
-                item.Night = NightParse;
-            }
-            else
-            {
-                item.Night = default(Color);
-            }
+                extraByte: true);
         }
         
         public void CopyInFromBinary(
@@ -1501,17 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunrise);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Sunrise = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color SunriseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sunrise = SunriseParse;
-                        }
-                        else
-                        {
-                            item.Sunrise = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1527,17 +1487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherType_FieldIndex.Day);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Day = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color DayParse,
-                            errorMask: errorMask))
-                        {
-                            item.Day = DayParse;
-                        }
-                        else
-                        {
-                            item.Day = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1553,17 +1505,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherType_FieldIndex.Sunset);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Sunset = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color SunsetParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sunset = SunsetParse;
-                        }
-                        else
-                        {
-                            item.Sunset = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1579,17 +1523,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherType_FieldIndex.Night);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Night = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color NightParse,
-                            errorMask: errorMask))
-                        {
-                            item.Night = NightParse;
-                        }
-                        else
-                        {
-                            item.Night = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

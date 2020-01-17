@@ -1589,17 +1589,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestGroupMasks);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestGroupMasks = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestGroupMasksParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestGroupMasks = TestGroupMasksParse;
-                            }
-                            else
-                            {
-                                item.TestGroupMasks = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1618,17 +1610,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestFlattenedMod);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestFlattenedMod = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestFlattenedModParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestFlattenedMod = TestFlattenedModParse;
-                            }
-                            else
-                            {
-                                item.TestFlattenedMod = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1647,17 +1631,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestBenchmarks);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestBenchmarks = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestBenchmarksParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestBenchmarks = TestBenchmarksParse;
-                            }
-                            else
-                            {
-                                item.TestBenchmarks = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1676,17 +1652,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestLocators);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestLocators = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestLocatorsParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestLocators = TestLocatorsParse;
-                            }
-                            else
-                            {
-                                item.TestLocators = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1705,17 +1673,9 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.TestRecordEnumerables);
-                            if (BooleanXmlTranslation.Instance.Parse(
+                            item.TestRecordEnumerables = BooleanXmlTranslation.Instance.Parse(
                                 node: node,
-                                item: out Boolean TestRecordEnumerablesParse,
-                                errorMask: errorMask))
-                            {
-                                item.TestRecordEnumerables = TestRecordEnumerablesParse;
-                            }
-                            else
-                            {
-                                item.TestRecordEnumerables = default(Boolean);
-                            }
+                                errorMask: errorMask);
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1734,18 +1694,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.DataFolderLocations);
-                            if (LoquiXmlTranslation<DataFolderLocations>.Instance.Parse(
+                            item.DataFolderLocations = LoquiXmlTranslation<DataFolderLocations>.Instance.Parse(
                                 node: node,
-                                item: out DataFolderLocations DataFolderLocationsParse,
                                 errorMask: errorMask,
-                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.DataFolderLocations)))
-                            {
-                                item.DataFolderLocations = DataFolderLocationsParse;
-                            }
-                            else
-                            {
-                                item.DataFolderLocations = default(DataFolderLocations);
-                            }
+                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.DataFolderLocations));
                         }
                         catch (Exception ex)
                         when (errorMask != null)
@@ -1764,18 +1716,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             errorMask?.PushIndex((int)TestingSettings_FieldIndex.PassthroughSettings);
-                            if (LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
+                            item.PassthroughSettings = LoquiXmlTranslation<PassthroughSettings>.Instance.Parse(
                                 node: node,
-                                item: out PassthroughSettings PassthroughSettingsParse,
                                 errorMask: errorMask,
-                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings)))
-                            {
-                                item.PassthroughSettings = PassthroughSettingsParse;
-                            }
-                            else
-                            {
-                                item.PassthroughSettings = default(PassthroughSettings);
-                            }
+                                translationMask: translationMask?.GetSubCrystal((int)TestingSettings_FieldIndex.PassthroughSettings));
                         }
                         catch (Exception ex)
                         when (errorMask != null)

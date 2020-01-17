@@ -1214,32 +1214,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41444353: // SCDA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] CompiledScriptParse))
-                    {
-                        item.CompiledScript = CompiledScriptParse;
-                    }
-                    else
-                    {
-                        item.CompiledScript = default(Byte[]);
-                    }
+                    item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String SourceCodeParse))
-                    {
-                        item.SourceCode = SourceCodeParse;
-                    }
-                    else
-                    {
-                        item.SourceCode = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
                 case 0x44534C53: // SLSD
@@ -1962,17 +1945,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptFields_FieldIndex.CompiledScript);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.CompiledScript = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] CompiledScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.CompiledScript = CompiledScriptParse;
-                        }
-                        else
-                        {
-                            item.CompiledScript = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1988,17 +1963,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptFields_FieldIndex.SourceCode);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.SourceCode = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String SourceCodeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SourceCode = SourceCodeParse;
-                        }
-                        else
-                        {
-                            item.SourceCode = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

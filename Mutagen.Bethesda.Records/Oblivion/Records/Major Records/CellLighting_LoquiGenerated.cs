@@ -1143,81 +1143,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+            item.AmbientColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color AmbientColorParse))
-            {
-                item.AmbientColor = AmbientColorParse;
-            }
-            else
-            {
-                item.AmbientColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            item.DirectionalColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color DirectionalColorParse))
-            {
-                item.DirectionalColor = DirectionalColorParse;
-            }
-            else
-            {
-                item.DirectionalColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                extraByte: true);
+            item.FogColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                 frame: frame,
-                extraByte: true,
-                item: out Color FogColorParse))
-            {
-                item.FogColor = FogColorParse;
-            }
-            else
-            {
-                item.FogColor = default(Color);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogNearParse))
-            {
-                item.FogNear = FogNearParse;
-            }
-            else
-            {
-                item.FogNear = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogFarParse))
-            {
-                item.FogFar = FogFarParse;
-            }
-            else
-            {
-                item.FogFar = default(Single);
-            }
+                extraByte: true);
+            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.DirectionalRotationXY = frame.ReadInt32();
             item.DirectionalRotationZ = frame.ReadInt32();
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single DirectionalFadeParse))
-            {
-                item.DirectionalFade = DirectionalFadeParse;
-            }
-            else
-            {
-                item.DirectionalFade = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single FogClipDistanceParse))
-            {
-                item.FogClipDistance = FogClipDistanceParse;
-            }
-            else
-            {
-                item.FogClipDistance = default(Single);
-            }
+            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1761,17 +1701,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.AmbientColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.AmbientColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color AmbientColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.AmbientColor = AmbientColorParse;
-                        }
-                        else
-                        {
-                            item.AmbientColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1787,17 +1719,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.DirectionalColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color DirectionalColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalColor = DirectionalColorParse;
-                        }
-                        else
-                        {
-                            item.DirectionalColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1813,17 +1737,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.FogColor);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.FogColor = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color FogColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogColor = FogColorParse;
-                        }
-                        else
-                        {
-                            item.FogColor = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1839,17 +1755,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.FogNear);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FogNear = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FogNearParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogNear = FogNearParse;
-                        }
-                        else
-                        {
-                            item.FogNear = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1865,17 +1773,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.FogFar);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FogFar = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FogFarParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogFar = FogFarParse;
-                        }
-                        else
-                        {
-                            item.FogFar = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1891,17 +1791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationXY);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.DirectionalRotationXY = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 DirectionalRotationXYParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalRotationXY = DirectionalRotationXYParse;
-                        }
-                        else
-                        {
-                            item.DirectionalRotationXY = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1917,17 +1809,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalRotationZ);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.DirectionalRotationZ = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 DirectionalRotationZParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalRotationZ = DirectionalRotationZParse;
-                        }
-                        else
-                        {
-                            item.DirectionalRotationZ = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1943,17 +1827,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.DirectionalFade);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DirectionalFade = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DirectionalFadeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DirectionalFade = DirectionalFadeParse;
-                        }
-                        else
-                        {
-                            item.DirectionalFade = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1969,17 +1845,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CellLighting_FieldIndex.FogClipDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.FogClipDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single FogClipDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.FogClipDistance = FogClipDistanceParse;
-                        }
-                        else
-                        {
-                            item.FogClipDistance = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

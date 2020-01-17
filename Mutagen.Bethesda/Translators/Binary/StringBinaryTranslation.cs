@@ -56,20 +56,27 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public virtual bool Parse(
+        public bool Parse(
             MutagenFrame frame,
             bool parseWhole,
             out string item)
         {
+            item = Parse(frame, parseWhole: parseWhole);
+            return true;
+        }
+
+        public virtual string Parse(
+            MutagenFrame frame,
+            bool parseWhole)
+        {
             if (parseWhole)
             {
-                item = BinaryStringUtility.ProcessWholeToZString(frame.ReadSpan(checked((int)frame.Remaining)));
+                return BinaryStringUtility.ProcessWholeToZString(frame.ReadSpan(checked((int)frame.Remaining)));
             }
             else
             {
-                item = BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
+                return BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
             }
-            return true;
         }
 
         public void Write(

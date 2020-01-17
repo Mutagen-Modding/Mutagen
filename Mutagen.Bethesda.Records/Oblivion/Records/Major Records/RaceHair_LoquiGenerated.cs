@@ -987,28 +987,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Male.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey MaleParse))
-            {
-                item.Male.FormKey = MaleParse;
-            }
-            else
-            {
-                item.Male.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.Female.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey FemaleParse))
-            {
-                item.Female.FormKey = FemaleParse;
-            }
-            else
-            {
-                item.Female.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
         }
         
         public void CopyInFromBinary(
@@ -1407,17 +1393,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Male);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Male.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey MaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Male.FormKey = MaleParse;
-                        }
-                        else
-                        {
-                            item.Male.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1433,17 +1412,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RaceHair_FieldIndex.Female);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Female.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey FemaleParse,
-                            errorMask: errorMask))
-                        {
-                            item.Female.FormKey = FemaleParse;
-                        }
-                        else
-                        {
-                            item.Female.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

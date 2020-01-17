@@ -1105,81 +1105,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.EnchantEffect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey EnchantEffectParse))
-            {
-                item.EnchantEffect.FormKey = EnchantEffectParse;
-            }
-            else
-            {
-                item.EnchantEffect.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.CastingSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey CastingSoundParse))
-            {
-                item.CastingSound.FormKey = CastingSoundParse;
-            }
-            else
-            {
-                item.CastingSound.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.BoltSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey BoltSoundParse))
-            {
-                item.BoltSound.FormKey = BoltSoundParse;
-            }
-            else
-            {
-                item.BoltSound.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.HitSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey HitSoundParse))
-            {
-                item.HitSound.FormKey = HitSoundParse;
-            }
-            else
-            {
-                item.HitSound.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.AreaSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey AreaSoundParse))
-            {
-                item.AreaSound.FormKey = AreaSoundParse;
-            }
-            else
-            {
-                item.AreaSound.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ConstantEffectEnchantmentFactorParse))
-            {
-                item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
-            }
-            else
-            {
-                item.ConstantEffectEnchantmentFactor = default(Single);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ConstantEffectBarterFactorParse))
-            {
-                item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
-            }
-            else
-            {
-                item.ConstantEffectBarterFactor = default(Single);
-            }
+                defaultVal: FormKey.NULL);
+            item.ConstantEffectEnchantmentFactor = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ConstantEffectBarterFactor = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1683,17 +1630,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.EnchantEffect);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.EnchantEffect.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey EnchantEffectParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantEffect.FormKey = EnchantEffectParse;
-                        }
-                        else
-                        {
-                            item.EnchantEffect.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1709,17 +1649,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.CastingSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.CastingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey CastingSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.CastingSound.FormKey = CastingSoundParse;
-                        }
-                        else
-                        {
-                            item.CastingSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1735,17 +1668,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.BoltSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.BoltSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey BoltSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.BoltSound.FormKey = BoltSoundParse;
-                        }
-                        else
-                        {
-                            item.BoltSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1761,17 +1687,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.HitSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.HitSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey HitSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.HitSound.FormKey = HitSoundParse;
-                        }
-                        else
-                        {
-                            item.HitSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1787,17 +1706,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.AreaSound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.AreaSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey AreaSoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.AreaSound.FormKey = AreaSoundParse;
-                        }
-                        else
-                        {
-                            item.AreaSound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1813,17 +1725,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ConstantEffectEnchantmentFactor = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ConstantEffectEnchantmentFactorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactorParse;
-                        }
-                        else
-                        {
-                            item.ConstantEffectEnchantmentFactor = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1839,17 +1743,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ConstantEffectBarterFactor = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ConstantEffectBarterFactorParse,
-                            errorMask: errorMask))
-                        {
-                            item.ConstantEffectBarterFactor = ConstantEffectBarterFactorParse;
-                        }
-                        else
-                        {
-                            item.ConstantEffectBarterFactor = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -2324,177 +2324,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DodgePercentChance = dataFrame.ReadUInt8();
                     item.LeftRightPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeLeftRightTimerMinParse))
-                    {
-                        item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeLeftRightTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeLeftRightTimerMaxParse))
-                    {
-                        item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeLeftRightTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeForwardTimerMinParse))
-                    {
-                        item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeForwardTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeForwardTimerMaxParse))
-                    {
-                        item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeForwardTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeBackTimerMinParse))
-                    {
-                        item.DodgeBackTimerMin = DodgeBackTimerMinParse;
-                    }
-                    else
-                    {
-                        item.DodgeBackTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single DodgeBackTimerMaxParse))
-                    {
-                        item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.DodgeBackTimerMax = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single IdleTimerMinParse))
-                    {
-                        item.IdleTimerMin = IdleTimerMinParse;
-                    }
-                    else
-                    {
-                        item.IdleTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single IdleTimerMaxParse))
-                    {
-                        item.IdleTimerMax = IdleTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.IdleTimerMax = default(Single);
-                    }
+                    item.DodgeLeftRightTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DodgeLeftRightTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DodgeForwardTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DodgeForwardTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DodgeBackTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DodgeBackTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.IdleTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.IdleTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BlockPercentChance = dataFrame.ReadUInt8();
                     item.AttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RecoilStaggerBonusToAttackParse))
-                    {
-                        item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.RecoilStaggerBonusToAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UnconsciousBonusToAttackParse))
-                    {
-                        item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.UnconsciousBonusToAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HandToHandBonusToAttackParse))
-                    {
-                        item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
-                    }
-                    else
-                    {
-                        item.HandToHandBonusToAttack = default(Single);
-                    }
+                    item.RecoilStaggerBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.UnconsciousBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HandToHandBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.PowerAttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RecoilStaggerBonusToPowerAttackParse))
-                    {
-                        item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
-                    }
-                    else
-                    {
-                        item.RecoilStaggerBonusToPowerAttack = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single UnconsciousBonusToPowerAttackParse))
-                    {
-                        item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
-                    }
-                    else
-                    {
-                        item.UnconsciousBonusToPowerAttack = default(Single);
-                    }
+                    item.RecoilStaggerBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.UnconsciousBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.PowerAttackNormal = dataFrame.ReadUInt8();
                     item.PowerAttackForward = dataFrame.ReadUInt8();
                     item.PowerAttackBack = dataFrame.ReadUInt8();
                     item.PowerAttackLeft = dataFrame.ReadUInt8();
                     item.PowerAttackRight = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HoldTimerMinParse))
-                    {
-                        item.HoldTimerMin = HoldTimerMinParse;
-                    }
-                    else
-                    {
-                        item.HoldTimerMin = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HoldTimerMaxParse))
-                    {
-                        item.HoldTimerMax = HoldTimerMaxParse;
-                    }
-                    else
-                    {
-                        item.HoldTimerMax = default(Single);
-                    }
-                    if (EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out CombatStyle.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(CombatStyle.Flag);
-                    }
+                    item.HoldTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HoldTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.AcrobaticDodgePercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 2);
                     if (dataFrame.Complete)
@@ -2502,86 +2358,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break0;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangeMultOptimalParse))
-                    {
-                        item.RangeMultOptimal = RangeMultOptimalParse;
-                    }
-                    else
-                    {
-                        item.RangeMultOptimal = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangeMultMaxParse))
-                    {
-                        item.RangeMultMax = RangeMultMaxParse;
-                    }
-                    else
-                    {
-                        item.RangeMultMax = default(Single);
-                    }
+                    item.RangeMultOptimal = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RangeMultMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break1;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.RangeMultMax);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single SwitchDistanceMeleeParse))
-                    {
-                        item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
-                    }
-                    else
-                    {
-                        item.SwitchDistanceMelee = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single SwitchDistanceRangedParse))
-                    {
-                        item.SwitchDistanceRanged = SwitchDistanceRangedParse;
-                    }
-                    else
-                    {
-                        item.SwitchDistanceRanged = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BuffStandoffDistanceParse))
-                    {
-                        item.BuffStandoffDistance = BuffStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.BuffStandoffDistance = default(Single);
-                    }
+                    item.SwitchDistanceMelee = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SwitchDistanceRanged = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BuffStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break2;
                         return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.BuffStandoffDistance);
                     }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RangedStandoffDistanceParse))
-                    {
-                        item.RangedStandoffDistance = RangedStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.RangedStandoffDistance = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single GroupStandoffDistanceParse))
-                    {
-                        item.GroupStandoffDistance = GroupStandoffDistanceParse;
-                    }
-                    else
-                    {
-                        item.GroupStandoffDistance = default(Single);
-                    }
+                    item.RangedStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.GroupStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break3;
@@ -2589,16 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     item.RushingAttackPercentChance = dataFrame.ReadUInt8();
                     dataFrame.SetPosition(dataFrame.Position + 3);
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single RushingAttackDistanceMultParse))
-                    {
-                        item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
-                    }
-                    else
-                    {
-                        item.RushingAttackDistanceMult = default(Single);
-                    }
+                    item.RushingAttackDistanceMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSTDDataTypeState |= CombatStyle.CSTDDataType.Break4;
@@ -4017,17 +3801,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgePercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.DodgePercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte DodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgePercentChance = DodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.DodgePercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4044,17 +3820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.LeftRightPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.LeftRightPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte LeftRightPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.LeftRightPercentChance = LeftRightPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.LeftRightPercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4070,17 +3838,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeLeftRightTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeLeftRightTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMin = DodgeLeftRightTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMin = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4096,17 +3856,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeLeftRightTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeLeftRightTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeLeftRightTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeLeftRightTimerMax = DodgeLeftRightTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeLeftRightTimerMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4122,17 +3874,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeForwardTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeForwardTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMin = DodgeForwardTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMin = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4148,17 +3892,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeForwardTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeForwardTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeForwardTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeForwardTimerMax = DodgeForwardTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeForwardTimerMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4174,17 +3910,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeBackTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeBackTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMin = DodgeBackTimerMinParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMin = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4200,17 +3928,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.DodgeBackTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.DodgeBackTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DodgeBackTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.DodgeBackTimerMax = DodgeBackTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.DodgeBackTimerMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4226,17 +3946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.IdleTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single IdleTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMin = IdleTimerMinParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMin = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4252,17 +3964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.IdleTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.IdleTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single IdleTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.IdleTimerMax = IdleTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.IdleTimerMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4278,17 +3982,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.BlockPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.BlockPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte BlockPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockPercentChance = BlockPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.BlockPercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4304,17 +4000,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.AttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.AttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte AttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AttackPercentChance = AttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AttackPercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4330,17 +4018,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RecoilStaggerBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RecoilStaggerBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToAttack = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4356,17 +4036,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.UnconsciousBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single UnconsciousBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToAttack = UnconsciousBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToAttack = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4382,17 +4054,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HandToHandBonusToAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.HandToHandBonusToAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single HandToHandBonusToAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.HandToHandBonusToAttack = HandToHandBonusToAttackParse;
-                        }
-                        else
-                        {
-                            item.HandToHandBonusToAttack = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4408,17 +4072,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackPercentChance = PowerAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackPercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4434,17 +4090,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RecoilStaggerBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RecoilStaggerBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.RecoilStaggerBonusToPowerAttack = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4460,17 +4108,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.UnconsciousBonusToPowerAttack = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single UnconsciousBonusToPowerAttackParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttackParse;
-                        }
-                        else
-                        {
-                            item.UnconsciousBonusToPowerAttack = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4486,17 +4126,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackNormal);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackNormal = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackNormalParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackNormal = PowerAttackNormalParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackNormal = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4512,17 +4144,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackForward);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackForward = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackForwardParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackForward = PowerAttackForwardParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackForward = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4538,17 +4162,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackBack);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackBack = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackBackParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackBack = PowerAttackBackParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackBack = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4564,17 +4180,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackLeft);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackLeft = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackLeftParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackLeft = PowerAttackLeftParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackLeft = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4590,17 +4198,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.PowerAttackRight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PowerAttackRight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PowerAttackRightParse,
-                            errorMask: errorMask))
-                        {
-                            item.PowerAttackRight = PowerAttackRightParse;
-                        }
-                        else
-                        {
-                            item.PowerAttackRight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4616,17 +4216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMin);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.HoldTimerMin = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single HoldTimerMinParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMin = HoldTimerMinParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMin = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4642,17 +4234,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.HoldTimerMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.HoldTimerMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single HoldTimerMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.HoldTimerMax = HoldTimerMaxParse;
-                        }
-                        else
-                        {
-                            item.HoldTimerMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4668,17 +4252,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Flags);
-                        if (EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<CombatStyle.Flag>.Instance.Parse(
                             node: node,
-                            item: out CombatStyle.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(CombatStyle.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4694,17 +4270,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.AcrobaticDodgePercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.AcrobaticDodgePercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte AcrobaticDodgePercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.AcrobaticDodgePercentChance = AcrobaticDodgePercentChanceParse;
-                        }
-                        else
-                        {
-                            item.AcrobaticDodgePercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4720,17 +4288,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultOptimal);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RangeMultOptimal = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RangeMultOptimalParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultOptimal = RangeMultOptimalParse;
-                        }
-                        else
-                        {
-                            item.RangeMultOptimal = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4747,17 +4307,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangeMultMax);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RangeMultMax = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RangeMultMaxParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangeMultMax = RangeMultMaxParse;
-                        }
-                        else
-                        {
-                            item.RangeMultMax = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4773,17 +4325,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceMelee);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.SwitchDistanceMelee = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single SwitchDistanceMeleeParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceMelee = SwitchDistanceMeleeParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceMelee = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4800,17 +4344,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.SwitchDistanceRanged);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.SwitchDistanceRanged = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single SwitchDistanceRangedParse,
-                            errorMask: errorMask))
-                        {
-                            item.SwitchDistanceRanged = SwitchDistanceRangedParse;
-                        }
-                        else
-                        {
-                            item.SwitchDistanceRanged = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4826,17 +4362,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.BuffStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.BuffStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single BuffStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.BuffStandoffDistance = BuffStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.BuffStandoffDistance = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4852,17 +4380,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RangedStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RangedStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RangedStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RangedStandoffDistance = RangedStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.RangedStandoffDistance = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4879,17 +4399,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.GroupStandoffDistance);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.GroupStandoffDistance = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single GroupStandoffDistanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.GroupStandoffDistance = GroupStandoffDistanceParse;
-                        }
-                        else
-                        {
-                            item.GroupStandoffDistance = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4905,17 +4417,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackPercentChance);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.RushingAttackPercentChance = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte RushingAttackPercentChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackPercentChance = RushingAttackPercentChanceParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackPercentChance = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4932,17 +4436,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.RushingAttackDistanceMult);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.RushingAttackDistanceMult = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single RushingAttackDistanceMultParse,
-                            errorMask: errorMask))
-                        {
-                            item.RushingAttackDistanceMult = RushingAttackDistanceMultParse;
-                        }
-                        else
-                        {
-                            item.RushingAttackDistanceMult = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4958,18 +4454,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.Advanced);
-                        if (LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
+                        item.Advanced = LoquiXmlTranslation<CombatStyleAdvanced>.Instance.Parse(
                             node: node,
-                            item: out CombatStyleAdvanced AdvancedParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced)))
-                        {
-                            item.Advanced = AdvancedParse;
-                        }
-                        else
-                        {
-                            item.Advanced = default(CombatStyleAdvanced);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4985,17 +4473,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)CombatStyle_FieldIndex.CSTDDataTypeState);
-                        if (EnumXmlTranslation<CombatStyle.CSTDDataType>.Instance.Parse(
+                        item.CSTDDataTypeState = EnumXmlTranslation<CombatStyle.CSTDDataType>.Instance.Parse(
                             node: node,
-                            item: out CombatStyle.CSTDDataType CSTDDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.CSTDDataTypeState = CSTDDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.CSTDDataTypeState = default(CombatStyle.CSTDDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -982,17 +982,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Weather.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey WeatherParse))
-            {
-                item.Weather.FormKey = WeatherParse;
-            }
-            else
-            {
-                item.Weather.FormKey = FormKey.NULL;
-            }
+                defaultVal: FormKey.NULL);
             item.Chance = frame.ReadInt32();
         }
         
@@ -1388,17 +1381,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherChance_FieldIndex.Weather);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Weather.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey WeatherParse,
-                            errorMask: errorMask))
-                        {
-                            item.Weather.FormKey = WeatherParse;
-                        }
-                        else
-                        {
-                            item.Weather.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1414,17 +1400,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)WeatherChance_FieldIndex.Chance);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Chance = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

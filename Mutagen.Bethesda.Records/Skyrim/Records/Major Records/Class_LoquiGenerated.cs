@@ -2085,49 +2085,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
                 }
                 case 0x43534544: // DESC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String DescriptionParse))
-                    {
-                        item.Description = DescriptionParse;
-                    }
-                    else
-                    {
-                        item.Description = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String IconParse))
-                    {
-                        item.Icon = IconParse;
-                    }
-                    else
-                    {
-                        item.Icon = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
@@ -2139,16 +2115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState = Class.DATADataType.Has;
                     }
                     item.Unknown = dataFrame.ReadInt32();
-                    if (EnumBinaryTranslation<Skill>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out Skill TeachesParse))
-                    {
-                        item.Teaches = TeachesParse;
-                    }
-                    else
-                    {
-                        item.Teaches = default(Skill);
-                    }
+                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
                     item.OneHandedWeight = dataFrame.ReadUInt8();
                     item.TwoHandedWeight = dataFrame.ReadUInt8();
@@ -2168,16 +2135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.IllusionWeight = dataFrame.ReadUInt8();
                     item.RestorationWeight = dataFrame.ReadUInt8();
                     item.EnchantingWeight = dataFrame.ReadUInt8();
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single BleedoutDefaultParse))
-                    {
-                        item.BleedoutDefault = BleedoutDefaultParse;
-                    }
-                    else
-                    {
-                        item.BleedoutDefault = default(Single);
-                    }
+                    item.BleedoutDefault = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.VoicePoints = dataFrame.ReadUInt32();
                     item.HealthWeight = dataFrame.ReadUInt8();
                     item.MagickaWeight = dataFrame.ReadUInt8();
@@ -3455,17 +3413,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3481,17 +3431,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Description);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Description = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String DescriptionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Description = DescriptionParse;
-                        }
-                        else
-                        {
-                            item.Description = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3507,17 +3449,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Icon);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Icon = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String IconParse,
-                            errorMask: errorMask))
-                        {
-                            item.Icon = IconParse;
-                        }
-                        else
-                        {
-                            item.Icon = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3533,17 +3467,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Unknown);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 UnknownParse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown = UnknownParse;
-                        }
-                        else
-                        {
-                            item.Unknown = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3560,17 +3486,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Teaches);
-                        if (EnumXmlTranslation<Skill>.Instance.Parse(
+                        item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
                             node: node,
-                            item: out Skill TeachesParse,
-                            errorMask: errorMask))
-                        {
-                            item.Teaches = TeachesParse;
-                        }
-                        else
-                        {
-                            item.Teaches = default(Skill);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3586,17 +3504,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.MaxTrainingLevel);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MaxTrainingLevel = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MaxTrainingLevelParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxTrainingLevel = MaxTrainingLevelParse;
-                        }
-                        else
-                        {
-                            item.MaxTrainingLevel = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3612,17 +3522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.OneHandedWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.OneHandedWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte OneHandedWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.OneHandedWeight = OneHandedWeightParse;
-                        }
-                        else
-                        {
-                            item.OneHandedWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3638,17 +3540,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.TwoHandedWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.TwoHandedWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte TwoHandedWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.TwoHandedWeight = TwoHandedWeightParse;
-                        }
-                        else
-                        {
-                            item.TwoHandedWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3664,17 +3558,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.MarksmanWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MarksmanWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MarksmanWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MarksmanWeight = MarksmanWeightParse;
-                        }
-                        else
-                        {
-                            item.MarksmanWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3690,17 +3576,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.BlockWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.BlockWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte BlockWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.BlockWeight = BlockWeightParse;
-                        }
-                        else
-                        {
-                            item.BlockWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3716,17 +3594,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.SmithingWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.SmithingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SmithingWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.SmithingWeight = SmithingWeightParse;
-                        }
-                        else
-                        {
-                            item.SmithingWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3742,17 +3612,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.HeavyArmorWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.HeavyArmorWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte HeavyArmorWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.HeavyArmorWeight = HeavyArmorWeightParse;
-                        }
-                        else
-                        {
-                            item.HeavyArmorWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3768,17 +3630,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.LightArmorWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.LightArmorWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte LightArmorWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.LightArmorWeight = LightArmorWeightParse;
-                        }
-                        else
-                        {
-                            item.LightArmorWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3794,17 +3648,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.PickpocketWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PickpocketWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PickpocketWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.PickpocketWeight = PickpocketWeightParse;
-                        }
-                        else
-                        {
-                            item.PickpocketWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3820,17 +3666,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.LockpickingWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.LockpickingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte LockpickingWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.LockpickingWeight = LockpickingWeightParse;
-                        }
-                        else
-                        {
-                            item.LockpickingWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3846,17 +3684,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.SneakWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.SneakWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SneakWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.SneakWeight = SneakWeightParse;
-                        }
-                        else
-                        {
-                            item.SneakWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3872,17 +3702,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.AlchemyWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.AlchemyWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte AlchemyWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.AlchemyWeight = AlchemyWeightParse;
-                        }
-                        else
-                        {
-                            item.AlchemyWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3898,17 +3720,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.SpeechcraftWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.SpeechcraftWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SpeechcraftWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.SpeechcraftWeight = SpeechcraftWeightParse;
-                        }
-                        else
-                        {
-                            item.SpeechcraftWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3924,17 +3738,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.AlterationWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.AlterationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte AlterationWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.AlterationWeight = AlterationWeightParse;
-                        }
-                        else
-                        {
-                            item.AlterationWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3950,17 +3756,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.ConjurationWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.ConjurationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte ConjurationWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.ConjurationWeight = ConjurationWeightParse;
-                        }
-                        else
-                        {
-                            item.ConjurationWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3976,17 +3774,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.DestructionWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.DestructionWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte DestructionWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.DestructionWeight = DestructionWeightParse;
-                        }
-                        else
-                        {
-                            item.DestructionWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4002,17 +3792,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.IllusionWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.IllusionWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte IllusionWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.IllusionWeight = IllusionWeightParse;
-                        }
-                        else
-                        {
-                            item.IllusionWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4028,17 +3810,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.RestorationWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.RestorationWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte RestorationWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.RestorationWeight = RestorationWeightParse;
-                        }
-                        else
-                        {
-                            item.RestorationWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4054,17 +3828,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.EnchantingWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.EnchantingWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte EnchantingWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantingWeight = EnchantingWeightParse;
-                        }
-                        else
-                        {
-                            item.EnchantingWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4080,17 +3846,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.BleedoutDefault);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.BleedoutDefault = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single BleedoutDefaultParse,
-                            errorMask: errorMask))
-                        {
-                            item.BleedoutDefault = BleedoutDefaultParse;
-                        }
-                        else
-                        {
-                            item.BleedoutDefault = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4106,17 +3864,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.VoicePoints);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.VoicePoints = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 VoicePointsParse,
-                            errorMask: errorMask))
-                        {
-                            item.VoicePoints = VoicePointsParse;
-                        }
-                        else
-                        {
-                            item.VoicePoints = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4132,17 +3882,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.HealthWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.HealthWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte HealthWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.HealthWeight = HealthWeightParse;
-                        }
-                        else
-                        {
-                            item.HealthWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4158,17 +3900,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.MagickaWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MagickaWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MagickaWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.MagickaWeight = MagickaWeightParse;
-                        }
-                        else
-                        {
-                            item.MagickaWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4184,17 +3918,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.StaminaWeight);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.StaminaWeight = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte StaminaWeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.StaminaWeight = StaminaWeightParse;
-                        }
-                        else
-                        {
-                            item.StaminaWeight = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4210,17 +3936,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.Unknown2);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Unknown2 = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte Unknown2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Unknown2 = Unknown2Parse;
-                        }
-                        else
-                        {
-                            item.Unknown2 = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4236,17 +3954,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out Class.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(Class.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

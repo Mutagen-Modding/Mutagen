@@ -33,6 +33,11 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+        public E Parse(MutagenFrame frame)
+        {
+            return ParseValue(frame);
+        }
+
         public void ParseInto(
             MutagenFrame frame,
             IHasItem<E?> item)

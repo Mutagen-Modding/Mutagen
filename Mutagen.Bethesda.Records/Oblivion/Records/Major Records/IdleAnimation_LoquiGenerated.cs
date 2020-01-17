@@ -1218,16 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse))
-                    {
-                        item.AnimationGroupSection = AnimationGroupSectionParse;
-                    }
-                    else
-                    {
-                        item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
-                    }
+                    item.AnimationGroupSection = EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
                 }
                 case 0x41544144: // DATA
@@ -2045,18 +2036,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2100,17 +2083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationGroupSection);
-                        if (EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
+                        item.AnimationGroupSection = EnumXmlTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(
                             node: node,
-                            item: out IdleAnimation.AnimationGroupSectionEnum AnimationGroupSectionParse,
-                            errorMask: errorMask))
-                        {
-                            item.AnimationGroupSection = AnimationGroupSectionParse;
-                        }
-                        else
-                        {
-                            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSectionEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

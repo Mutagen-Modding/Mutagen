@@ -1513,17 +1513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)QuestStage_FieldIndex.Stage);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Stage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 StageParse,
-                            errorMask: errorMask))
-                        {
-                            item.Stage = StageParse;
-                        }
-                        else
-                        {
-                            item.Stage = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

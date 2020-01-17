@@ -1060,17 +1060,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)BaseLayer_FieldIndex.LayerNumber);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.LayerNumber = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 LayerNumberParse,
-                            errorMask: errorMask))
-                        {
-                            item.LayerNumber = LayerNumberParse;
-                        }
-                        else
-                        {
-                            item.LayerNumber = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1152,27 +1144,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.BTXTDataTypeState = BaseLayer.BTXTDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Texture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: out FormKey TextureParse))
-                    {
-                        item.Texture.FormKey = TextureParse;
-                    }
-                    else
-                    {
-                        item.Texture.FormKey = FormKey.NULL;
-                    }
-                    if (EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out AlphaLayer.QuadrantEnum QuadrantParse))
-                    {
-                        item.Quadrant = QuadrantParse;
-                    }
-                    else
-                    {
-                        item.Quadrant = default(AlphaLayer.QuadrantEnum);
-                    }
+                        defaultVal: FormKey.NULL);
+                    item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     item.LayerNumber = dataFrame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.LayerNumber);
                 }
@@ -1632,17 +1608,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)BaseLayer_FieldIndex.Texture);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Texture.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey TextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.Texture.FormKey = TextureParse;
-                        }
-                        else
-                        {
-                            item.Texture.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1659,17 +1628,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)BaseLayer_FieldIndex.Quadrant);
-                        if (EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
+                        item.Quadrant = EnumXmlTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(
                             node: node,
-                            item: out AlphaLayer.QuadrantEnum QuadrantParse,
-                            errorMask: errorMask))
-                        {
-                            item.Quadrant = QuadrantParse;
-                        }
-                        else
-                        {
-                            item.Quadrant = default(AlphaLayer.QuadrantEnum);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1685,17 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)BaseLayer_FieldIndex.BTXTDataTypeState);
-                        if (EnumXmlTranslation<BaseLayer.BTXTDataType>.Instance.Parse(
+                        item.BTXTDataTypeState = EnumXmlTranslation<BaseLayer.BTXTDataType>.Instance.Parse(
                             node: node,
-                            item: out BaseLayer.BTXTDataType BTXTDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.BTXTDataTypeState = BTXTDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.BTXTDataTypeState = default(BaseLayer.BTXTDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

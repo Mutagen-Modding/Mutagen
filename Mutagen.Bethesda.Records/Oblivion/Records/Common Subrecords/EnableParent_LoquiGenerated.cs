@@ -985,27 +985,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey ReferenceParse))
-            {
-                item.Reference.FormKey = ReferenceParse;
-            }
-            else
-            {
-                item.Reference.FormKey = FormKey.NULL;
-            }
-            if (EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out EnableParent.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(EnableParent.Flag);
-            }
+                defaultVal: FormKey.NULL);
+            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public void CopyInFromBinary(
@@ -1403,17 +1387,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)EnableParent_FieldIndex.Reference);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ReferenceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Reference.FormKey = ReferenceParse;
-                        }
-                        else
-                        {
-                            item.Reference.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1429,17 +1406,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)EnableParent_FieldIndex.Flags);
-                        if (EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<EnableParent.Flag>.Instance.Parse(
                             node: node,
-                            item: out EnableParent.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(EnableParent.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1255,17 +1255,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
                 }
                 case 0x54494E45: // ENIT
@@ -1276,28 +1268,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.ENITDataTypeState = Enchantment.ENITDataType.Has;
                     }
-                    if (EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Enchantment.EnchantmentType TypeParse))
-                    {
-                        item.Type = TypeParse;
-                    }
-                    else
-                    {
-                        item.Type = default(Enchantment.EnchantmentType);
-                    }
+                    item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ChargeAmount = dataFrame.ReadUInt32();
                     item.EnchantCost = dataFrame.ReadUInt32();
-                    if (EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Enchantment.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Enchantment.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Flags);
                 }
                 case 0x44494645: // EFID
@@ -2091,17 +2065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2117,17 +2083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.Type);
-                        if (EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                        item.Type = EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
                             node: node,
-                            item: out Enchantment.EnchantmentType TypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.Type = TypeParse;
-                        }
-                        else
-                        {
-                            item.Type = default(Enchantment.EnchantmentType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2144,17 +2102,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.ChargeAmount);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.ChargeAmount = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 ChargeAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.ChargeAmount = ChargeAmountParse;
-                        }
-                        else
-                        {
-                            item.ChargeAmount = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2170,17 +2120,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.EnchantCost);
-                        if (UInt32XmlTranslation.Instance.Parse(
+                        item.EnchantCost = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt32 EnchantCostParse,
-                            errorMask: errorMask))
-                        {
-                            item.EnchantCost = EnchantCostParse;
-                        }
-                        else
-                        {
-                            item.EnchantCost = default(UInt32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2196,17 +2138,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
                             node: node,
-                            item: out Enchantment.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Enchantment.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2250,17 +2184,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Enchantment_FieldIndex.ENITDataTypeState);
-                        if (EnumXmlTranslation<Enchantment.ENITDataType>.Instance.Parse(
+                        item.ENITDataTypeState = EnumXmlTranslation<Enchantment.ENITDataType>.Instance.Parse(
                             node: node,
-                            item: out Enchantment.ENITDataType ENITDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.ENITDataTypeState = ENITDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.ENITDataTypeState = default(Enchantment.ENITDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

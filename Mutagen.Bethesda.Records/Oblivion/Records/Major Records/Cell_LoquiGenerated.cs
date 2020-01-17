@@ -1909,47 +1909,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<Cell.Flag>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Cell.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Cell.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<Cell.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
                 }
                 case 0x434C4358: // XCLC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out P2Int GridParse))
-                    {
-                        item.Grid = GridParse;
-                    }
-                    else
-                    {
-                        item.Grid = default(P2Int);
-                    }
+                    item.Grid = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
                 }
                 case 0x4C4C4358: // XCLL
@@ -1987,79 +1961,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x544D4358: // XCMT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out MusicType MusicTypeParse))
-                    {
-                        item.MusicType = MusicTypeParse;
-                    }
-                    else
-                    {
-                        item.MusicType = default(MusicType);
-                    }
+                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
                 }
                 case 0x574C4358: // XCLW
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single WaterHeightParse))
-                    {
-                        item.WaterHeight = WaterHeightParse;
-                    }
-                    else
-                    {
-                        item.WaterHeight = default(Single);
-                    }
+                    item.WaterHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
                 }
                 case 0x4D434358: // XCCM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Climate.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ClimateParse))
-                    {
-                        item.Climate.FormKey = ClimateParse;
-                    }
-                    else
-                    {
-                        item.Climate.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Climate);
                 }
                 case 0x54574358: // XCWT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Water.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey WaterParse))
-                    {
-                        item.Water.FormKey = WaterParse;
-                    }
-                    else
-                    {
-                        item.Water.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
                 }
                 case 0x4E574F58: // XOWN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Owner.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey OwnerParse))
-                    {
-                        item.Owner.FormKey = OwnerParse;
-                    }
-                    else
-                    {
-                        item.Owner.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.Owner);
                 }
                 case 0x4B4E5258: // XRNK
@@ -2071,17 +2006,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x424C4758: // XGLB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.GlobalVariable.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey GlobalVariableParse))
-                    {
-                        item.GlobalVariable.FormKey = GlobalVariableParse;
-                    }
-                    else
-                    {
-                        item.GlobalVariable.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Cell_FieldIndex.GlobalVariable);
                 }
                 default:
@@ -3921,17 +3849,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3947,17 +3867,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Cell.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Cell.Flag>.Instance.Parse(
                             node: node,
-                            item: out Cell.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Cell.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3973,17 +3885,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
-                        if (P2IntXmlTranslation.Instance.Parse(
+                        item.Grid = P2IntXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P2Int GridParse,
-                            errorMask: errorMask))
-                        {
-                            item.Grid = GridParse;
-                        }
-                        else
-                        {
-                            item.Grid = default(P2Int);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3999,18 +3903,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
-                        if (LoquiXmlTranslation<CellLighting>.Instance.Parse(
+                        item.Lighting = LoquiXmlTranslation<CellLighting>.Instance.Parse(
                             node: node,
-                            item: out CellLighting LightingParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting)))
-                        {
-                            item.Lighting = LightingParse;
-                        }
-                        else
-                        {
-                            item.Lighting = default(CellLighting);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4054,17 +3950,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
-                        if (EnumXmlTranslation<MusicType>.Instance.Parse(
+                        item.MusicType = EnumXmlTranslation<MusicType>.Instance.Parse(
                             node: node,
-                            item: out MusicType MusicTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MusicType = MusicTypeParse;
-                        }
-                        else
-                        {
-                            item.MusicType = default(MusicType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4080,17 +3968,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.WaterHeight);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WaterHeight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WaterHeightParse,
-                            errorMask: errorMask))
-                        {
-                            item.WaterHeight = WaterHeightParse;
-                        }
-                        else
-                        {
-                            item.WaterHeight = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4106,17 +3986,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Climate);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Climate.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ClimateParse,
-                            errorMask: errorMask))
-                        {
-                            item.Climate.FormKey = ClimateParse;
-                        }
-                        else
-                        {
-                            item.Climate.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4132,17 +4005,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Water);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Water.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey WaterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Water.FormKey = WaterParse;
-                        }
-                        else
-                        {
-                            item.Water.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4158,17 +4024,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Owner);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Owner.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey OwnerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Owner.FormKey = OwnerParse;
-                        }
-                        else
-                        {
-                            item.Owner.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4184,17 +4043,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.FactionRank);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.FactionRank = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 FactionRankParse,
-                            errorMask: errorMask))
-                        {
-                            item.FactionRank = FactionRankParse;
-                        }
-                        else
-                        {
-                            item.FactionRank = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4210,17 +4061,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.GlobalVariable);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.GlobalVariable.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey GlobalVariableParse,
-                            errorMask: errorMask))
-                        {
-                            item.GlobalVariable.FormKey = GlobalVariableParse;
-                        }
-                        else
-                        {
-                            item.GlobalVariable.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4236,18 +4080,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.PathGrid);
-                        if (LoquiXmlTranslation<PathGrid>.Instance.Parse(
+                        item.PathGrid = LoquiXmlTranslation<PathGrid>.Instance.Parse(
                             node: node,
-                            item: out PathGrid PathGridParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid)))
-                        {
-                            item.PathGrid = PathGridParse;
-                        }
-                        else
-                        {
-                            item.PathGrid = default(PathGrid);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.PathGrid));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4263,18 +4099,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
-                        if (LoquiXmlTranslation<Landscape>.Instance.Parse(
+                        item.Landscape = LoquiXmlTranslation<Landscape>.Instance.Parse(
                             node: node,
-                            item: out Landscape LandscapeParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape)))
-                        {
-                            item.Landscape = LandscapeParse;
-                        }
-                        else
-                        {
-                            item.Landscape = default(Landscape);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4290,17 +4118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.Timestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] TimestampParse,
-                            errorMask: errorMask))
-                        {
-                            item.Timestamp = TimestampParse;
-                        }
-                        else
-                        {
-                            item.Timestamp = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4316,17 +4136,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.PersistentTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] PersistentTimestampParse,
-                            errorMask: errorMask))
-                        {
-                            item.PersistentTimestamp = PersistentTimestampParse;
-                        }
-                        else
-                        {
-                            item.PersistentTimestamp = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4370,17 +4182,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.TemporaryTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] TemporaryTimestampParse,
-                            errorMask: errorMask))
-                        {
-                            item.TemporaryTimestamp = TemporaryTimestampParse;
-                        }
-                        else
-                        {
-                            item.TemporaryTimestamp = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4424,17 +4228,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.VisibleWhenDistantTimestamp = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] VisibleWhenDistantTimestampParse,
-                            errorMask: errorMask))
-                        {
-                            item.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestampParse;
-                        }
-                        else
-                        {
-                            item.VisibleWhenDistantTimestamp = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

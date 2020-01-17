@@ -1008,37 +1008,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Destination.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey DestinationParse))
-            {
-                item.Destination.FormKey = DestinationParse;
-            }
-            else
-            {
-                item.Destination.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Float PositionParse))
-            {
-                item.Position = PositionParse;
-            }
-            else
-            {
-                item.Position = default(P3Float);
-            }
-            if (Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P3Float RotationParse))
-            {
-                item.Rotation = RotationParse;
-            }
-            else
-            {
-                item.Rotation = default(P3Float);
-            }
+                defaultVal: FormKey.NULL);
+            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1457,17 +1432,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Destination.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey DestinationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Destination.FormKey = DestinationParse;
-                        }
-                        else
-                        {
-                            item.Destination.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1483,17 +1451,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Position);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Position = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float PositionParse,
-                            errorMask: errorMask))
-                        {
-                            item.Position = PositionParse;
-                        }
-                        else
-                        {
-                            item.Position = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1509,17 +1469,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Rotation);
-                        if (P3FloatXmlTranslation.Instance.Parse(
+                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P3Float RotationParse,
-                            errorMask: errorMask))
-                        {
-                            item.Rotation = RotationParse;
-                        }
-                        else
-                        {
-                            item.Rotation = default(P3Float);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

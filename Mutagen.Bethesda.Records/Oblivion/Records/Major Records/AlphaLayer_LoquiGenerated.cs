@@ -1023,16 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54585456: // VTXT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Byte[] AlphaLayerDataParse))
-                    {
-                        item.AlphaLayerData = AlphaLayerDataParse;
-                    }
-                    else
-                    {
-                        item.AlphaLayerData = default(Byte[]);
-                    }
+                    item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
                 }
                 default:
@@ -1526,17 +1517,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
-                        if (ByteArrayXmlTranslation.Instance.Parse(
+                        item.AlphaLayerData = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte[] AlphaLayerDataParse,
-                            errorMask: errorMask))
-                        {
-                            item.AlphaLayerData = AlphaLayerDataParse;
-                        }
-                        else
-                        {
-                            item.AlphaLayerData = default(Byte[]);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1054,17 +1054,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                    item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true,
-                        item: out Color ColorParse))
-                    {
-                        item.Color = ColorParse;
-                    }
-                    else
-                    {
-                        item.Color = default(Color);
-                    }
+                        extraByte: true);
                     return TryGet<int?>.Succeed((int)Keyword_FieldIndex.Color);
                 }
                 default:
@@ -1646,17 +1638,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Keyword_FieldIndex.Color);
-                        if (ColorXmlTranslation.Instance.Parse(
+                        item.Color = ColorXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Color ColorParse,
-                            errorMask: errorMask))
-                        {
-                            item.Color = ColorParse;
-                        }
-                        else
-                        {
-                            item.Color = default(Color);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

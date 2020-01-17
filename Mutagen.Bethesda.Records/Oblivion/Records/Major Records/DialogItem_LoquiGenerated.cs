@@ -1371,63 +1371,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.DATADataTypeState = DialogItem.DATADataType.Has;
                     }
-                    if (EnumBinaryTranslation<DialogType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(2),
-                        item: out DialogType DialogTypeParse))
-                    {
-                        item.DialogType = DialogTypeParse;
-                    }
-                    else
-                    {
-                        item.DialogType = default(DialogType);
-                    }
+                    item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= DialogItem.DATADataType.Break0;
                         return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.DialogType);
                     }
-                    if (EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(1),
-                        item: out DialogItem.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(DialogItem.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Flags);
                 }
                 case 0x49545351: // QSTI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Quest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey QuestParse))
-                    {
-                        item.Quest.FormKey = QuestParse;
-                    }
-                    else
-                    {
-                        item.Quest.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
                 }
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PreviousTopic.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey PreviousTopicParse))
-                    {
-                        item.PreviousTopic.FormKey = PreviousTopicParse;
-                    }
-                    else
-                    {
-                        item.PreviousTopic.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
                 }
                 case 0x454D414E: // NAME
@@ -2673,17 +2641,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.DialogType);
-                        if (EnumXmlTranslation<DialogType>.Instance.Parse(
+                        item.DialogType = EnumXmlTranslation<DialogType>.Instance.Parse(
                             node: node,
-                            item: out DialogType DialogTypeParse,
-                            errorMask: errorMask))
-                        {
-                            item.DialogType = DialogTypeParse;
-                        }
-                        else
-                        {
-                            item.DialogType = default(DialogType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2700,17 +2660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.Flags);
-                        if (EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
                             node: node,
-                            item: out DialogItem.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(DialogItem.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2727,17 +2679,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.Quest);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Quest.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey QuestParse,
-                            errorMask: errorMask))
-                        {
-                            item.Quest.FormKey = QuestParse;
-                        }
-                        else
-                        {
-                            item.Quest.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2753,17 +2698,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.PreviousTopic);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.PreviousTopic.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey PreviousTopicParse,
-                            errorMask: errorMask))
-                        {
-                            item.PreviousTopic.FormKey = PreviousTopicParse;
-                        }
-                        else
-                        {
-                            item.PreviousTopic.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2919,17 +2857,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)DialogItem_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<DialogItem.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<DialogItem.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out DialogItem.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(DialogItem.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

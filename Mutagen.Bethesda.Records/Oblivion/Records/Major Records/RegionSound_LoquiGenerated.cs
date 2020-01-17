@@ -1006,37 +1006,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey SoundParse))
-            {
-                item.Sound.FormKey = SoundParse;
-            }
-            else
-            {
-                item.Sound.FormKey = FormKey.NULL;
-            }
-            if (EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(
-                frame: frame.SpawnWithLength(4),
-                item: out RegionSound.Flag FlagsParse))
-            {
-                item.Flags = FlagsParse;
-            }
-            else
-            {
-                item.Flags = default(RegionSound.Flag);
-            }
-            if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out Single ChanceParse))
-            {
-                item.Chance = ChanceParse;
-            }
-            else
-            {
-                item.Chance = default(Single);
-            }
+                defaultVal: FormKey.NULL);
+            item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1452,17 +1427,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionSound_FieldIndex.Sound);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey SoundParse,
-                            errorMask: errorMask))
-                        {
-                            item.Sound.FormKey = SoundParse;
-                        }
-                        else
-                        {
-                            item.Sound.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1478,17 +1446,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionSound_FieldIndex.Flags);
-                        if (EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<RegionSound.Flag>.Instance.Parse(
                             node: node,
-                            item: out RegionSound.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(RegionSound.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1504,17 +1464,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)RegionSound_FieldIndex.Chance);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Chance = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ChanceParse,
-                            errorMask: errorMask))
-                        {
-                            item.Chance = ChanceParse;
-                        }
-                        else
-                        {
-                            item.Chance = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -974,16 +974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                frame: frame.SpawnWithLength(1),
-                item: out ActorValue SkillParse))
-            {
-                item.Skill = SkillParse;
-            }
-            else
-            {
-                item.Skill = default(ActorValue);
-            }
+            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Boost = frame.ReadInt8();
         }
         
@@ -1378,17 +1369,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkillBoost_FieldIndex.Skill);
-                        if (EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        item.Skill = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
-                            item: out ActorValue SkillParse,
-                            errorMask: errorMask))
-                        {
-                            item.Skill = SkillParse;
-                        }
-                        else
-                        {
-                            item.Skill = default(ActorValue);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1404,17 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)SkillBoost_FieldIndex.Boost);
-                        if (Int8XmlTranslation.Instance.Parse(
+                        item.Boost = Int8XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out SByte BoostParse,
-                            errorMask: errorMask))
-                        {
-                            item.Boost = BoostParse;
-                        }
-                        else
-                        {
-                            item.Boost = default(SByte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

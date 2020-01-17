@@ -1168,73 +1168,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
                     }
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         masterReferences: masterReferences,
-                        item: out FormKey ScriptParse))
-                    {
-                        item.Script.FormKey = ScriptParse;
-                    }
-                    else
-                    {
-                        item.Script.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     if (dataFrame.Complete)
                     {
                         item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
                         return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Script);
                     }
-                    if (EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out MagicSchool MagicSchoolParse))
-                    {
-                        item.MagicSchool = MagicSchoolParse;
-                    }
-                    else
-                    {
-                        item.MagicSchool = default(MagicSchool);
-                    }
-                    if (Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                    item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.VisualEffect.EDID = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
-                        item: out RecordType VisualEffectParse))
-                    {
-                        item.VisualEffect.EDID = VisualEffectParse;
-                    }
-                    else
-                    {
-                        item.VisualEffect.EDID = RecordType.NULL;
-                    }
+                        defaultVal: RecordType.NULL);
                     if (dataFrame.Complete)
                     {
                         item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
                         return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.VisualEffect);
                     }
-                    if (EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out ScriptEffect.Flag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(ScriptEffect.Flag);
-                    }
+                    item.Flags = EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
                 }
                 default:
@@ -1762,17 +1722,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.Script.FormKey = ScriptParse;
-                        }
-                        else
-                        {
-                            item.Script.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1789,17 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
-                        if (EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                        item.MagicSchool = EnumXmlTranslation<MagicSchool>.Instance.Parse(
                             node: node,
-                            item: out MagicSchool MagicSchoolParse,
-                            errorMask: errorMask))
-                        {
-                            item.MagicSchool = MagicSchoolParse;
-                        }
-                        else
-                        {
-                            item.MagicSchool = default(MagicSchool);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1816,17 +1761,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
-                        if (RecordTypeXmlTranslation.Instance.Parse(
+                        item.VisualEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out RecordType VisualEffectParse,
-                            errorMask: errorMask))
-                        {
-                            item.VisualEffect.EDID = VisualEffectParse;
-                        }
-                        else
-                        {
-                            item.VisualEffect.EDID = RecordType.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: RecordType.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1842,17 +1780,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
-                        if (EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
                             node: node,
-                            item: out ScriptEffect.Flag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(ScriptEffect.Flag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1869,17 +1799,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1895,17 +1817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptEffect_FieldIndex.SCITDataTypeState);
-                        if (EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Parse(
+                        item.SCITDataTypeState = EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Parse(
                             node: node,
-                            item: out ScriptEffect.SCITDataType SCITDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.SCITDataTypeState = SCITDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.SCITDataTypeState = default(ScriptEffect.SCITDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

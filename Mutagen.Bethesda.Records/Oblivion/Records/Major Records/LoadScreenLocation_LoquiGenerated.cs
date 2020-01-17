@@ -1010,38 +1010,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReferences masterReferences,
             ErrorMaskBuilder errorMask)
         {
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Direct.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey DirectParse))
-            {
-                item.Direct.FormKey = DirectParse;
-            }
-            else
-            {
-                item.Direct.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                defaultVal: FormKey.NULL);
+            item.Indirect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 masterReferences: masterReferences,
-                item: out FormKey IndirectParse))
-            {
-                item.Indirect.FormKey = IndirectParse;
-            }
-            else
-            {
-                item.Indirect.FormKey = FormKey.NULL;
-            }
-            if (Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
-                frame: frame,
-                item: out P2Int16 GridPointParse))
-            {
-                item.GridPoint = GridPointParse;
-            }
-            else
-            {
-                item.GridPoint = default(P2Int16);
-            }
+                defaultVal: FormKey.NULL);
+            item.GridPoint = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public void CopyInFromBinary(
@@ -1461,17 +1438,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Direct.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey DirectParse,
-                            errorMask: errorMask))
-                        {
-                            item.Direct.FormKey = DirectParse;
-                        }
-                        else
-                        {
-                            item.Direct.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1487,17 +1457,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Indirect.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey IndirectParse,
-                            errorMask: errorMask))
-                        {
-                            item.Indirect.FormKey = IndirectParse;
-                        }
-                        else
-                        {
-                            item.Indirect.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1513,17 +1476,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.GridPoint);
-                        if (P2Int16XmlTranslation.Instance.Parse(
+                        item.GridPoint = P2Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out P2Int16 GridPointParse,
-                            errorMask: errorMask))
-                        {
-                            item.GridPoint = GridPointParse;
-                        }
-                        else
-                        {
-                            item.GridPoint = default(P2Int16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

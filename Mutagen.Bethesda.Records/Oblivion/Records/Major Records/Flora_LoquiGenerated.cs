@@ -1326,17 +1326,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String NameParse))
-                    {
-                        item.Name = NameParse;
-                    }
-                    else
-                    {
-                        item.Name = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
@@ -1364,33 +1356,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey ScriptParse))
-                    {
-                        item.Script.FormKey = ScriptParse;
-                    }
-                    else
-                    {
-                        item.Script.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
                 }
                 case 0x47494650: // PFIG
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Ingredient.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         masterReferences: masterReferences,
-                        item: out FormKey IngredientParse))
-                    {
-                        item.Ingredient.FormKey = IngredientParse;
-                    }
-                    else
-                    {
-                        item.Ingredient.FormKey = FormKey.NULL;
-                    }
+                        defaultVal: FormKey.NULL);
                     return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
                 }
                 case 0x43504650: // PFPC
@@ -2241,17 +2219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Name);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String NameParse,
-                            errorMask: errorMask))
-                        {
-                            item.Name = NameParse;
-                        }
-                        else
-                        {
-                            item.Name = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2267,18 +2237,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Flora_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2294,17 +2256,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Script);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey ScriptParse,
-                            errorMask: errorMask))
-                        {
-                            item.Script.FormKey = ScriptParse;
-                        }
-                        else
-                        {
-                            item.Script.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2320,17 +2275,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Ingredient);
-                        if (FormKeyXmlTranslation.Instance.Parse(
+                        item.Ingredient.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out FormKey IngredientParse,
-                            errorMask: errorMask))
-                        {
-                            item.Ingredient.FormKey = IngredientParse;
-                        }
-                        else
-                        {
-                            item.Ingredient.FormKey = FormKey.NULL;
-                        }
+                            errorMask: errorMask,
+                            defaultVal: FormKey.NULL);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2346,17 +2294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Spring);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Spring = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SpringParse,
-                            errorMask: errorMask))
-                        {
-                            item.Spring = SpringParse;
-                        }
-                        else
-                        {
-                            item.Spring = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2373,17 +2313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Summer);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Summer = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte SummerParse,
-                            errorMask: errorMask))
-                        {
-                            item.Summer = SummerParse;
-                        }
-                        else
-                        {
-                            item.Summer = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2399,17 +2331,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Fall);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Fall = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte FallParse,
-                            errorMask: errorMask))
-                        {
-                            item.Fall = FallParse;
-                        }
-                        else
-                        {
-                            item.Fall = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2425,17 +2349,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.Winter);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Winter = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte WinterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Winter = WinterParse;
-                        }
-                        else
-                        {
-                            item.Winter = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2451,17 +2367,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Flora_FieldIndex.PFPCDataTypeState);
-                        if (EnumXmlTranslation<Flora.PFPCDataType>.Instance.Parse(
+                        item.PFPCDataTypeState = EnumXmlTranslation<Flora.PFPCDataType>.Instance.Parse(
                             node: node,
-                            item: out Flora.PFPCDataType PFPCDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.PFPCDataTypeState = PFPCDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.PFPCDataTypeState = default(Flora.PFPCDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

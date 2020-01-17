@@ -1513,66 +1513,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Fluff1 = dataFrame.ReadUInt8();
                     item.UnitFromWaterAmount = dataFrame.ReadUInt16();
                     item.Fluff2 = dataFrame.ReadUInt16();
-                    if (EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Grass.UnitFromWaterType UnitFromWaterModeParse))
-                    {
-                        item.UnitFromWaterMode = UnitFromWaterModeParse;
-                    }
-                    else
-                    {
-                        item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single PositionRangeParse))
-                    {
-                        item.PositionRange = PositionRangeParse;
-                    }
-                    else
-                    {
-                        item.PositionRange = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single HeightRangeParse))
-                    {
-                        item.HeightRange = HeightRangeParse;
-                    }
-                    else
-                    {
-                        item.HeightRange = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single ColorRangeParse))
-                    {
-                        item.ColorRange = ColorRangeParse;
-                    }
-                    else
-                    {
-                        item.ColorRange = default(Single);
-                    }
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        item: out Single WavePeriodParse))
-                    {
-                        item.WavePeriod = WavePeriodParse;
-                    }
-                    else
-                    {
-                        item.WavePeriod = default(Single);
-                    }
-                    if (EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
-                        frame: dataFrame.SpawnWithLength(4),
-                        item: out Grass.GrassFlag FlagsParse))
-                    {
-                        item.Flags = FlagsParse;
-                    }
-                    else
-                    {
-                        item.Flags = default(Grass.GrassFlag);
-                    }
+                    item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.PositionRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HeightRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ColorRange = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return TryGet<int?>.Succeed((int)Grass_FieldIndex.Flags);
                 }
                 default:
@@ -2439,18 +2385,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2466,17 +2404,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.Density);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Density = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte DensityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Density = DensityParse;
-                        }
-                        else
-                        {
-                            item.Density = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2493,17 +2423,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.MinSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MinSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MinSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MinSlope = MinSlopeParse;
-                        }
-                        else
-                        {
-                            item.MinSlope = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2519,17 +2441,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.MaxSlope);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.MaxSlope = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte MaxSlopeParse,
-                            errorMask: errorMask))
-                        {
-                            item.MaxSlope = MaxSlopeParse;
-                        }
-                        else
-                        {
-                            item.MaxSlope = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2545,17 +2459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.Fluff1);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Fluff1 = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte Fluff1Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff1 = Fluff1Parse;
-                        }
-                        else
-                        {
-                            item.Fluff1 = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2571,17 +2477,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterAmount);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.UnitFromWaterAmount = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 UnitFromWaterAmountParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterAmount = UnitFromWaterAmountParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterAmount = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2597,17 +2495,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.Fluff2);
-                        if (UInt16XmlTranslation.Instance.Parse(
+                        item.Fluff2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt16 Fluff2Parse,
-                            errorMask: errorMask))
-                        {
-                            item.Fluff2 = Fluff2Parse;
-                        }
-                        else
-                        {
-                            item.Fluff2 = default(UInt16);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2623,17 +2513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.UnitFromWaterMode);
-                        if (EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                        item.UnitFromWaterMode = EnumXmlTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             node: node,
-                            item: out Grass.UnitFromWaterType UnitFromWaterModeParse,
-                            errorMask: errorMask))
-                        {
-                            item.UnitFromWaterMode = UnitFromWaterModeParse;
-                        }
-                        else
-                        {
-                            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2649,17 +2531,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.PositionRange);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.PositionRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single PositionRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.PositionRange = PositionRangeParse;
-                        }
-                        else
-                        {
-                            item.PositionRange = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2675,17 +2549,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.HeightRange);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.HeightRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single HeightRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.HeightRange = HeightRangeParse;
-                        }
-                        else
-                        {
-                            item.HeightRange = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2701,17 +2567,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.ColorRange);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.ColorRange = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single ColorRangeParse,
-                            errorMask: errorMask))
-                        {
-                            item.ColorRange = ColorRangeParse;
-                        }
-                        else
-                        {
-                            item.ColorRange = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2727,17 +2585,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.WavePeriod);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.WavePeriod = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single WavePeriodParse,
-                            errorMask: errorMask))
-                        {
-                            item.WavePeriod = WavePeriodParse;
-                        }
-                        else
-                        {
-                            item.WavePeriod = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2753,17 +2603,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.Flags);
-                        if (EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Grass.GrassFlag>.Instance.Parse(
                             node: node,
-                            item: out Grass.GrassFlag FlagsParse,
-                            errorMask: errorMask))
-                        {
-                            item.Flags = FlagsParse;
-                        }
-                        else
-                        {
-                            item.Flags = default(Grass.GrassFlag);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2779,17 +2621,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Grass_FieldIndex.DATADataTypeState);
-                        if (EnumXmlTranslation<Grass.DATADataType>.Instance.Parse(
+                        item.DATADataTypeState = EnumXmlTranslation<Grass.DATADataType>.Instance.Parse(
                             node: node,
-                            item: out Grass.DATADataType DATADataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.DATADataTypeState = DATADataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.DATADataTypeState = default(Grass.DATADataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

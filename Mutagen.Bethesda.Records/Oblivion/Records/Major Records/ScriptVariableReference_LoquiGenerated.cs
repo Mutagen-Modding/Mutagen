@@ -1387,17 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)ScriptVariableReference_FieldIndex.VariableIndex);
-                        if (Int32XmlTranslation.Instance.Parse(
+                        item.VariableIndex = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Int32 VariableIndexParse,
-                            errorMask: errorMask))
-                        {
-                            item.VariableIndex = VariableIndexParse;
-                        }
-                        else
-                        {
-                            item.VariableIndex = default(Int32);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

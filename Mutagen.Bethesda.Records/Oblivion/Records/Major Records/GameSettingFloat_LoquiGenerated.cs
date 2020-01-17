@@ -1055,16 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out Single DataParse))
-                    {
-                        item.Data = DataParse;
-                    }
-                    else
-                    {
-                        item.Data = default(Single);
-                    }
+                    item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)GameSettingFloat_FieldIndex.Data);
                 }
                 default:
@@ -1716,17 +1707,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)GameSettingFloat_FieldIndex.Data);
-                        if (FloatXmlTranslation.Instance.Parse(
+                        item.Data = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Single DataParse,
-                            errorMask: errorMask))
-                        {
-                            item.Data = DataParse;
-                        }
-                        else
-                        {
-                            item.Data = default(Single);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

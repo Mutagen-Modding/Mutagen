@@ -1030,16 +1030,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        item: out ModKey MasterParse))
-                    {
-                        item.Master = MasterParse;
-                    }
-                    else
-                    {
-                        item.Master = default(ModKey);
-                    }
+                    item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 }
                 case 0x41544144: // DATA
@@ -1474,17 +1465,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.Master);
-                        if (ModKeyXmlTranslation.Instance.Parse(
+                        item.Master = ModKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out ModKey MasterParse,
-                            errorMask: errorMask))
-                        {
-                            item.Master = MasterParse;
-                        }
-                        else
-                        {
-                            item.Master = default(ModKey);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1500,17 +1483,9 @@ namespace Mutagen.Bethesda.Internals
                     try
                     {
                         errorMask?.PushIndex((int)MasterReference_FieldIndex.FileSize);
-                        if (UInt64XmlTranslation.Instance.Parse(
+                        item.FileSize = UInt64XmlTranslation.Instance.Parse(
                             node: node,
-                            item: out UInt64 FileSizeParse,
-                            errorMask: errorMask))
-                        {
-                            item.FileSize = FileSizeParse;
-                        }
-                        else
-                        {
-                            item.FileSize = default(UInt64);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

@@ -1480,33 +1480,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.SunTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String SunTextureParse))
-                    {
-                        item.SunTexture = SunTextureParse;
-                    }
-                    else
-                    {
-                        item.SunTexture = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
                 }
                 case 0x4D414E47: // GNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    if (Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.SunGlareTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
-                        parseWhole: true,
-                        item: out String SunGlareTextureParse))
-                    {
-                        item.SunGlareTexture = SunGlareTextureParse;
-                    }
-                    else
-                    {
-                        item.SunGlareTexture = default(String);
-                    }
+                        parseWhole: true);
                     return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
                 }
                 case 0x4C444F4D: // MODL
@@ -2548,17 +2532,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunTexture);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.SunTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String SunTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunTexture = SunTextureParse;
-                        }
-                        else
-                        {
-                            item.SunTexture = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2574,17 +2550,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunGlareTexture);
-                        if (StringXmlTranslation.Instance.Parse(
+                        item.SunGlareTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out String SunGlareTextureParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunGlareTexture = SunGlareTextureParse;
-                        }
-                        else
-                        {
-                            item.SunGlareTexture = default(String);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2600,18 +2568,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Model);
-                        if (LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
-                            item: out Model ModelParse,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model)))
-                        {
-                            item.Model = ModelParse;
-                        }
-                        else
-                        {
-                            item.Model = default(Model);
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)Climate_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2627,17 +2587,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunriseBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
+                        item.SunriseBegin = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out DateTime SunriseBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseBegin = SunriseBeginParse;
-                        }
-                        else
-                        {
-                            item.SunriseBegin = default(DateTime);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2654,17 +2606,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunriseEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
+                        item.SunriseEnd = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out DateTime SunriseEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunriseEnd = SunriseEndParse;
-                        }
-                        else
-                        {
-                            item.SunriseEnd = default(DateTime);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2680,17 +2624,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunsetBegin);
-                        if (DateTimeXmlTranslation.Instance.Parse(
+                        item.SunsetBegin = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out DateTime SunsetBeginParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetBegin = SunsetBeginParse;
-                        }
-                        else
-                        {
-                            item.SunsetBegin = default(DateTime);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2706,17 +2642,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.SunsetEnd);
-                        if (DateTimeXmlTranslation.Instance.Parse(
+                        item.SunsetEnd = DateTimeXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out DateTime SunsetEndParse,
-                            errorMask: errorMask))
-                        {
-                            item.SunsetEnd = SunsetEndParse;
-                        }
-                        else
-                        {
-                            item.SunsetEnd = default(DateTime);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2732,17 +2660,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Volatility);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.Volatility = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte VolatilityParse,
-                            errorMask: errorMask))
-                        {
-                            item.Volatility = VolatilityParse;
-                        }
-                        else
-                        {
-                            item.Volatility = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2758,17 +2678,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.Phase);
-                        if (EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
+                        item.Phase = EnumXmlTranslation<Climate.MoonPhase>.Instance.Parse(
                             node: node,
-                            item: out Climate.MoonPhase PhaseParse,
-                            errorMask: errorMask))
-                        {
-                            item.Phase = PhaseParse;
-                        }
-                        else
-                        {
-                            item.Phase = default(Climate.MoonPhase);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2784,17 +2696,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.PhaseLength);
-                        if (ByteXmlTranslation.Instance.Parse(
+                        item.PhaseLength = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            item: out Byte PhaseLengthParse,
-                            errorMask: errorMask))
-                        {
-                            item.PhaseLength = PhaseLengthParse;
-                        }
-                        else
-                        {
-                            item.PhaseLength = default(Byte);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2810,17 +2714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         errorMask?.PushIndex((int)Climate_FieldIndex.TNAMDataTypeState);
-                        if (EnumXmlTranslation<Climate.TNAMDataType>.Instance.Parse(
+                        item.TNAMDataTypeState = EnumXmlTranslation<Climate.TNAMDataType>.Instance.Parse(
                             node: node,
-                            item: out Climate.TNAMDataType TNAMDataTypeStateParse,
-                            errorMask: errorMask))
-                        {
-                            item.TNAMDataTypeState = TNAMDataTypeStateParse;
-                        }
-                        else
-                        {
-                            item.TNAMDataTypeState = default(Climate.TNAMDataType);
-                        }
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

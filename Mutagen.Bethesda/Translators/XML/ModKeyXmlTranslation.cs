@@ -16,6 +16,20 @@ namespace Mutagen.Bethesda
 
         public string ElementName => "ModKey";
 
+        public ModKey Parse(XElement node, ErrorMaskBuilder errorMask)
+        {
+            if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
+            {
+                return ModKey.NULL;
+            }
+
+            if (!ModKey.TryFactory(str, out var item))
+            {
+                return ModKey.NULL;
+            }
+            return item;
+        }
+
         public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder errorMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
