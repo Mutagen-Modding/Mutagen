@@ -61,9 +61,8 @@ namespace Mutagen.Bethesda.Binary
         }
 
         #region Out Parameters
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             BinarySubParseDelegate transl)
@@ -88,13 +87,11 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
-            item = ret;
-            return true;
+            return ret;
         }
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> item,
             RecordType triggeringRecord,
             int lengthLength,
             ErrorMaskBuilder errorMask,
@@ -132,14 +129,12 @@ namespace Mutagen.Bethesda.Binary
                     }
                 }
             }
-            item = ret;
-            return true;
+            return ret;
         }
 
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
             long lengthLength,
             ErrorMaskBuilder errorMask,
             BinarySubParseRecordErrDelegate transl,
@@ -177,13 +172,11 @@ namespace Mutagen.Bethesda.Binary
                     }
                 }
             }
-            enumer = ret;
-            return true;
+            return ret;
         }
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
             long lengthLength,
             BinarySubParseRecordDelegate transl,
             ICollectionGetter<RecordType> triggeringRecord = null)
@@ -207,8 +200,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
                 }
             }
-            enumer = ret;
-            return true;
+            return ret;
         }
         #endregion
 
@@ -220,25 +212,18 @@ namespace Mutagen.Bethesda.Binary
             int lengthLength,
             BinarySubParseDelegate transl)
         {
-            if (ParseRepeatedItem(
+            var enumer = ParseRepeatedItem(
                 frame,
-                out var enumer,
                 triggeringRecord,
                 lengthLength,
-                transl: transl))
+                transl: transl);
+            if (item is ISetList<T> setList)
             {
-                if (item is ISetList<T> setList)
-                {
-                    setList.SetTo(enumer);
-                }
-                else
-                {
-                    item.SetTo(enumer);
-                }
+                setList.SetTo(enumer);
             }
             else
             {
-                item.Clear();
+                item.SetTo(enumer);
             }
         }
 
@@ -255,26 +240,19 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (ParseRepeatedItem(
+                    var enumer =ParseRepeatedItem(
                         frame,
-                        out var enumer,
                         triggeringRecord,
                         lengthLength,
                         errorMask: errorMask,
-                        transl: transl))
+                        transl: transl);
+                    if (item is ISetList<T> setList)
                     {
-                        if (item is ISetList<T> setList)
-                        {
-                            setList.SetTo(enumer);
-                        }
-                        else
-                        {
-                            item.SetTo(enumer);
-                        }
+                        setList.SetTo(enumer);
                     }
                     else
                     {
-                        item.Clear();
+                        item.SetTo(enumer);
                     }
                 }
                 catch (Exception ex)
@@ -339,26 +317,19 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (ParseRepeatedItem(
+                    var enumer = ParseRepeatedItem(
                         frame,
-                        out var enumer,
                         lengthLength,
                         errorMask: errorMask,
                         transl: transl,
-                        triggeringRecord: triggeringRecord))
+                        triggeringRecord: triggeringRecord);
+                    if (item is ISetList<T> setList)
                     {
-                        if (item is ISetList<T> setList)
-                        {
-                            setList.SetTo(enumer);
-                        }
-                        else
-                        {
-                            item.SetTo(enumer);
-                        }
+                        setList.SetTo(enumer);
                     }
                     else
                     {
-                        item.Clear();
+                        item.SetTo(enumer);
                     }
                 }
                 catch (Exception ex)
@@ -370,9 +341,8 @@ namespace Mutagen.Bethesda.Binary
         }
         #endregion
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
         {
@@ -396,8 +366,7 @@ namespace Mutagen.Bethesda.Binary
                     }
                 }
             }
-            enumer = ret;
-            return true;
+            return ret;
         }
 
         public bool ParseRepeatedItem(
@@ -428,24 +397,17 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (ParseRepeatedItem(
+                    var enumer = ParseRepeatedItem(
                         frame,
-                        out var enumer,
                         errorMask: errorMask,
-                        transl: transl))
+                        transl: transl);
+                    if (item is ISetList<T> setList)
                     {
-                        if (item is ISetList<T> setList)
-                        {
-                            setList.SetTo(enumer);
-                        }
-                        else
-                        {
-                            item.SetTo(enumer);
-                        }
+                        setList.SetTo(enumer);
                     }
                     else
                     {
-                        item.Clear();
+                        item.SetTo(enumer);
                     }
                 }
                 catch (Exception ex)
@@ -496,9 +458,8 @@ namespace Mutagen.Bethesda.Binary
                 });
         }
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
             int amount,
             ErrorMaskBuilder errorMask,
             BinarySubParseErrDelegate transl)
@@ -522,13 +483,11 @@ namespace Mutagen.Bethesda.Binary
                     }
                 }
             }
-            enumer = ret;
-            return true;
+            return ret;
         }
 
-        public bool ParseRepeatedItem(
+        public IEnumerable<T> ParseRepeatedItem(
             MutagenFrame frame,
-            out IEnumerable<T> enumer,
             int amount,
             BinarySubParseDelegate transl)
         {
@@ -540,8 +499,7 @@ namespace Mutagen.Bethesda.Binary
                     ret.Add(subItem);
                 }
             }
-            enumer = ret;
-            return true;
+            return ret;
         }
 
         public void ParseRepeatedItem(
@@ -556,25 +514,18 @@ namespace Mutagen.Bethesda.Binary
             {
                 try
                 {
-                    if (ParseRepeatedItem(
+                    var enumer = ParseRepeatedItem(
                         frame,
-                        out var enumer,
                         amount: amount,
                         errorMask: errorMask,
-                        transl: transl))
+                        transl: transl);
+                    if (item is ISetList<T> setList)
                     {
-                        if (item is ISetList<T> setList)
-                        {
-                            setList.SetTo(enumer);
-                        }
-                        else
-                        {
-                            item.SetTo(enumer);
-                        }
+                        setList.SetTo(enumer);
                     }
                     else
                     {
-                        item.Clear();
+                        item.SetTo(enumer);
                     }
                 }
                 catch (Exception ex)
@@ -591,24 +542,17 @@ namespace Mutagen.Bethesda.Binary
             int amount,
             BinarySubParseDelegate transl)
         {
-            if (ParseRepeatedItem(
+            var enumer = ParseRepeatedItem(
                 frame,
-                out var enumer,
                 amount: amount,
-                transl: transl))
+                transl: transl);
+            if (item is ISetList<T> setList)
             {
-                if (item is ISetList<T> setList)
-                {
-                    setList.SetTo(enumer);
-                }
-                else
-                {
-                    item.SetTo(enumer);
-                }
+                setList.SetTo(enumer);
             }
             else
             {
-                item.Clear();
+                item.SetTo(enumer);
             }
         }
 
