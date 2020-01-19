@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>928f570a3251e5cb67f47a820718482f89829c1b</Sha>
+         <Sha>579cb7dfeea4c87602be61bef3cc1f117cf9aa31</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-12-2020 18:52:43</CommitDate>
-         <Description>IViewForExt.BindToString /w observe on GUI call</Description>
+         <CommitDate>01-19-2020 00:11:51</CommitDate>
+         <Description>NuGet updates</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

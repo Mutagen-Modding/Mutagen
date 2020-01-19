@@ -1719,6 +1719,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="11.1.6" />
+    <PackageReference Include="ReactiveUI" Version="11.1.12" />
   </ItemGroup>
 </Project>
