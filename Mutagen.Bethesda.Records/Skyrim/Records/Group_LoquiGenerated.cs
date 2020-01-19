@@ -316,15 +316,13 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -335,39 +333,20 @@ namespace Mutagen.Bethesda.Skyrim
             return await CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinaryWithErrorMask<T_ErrMask>(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return (ret, Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Group<T>();
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -838,43 +817,21 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<Group_ErrorMask<T_ErrMask>> CopyInFromBinaryWithErrorMask<T, T_ErrMask>(
-            this IGroup<T> item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-            where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            await CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem
         {
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1182,14 +1139,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             IGroup<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
@@ -1201,7 +1156,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1214,19 +1168,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
-                            fieldIndex: (int)Group_FieldIndex.RecordCache,
                             lengthLength: 4,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
+                            transl: (MutagenFrame r) =>
                             {
                                 return LoquiBinaryAsyncTranslation<T>.Instance.Parse(
                                     frame: r,
-                                    errorMask: dictSubMask,
                                     masterReferences: masterReferences);
                             }).ConfigureAwait(false);
                         return TryGet<int?>.Failure;
                     }
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
@@ -1236,14 +1186,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             await UtilityAsyncTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
@@ -2447,36 +2395,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         public static void Write_Embedded<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
@@ -2489,22 +2432,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.RecordCache.Items,
-                fieldIndex: (int)Group_FieldIndex.RecordCache,
-                errorMask: errorMask,
-                transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
+                transl: (MutagenWriter r, T dictSubItem) =>
                 {
                     var loquiItem = dictSubItem;
                     ((SkyrimMajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                         item: loquiItem,
                         writer: r,
-                        errorMask: dictSubMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 });
@@ -2514,8 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
@@ -2526,13 +2464,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
                 Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
@@ -2541,8 +2477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             throw new NotImplementedException();
         }
@@ -2557,20 +2492,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void FillBinaryContainedRecordTypeParseCustomPublic(
             MutagenFrame frame,
             IGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
     }
@@ -2584,40 +2516,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary<T>(
-            this IGroupGetter<T> item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-            where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -2626,8 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -2692,15 +2589,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region ContainedRecordTypeParse

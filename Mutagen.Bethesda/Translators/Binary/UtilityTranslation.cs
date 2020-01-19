@@ -22,8 +22,7 @@ namespace Mutagen.Bethesda
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public delegate TryGet<int?> RecordTypeFill<R>(
             R record,
@@ -31,7 +30,6 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter);
 
         public delegate TryGet<int?> RecordTypelessStructFill<R>(
@@ -41,7 +39,6 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter);
 
         public delegate TryGet<int?> ModRecordTypeFill<R, G>(
@@ -50,14 +47,12 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             G importMask,
             RecordTypeConverter recordTypeConverter);
 
         public static M MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
-            ErrorMaskBuilder errorMask,
             RecordType recType,
             RecordTypeConverter recordTypeConverter,
             MasterReferences masterReferences,
@@ -71,8 +66,7 @@ namespace Mutagen.Bethesda
             fillStructs(
                 record: record,
                 frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             if (fillTyped == null) return record;
             MutagenFrame targetFrame = frame;
             if (record.IsCompressed)
@@ -89,7 +83,6 @@ namespace Mutagen.Bethesda
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.RecordLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask,
                     recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (targetFrame.Position < finalPos)
@@ -106,23 +99,13 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
-            try
-            {
-                fillStructs?.Invoke(
-                    record: record,
-                    frame: frame,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
             if (setFinal)
             {
                 frame.SetToFinalPosition();
@@ -135,41 +118,30 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var subMeta = frame.MetaData.GetSubRecord(frame);
+                var finalPos = frame.Position + subMeta.TotalLength;
+                var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    nextRecordType: subMeta.RecordType,
+                    contentLength: subMeta.RecordLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var subMeta = frame.MetaData.GetSubRecord(frame);
-                    var finalPos = frame.Position + subMeta.TotalLength;
-                    var parsed = fillTyped(
-                        record: record,
-                        frame: frame,
-                        nextRecordType: subMeta.RecordType,
-                        contentLength: subMeta.RecordLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
             }
             if (setFinal)
             {
@@ -183,23 +155,13 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
-            try
-            {
-                fillStructs?.Invoke(
-                    record: record,
-                    frame: frame,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
             if (setFinal)
             {
                 frame.SetToFinalPosition();
@@ -212,44 +174,33 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            int? lastParsed = null;
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var subMeta = frame.MetaData.GetSubRecord(frame);
+                var finalPos = frame.Position + subMeta.TotalLength;
+                var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    lastParsed: lastParsed,
+                    nextRecordType: subMeta.RecordType,
+                    contentLength: subMeta.RecordLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                int? lastParsed = null;
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var subMeta = frame.MetaData.GetSubRecord(frame);
-                    var finalPos = frame.Position + subMeta.TotalLength;
-                    var parsed = fillTyped(
-                        record: record,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: subMeta.RecordType,
-                        contentLength: subMeta.RecordLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
-                    lastParsed = parsed.Value;
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
+                lastParsed = parsed.Value;
             }
             if (setFinal)
             {
@@ -262,51 +213,40 @@ namespace Mutagen.Bethesda
             G record,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
-            try
+            var groupMeta = frame.MetaData.GetGroup(frame);
+            if (!groupMeta.IsGroup)
             {
-                var groupMeta = frame.MetaData.GetGroup(frame);
-                if (!groupMeta.IsGroup)
-                {
-                    throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");
-                }
-                frame.Position += groupMeta.TypeAndLengthLength;
-                frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
+                throw new ArgumentException($"Expected GRUP header was not read in: {frame.Position}");
+            }
+            frame.Position += groupMeta.TypeAndLengthLength;
+            frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
 
-                fillStructs?.Invoke(
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            while (!frame.Complete)
+            {
+                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                    reader: frame.Reader,
+                    contentLength: out var contentLength);
+                var finalPos = frame.Position + contentLength;
+                var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    nextRecordType: nextRecordType,
+                    contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength;
-                    var parsed = fillTyped(
-                        record: record,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
             }
             frame.SetToFinalPosition();
             return record;
@@ -317,44 +257,33 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             MasterReferences masterReferences,
             G importMask,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             ModRecordTypeFill<M, G> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var nextRecordType = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    finalPos: out var finalPos,
+                    contentLength: out var contentLength);
+                var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    importMask: importMask,
+                    nextRecordType: nextRecordType,
+                    contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextType(
-                        reader: frame.Reader,
-                        finalPos: out var finalPos,
-                        contentLength: out var contentLength);
-                    var parsed = fillTyped(
-                        record: record,
-                        frame: frame,
-                        importMask: importMask,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
             }
             frame.SetToFinalPosition();
             return record;
@@ -572,8 +501,7 @@ namespace Mutagen.Bethesda
         public delegate void RecordStructFill<R>(
             R record,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public delegate Task<TryGet<int?>> RecordTypeFill<R>(
             R record,
@@ -581,7 +509,6 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter);
 
         public delegate Task<TryGet<int?>> RecordTypelessStructFill<R>(
@@ -591,7 +518,6 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter);
 
         public delegate Task<TryGet<int?>> ModRecordTypeFill<R, G>(
@@ -600,14 +526,12 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             G importMask,
             RecordTypeConverter recordTypeConverter);
 
         public static async Task<M> MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
-            ErrorMaskBuilder errorMask,
             RecordType recType,
             RecordTypeConverter recordTypeConverter,
             MasterReferences masterReferences,
@@ -621,8 +545,7 @@ namespace Mutagen.Bethesda
             fillStructs(
                 record: record,
                 frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             if (fillTyped == null) return record;
             MutagenFrame targetFrame = frame;
             if (record.IsCompressed)
@@ -641,7 +564,6 @@ namespace Mutagen.Bethesda
                     nextRecordType: nextRecordType,
                     contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
                 if (parsed.Failed) break;
                 if (targetFrame.Position < finalPos)
@@ -658,23 +580,13 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
-            try
-            {
-                fillStructs?.Invoke(
-                    record: record,
-                    frame: frame,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
             if (setFinal)
             {
                 frame.SetToFinalPosition();
@@ -687,43 +599,32 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                    reader: frame.Reader,
+                    contentLength: out var contentLength);
+                var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
+                var parsed = await fillTyped(
                     record: record,
                     frame: frame,
+                    nextRecordType: nextRecordType,
+                    contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
-                    var parsed = await fillTyped(
-                        record: record,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
             }
             if (setFinal)
             {
@@ -737,23 +638,13 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
-            try
-            {
-                fillStructs?.Invoke(
-                    record: record,
-                    frame: frame,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
             if (setFinal)
             {
                 frame.SetToFinalPosition();
@@ -766,46 +657,35 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            int? lastParsed = null;
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                    reader: frame.Reader,
+                    contentLength: out var contentLength);
+                var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
+                var parsed = await fillTyped(
                     record: record,
                     frame: frame,
+                    lastParsed: lastParsed,
+                    nextRecordType: nextRecordType,
+                    contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                int? lastParsed = null;
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                if (parsed.Failed) break;
+                if (frame.Position < finalPos)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                        reader: frame.Reader,
-                        contentLength: out var contentLength);
-                    var finalPos = frame.Position + contentLength + frame.MetaData.SubConstants.HeaderLength;
-                    var parsed = await fillTyped(
-                        record: record,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-                    if (parsed.Failed) break;
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
-                    lastParsed = parsed.Value;
+                    frame.Position = finalPos;
                 }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
+                lastParsed = parsed.Value;
             }
             if (setFinal)
             {
@@ -818,63 +698,48 @@ namespace Mutagen.Bethesda
             G record,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
-            if (errorMask != null)
+            if (!HeaderTranslation.TryParse(
+                frame,
+                Mutagen.Bethesda.Constants.GRUP,
+                out var grupLen,
+                frame.MetaData.GroupConstants.LengthLength))
             {
-                throw new NotImplementedException();
+                throw new ArgumentException($"Expected header was not read in: {Mutagen.Bethesda.Constants.GRUP}");
             }
-            try
-            {
-                if (!HeaderTranslation.TryParse(
-                    frame,
-                    Mutagen.Bethesda.Constants.GRUP,
-                    out var grupLen,
-                    frame.MetaData.GroupConstants.LengthLength))
-                {
-                    throw new ArgumentException($"Expected header was not read in: {Mutagen.Bethesda.Constants.GRUP}");
-                }
-                var groupLen = checked((int)(grupLen - frame.MetaData.GroupConstants.TypeAndLengthLength));
-                frame = frame.ReadAndReframe(groupLen);
+            var groupLen = checked((int)(grupLen - frame.MetaData.GroupConstants.TypeAndLengthLength));
+            frame = frame.ReadAndReframe(groupLen);
 
-                return await Task.Run(async () =>
+            return await Task.Run(async () =>
+            {
+                fillStructs?.Invoke(
+                    record: record,
+                    frame: frame,
+                    masterReferences: masterReferences);
+                while (!frame.Complete)
                 {
-                    fillStructs?.Invoke(
+                    var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                        reader: frame.Reader,
+                        contentLength: out var contentLength);
+                    var finalPos = frame.Position + contentLength;
+                    var parsed = await fillTyped(
                         record: record,
                         frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
                         masterReferences: masterReferences,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
+                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+                    if (parsed.Failed) break;
+                    if (frame.Position < finalPos)
                     {
-                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                            reader: frame.Reader,
-                            contentLength: out var contentLength);
-                        var finalPos = frame.Position + contentLength;
-                        var parsed = await fillTyped(
-                            record: record,
-                            frame: frame,
-                            nextRecordType: nextRecordType,
-                            contentLength: contentLength,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-                        if (parsed.Failed) break;
-                        if (frame.Position < finalPos)
-                        {
-                            frame.Position = finalPos;
-                        }
+                        frame.Position = finalPos;
                     }
-                    return record;
-                }).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+                }
+                return record;
+            }).ConfigureAwait(false);
             frame.SetToFinalPosition();
             return record;
         }
@@ -884,46 +749,35 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             MasterReferences masterReferences,
             G importMask,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter,
             RecordStructFill<M> fillStructs,
             ModRecordTypeFill<M, G> fillTyped)
         {
-            try
+            fillStructs?.Invoke(
+                record: record,
+                frame: frame,
+                masterReferences: masterReferences);
+            List<Task> tasks = new List<Task>();
+            while (!frame.Complete)
             {
-                fillStructs?.Invoke(
+                var nextRecordType = HeaderTranslation.GetNextType(
+                    reader: frame.Reader,
+                    finalPos: out var finalPos,
+                    contentLength: out var contentLength);
+                tasks.Add(fillTyped(
                     record: record,
                     frame: frame,
+                    importMask: importMask,
+                    nextRecordType: nextRecordType,
+                    contentLength: contentLength,
                     masterReferences: masterReferences,
-                    errorMask: errorMask);
-                List<Task> tasks = new List<Task>();
-                while (!frame.Complete)
+                    recordTypeConverter: recordTypeConverter));
+                if (frame.Position < finalPos)
                 {
-                    var nextRecordType = HeaderTranslation.GetNextType(
-                        reader: frame.Reader,
-                        finalPos: out var finalPos,
-                        contentLength: out var contentLength);
-                    tasks.Add(fillTyped(
-                        record: record,
-                        frame: frame,
-                        importMask: importMask,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask,
-                        recordTypeConverter: recordTypeConverter));
-                    if (frame.Position < finalPos)
-                    {
-                        frame.Position = finalPos;
-                    }
+                    frame.Position = finalPos;
                 }
-                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            await Task.WhenAll(tasks).ConfigureAwait(false);
             frame.SetToFinalPosition();
             return record;
         }

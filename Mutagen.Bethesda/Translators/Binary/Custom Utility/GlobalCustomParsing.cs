@@ -36,7 +36,6 @@ namespace Mutagen.Bethesda.Binary
         public static T Create<T>(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             Func<MutagenFrame, MasterReferences, char, T> getter)
             where T : IMajorRecordCommon, IGlobalCommon
         {

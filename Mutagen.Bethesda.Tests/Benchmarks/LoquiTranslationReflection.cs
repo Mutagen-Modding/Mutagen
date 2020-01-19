@@ -32,8 +32,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             return Ammo.CreateFromBinary(
                 frame: _frame,
                 masterReferences: _masterRefs,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
         [Benchmark]
@@ -43,8 +42,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             return _create(
                 reader: _frame,
                 masterReferences: _masterRefs,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
     }
 }

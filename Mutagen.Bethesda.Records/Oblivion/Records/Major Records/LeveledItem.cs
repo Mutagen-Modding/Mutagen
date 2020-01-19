@@ -14,14 +14,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class LeveledItemSetterCommon
         {
-            static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame, ErrorMaskBuilder errorMask)
+            static partial void SpecialParse_Vestigial(ILeveledItemInternal item, MutagenFrame frame)
             {
                 var rec = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var length);
                 if (length != 1)
                 {
-                    errorMask.ReportExceptionOrThrow(
-                        new ArgumentException($"Unexpected length: {length}"));
-                    return;
+                    throw new ArgumentException($"Unexpected length: {length}");
                 }
                 if (ByteBinaryTranslation.Instance.Parse(
                     frame,

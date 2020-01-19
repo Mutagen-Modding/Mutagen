@@ -374,7 +374,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
                     args.Add($"MasterReferences masterReferences");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -386,7 +385,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("item: item");
                             args.Add("frame: frame");
                             args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
                         }
                     }
                     foreach (var field in obj.IterateFields(
@@ -427,7 +425,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("RecordType nextRecordType");
                     args.Add("int contentLength");
                     args.Add("MasterReferences masterReferences");
-                    args.Add($"ErrorMaskBuilder errorMask");
                     if (data.ObjectType == ObjectType.Mod)
                     {
                         args.Add($"GroupMask importMask");
@@ -554,7 +551,6 @@ namespace Mutagen.Bethesda.Generation
                                         args.Add("recordTypeConverter: recordTypeConverter");
                                     }
                                     args.Add($"masterReferences: masterReferences");
-                                    args.Add($"errorMask: errorMask");
                                 }
                             }
                             else
@@ -570,7 +566,6 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    fg.AppendLine($"errorMask?.ReportWarning($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
                                     string addString;
                                     switch (obj.GetObjectType())
                                     {
@@ -714,7 +709,6 @@ namespace Mutagen.Bethesda.Generation
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
                 args.Add("MasterReferences masterReferences");
-                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (var args = new FunctionWrapper(fg,
                 $"public static void CustomBinaryEndExportInternal"))
@@ -722,7 +716,6 @@ namespace Mutagen.Bethesda.Generation
                 args.Add("MutagenWriter writer");
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
                 args.Add("MasterReferences masterReferences");
-                args.Add($"ErrorMaskBuilder errorMask");
             }
             using (new BraceWrapper(fg))
             {
@@ -732,7 +725,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"writer: writer");
                     args.Add($"obj: obj");
                     args.Add($"masterReferences: masterReferences");
-                    args.Add($"errorMask: errorMask");
                 }
             }
         }
@@ -749,7 +741,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
                     args.Add("MasterReferences masterReferences");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new FunctionWrapper(fg,
                     $"public static void CustomBinaryEndImportPublic"))
@@ -757,7 +748,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("MutagenFrame frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");
                     args.Add("MasterReferences masterReferences");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -767,7 +757,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("frame: frame");
                         args.Add($"obj: obj");
                         args.Add("masterReferences: masterReferences");
-                        args.Add($"errorMask: errorMask");
                     }
                 }
             }
@@ -872,7 +861,7 @@ namespace Mutagen.Bethesda.Generation
                 readerAccessor: frameAccessor,
                 itemAccessor: new Accessor(field, "item."),
                 translationAccessor: null,
-                errorMaskAccessor: $"errorMask");
+                errorMaskAccessor: null);
         }
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
@@ -945,7 +934,6 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add("recordType: nextRecord");
                                 args.Add("recordTypeConverter: recordTypeConverter");
                                 args.Add("masterReferences: masterReferences");
-                                args.Add("errorMask: errorMask");
                             }
                         }
                         fg.AppendLine("default:");
@@ -986,7 +974,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"record: {accessor}");
                     args.Add($"frame: frame");
-                    args.Add($"errorMask: errorMask");
                     args.Add($"recType: RecordType");
                     args.Add($"recordTypeConverter: recordTypeConverter");
                     args.Add($"masterReferences: masterReferences");
@@ -995,23 +982,12 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (data.CustomBinaryEnd != CustomEnd.Off)
                 {
-                    fg.AppendLine("try");
-                    using (new BraceWrapper(fg))
+                    using (var args = new ArgsWrapper(fg,
+                        $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
-                        {
-                            args.Add("frame: frame");
-                            args.Add($"obj: {accessor}");
-                            args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
-                        }
-                    }
-                    fg.AppendLine("catch (Exception ex)");
-                    fg.AppendLine("when (errorMask != null)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("errorMask.ReportException(ex);");
+                        args.Add("frame: frame");
+                        args.Add($"obj: {accessor}");
+                        args.Add("masterReferences: masterReferences");
                     }
                 }
             }
@@ -1066,7 +1042,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add($"setFinal: {(obj.TryGetRecordType(out var recType) ? "true" : "false")}");
                             args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
@@ -1083,7 +1058,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
                             args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
@@ -1101,7 +1075,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add("frame: frame");
                             args.Add("importMask: importMask");
                             args.Add("masterReferences: masterReferences");
-                            args.Add("errorMask: errorMask");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))
@@ -1121,7 +1094,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add("frame: frame");
                         args.Add($"obj: {accessor}");
-                        args.Add("errorMask: errorMask");
                         args.Add("masterReferences: masterReferences");
                     }
                 }
@@ -1153,7 +1125,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
-                        args.Add($"errorMask: errorMask");
                         args.Add($"masterReferences: masterReferences");
                     }
                 }
@@ -1167,7 +1138,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
-                            args.Add($"errorMask: errorMask");
                             args.Add($"masterReferences: masterReferences");
                         }
                     }
@@ -1185,7 +1155,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"modKey: modKey");
                         }
                         args.Add($"recordTypeConverter: recordTypeConverter");
-                        args.Add($"errorMask: errorMask");
                         if (obj.GetObjectType() != ObjectType.Mod)
                         {
                             args.Add($"masterReferences: masterReferences");
@@ -1203,7 +1172,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"item: item");
                             args.Add($"writer: writer");
                             args.Add($"recordTypeConverter: recordTypeConverter");
-                            args.Add($"errorMask: errorMask");
                             args.Add($"masterReferences: masterReferences");
                         }
                     }
@@ -1216,7 +1184,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("writer: writer");
                     args.Add("obj: item");
-                    args.Add("errorMask: errorMask");
                     args.Add($"masterReferences: masterReferences");
                 }
             }
@@ -1233,7 +1200,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                     args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
                     args.Add("MutagenWriter writer");
-                    args.Add($"ErrorMaskBuilder errorMask");
                     args.Add($"MasterReferences masterReferences");
                 }
                 using (new BraceWrapper(fg))
@@ -1248,7 +1214,6 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add("item: item");
                                 args.Add("writer: writer");
-                                args.Add("errorMask: errorMask");
                                 args.Add("masterReferences: masterReferences");
                             }
                         }
@@ -1298,7 +1263,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "writer",
                                 itemAccessor: new Accessor(field, "item."),
                                 translationAccessor: null,
-                                errorMaskAccessor: "errorMask");
+                                errorMaskAccessor: null);
                         }
                     }
                 }
@@ -1319,7 +1284,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"ModKey modKey");
                     }
                     args.Add("RecordTypeConverter recordTypeConverter");
-                    args.Add($"ErrorMaskBuilder errorMask");
                     if (obj.GetObjectType() != ObjectType.Mod)
                     {
                         args.Add($"MasterReferences masterReferences");
@@ -1349,7 +1313,6 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add("recordTypeConverter: recordTypeConverter");
                                 }
-                                args.Add($"errorMask: errorMask");
                                 args.Add($"masterReferences: masterReferences");
                             }
                         }
@@ -1399,7 +1362,6 @@ namespace Mutagen.Bethesda.Generation
                                             {
                                                 args.Add("writer: writer");
                                                 args.Add("item: item");
-                                                args.Add("errorMask: errorMask");
                                                 args.Add($"masterReferences: masterReferences");
                                             }
                                             continue;
@@ -1430,7 +1392,7 @@ namespace Mutagen.Bethesda.Generation
                                             writerAccessor: "writer",
                                                 translationAccessor: null,
                                             itemAccessor: new Accessor(subField.Field, "item."),
-                                            errorMaskAccessor: $"errorMask");
+                                            errorMaskAccessor: null);
                                     }
                                     for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                     {
@@ -1469,7 +1431,7 @@ namespace Mutagen.Bethesda.Generation
                                     writerAccessor: "writer",
                                     itemAccessor: accessor,
                                     translationAccessor: null,
-                                    errorMaskAccessor: $"errorMask");
+                                    errorMaskAccessor: null);
                             }
                         }
                     }

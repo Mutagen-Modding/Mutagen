@@ -306,15 +306,13 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -325,40 +323,20 @@ namespace Mutagen.Bethesda.Skyrim
             return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static Decal CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out Decal_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+                recordTypeConverter: null);
         }
 
         public static Decal CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Decal();
             ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -783,41 +761,20 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IDecal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out Decal_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IDecal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1186,8 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             IDecal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             item.MinWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.MaxWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1208,8 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDecal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1219,7 +1174,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 setFinal: true,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -2674,7 +2628,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_Embedded(
             IDecalGetter item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -2714,8 +2667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IDecalGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2725,7 +2677,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
@@ -2734,15 +2685,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IDecalGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2762,45 +2711,13 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDecalGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Decal_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Decal_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary(
-            this IDecalGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary(
-            this IDecalGetter item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
         {
             ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -2859,15 +2776,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         public Single MinWidth => SpanExt.GetFloat(_data.Span.Slice(0, 4));

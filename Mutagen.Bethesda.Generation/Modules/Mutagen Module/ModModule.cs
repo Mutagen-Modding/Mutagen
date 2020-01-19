@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);");
                     }
                     fg.AppendLine($"subStreams[0] = groupByteStream;");
                     fg.AppendLine($"Parallel.ForEach(cuts, (cutItems, state, counter) =>");
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
-                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);");
+                        fg.AppendLine($"GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);");
                     }
                     fg.AppendLine($"streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));");
                     fg.AppendLine($"foreach (var cutItems in group.Records.Cut(CutCount))");

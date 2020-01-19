@@ -21,21 +21,21 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class SoundDataExtendedBinaryWriteTranslation
         {
-            static partial void WriteBinaryStaticAttenuationCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryStaticAttenuationCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences)
             {
                 UInt16BinaryTranslation.Instance.Write(
                     writer,
                     (ushort)Math.Round(item.StaticAttenuation * 100));
             }
 
-            static partial void WriteBinaryStartTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryStartTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences)
             {
                 ByteBinaryTranslation.Instance.Write(
                     writer,
                     (byte)Math.Round(item.StartTime / 1440f * 256f));
             }
 
-            static partial void WriteBinaryStopTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryStopTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item, MasterReferences masterReferences)
             {
                 ByteBinaryTranslation.Instance.Write(
                     writer,
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static float ConvertAttenuation(ushort i) => i / 100f;
             public static float ConvertTime(byte b) => b * 1440f / 256f;
 
-            static partial void FillBinaryStaticAttenuationCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryStaticAttenuationCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences)
             {
                 if (!UInt16BinaryTranslation.Instance.Parse(
                     frame,
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.StaticAttenuation = ConvertAttenuation(i);
             }
 
-            static partial void FillBinaryStartTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryStartTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences)
             {
                 if (!ByteBinaryTranslation.Instance.Parse(
                     frame,
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item.StartTime = ConvertTime(b);
             }
 
-            static partial void FillBinaryStopTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryStopTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item, MasterReferences masterReferences)
             {
                 if (!ByteBinaryTranslation.Instance.Parse(
                     frame,

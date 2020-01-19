@@ -20,12 +20,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDSD = new RecordType("RDSD");
         public static readonly RecordType RDMD = new RecordType("RDMD");
 
-        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences)
         {
             var rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(Region_Registration.RDAT_HEADER))
             {
-                ParseRegionData(frame, item, masterReferences, errorMask);
+                ParseRegionData(frame, item, masterReferences);
                 if (frame.Complete) break;
                 rdat = HeaderTranslation.GetNextSubRecordType(frame.Reader, out rdatType);
             }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        static void ParseRegionData(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static void ParseRegionData(MutagenFrame frame, IRegionInternal item, MasterReferences masterReferences)
         {
             var rdatFrame = frame.MetaData.GetSubRecordFrame(frame);
             RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.ContentSpan);
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionBinaryWriteTranslation
     {
-        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item, MasterReferences masterReferences)
         {
             if (item.Objects_IsSet)
             {

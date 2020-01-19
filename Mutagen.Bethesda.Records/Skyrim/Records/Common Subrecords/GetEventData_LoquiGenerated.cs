@@ -296,15 +296,13 @@ namespace Mutagen.Bethesda.Skyrim
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -315,40 +313,20 @@ namespace Mutagen.Bethesda.Skyrim
             return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static GetEventData CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out GetEventData_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+                recordTypeConverter: null);
         }
 
         public new static GetEventData CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new GetEventData();
             ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -729,41 +707,20 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IGetEventData item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out GetEventData_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IGetEventData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1084,8 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             IGetEventData item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             item.Unknown2 = frame.ReadUInt16();
             item.EventFunction = frame.ReadUInt16();
@@ -1106,15 +1062,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventData item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -2260,7 +2214,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void Write_Embedded(
             IGetEventDataGetter item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             writer.Write(item.Unknown2);
@@ -2285,13 +2238,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             IGetEventDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -2299,30 +2250,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IGetEventDataGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IGetEventDataGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2339,23 +2286,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Binary Write Mixins
     public static class GetEventDataBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IGetEventDataGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out GetEventData_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GetEventDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = GetEventData_ErrorMask.Factory(errorMaskBuilder);
-        }
-
     }
     #endregion
 
@@ -2403,15 +2333,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0, 2));

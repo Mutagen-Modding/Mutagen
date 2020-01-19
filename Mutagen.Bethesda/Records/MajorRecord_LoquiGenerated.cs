@@ -343,15 +343,13 @@ namespace Mutagen.Bethesda
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #endregion
 
@@ -782,41 +780,20 @@ namespace Mutagen.Bethesda
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IMajorRecordInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1310,8 +1287,7 @@ namespace Mutagen.Bethesda.Internals
         protected static void FillBinaryStructs(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
             item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(
@@ -1326,7 +1302,6 @@ namespace Mutagen.Bethesda.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1341,7 +1316,6 @@ namespace Mutagen.Bethesda.Internals
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 }
                 default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
@@ -1351,8 +1325,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
         }
         
@@ -2412,7 +2385,6 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Embedded(
             IMajorRecordGetter item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             writer.Write(item.MajorRecordFlagsRaw);
@@ -2427,7 +2399,6 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             if (item.EditorID_IsSet)
@@ -2445,19 +2416,16 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -2465,15 +2433,13 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IMajorRecordGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2493,45 +2459,13 @@ namespace Mutagen.Bethesda
         public static void WriteToBinary(
             this IMajorRecordGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = MajorRecord_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary(
-            this IMajorRecordGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary(
-            this IMajorRecordGetter item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
         {
             ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -2595,15 +2529,13 @@ namespace Mutagen.Bethesda.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));

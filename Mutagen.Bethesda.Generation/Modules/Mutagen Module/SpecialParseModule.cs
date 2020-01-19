@@ -22,21 +22,18 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new ArgsWrapper(fg,
                     $"static partial void SpecialWrite_{field.Name}"))
                 {
                     args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (var args = new FunctionWrapper(fg,
                     $"internal static void SpecialWrite_{field.Name}_Internal"))
                 {
                     args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"ErrorMaskBuilder errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -45,7 +42,6 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
-                        args.Add($"errorMask: errorMask");
                     }
                 }
             }

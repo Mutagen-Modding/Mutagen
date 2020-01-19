@@ -636,15 +636,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -655,38 +653,20 @@ namespace Mutagen.Bethesda.Oblivion
             return await CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<(Worldspace Object, Worldspace_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return (ret, Worldspace_ErrorMask.Factory(errorMaskBuilder));
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public new static async Task<Worldspace> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Worldspace();
             await ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -1195,40 +1175,20 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<Worldspace_ErrorMask> CopyInFromBinaryWithErrorMask(
-            this IWorldspaceInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            await CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return Worldspace_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             await ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1747,14 +1707,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IWorldspaceInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             PlaceSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
         
         protected static async Task<TryGet<int?>> FillBinaryRecordTypes(
@@ -1763,7 +1721,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1814,24 +1771,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E4D: // MNAM
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)Worldspace_FieldIndex.MapData);
-                        item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.MapData = Mutagen.Bethesda.Oblivion.MapData.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.MapData);
                 }
                 case 0x41544144: // DATA
@@ -1863,8 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WorldspaceBinaryCreateTranslation.FillBinaryOffsetLengthCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed(null);
                 }
                 case 0x5453464F: // OFST
@@ -1872,8 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WorldspaceBinaryCreateTranslation.FillBinaryOffsetDataCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.OffsetData);
                 }
                 default:
@@ -1883,8 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
             }
         }
         
@@ -1892,31 +1832,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             await UtilityAsyncTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
                 frame: frame,
-                errorMask: errorMask,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
-            try
-            {
-                await WorldspaceBinaryCreateTranslation.CustomBinaryEndImport(
-                    frame: frame,
-                    obj: item,
-                    masterReferences: masterReferences,
-                    errorMask: errorMask);
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask.ReportException(ex);
-            }
+            await WorldspaceBinaryCreateTranslation.CustomBinaryEndImport(
+                frame: frame,
+                obj: item,
+                masterReferences: masterReferences);
         }
         
         #endregion
@@ -4534,68 +4463,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryOffsetLengthCustom(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void WriteBinaryOffsetLength(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             WriteBinaryOffsetLengthCustom(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         static partial void WriteBinaryOffsetDataCustom(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void WriteBinaryOffsetData(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             WriteBinaryOffsetDataCustom(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IWorldspaceGetter obj,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
         public static void CustomBinaryEndExportInternal(
             MutagenWriter writer,
             IWorldspaceGetter obj,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             CustomBinaryEndExport(
                 writer: writer,
                 obj: obj,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
         public static void Write_Embedded(
             IWorldspaceGetter item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -4603,14 +4521,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
@@ -4663,7 +4579,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((MapDataBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
@@ -4704,21 +4619,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WorldspaceBinaryWriteTranslation.WriteBinaryOffsetLength(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             WorldspaceBinaryWriteTranslation.WriteBinaryOffsetData(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -4728,19 +4640,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
                 Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
             CustomBinaryEndExportInternal(
                 writer: writer,
                 obj: item,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -4748,60 +4657,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IPlaceGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IWorldspaceGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -4813,39 +4714,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryOffsetLengthCustom(
             MutagenFrame frame,
             IWorldspaceInternal item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void FillBinaryOffsetLengthCustomPublic(
             MutagenFrame frame,
             IWorldspaceInternal item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             FillBinaryOffsetLengthCustom(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         static partial void FillBinaryOffsetDataCustom(
             MutagenFrame frame,
             IWorldspaceInternal item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void FillBinaryOffsetDataCustomPublic(
             MutagenFrame frame,
             IWorldspaceInternal item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             FillBinaryOffsetDataCustom(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
     }
@@ -4856,23 +4751,6 @@ namespace Mutagen.Bethesda.Oblivion
     #region Binary Write Mixins
     public static class WorldspaceBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IWorldspaceGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Worldspace_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((WorldspaceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Worldspace_ErrorMask.Factory(errorMaskBuilder);
-        }
-
     }
     #endregion
 
@@ -4924,15 +4802,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region Name

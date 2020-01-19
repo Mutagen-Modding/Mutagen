@@ -32,9 +32,7 @@ namespace Mutagen.Bethesda.Tests
                 var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
                 mod.WriteToBinary(
                     oblivionOutputPath,
-                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                    errorMask: out var outputErrMask);
-                Assert.False(outputErrMask?.IsInError() ?? false);
+                    modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion);
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: MetaDataConstants.Get(GameMode.Oblivion));
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {
@@ -63,12 +61,10 @@ namespace Mutagen.Bethesda.Tests
                 mod.WriteToBinary(
                     oblivionOutputPath,
                     modKeyOverride: Mutagen.Bethesda.Oblivion.Constants.Oblivion,
-                    errorMask: out var outputErrMask,
                     importMask: new GroupMask()
                     {
                         NPCs = true
                     });
-                Assert.False(outputErrMask?.IsInError() ?? false);
                 var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, GameMode.Oblivion);
                 using (var reader = new BinaryReadStream(oblivionOutputPath))
                 {

@@ -391,15 +391,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -410,40 +408,20 @@ namespace Mutagen.Bethesda.Oblivion
             return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static Faction CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out Faction_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+                recordTypeConverter: null);
         }
 
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Faction();
             ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -831,41 +809,20 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IFactionInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out Faction_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IFactionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1209,14 +1166,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IFactionInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             OblivionMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1225,7 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1245,15 +1199,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
                         item: item.Relations,
-                        fieldIndex: (int)Faction_FieldIndex.Relations,
                         lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out Relation listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out Relation listSubItem) =>
                         {
                             return LoquiBinaryTranslation<Relation>.Instance.Parse(
                                 frame: r,
                                 item: out listSubItem,
-                                errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         });
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
@@ -1279,15 +1230,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                         item: item.Ranks,
-                        fieldIndex: (int)Faction_FieldIndex.Ranks,
                         lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out Rank listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out Rank listSubItem) =>
                         {
                             return LoquiBinaryTranslation<Rank>.Instance.Parse(
                                 frame: r,
                                 item: out listSubItem,
-                                errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         });
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
@@ -1299,8 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
             }
         }
         
@@ -1308,13 +1255,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFactionInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             UtilityTranslation.MajorRecordParse<IFactionInternal>(
                 record: item,
                 frame: frame,
-                errorMask: errorMask,
                 recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
                 masterReferences: masterReferences,
@@ -2845,14 +2790,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFactionGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
@@ -2868,15 +2811,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IRelationGetter>.Instance.Write(
                     writer: writer,
                     items: item.Relations,
-                    fieldIndex: (int)Faction_FieldIndex.Relations,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRelationGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRelationGetter subItem) =>
                     {
                         var loquiItem = subItem;
                         ((RelationBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                             item: loquiItem,
                             writer: subWriter,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
                     });
@@ -2903,15 +2843,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
                     writer: writer,
                     items: item.Ranks,
-                    fieldIndex: (int)Faction_FieldIndex.Ranks,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IRankGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IRankGetter subItem) =>
                     {
                         var loquiItem = subItem;
                         ((RankBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                             item: loquiItem,
                             writer: subWriter,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
                     });
@@ -2922,8 +2859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IFactionGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
@@ -2933,13 +2869,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
                 Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
@@ -2948,45 +2882,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IFactionGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -3003,23 +2931,6 @@ namespace Mutagen.Bethesda.Oblivion
     #region Binary Write Mixins
     public static class FactionBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IFactionGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Faction_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((FactionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Faction_ErrorMask.Factory(errorMaskBuilder);
-        }
-
     }
     #endregion
 
@@ -3067,15 +2978,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region Name

@@ -57,14 +57,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GlobalIntBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item, MasterReferences masterReferences)
             {
             }
         }
 
         public partial class GlobalIntBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item, MasterReferences masterReferences)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalInt_Registration.FLTV_HEADER))
                 {

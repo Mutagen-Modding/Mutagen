@@ -332,15 +332,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -351,40 +349,20 @@ namespace Mutagen.Bethesda.Oblivion
             return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptFields CreateFromBinary(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out ScriptFields_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
-            return ret;
+                recordTypeConverter: null);
         }
 
         public static ScriptFields CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new ScriptFields();
             ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -776,41 +754,20 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IScriptFields item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out ScriptFields_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IScriptFields item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ScriptFieldsSetterCommon)((IScriptFieldsGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1160,8 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IScriptFields item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
         }
         
@@ -1172,7 +1128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1181,24 +1136,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
-                    try
-                    {
-                        errorMask?.PushIndex((int)ScriptFields_FieldIndex.MetadataSummary);
-                        item.MetadataSummary.CopyInFromBinary(
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.MetadataSummary.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
                 case 0x44484353: // SCHD
@@ -1207,8 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
                         frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed(lastParsed);
                 }
                 case 0x41444353: // SCDA
@@ -1231,15 +1171,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         triggeringRecord: ScriptFields_Registration.SLSD_HEADER,
                         item: item.LocalVariables,
-                        fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
                         lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, out LocalVariable listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, out LocalVariable listSubItem) =>
                         {
                             return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
                                 frame: r,
                                 item: out listSubItem,
-                                errorMask: listErrMask,
                                 masterReferences: masterReferences);
                         });
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
@@ -1251,10 +1188,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                         item: item.References,
-                        fieldIndex: (int)ScriptFields_FieldIndex.References,
                         lengthLength: frame.MetaData.SubConstants.LengthLength,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem) =>
                         {
                             switch (header.TypeInt)
                             {
@@ -1262,13 +1197,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
                                         frame: r,
                                         item: out listSubItem,
-                                        errorMask: listErrMask,
                                         masterReferences: masterReferences);
                                 case 0x4F524353: // SCRO
                                     return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
                                         frame: r,
                                         item: out listSubItem,
-                                        errorMask: listErrMask,
                                         masterReferences: masterReferences);
                                 default:
                                     throw new NotImplementedException();
@@ -1285,15 +1218,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptFields item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             UtilityTranslation.TypelessRecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
@@ -2744,27 +2675,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryMetadataSummaryOldCustom(
             MutagenWriter writer,
             IScriptFieldsGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void WriteBinaryMetadataSummaryOld(
             MutagenWriter writer,
             IScriptFieldsGetter item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             WriteBinaryMetadataSummaryOldCustom(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         public static void Write_RecordTypes(
             IScriptFieldsGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             {
@@ -2772,15 +2699,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
             ScriptFieldsBinaryWriteTranslation.WriteBinaryMetadataSummaryOld(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             if (item.CompiledScript_IsSet)
             {
                 Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -2803,15 +2728,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
                     writer: writer,
                     items: item.LocalVariables,
-                    fieldIndex: (int)ScriptFields_FieldIndex.LocalVariables,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, ILocalVariableGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, ILocalVariableGetter subItem) =>
                     {
                         var loquiItem = subItem;
                         ((LocalVariableBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                             item: loquiItem,
                             writer: subWriter,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
                     });
@@ -2821,15 +2743,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.References,
-                    fieldIndex: (int)ScriptFields_FieldIndex.References,
-                    errorMask: errorMask,
-                    transl: (MutagenWriter subWriter, IScriptReferenceGetter subItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenWriter subWriter, IScriptReferenceGetter subItem) =>
                     {
                         var loquiItem = subItem;
                         ((ScriptReferenceBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                             item: loquiItem,
                             writer: subWriter,
-                            errorMask: listErrorMask,
                             masterReferences: masterReferences,
                             recordTypeConverter: null);
                     });
@@ -2840,14 +2759,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IScriptFieldsGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -2855,15 +2772,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IScriptFieldsGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -2875,20 +2790,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
             IScriptFields item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void FillBinaryMetadataSummaryOldCustomPublic(
             MutagenFrame frame,
             IScriptFields item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             FillBinaryMetadataSummaryOldCustom(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
     }
@@ -2902,45 +2814,13 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IScriptFieldsGetter item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ScriptFields_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ScriptFieldsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ScriptFields_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary(
-            this IScriptFieldsGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            ((ScriptFieldsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary(
-            this IScriptFieldsGetter item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
         {
             ((ScriptFieldsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -3000,15 +2880,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ScriptFieldsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region MetadataSummary

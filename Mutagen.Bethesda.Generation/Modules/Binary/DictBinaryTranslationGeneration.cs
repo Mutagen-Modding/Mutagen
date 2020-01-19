@@ -100,12 +100,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Items");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
                 if (subTransl.AllowDirectWrite(objGen, typeGen))
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Write");
@@ -114,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem, ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem) =>");
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
@@ -125,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
                                 itemAccessor: new Accessor("dictSubItem"),
                                 writerAccessor: "r",
                                 translationAccessor: "dictTranslMask",
-                                errorMaskAccessor: "dictSubMask");
+                                errorMaskAccessor: null);
                         }
                     });
                 }
@@ -179,7 +177,6 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
                 }
                 args.Add($"item: {itemAccessor.PropertyAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (dict.CustomData.TryGetValue("lengthLength", out object len))
                 {
                     args.Add($"lengthLength: {len}");
@@ -204,7 +201,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
                 if (subGenTypes.Count <= 1
@@ -216,7 +212,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r, RecordType header{(isAsync ? null : $", out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem")}) =>");
                         using (new BraceWrapper(gen))
                         {
                             gen.AppendLine("switch (header.Type)");
@@ -242,7 +238,7 @@ namespace Mutagen.Bethesda.Generation
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             translationAccessor: "dictTranslMask",
                                             asyncMode: AsyncMode.Direct,
-                                            errorMaskAccessor: "dictSubMask");
+                                            errorMaskAccessor: null);
                                     }
                                 }
                                 gen.AppendLine("default:");
@@ -258,7 +254,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r, {(isAsync ? null : $"out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem, ")}ErrorMaskBuilder dictSubMask) =>");
+                        gen.AppendLine($"transl: (MutagenFrame r{(isAsync ? null : $", out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem")}) =>");
                         using (new BraceWrapper(gen))
                         {
                             LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
@@ -272,7 +268,7 @@ namespace Mutagen.Bethesda.Generation
                                 outItemAccessor: new Accessor("dictSubItem"),
                                 translationAccessor: "dictTranslMask",
                                 asyncMode: AsyncMode.Direct,
-                                errorMaskAccessor: "dictSubMask");
+                                errorMaskAccessor: null);
                         }
                     });
                 }

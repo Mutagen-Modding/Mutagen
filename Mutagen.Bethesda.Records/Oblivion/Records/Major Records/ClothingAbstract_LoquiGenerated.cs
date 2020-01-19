@@ -566,15 +566,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ClothingAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #endregion
 
@@ -1026,41 +1024,20 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary(
-            this IClothingAbstractInternal item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out ClothingAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary(
             this IClothingAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ClothingAbstractSetterCommon)((IClothingAbstractGetter)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1565,14 +1542,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IClothingAbstractInternal item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             ItemAbstractSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1581,7 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1633,46 +1607,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleBipedModel);
-                        item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleBipedModel);
                 }
                 case 0x32444F4D: // MOD2
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.MaleWorldModel);
-                        item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.MaleWorldModel);
                 }
                 case 0x4E4F4349: // ICON
@@ -1685,46 +1631,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x33444F4D: // MOD3
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
-                        item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleBipedModel);
                 }
                 case 0x34444F4D: // MOD4
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
-                        item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
-                            frame: frame,
-                            recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
-                            masterReferences: masterReferences,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)ClothingAbstract_FieldIndex.FemaleWorldModel);
                 }
                 case 0x324F4349: // ICO2
@@ -1742,8 +1660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask);
+                        masterReferences: masterReferences);
             }
         }
         
@@ -1751,8 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstractInternal item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
         }
         
@@ -3853,13 +3769,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Embedded(
             IClothingAbstractGetter item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             OblivionMajorRecordBinaryWriteTranslation.Write_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -3867,14 +3781,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingAbstractGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
         {
             MajorRecordBinaryWriteTranslation.Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             if (item.Name_IsSet)
             {
@@ -3931,7 +3843,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
@@ -3941,7 +3852,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
             }
@@ -3960,7 +3870,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.FemaleBipedModelConverter);
             }
@@ -3970,7 +3879,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ((ModelBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
             }
@@ -3989,19 +3897,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IClothingAbstractGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write_Embedded(
                 item: item,
                 writer: writer,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
             Write_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask,
                 masterReferences: masterReferences);
         }
 
@@ -4009,60 +3914,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IClothingAbstractGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IItemAbstractGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IClothingAbstractGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IClothingAbstractGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             Write(
                 item: (IClothingAbstractGetter)item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -4079,23 +3976,6 @@ namespace Mutagen.Bethesda.Oblivion
     #region Binary Write Mixins
     public static class ClothingAbstractBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IClothingAbstractGetter item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            out ClothingAbstract_ErrorMask errorMask,
-            bool doMasks = true)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((ClothingAbstractBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = ClothingAbstract_ErrorMask.Factory(errorMaskBuilder);
-        }
-
     }
     #endregion
 
@@ -4143,15 +4023,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((ClothingAbstractBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region Name

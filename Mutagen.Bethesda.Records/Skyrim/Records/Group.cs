@@ -64,8 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item,
-                MasterReferences masterReferences,
-                ErrorMaskBuilder errorMask)
+                MasterReferences masterReferences)
                 where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
@@ -79,8 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
                 IGroup<T> item,
-                MasterReferences masterReferences,
-                ErrorMaskBuilder errorMask)
+                MasterReferences masterReferences)
             {
                 frame.Reader.Position += 4;
             }

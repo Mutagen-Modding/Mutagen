@@ -361,15 +361,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((LeveledEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -380,41 +378,20 @@ namespace Mutagen.Bethesda.Oblivion
             return CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static LeveledEntry<T> CreateFromBinary<T_ErrMask>(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-            return ret;
+                recordTypeConverter: null);
         }
 
         public static LeveledEntry<T> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new LeveledEntry<T>();
             ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -864,44 +841,21 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null);
-        }
-
-        [DebuggerStepThrough]
-        public static void CopyInFromBinary<T, T_ErrMask>(
-            this ILeveledEntry<T> item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+                recordTypeConverter: null);
         }
 
         public static void CopyInFromBinary<T>(
             this ILeveledEntry<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             ((LeveledEntrySetterCommon<T>)((ILeveledEntryGetter<T>)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1202,8 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             ILeveledEntry<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             item.Level = frame.ReadInt16();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
@@ -1221,8 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledEntry<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
@@ -1232,7 +1184,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 setFinal: true,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }
@@ -2396,7 +2347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Embedded<T>(
             ILeveledEntryGetter<T> item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -2424,8 +2374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             ILeveledEntryGetter<T> item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
@@ -2436,7 +2385,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
@@ -2445,8 +2393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             throw new NotImplementedException();
         }
@@ -2469,40 +2416,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary<T, T_ErrMask>(
             this ILeveledEntryGetter<T> item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out LeveledEntry_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = LeveledEntry_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary<T>(
-            this ILeveledEntryGetter<T> item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            ((LeveledEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary<T, T_ErrMask>(
-            this ILeveledEntryGetter<T> item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -2511,8 +2424,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -2573,15 +2485,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((LeveledEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Span.Slice(0, 2));

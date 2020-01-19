@@ -38,8 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static Condition CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var subRecMeta = frame.MetaData.GetSubRecord(frame);
             if (subRecMeta.RecordType != Condition_Registration.CTDA_HEADER)
@@ -83,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return (CompareOperator)((CompareMask & b) >> 5);
             }
 
-            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static void FillConditionsList(IList<Condition> conditions, MutagenFrame frame, MasterReferences masterReferences)
             {
                 var countMeta = frame.MetaData.ReadSubRecordFrame(frame);
                 if (countMeta.Header.RecordType != Faction_Registration.CITC_HEADER
@@ -95,19 +94,19 @@ namespace Mutagen.Bethesda.Skyrim
                 List<Condition> conds = new List<Condition>(count);
                 for (int i = 0; i < count; i++)
                 {
-                    conds.Add(Condition.CreateFromBinary(frame, masterReferences, default(RecordTypeConverter), errorMask));
+                    conds.Add(Condition.CreateFromBinary(frame, masterReferences, default(RecordTypeConverter)));
                 }
                 conditions.SetTo(conds);
             }
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);
                 item.CompareOperator = GetCompareOperator(b);
             }
 
-            public static void CustomStringImports(MutagenFrame frame, IConditionData item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static void CustomStringImports(MutagenFrame frame, IConditionData item, MasterReferences masterReferences)
             {
                 if (!frame.MetaData.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
                 if (!(item is IFunctionConditionDataInternal funcData)) return;
@@ -148,12 +147,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences)
             {
                 writer.Write(GetFlagWriteByte(item.Flags, item.CompareOperator));
             }
 
-            public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj, MasterReferences masterReferences)
             {
                 if (!(obj is IFunctionConditionDataGetter funcData)) return;
                 if (funcData.ParameterOneString_IsSet)
@@ -235,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ConditionGlobalBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionGlobal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionGlobal item, MasterReferences masterReferences)
             {
                 var functionIndex = frame.GetUInt16();
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
@@ -248,28 +247,28 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj, MasterReferences masterReferences)
             {
-                ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data, masterReferences, errorMask);
+                ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data, masterReferences);
             }
         }
 
         public partial class ConditionGlobalBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionGlobalGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionGlobalGetter item, MasterReferences masterReferences)
             {
                 item.Data.WriteToBinary(writer, masterReferences);
             }
 
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj, MasterReferences masterReferences)
             {
-                ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data, masterReferences, errorMask);
+                ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data, masterReferences);
             }
         }
 
         public partial class ConditionFloatBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionFloat item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionFloat item, MasterReferences masterReferences)
             {
                 var functionIndex = frame.GetUInt16();
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
@@ -282,28 +281,28 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj, MasterReferences masterReferences)
             {
-                ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data, masterReferences, errorMask);
+                ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data, masterReferences);
             }
         }
 
         public partial class ConditionFloatBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionFloatGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionFloatGetter item, MasterReferences masterReferences)
             {
                 item.Data.WriteToBinary(writer, masterReferences);
             }
 
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj, MasterReferences masterReferences)
             {
-                ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data, masterReferences, errorMask);
+                ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data, masterReferences);
             }
         }
 
         public partial class FunctionConditionDataBinaryCreateTranslation
         {
-            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionDataInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionDataInternal item, MasterReferences masterReferences)
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
@@ -317,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FunctionConditionDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IFunctionConditionDataGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IFunctionConditionDataGetter item, MasterReferences masterReferences)
             {
                 writer.Write(item.ParameterOneNumber);
                 writer.Write(item.ParameterTwoNumber);

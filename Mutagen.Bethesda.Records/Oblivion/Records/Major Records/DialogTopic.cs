@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj, MasterReferences masterReferences)
             {
                 if (frame.Reader.Complete) return;
                 GroupRecordMeta groupMeta = frame.MetaData.GetGroup(frame);
@@ -45,17 +45,14 @@ namespace Mutagen.Bethesda.Oblivion
                 frame.Reader.Position += groupMeta.HeaderLength;
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.ParseRepeatedItem(
                     frame: frame.SpawnWithLength(groupMeta.ContentLength),
-                    fieldIndex: (int)DialogTopic_FieldIndex.Items,
                     lengthLength: 4,
                     item: obj.Items,
-                    errorMask: errorMask,
-                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem, ErrorMaskBuilder listErrorMask) =>
+                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                     {
                         return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
                             frame: r,
                             item: out listItem,
-                            masterReferences: masterReferences,
-                            errorMask: listErrorMask);
+                            masterReferences: masterReferences);
                     }
                     );
             }
@@ -63,7 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj, MasterReferences masterReferences)
             {
                 if (obj.Items.Count == 0) return;
                 using (HeaderExport.ExportHeader(writer, Group_Registration.GRUP_HEADER, ObjectType.Group))
@@ -77,14 +74,11 @@ namespace Mutagen.Bethesda.Oblivion
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
                         writer: writer,
                         items: obj.Items,
-                        fieldIndex: (int)DialogTopic_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: (MutagenWriter subWriter, IDialogItemGetter subItem, ErrorMaskBuilder listErrMask) =>
+                        transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>
                         {
                             subItem.WriteToBinary(
                                  writer: subWriter,
-                                 masterReferences: masterReferences,
-                                 errorMask: listErrMask);
+                                 masterReferences: masterReferences);
                         });
                 }
             }

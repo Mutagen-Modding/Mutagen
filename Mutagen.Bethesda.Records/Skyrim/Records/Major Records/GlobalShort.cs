@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GlobalShortBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item, MasterReferences masterReferences)
             {
                 using (HeaderExport.ExportSubRecordHeader(writer, GlobalShort_Registration.FLTV_HEADER))
                 {

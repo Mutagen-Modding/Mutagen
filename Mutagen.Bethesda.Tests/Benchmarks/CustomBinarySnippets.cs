@@ -59,8 +59,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
                 new Binary.MutagenFrame(PathGridReader),
                 pathGrid,
-                masterReferences: null,
-                errorMask: null);
+                masterReferences: null);
             return pathGrid;
         }
     }

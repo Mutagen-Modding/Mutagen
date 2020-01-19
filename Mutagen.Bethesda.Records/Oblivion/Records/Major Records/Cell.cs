@@ -50,12 +50,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryCreateTranslation
         {
-            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            public static async Task CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
             {
-                CustomBinaryEnd(frame, obj, masterReferences, errorMask);
+                CustomBinaryEnd(frame, obj, masterReferences);
             }
 
-            private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
             {
                 if (frame.Reader.Complete) return;
                 var groupMeta = frame.MetaData.GetGroup(frame);
@@ -90,27 +90,22 @@ namespace Mutagen.Bethesda.Oblivion
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
-                                fieldIndex: (int)Cell_FieldIndex.Persistent,
                                 masterReferences: masterReferences,
                                 coll: obj.Persistent,
-                                errorMask: errorMask,
                                 persistentParse: true);
                             break;
                         case GroupTypeEnum.CellTemporaryChildren:
                             ParseTemporary(
                                 itemFrame,
                                 obj,
-                                masterReferences,
-                                errorMask);
+                                masterReferences);
                             break;
                         case GroupTypeEnum.CellVisibleDistantChildren:
                             ParseTypical(
                                 frame: itemFrame,
                                 obj: obj,
-                                fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
                                 masterReferences: masterReferences,
                                 coll: obj.VisibleWhenDistant,
-                                errorMask: errorMask,
                                 persistentParse: false);
                             break;
                         default:
@@ -122,10 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
             static void ParseTypical(
                 MutagenFrame frame,
                 ICellInternal obj,
-                int fieldIndex,
                 MasterReferences masterReferences,
                 ISetList<IPlaced> coll,
-                ErrorMaskBuilder errorMask,
                 bool persistentParse)
             {
                 var groupMeta = frame.MetaData.ReadGroup(frame);
@@ -144,11 +137,9 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
-                    fieldIndex: fieldIndex,
                     item: coll,
                     lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                    errorMask: errorMask,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder errMaskInternal) =>
+                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
                         {
@@ -156,8 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                         frame: r,
                                         item: out var placedCrea,
-                                        masterReferences: masterReferences,
-                                        errorMask: errMaskInternal))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedCrea;
                                     return true;
@@ -167,8 +157,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                         frame: r,
                                         item: out var placedNPC,
-                                        masterReferences: masterReferences,
-                                        errorMask: errMaskInternal))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedNPC;
                                     return true;
@@ -178,8 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                         frame: r,
                                         item: out var placedObj,
-                                        masterReferences: masterReferences,
-                                        errorMask: errMaskInternal))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedObj;
                                     return true;
@@ -194,38 +182,30 @@ namespace Mutagen.Bethesda.Oblivion
                     );
             }
 
-            static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static bool ParseTemporaryOutliers(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
             {
                 var majorMeta = frame.MetaData.GetMajorRecord(frame);
                 var nextHeader = majorMeta.RecordType;
                 if (nextHeader.Equals(PathGrid_Registration.PGRD_HEADER))
                 {
-                    using (errorMask.PushIndex((int)Cell_FieldIndex.PathGrid))
-                    {
-                        obj.PathGrid = PathGrid.CreateFromBinary(
-                            frame.SpawnWithLength(majorMeta.TotalLength),
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    obj.PathGrid = PathGrid.CreateFromBinary(
+                        frame.SpawnWithLength(majorMeta.TotalLength),
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                     return true;
                 }
                 else if (nextHeader.Equals(Landscape_Registration.LAND_HEADER))
                 {
-                    using (errorMask.PushIndex((int)Cell_FieldIndex.Landscape))
-                    {
-                        obj.Landscape = Landscape.CreateFromBinary(
-                            frame.SpawnWithLength(majorMeta.TotalLength),
-                            errorMask: errorMask,
-                            masterReferences: masterReferences,
-                            recordTypeConverter: null);
-                    }
+                    obj.Landscape = Landscape.CreateFromBinary(
+                        frame.SpawnWithLength(majorMeta.TotalLength),
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
                     return true;
                 }
                 return false;
             }
 
-            static void ParseTemporary(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static void ParseTemporary(MutagenFrame frame, ICellInternal obj, MasterReferences masterReferences)
             {
                 var groupMeta = frame.MetaData.ReadGroup(frame);
                 var formKey = FormKey.Factory(masterReferences, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
@@ -237,10 +217,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.ParseRepeatedItem(
                     frame: frame,
                     item: obj.Temporary,
-                    fieldIndex: (int)Cell_FieldIndex.Persistent,
                     lengthLength: frame.MetaData.MajorConstants.LengthLength,
-                    errorMask: errorMask,
-                    transl: (MutagenFrame r, RecordType header, out IPlaced placed, ErrorMaskBuilder listSubMask) =>
+                    transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
                         {
@@ -248,8 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedCreature>.Instance.Parse(
                                         frame: r,
                                         item: out var placedCrea,
-                                        masterReferences: masterReferences,
-                                        errorMask: errorMask))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedCrea;
                                     return true;
@@ -259,8 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedNPC>.Instance.Parse(
                                         frame: r,
                                         item: out var placedNPC,
-                                        masterReferences: masterReferences,
-                                        errorMask: errorMask))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedNPC;
                                     return true;
@@ -270,17 +246,15 @@ namespace Mutagen.Bethesda.Oblivion
                                 if (LoquiBinaryTranslation<PlacedObject>.Instance.Parse(
                                         frame: r,
                                         item: out var placedObj,
-                                        masterReferences: masterReferences,
-                                        errorMask: errorMask))
+                                        masterReferences: masterReferences))
                                 {
                                     placed = placedObj;
                                     return true;
                                 }
                                 break;
                             default:
-                                if (ParseTemporaryOutliers(frame, obj, masterReferences, errorMask))
+                                if (ParseTemporaryOutliers(frame, obj, masterReferences))
                                 {
-                                    listSubMask = null;
                                     placed = null;
                                     return false;
                                 }
@@ -294,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj, MasterReferences masterReferences)
             {
                 if (obj.Persistent.Count == 0
                     && obj.Temporary.Count == 0
@@ -322,14 +296,11 @@ namespace Mutagen.Bethesda.Oblivion
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.Persistent,
-                                fieldIndex: (int)Cell_FieldIndex.Persistent,
-                                errorMask: errorMask,
-                                transl: (r, item, subErr) =>
+                                transl: (r, item) =>
                                 {
                                     item.WriteToBinary(
                                         r,
-                                        masterReferences,
-                                        errorMask);
+                                        masterReferences);
                                 });
                         }
                     }
@@ -349,27 +320,22 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 obj.Landscape.WriteToBinary(
                                     writer,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask);
+                                    masterReferences: masterReferences);
                             }
                             if (obj.PathGrid_IsSet)
                             {
                                 obj.PathGrid.WriteToBinary(
                                     writer,
-                                    masterReferences: masterReferences,
-                                    errorMask: errorMask);
+                                    masterReferences: masterReferences);
                             }
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.Temporary,
-                                fieldIndex: (int)Cell_FieldIndex.Temporary,
-                                errorMask: errorMask,
-                                transl: (r, item, subErr) =>
+                                transl: (r, item) =>
                                 {
                                     item.WriteToBinary(
                                         r,
-                                        masterReferences,
-                                        errorMask);
+                                        masterReferences);
                                 });
                         }
                     }
@@ -386,14 +352,11 @@ namespace Mutagen.Bethesda.Oblivion
                             Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                 writer: writer,
                                 items: obj.VisibleWhenDistant,
-                                fieldIndex: (int)Cell_FieldIndex.VisibleWhenDistant,
-                                errorMask: errorMask,
-                                transl: (r, item, subErr) =>
+                                transl: (r, item) =>
                                 {
                                     item.WriteToBinary(
                                         r,
-                                        masterReferences,
-                                        errorMask);
+                                        masterReferences);
                                 });
                         }
                     }

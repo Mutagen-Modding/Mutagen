@@ -30,34 +30,34 @@ namespace Mutagen.Bethesda.Oblivion
                 return (byte)(mins / 10);
             }
 
-            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunriseBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             {
                 writer.Write(GetByte(item.SunriseBegin));
             }
 
-            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunriseEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             {
                 writer.Write(GetByte(item.SunriseEnd));
             }
 
-            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunsetBeginCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             {
                 writer.Write(GetByte(item.SunsetBegin));
             }
 
-            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinarySunsetEndCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             {
                 writer.Write(GetByte(item.SunsetEnd));
             }
 
-            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryPhaseCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             {
                 var eInt = (byte)(((int)item.Phase) * 64);
                 eInt += item.PhaseLength;
                 writer.Write(eInt);
             }
 
-            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryPhaseLengthCustom(MutagenWriter writer, IClimateGetter item, MasterReferences masterReferences)
             { // Handled in Phase section
             }
         }
@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Oblivion
                     .AddMinutes(d.Minute / 10 * 10);
             }
 
-            private static bool GetDate(byte b, out DateTime date, ErrorMaskBuilder errorMask)
+            private static bool GetDate(byte b, out DateTime date)
             {
                 if (b > 144)
                 {
-                    errorMask.ReportExceptionOrThrow(new ArgumentException("Cannot have a time value greater than 144"));
+                    throw new ArgumentException("Cannot have a time value greater than 144");
                     date = default(DateTime);
                     return false;
                 }
@@ -92,33 +92,33 @@ namespace Mutagen.Bethesda.Oblivion
                 return DateTime.MinValue.AddMinutes(b * 10);
             }
 
-            static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             {
-                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
                     item.SunriseBegin = date;
                 }
             }
 
-            static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             {
-                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
                     item.SunriseEnd = date;
                 }
             }
 
-            static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             {
-                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
                     item.SunsetBegin = date;
                 }
             }
 
-            static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             {
-                if (GetDate(frame.Reader.ReadUInt8(), out var date, errorMask))
+                if (GetDate(frame.Reader.ReadUInt8(), out var date))
                 {
                     item.SunsetEnd = date;
                 }
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Oblivion
             public static int GetPhaseInt(byte b) => b / 64;
             public static byte GetPhaseLen(byte b) => (byte)(b % 64);
 
-            static partial void FillBinaryPhaseCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryPhaseCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             {
                 var b = frame.Reader.ReadUInt8();
                 if (EnumExt.TryParse<Climate.MoonPhase>(GetPhaseInt(b), out var e))
@@ -136,13 +136,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else
                 {
-                    errorMask.ReportException(
-                        new ArgumentException($"Unknown moon phase type: {b}"));
+                    throw new ArgumentException($"Unknown moon phase type: {b}");
                 }
                 item.PhaseLength = GetPhaseLen(b);
             }
 
-            static partial void FillBinaryPhaseLengthCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryPhaseLengthCustom(MutagenFrame frame, IClimateInternal item, MasterReferences masterReferences)
             { // Handled in Phase section
             }
         }

@@ -636,32 +636,13 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
-            MutagenFrame frame,
-            ModKey modKey,
-            bool doMasks = true,
-            GroupMask importMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await CreateFromBinary(
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return (ret, SkyrimMod_ErrorMask.Factory(errorMaskBuilder));
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task<SkyrimMod> CreateFromBinary(
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             var ret = new SkyrimMod(modKey);
@@ -670,8 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -691,22 +671,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
-            string path,
-            ModKey? modKeyOverride = null,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                return await CreateFromBinaryWithErrorMask(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
         public static async Task<SkyrimMod> CreateFromBinary(
             string path,
             ErrorMaskBuilder errorMask,
@@ -721,8 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
+                    recordTypeConverter: null);
             }
         }
 
@@ -735,21 +698,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var frame = new MutagenFrame(reader);
                 return await CreateFromBinary(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
-        public static async Task<(SkyrimMod Object, SkyrimMod_ErrorMask ErrorMask)> CreateFromBinaryWithErrorMask(
-            Stream stream,
-            ModKey modKey,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                return await CreateFromBinaryWithErrorMask(
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -769,8 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
+                    recordTypeConverter: null);
             }
         }
 
@@ -1286,27 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
-            this ISkyrimMod item,
-            MutagenFrame frame,
-            ModKey modKey,
-            bool doMasks = true,
-            GroupMask importMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            await CopyInFromBinary(
-                item: item,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task CopyInFromBinary(
@@ -1314,7 +1241,6 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             await ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()).CopyInFromBinary(
@@ -1322,8 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public static async Task CopyInFromBinary(
@@ -1344,45 +1269,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
-            this ISkyrimMod item,
-            string path,
-            ModKey? modKeyOverride = null,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                return await CopyInFromBinaryWithErrorMask(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
-        public static async Task CopyInFromBinary(
-            this ISkyrimMod item,
-            string path,
-            ErrorMaskBuilder errorMask,
-            ModKey? modKeyOverride = null,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(path, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                await CopyInFromBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
-            }
-        }
-
         public static async Task CopyInFromBinary(
             this ISkyrimMod item,
             Stream stream,
@@ -1397,43 +1283,6 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
-            }
-        }
-
-        public static async Task<SkyrimMod_ErrorMask> CopyInFromBinaryWithErrorMask(
-            this ISkyrimMod item,
-            Stream stream,
-            ModKey modKey,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                return await CopyInFromBinaryWithErrorMask(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
-        public static async Task CopyInFromBinary(
-            this ISkyrimMod item,
-            Stream stream,
-            ModKey modKey,
-            ErrorMaskBuilder errorMask,
-            GroupMask importMask = null)
-        {
-            using (var reader = new MutagenBinaryReadStream(stream, GameMode.Skyrim))
-            {
-                var frame = new MutagenFrame(reader);
-                await CopyInFromBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame,
-                    recordTypeConverter: null,
-                    errorMask: errorMask);
             }
         }
 
@@ -1854,8 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected static void FillBinaryStructs(
             ISkyrimMod item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
         }
         
@@ -1865,7 +1713,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask,
             RecordTypeConverter recordTypeConverter = null)
         {
@@ -1874,48 +1721,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x34534554: // TES4
                 {
-                    try
-                    {
-                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ModHeader);
-                        item.ModHeader.CopyInFromBinary(
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: null,
-                            masterReferences: masterReferences);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                    item.ModHeader.CopyInFromBinary(
+                        frame: frame,
+                        recordTypeConverter: null,
+                        masterReferences: masterReferences);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST
                 {
                     if (importMask?.GameSettings ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.GameSettings);
-                            await item.GameSettings.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.GameSettings.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -1927,24 +1746,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.Keywords ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keywords);
-                            await item.Keywords.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.Keywords.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -1956,24 +1761,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.LocationReferenceTypes ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
-                            await item.LocationReferenceTypes.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.LocationReferenceTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -1985,24 +1776,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.Actions ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Actions);
-                            await item.Actions.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.Actions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -2014,24 +1791,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.TextureSets ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TextureSets);
-                            await item.TextureSets.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.TextureSets.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -2043,24 +1806,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.Globals ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Globals);
-                            await item.Globals.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.Globals.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -2072,24 +1821,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.Classes ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Classes);
-                            await item.Classes.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.Classes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -2101,24 +1836,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (importMask?.Factions ?? true)
                     {
-                        try
-                        {
-                            errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Factions);
-                            await item.Factions.CopyInFromBinary(
-                                frame: frame,
-                                errorMask: errorMask,
-                                recordTypeConverter: null,
-                                masterReferences: masterReferences);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
+                        await item.Factions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
                     }
                     else
                     {
@@ -2127,7 +1848,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
                 }
                 default:
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
             }
@@ -2138,7 +1858,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             var masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
@@ -2147,7 +1866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 importMask: importMask,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
@@ -2431,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (var stream = new MutagenWriter(groupByteStream, MetaDataConstants.Skyrim, dispose: false))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
+                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);
             }
             subStreams[0] = groupByteStream;
             Parallel.ForEach(cuts, (cutItems, state, counter) =>
@@ -2485,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (var stream = new MutagenWriter(new MemoryStream(groupBytes), MetaDataConstants.Skyrim))
             {
                 stream.Position += 8;
-                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default, default);
+                GroupBinaryWriteTranslation.Write_Embedded<T>(group, stream, default);
             }
             streams.Add(Task.FromResult<Stream>(new MemoryStream(groupBytes)));
             foreach (var cutItems in group.Records.Cut(CutCount))
@@ -4125,8 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             GroupMask importMask,
             ModKey modKey,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
             {
@@ -4134,7 +3851,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                     item: loquiItem,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences,
                     recordTypeConverter: null);
             }
@@ -4146,7 +3862,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4159,7 +3874,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4172,7 +3886,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ILocationReferenceTypeGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4185,7 +3898,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4198,7 +3910,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4211,7 +3922,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4224,7 +3934,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4237,7 +3946,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: loquiItem,
                         writer: writer,
-                        errorMask: errorMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 }
@@ -4249,7 +3957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             Write_RecordTypes(
@@ -4257,8 +3964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 importMask: importMask,
                 modKey: modKey,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -4266,7 +3972,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             object item,
             ModKey modKey,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             Write(
@@ -4274,8 +3979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 importMask: importMask,
                 modKey: modKey,
                 writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
     }
@@ -4296,122 +4000,6 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             MutagenWriter writer,
             ModKey modKey,
-            out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
-            GroupMask importMask = null)
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            SkyrimModBinaryWriteTranslation.Instance.Write(
-                item: item,
-                importMask: importMask,
-                modKey: modKey,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = SkyrimMod_ErrorMask.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            string path,
-            out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
-            ModKey? modKeyOverride = null,
-            GroupMask importMask = null)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
-                {
-                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                    WriteToBinary(
-                        item: item,
-                        importMask: importMask,
-                        modKey: modKey,
-                        writer: writer,
-                        errorMask: out errorMask,
-                        doMasks: doMasks);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            string path,
-            ErrorMaskBuilder errorMask,
-            bool doMasks = true,
-            ModKey? modKeyOverride = null,
-            GroupMask importMask = null)
-        {
-            using (var memStream = new MemoryTributary())
-            {
-                using (var writer = new MutagenWriter(memStream, dispose: false, meta: MetaDataConstants.Get(item.GameMode)))
-                {
-                    var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
-                    WriteToBinary(
-                        item: item,
-                        importMask: importMask,
-                        modKey: modKey,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    memStream.Position = 0;
-                    memStream.CopyTo(fs);
-                }
-            }
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey,
-            out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
-            GroupMask importMask = null)
-        {
-            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
-            {
-                WriteToBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    writer: writer,
-                    errorMask: out errorMask,
-                    doMasks: doMasks);
-            }
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            Stream stream,
-            ModKey modKey,
-            ErrorMaskBuilder errorMask,
-            bool doMasks = true,
-            GroupMask importMask = null)
-        {
-            using (var writer = new MutagenWriter(stream, meta: item.GameMode, dispose: false))
-            {
-                WriteToBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    writer: writer,
-                    errorMask: errorMask);
-            }
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            MutagenWriter writer,
-            ModKey modKey,
-            ErrorMaskBuilder errorMask,
             GroupMask importMask = null)
         {
             SkyrimModBinaryWriteTranslation.Instance.Write(
@@ -4419,23 +4007,7 @@ namespace Mutagen.Bethesda.Skyrim
                 importMask: importMask,
                 modKey: modKey,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary(
-            this ISkyrimModGetter item,
-            MutagenWriter writer,
-            ModKey modKey,
-            GroupMask importMask = null)
-        {
-            SkyrimModBinaryWriteTranslation.Instance.Write(
-                item: item,
-                importMask: importMask,
-                modKey: modKey,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
         public static void WriteToBinary(
@@ -4454,8 +4026,7 @@ namespace Mutagen.Bethesda.Skyrim
                         importMask: importMask,
                         modKey: modKey,
                         writer: writer,
-                        recordTypeConverter: null,
-                        errorMask: null);
+                        recordTypeConverter: null);
                 }
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
@@ -4478,8 +4049,7 @@ namespace Mutagen.Bethesda.Skyrim
                     importMask: importMask,
                     modKey: modKey,
                     writer: writer,
-                    recordTypeConverter: null,
-                    errorMask: null);
+                    recordTypeConverter: null);
             }
         }
 

@@ -18,8 +18,7 @@ namespace Mutagen.Bethesda.Binary
         public delegate T CREATE_FUNC(
             MutagenFrame reader,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask);
+            RecordTypeConverter recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -31,11 +30,10 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.Equals(tType))
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
                 .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
                 .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
-                .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
                 .FirstOrDefault();
             if (method != null)
             {
@@ -49,33 +47,19 @@ namespace Mutagen.Bethesda.Binary
 
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                item: out T subItem,
+                masterReferences: masterReferences))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        item: out T subItem,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
@@ -83,76 +67,32 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             out T item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             return Parse(
                 frame: frame,
                 item: out item,
-                errorMask: errorMask,
                 masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
 
-        public bool Parse(
-            MutagenFrame frame,
-            out T item,
-            int fieldIndex,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    return Parse(
-                        frame: frame,
-                        item: out item,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                    item = default;
-                    return false;
-                }
-            }
-        }
-
         public void ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<T> item,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(
+                frame,
+                out T subItem,
+                masterReferences: masterReferences,
+                recordTypeConverter: recordTypeConverter))
             {
-                try
-                {
-                    if (Parse(
-                        frame,
-                        out T subItem,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: recordTypeConverter))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
@@ -161,14 +101,12 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out T item,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
             item = CREATE(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             return true;
         }
         #endregion
@@ -181,8 +119,7 @@ namespace Mutagen.Bethesda.Binary
         public delegate Task<T> CREATE_FUNC(
             MutagenFrame reader,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask);
+            RecordTypeConverter recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -193,11 +130,10 @@ namespace Mutagen.Bethesda.Binary
                 .Where((methodInfo) => methodInfo.Name.Equals("CreateFromBinary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.GetParameters().Length == 4)
+                .Where((methodInfo) => methodInfo.GetParameters().Length == 3)
                 .Where((methodInfo) => methodInfo.GetParameters()[0].ParameterType.Equals(typeof(MutagenFrame)))
                 .Where((methodInfo) => methodInfo.GetParameters()[1].ParameterType.Equals(typeof(MasterReferences)))
                 .Where((methodInfo) => methodInfo.GetParameters()[2].ParameterType.Equals(typeof(RecordTypeConverter)))
-                .Where((methodInfo) => methodInfo.GetParameters()[3].ParameterType.Equals(typeof(ErrorMaskBuilder)))
                 .FirstOrDefault();
             if (method == null)
             {
@@ -206,9 +142,9 @@ namespace Mutagen.Bethesda.Binary
             if (method.ReturnType.Equals(tType))
             {
                 var wrap = LoquiBinaryTranslation<T>.CREATE;
-                return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter recConv, ErrorMaskBuilder errMask) =>
+                return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter recConv) =>
                 {
-                    return wrap(frame, master, recConv, errMask);
+                    return wrap(frame, master, recConv);
                 };
             }
             else
@@ -219,105 +155,50 @@ namespace Mutagen.Bethesda.Binary
 
         public async Task ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            var result = await Parse(
+                frame,
+                masterReferences: masterReferences).ConfigureAwait(false);
+            if (result.Succeeded)
             {
-                try
-                {
-                    var result = await Parse(
-                        frame,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask).ConfigureAwait(false);
-                    if (result.Succeeded)
-                    {
-                        item.Item = result.Value;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = result.Value;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
         [DebuggerStepThrough]
         public Task<TryGet<T>> Parse(
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             return Parse(
                 frame: frame,
-                errorMask: errorMask,
                 masterReferences: masterReferences,
                 recordTypeConverter: null);
         }
 
-        public async Task<TryGet<T>> Parse(
-            MutagenFrame frame,
-            int fieldIndex,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-        {
-            using (errorMask.PushIndex(fieldIndex))
-            {
-                try
-                {
-                    return await Parse(
-                        frame: frame,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: null).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                    return TryGet<T>.Failure;
-                }
-            }
-        }
-
         public async Task ParseInto(
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<T> item,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            using (errorMask.PushIndex(fieldIndex))
+            var result = await Parse(
+                frame,
+                masterReferences: masterReferences,
+                recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
+            if (result.Succeeded)
             {
-                try
-                {
-                    var result = await Parse(
-                        frame,
-                        errorMask: errorMask,
-                        masterReferences: masterReferences,
-                        recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
-                    if (result.Succeeded)
-                    {
-                        item.Item = result.Value;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = result.Value;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
@@ -325,14 +206,12 @@ namespace Mutagen.Bethesda.Binary
         public async Task<TryGet<T>> Parse(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter)
         {
             var item = await CREATE(
                 reader: frame,
                 recordTypeConverter: recordTypeConverter,
-                masterReferences: masterReferences,
-                errorMask: errorMask).ConfigureAwait(false);
+                masterReferences: masterReferences).ConfigureAwait(false);
             return TryGet<T>.Succeed(item);
         }
         #endregion
@@ -343,34 +222,20 @@ namespace Mutagen.Bethesda.Binary
         public static void ParseInto<T, B>(
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
-            int fieldIndex,
             IHasItem<B> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : ILoquiObjectGetter, B
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (loquiTrans.Parse(
+                frame,
+                out T subItem,
+                masterReferences: masterReferences))
             {
-                try
-                {
-                    if (loquiTrans.Parse(
-                        frame,
-                        out T subItem,
-                        masterReferences: masterReferences,
-                        errorMask: errorMask))
-                    {
-                        item.Item = subItem;
-                    }
-                    else
-                    {
-                        item.Unset();
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item.Item = subItem;
+            }
+            else
+            {
+                item.Unset();
             }
         }
 
@@ -379,15 +244,13 @@ namespace Mutagen.Bethesda.Binary
             this LoquiBinaryTranslation<T> loquiTrans,
             MutagenFrame frame,
             out B item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : ILoquiObjectGetter, B
         {
             if (loquiTrans.Parse(
                 frame: frame,
                 item: out T tItem,
-                masterReferences: masterReferences,
-                errorMask: errorMask))
+                masterReferences: masterReferences))
             {
                 item = tItem;
                 return true;

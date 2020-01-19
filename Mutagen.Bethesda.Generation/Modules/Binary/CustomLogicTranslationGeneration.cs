@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Generation
     public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         public override bool DoErrorMasks => true;
-        public const bool DoErrorMasksStatic = true;
+        public const bool DoErrorMasksStatic = false;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {

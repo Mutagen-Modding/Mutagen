@@ -11,8 +11,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null,
-            ErrorMaskBuilder errorMask = null);
+            RecordTypeConverter recordTypeConverter = null);
     }
 
     public interface IBinaryItem
@@ -22,7 +21,6 @@ namespace Mutagen.Bethesda.Binary
         void WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter = null,
-            ErrorMaskBuilder errorMask = null);
+            RecordTypeConverter recordTypeConverter = null);
     }
 }

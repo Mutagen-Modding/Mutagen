@@ -129,10 +129,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
-                if (subTransl.DoErrorMasks)
-                {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                }
                 if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {data.TriggeringRecordSetAccessor}");
@@ -140,10 +136,6 @@ namespace Mutagen.Bethesda.Generation
                 if (listOfRecords)
                 {
                     args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
-                }
-                if (subTransl.DoErrorMasks)
-                {
-                    args.Add($"errorMask: {errorMaskAccessor}");
                 }
                 if (this.Module.TranslationMaskParameter)
                 {
@@ -158,7 +150,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(list.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrorMask" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName} subItem) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -168,7 +160,7 @@ namespace Mutagen.Bethesda.Generation
                                 writerAccessor: "subWriter",
                                 translationAccessor: "listTranslMask",
                                 itemAccessor: new Accessor($"subItem"),
-                                errorMaskAccessor: $"listErrorMask");
+                                errorMaskAccessor: null);
                         }
                     });
                 }
@@ -251,10 +243,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"masterReferences: masterReferences");
                 }
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                if (subTransl.DoErrorMasks)
-                {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                }
                 if (list.CustomData.TryGetValue("lengthLength", out object len))
                 {
                     args.Add($"lengthLength: {len}");
@@ -284,10 +272,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"lengthLength: frame.{nameof(MutagenFrame.MetaData)}.{nameof(MetaDataConstants.SubConstants)}.{nameof(MetaDataConstants.SubConstants.LengthLength)}");
                     }
                 }
-                if (subTransl.DoErrorMasks)
-                {
-                    args.Add($"errorMask: {errorMaskAccessor}");
-                }
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
                 if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
@@ -309,7 +293,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(subTransl.DoErrorMasks ? ", ErrorMaskBuilder listErrMask" : null)}) =>");
+                        gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}) =>");
                         using (new BraceWrapper(gen))
                         {
                             if (subGenTypes.Count <= 1)

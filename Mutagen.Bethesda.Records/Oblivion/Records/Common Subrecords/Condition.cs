@@ -23,8 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             RecordType recordType, 
             RecordTypeConverter recordTypeConverter,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             var pos = frame.PositionWithOffset;
             var span = frame.ReadSpan(0x1A);
@@ -35,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
             LoquiBinaryTranslation<Condition>.Instance.Parse(
                 frame: new MutagenFrame(new MutagenMemoryReadStream(newBytes, frame.MetaData, offsetReference: pos)),
                 item: out var item,
-                errorMask: errorMask,
                 masterReferences: masterReferences,
                 recordTypeConverter: recordTypeConverter);
             return item;
@@ -58,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return (CompareOperator)((Mask & b) >> 4);
             }
 
-            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item, MasterReferences masterReferences)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);
@@ -68,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ConditionBinaryWriteTranslation
         {
-            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences, ErrorMaskBuilder errorMask)
+            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item, MasterReferences masterReferences)
             {
                 byte b = (byte)item.Flags;
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);

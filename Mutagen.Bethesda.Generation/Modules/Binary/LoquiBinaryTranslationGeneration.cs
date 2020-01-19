@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
         public const string AsyncOverrideKey = "AsyncOverride";
 
         public string ModNickname;
-        public override bool DoErrorMasks => true;
+        public override bool DoErrorMasks => false;
         public override bool IsAsync(TypeGeneration gen, bool read)
         {
             if (!read) return false;
@@ -99,7 +99,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"item: loquiItem");
                     args.Add($"writer: {writerAccessor}");
-                    args.Add($"errorMask: {errorMaskAccessor}");
                     args.Add($"masterReferences: masterReferences");
                     if (data?.RecordTypeConverter != null
                         && data.RecordTypeConverter.FromConversions.Count > 0)
@@ -139,45 +138,34 @@ namespace Mutagen.Bethesda.Generation
                 }
 
                 if (loquiGen.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
-                MaskGenerationUtility.WrapErrorFieldIndexPush(fg,
-                    () =>
+                if (loquiGen.SingletonType == SingletonLevel.Singleton)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
                     {
-                        if (loquiGen.SingletonType == SingletonLevel.Singleton)
+                        args.Add($"frame: {frameAccessor}");
+                        args.Add($"recordTypeConverter: null");
+                        args.Add($"masterReferences: masterReferences");
+                    }
+                }
+                else
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.ObjectTypeName}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
+                    {
+                        args.Add($"frame: {frameAccessor}");
+                        if (data?.RecordTypeConverter != null
+                            && data.RecordTypeConverter.FromConversions.Count > 0)
                         {
-                            using (var args = new ArgsWrapper(fg,
-                                $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
-                            {
-                                args.Add($"frame: {frameAccessor}");
-                                args.Add($"errorMask: {errorMaskAccessor}");
-                                args.Add($"recordTypeConverter: null");
-                                args.Add($"masterReferences: masterReferences");
-                            }
+                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                         }
                         else
                         {
-                            using (var args = new ArgsWrapper(fg,
-                                $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.ObjectTypeName}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
-                            {
-                                args.Add($"frame: {frameAccessor}");
-                                if (data?.RecordTypeConverter != null
-                                    && data.RecordTypeConverter.FromConversions.Count > 0)
-                                {
-                                    args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
-                                }
-                                else
-                                {
-                                    args.Add("recordTypeConverter: null");
-                                }
-                                args.Add($"masterReferences: masterReferences");
-                                if (this.DoErrorMasks)
-                                {
-                                    args.Add("errorMask: errorMask");
-                                }
-                            }
+                            args.Add("recordTypeConverter: null");
                         }
-                    },
-                    errorMaskAccessor: "errorMask",
-                    indexAccessor: $"(int){typeGen.IndexEnumName}");
+                        args.Add($"masterReferences: masterReferences");
+                    }
+                }
             }
             else
             {
@@ -206,15 +194,10 @@ namespace Mutagen.Bethesda.Generation
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add($"frame: {readerAccessor}");
-                if (loquiGen.HasIndex)
-                {
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                }
                 if (asyncMode == AsyncMode.Off)
                 {
                     args.Add($"item: out {outItemAccessor.DirectAccess}");
                 }
-                args.Add($"errorMask: {errorMaskAccessor}");
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
                     args.Add($"masterReferences: item.TES4.MasterReferences");

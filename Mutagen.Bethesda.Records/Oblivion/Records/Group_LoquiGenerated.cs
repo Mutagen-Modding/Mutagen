@@ -312,15 +312,13 @@ namespace Mutagen.Bethesda.Oblivion
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
         #region Binary Create
         [DebuggerStepThrough]
@@ -331,39 +329,20 @@ namespace Mutagen.Bethesda.Oblivion
             return await CreateFromBinary(
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<(Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask)> CreateFromBinaryWithErrorMask<T_ErrMask>(
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            var ret = await CreateFromBinary(
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return (ret, Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder));
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task<Group<T>> CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Group<T>();
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)ret).CommonSetterInstance()).CopyInFromBinary(
                 item: ret,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
             return ret;
         }
 
@@ -828,43 +807,21 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: null,
-                errorMask: null).ConfigureAwait(false);
-        }
-
-        [DebuggerStepThrough]
-        public static async Task<Group_ErrorMask<T_ErrMask>> CopyInFromBinaryWithErrorMask<T, T_ErrMask>(
-            this IGroup<T> item,
-            MutagenFrame frame,
-            MasterReferences masterReferences,
-            bool doMasks = true)
-            where T : OblivionMajorRecord, IXmlItem, IBinaryItem
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            await CopyInFromBinary(
-                item: item,
-                masterReferences: masterReferences,
-                frame: frame,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder).ConfigureAwait(false);
-            return Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
+                recordTypeConverter: null).ConfigureAwait(false);
         }
 
         public static async Task CopyInFromBinary<T>(
             this IGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
         {
             await ((GroupSetterCommon<T>)((IGroupGetter<T>)item).CommonSetterInstance()).CopyInFromBinary(
                 item: item,
                 masterReferences: masterReferences,
                 frame: frame,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
+                recordTypeConverter: recordTypeConverter);
         }
 
         #endregion
@@ -1159,14 +1116,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static void FillBinaryStructs(
             IGroup<T> item,
             MutagenFrame frame,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustomPublic(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
         }
@@ -1177,7 +1132,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
@@ -1190,19 +1144,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
-                            fieldIndex: (int)Group_FieldIndex.RecordCache,
                             lengthLength: 4,
-                            errorMask: errorMask,
-                            transl: (MutagenFrame r, ErrorMaskBuilder dictSubMask) =>
+                            transl: (MutagenFrame r) =>
                             {
                                 return LoquiBinaryAsyncTranslation<T>.Instance.Parse(
                                     frame: r,
-                                    errorMask: dictSubMask,
                                     masterReferences: masterReferences);
                             }).ConfigureAwait(false);
                         return TryGet<int?>.Failure;
                     }
-                    errorMask?.ReportWarning($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + frame.MetaData.MajorConstants.HeaderLength;
                     return TryGet<int?>.Succeed(null);
             }
@@ -1212,14 +1162,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroup<T> item,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             await UtilityAsyncTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 masterReferences: masterReferences,
-                errorMask: errorMask,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes).ConfigureAwait(false);
@@ -2359,36 +2307,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem;
 
         public static void WriteBinaryContainedRecordTypeParse<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             WriteBinaryContainedRecordTypeParseCustom(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
         public static void Write_Embedded<T>(
             IGroupGetter<T> item,
             MutagenWriter writer,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
@@ -2400,22 +2343,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroupGetter<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask,
             MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.RecordCache.Items,
-                fieldIndex: (int)Group_FieldIndex.RecordCache,
-                errorMask: errorMask,
-                transl: (MutagenWriter r, T dictSubItem, ErrorMaskBuilder dictSubMask) =>
+                transl: (MutagenWriter r, T dictSubItem) =>
                 {
                     var loquiItem = dictSubItem;
                     ((OblivionMajorRecordBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
                         item: loquiItem,
                         writer: r,
-                        errorMask: dictSubMask,
                         masterReferences: masterReferences,
                         recordTypeConverter: null);
                 });
@@ -2425,8 +2364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IGroupGetter<T> item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
             using (HeaderExport.ExportHeader(
@@ -2437,13 +2375,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Embedded(
                     item: item,
                     writer: writer,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
                 Write_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask,
                     masterReferences: masterReferences);
             }
         }
@@ -2452,8 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             throw new NotImplementedException();
         }
@@ -2468,20 +2403,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask);
+            MasterReferences masterReferences);
 
         public static void FillBinaryContainedRecordTypeParseCustomPublic(
             MutagenFrame frame,
             IGroup<T> item,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
+            MasterReferences masterReferences)
         {
             FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item,
-                masterReferences: masterReferences,
-                errorMask: errorMask);
+                masterReferences: masterReferences);
         }
 
     }
@@ -2495,40 +2427,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary<T, T_ErrMask>(
             this IGroupGetter<T> item,
             MutagenWriter writer,
-            MasterReferences masterReferences,
-            out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true)
-            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
-        {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMaskBuilder);
-            errorMask = Group_ErrorMask<T_ErrMask>.Factory(errorMaskBuilder);
-        }
-
-        public static void WriteToBinary<T>(
-            this IGroupGetter<T> item,
-            MutagenWriter writer,
-            MasterReferences masterReferences,
-            ErrorMaskBuilder errorMask)
-            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-        {
-            ((GroupBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
-                item: item,
-                masterReferences: masterReferences,
-                writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
-        }
-
-        public static void WriteToBinary<T, T_ErrMask>(
-            this IGroupGetter<T> item,
-            MutagenWriter writer,
             MasterReferences masterReferences)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -2537,8 +2435,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: null);
+                recordTypeConverter: null);
         }
 
     }
@@ -2603,15 +2500,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             ((GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 masterReferences: masterReferences,
                 writer: writer,
-                recordTypeConverter: null,
-                errorMask: errorMask);
+                recordTypeConverter: null);
         }
 
         #region ContainedRecordTypeParse

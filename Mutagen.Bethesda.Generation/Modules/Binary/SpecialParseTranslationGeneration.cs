@@ -26,9 +26,8 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"SpecialParse_{typeGen.Name}"))
             {
-                args.Add("item: item");
-                args.Add("frame: frame");
-                args.Add("errorMask: errorMask");
+                args.AddPassArg("item");
+                args.AddPassArg("frame");
             }
         }
 
@@ -60,9 +59,8 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{objGen.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.SpecialWrite_{typeGen.Name}_Internal"))
             {
-                args.Add("item: item");
-                args.Add("writer: writer");
-                args.Add("errorMask: errorMask");
+                args.AddPassArg("item");
+                args.AddPassArg("writer");
             }
         }
 
