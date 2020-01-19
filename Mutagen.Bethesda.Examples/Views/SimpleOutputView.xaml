@@ -65,7 +65,7 @@
             x:Name="TerminalControl"
             Grid.Row="2"
             Background="Black"
-            BorderBrush="{StaticResource AccentColorBrush}"
+            BorderBrush="{StaticResource MahApps.Brushes.Accent}"
             IsReadOnly="True"
             VerticalScrollBarVisibility="Auto" />
         <Grid Grid.Row="3">

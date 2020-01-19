@@ -10,11 +10,9 @@
                 <!--  MahApps.Metro resource dictionaries.  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
                 <!--  Accent and AppTheme setting  -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Emerald.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Emerald.xaml" />
                 <!--  Noggog Theming  -->
                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/TypicalTheming.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Converters/Converters.xaml" />
