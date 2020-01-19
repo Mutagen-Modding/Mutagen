@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Bethesda"),
-                    new DirectoryInfo("../../../Mutagen.Bethesda"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
                 });
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Oblivion"),
-                    new DirectoryInfo("../../../Mutagen.Bethesda.Records/Oblivion"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Oblivion"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 });
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Skyrim"),
-                    new DirectoryInfo("../../../Mutagen.Bethesda.Records/Skyrim"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Records/Skyrim"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Skyrim",
                 });
@@ -123,12 +123,12 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Tests"),
-                    new DirectoryInfo("../../../Mutagen.Bethesda.Tests/Settings"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Tests/Settings"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Tests",
                 });
             testerProto.AddProjectToModify(
-                new FileInfo("../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
+                new FileInfo("../../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
 
             gen.Generate().Wait();
         }

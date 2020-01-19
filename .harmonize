@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>a97b829c5fe3820cbc84c099c27b526b4ea4d0be</Sha>
+         <Sha>f8ab6752e3549083681bfe0e2f3b6100fd6565a9</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-19-2020 16:34:42</CommitDate>
-         <Description>Some brush references fixed</Description>
+         <CommitDate>01-19-2020 22:58:00</CommitDate>
+         <Description>Removed some StringCaseAgnostic usages</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>66a7f1e87ec00c6457ef727f13f76e9cea4ff780</Sha>
+         <Sha>4645fe70dff6b05e4b94d0f223a72acbce0d2a1b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-18-2020 23:56:08</CommitDate>
-         <Description>Improvements for when not generating error masks in translations</Description>
+         <CommitDate>01-20-2020 23:28:26</CommitDate>
+         <Description>Removed some StringCaseAgnostic usage</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

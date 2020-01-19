@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Bethesda.Binary;
 using System.IO;
-using System.Windows.Media;
 using Noggog;
 using Loqui.Internal;
 using System.Xml.Linq;
@@ -183,10 +182,13 @@ namespace Mutagen.Bethesda.Generation
         public override async Task LoadWrapup(ObjectGeneration obj)
         {
             await base.LoadWrapup(obj);
-            foreach (var gen in _typeGenerations.Values)
+            lock (_typeGenerations)
             {
-                gen.Module = this;
-                gen.MaskModule = this.Gen.MaskModule;
+                foreach (var gen in _typeGenerations.Values)
+                {
+                    gen.Module = this;
+                    gen.MaskModule = this.Gen.MaskModule;
+                }
             }
             obj.RequiredNamespaces.Add("System.Reactive.Disposables");
             obj.RequiredNamespaces.Add("System.Reactive.Linq");

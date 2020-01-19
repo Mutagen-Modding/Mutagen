@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Generation
             DataType data = null)
         {
             using (var args = new ArgsWrapper(fg,
-                $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType.ToStringSafe() : typeGen.Name)}CustomParse"))
+                $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
                 args.Add($"{nameof(BinaryMemoryReadStream)} stream");
                 args.Add($"int offset");
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             using (var args = new ArgsWrapper(fg,
-                $"{(typeGen.Name == null ? typeGen.GetFieldData().RecordType.ToStringSafe() : typeGen.Name)}CustomParse"))
+                $"{(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
                 args.Add("stream");
                 args.Add("offset");

@@ -19,23 +19,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicData", "..\DynamicDa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda", "Mutagen.Bethesda\Mutagen.Bethesda.csproj", "{4D6DBB44-B89A-47A8-AB14-ACC8391C1A59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.Benchmark", "..\CSharpExt\CSharpExt.Benchmark\CSharpExt.Benchmark.csproj", "{FFB18690-4914-40D3-9BA2-4968DFFB3225}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Tests", "Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj", "{E64E58E8-E2C6-4B2C-B649-2934FFFA603F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Tester", "Mutagen.Bethesda.Tester\Mutagen.Bethesda.Tester.csproj", "{01D07ECE-426E-49A6-AB3F-326BFAAFE407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.UnitTests", "Mutagen.Bethesda.UnitTests\Mutagen.Bethesda.UnitTests.csproj", "{D20B9E26-0C3E-462D-AC53-E23541F4CA77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.UnitTests", "..\CSharpExt\CSharpExt.UnitTests\CSharpExt.UnitTests.csproj", "{7D5ED080-106F-4A21-A724-54A53B5080A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpExt.UnitTests", "..\CSharpExt\CSharpExt.UnitTests\CSharpExt.UnitTests.csproj", "{7D5ED080-106F-4A21-A724-54A53B5080A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Records", "Mutagen.Bethesda.Records\Mutagen.Bethesda.Records.csproj", "{8B371C38-CA17-4E7F-9175-BDBC6918298F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noggog.WPF", "..\CSharpExt\Noggog.WPF\Noggog.WPF.csproj", "{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noggog.WPF", "..\CSharpExt\Noggog.WPF\Noggog.WPF.csproj", "{BCBEB6F3-9D2F-4491-8DDF-7E711B1F5252}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Examples", "Mutagen.Bethesda.Examples\Mutagen.Bethesda.Examples.csproj", "{19A37042-59E7-4E14-B930-7AB04DE039C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Examples", "Mutagen.Bethesda.Examples\Mutagen.Bethesda.Examples.csproj", "{19A37042-59E7-4E14-B930-7AB04DE039C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{3099A5D7-A0F3-4D3B-87B8-5E3A7571AFDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.UnitTests", "Mutagen.Bethesda.UnitTests\Mutagen.Bethesda.UnitTests.csproj", "{0BF7565B-7AF2-4D7D-A450-043AD601FF57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,10 +71,6 @@ Global
 		{4D6DBB44-B89A-47A8-AB14-ACC8391C1A59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6DBB44-B89A-47A8-AB14-ACC8391C1A59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6DBB44-B89A-47A8-AB14-ACC8391C1A59}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB18690-4914-40D3-9BA2-4968DFFB3225}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,10 +83,6 @@ Global
 		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01D07ECE-426E-49A6-AB3F-326BFAAFE407}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D20B9E26-0C3E-462D-AC53-E23541F4CA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D20B9E26-0C3E-462D-AC53-E23541F4CA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D20B9E26-0C3E-462D-AC53-E23541F4CA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D20B9E26-0C3E-462D-AC53-E23541F4CA77}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D5ED080-106F-4A21-A724-54A53B5080A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,6 +99,14 @@ Global
 		{19A37042-59E7-4E14-B930-7AB04DE039C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19A37042-59E7-4E14-B930-7AB04DE039C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19A37042-59E7-4E14-B930-7AB04DE039C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3099A5D7-A0F3-4D3B-87B8-5E3A7571AFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3099A5D7-A0F3-4D3B-87B8-5E3A7571AFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3099A5D7-A0F3-4D3B-87B8-5E3A7571AFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3099A5D7-A0F3-4D3B-87B8-5E3A7571AFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF7565B-7AF2-4D7D-A450-043AD601FF57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF7565B-7AF2-4D7D-A450-043AD601FF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF7565B-7AF2-4D7D-A450-043AD601FF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF7565B-7AF2-4D7D-A450-043AD601FF57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
