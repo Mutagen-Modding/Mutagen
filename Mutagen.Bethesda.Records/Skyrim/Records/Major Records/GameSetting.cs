@@ -27,30 +27,26 @@ namespace Mutagen.Bethesda.Skyrim
         public static GameSetting CreateFromBinary(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
-            ErrorMaskBuilder errorMask)
+            RecordTypeConverter recordTypeConverter)
         {
             var majorMeta = frame.MetaData.GetMajorRecord(frame);
             var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData);
             if (settingType.Failed)
             {
-                errorMask.ReportExceptionOrThrow(new ArgumentException($"Error splitting to desired GameSetting type at position {frame.Position}: {settingType.Reason}"));
-                return null;
+                throw new ArgumentException($"Error splitting to desired GameSetting type at position {frame.Position}: {settingType.Reason}");
             }
             switch (settingType.Value)
             {
                 case GameSettingType.Float:
-                    return GameSettingFloat.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingFloat.CreateFromBinary(frame, masterReferences, recordTypeConverter);
                 case GameSettingType.Int:
-                    return GameSettingInt.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingInt.CreateFromBinary(frame, masterReferences, recordTypeConverter);
                 case GameSettingType.String:
-                    return GameSettingString.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingString.CreateFromBinary(frame, masterReferences, recordTypeConverter);
                 case GameSettingType.Bool:
-                    return GameSettingBool.CreateFromBinary(frame, masterReferences, recordTypeConverter, errorMask);
+                    return GameSettingBool.CreateFromBinary(frame, masterReferences, recordTypeConverter);
                 default:
-                    errorMask.ReportExceptionOrThrow(
-                        new ArgumentException($"Unknown game type: {settingType.Value}"));
-                    return null;
+                    throw new ArgumentException($"Unknown game type: {settingType.Value}");
             }
         }
     }
