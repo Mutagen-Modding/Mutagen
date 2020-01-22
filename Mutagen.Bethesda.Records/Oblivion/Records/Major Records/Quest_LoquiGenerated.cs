@@ -2783,8 +2783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Priority = eval(this.Priority);
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
-                obj.Conditions.Overall = eval(this.Conditions.Overall);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
                 if (Conditions.Specific != null)
                 {
                     List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
@@ -2795,12 +2794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2808,8 +2802,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Stages != null)
             {
-                obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage_Mask<R>>>>();
-                obj.Stages.Overall = eval(this.Stages.Overall);
+                obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage_Mask<R>>>>(eval(this.Stages.Overall), default);
                 if (Stages.Specific != null)
                 {
                     List<MaskItemIndexed<R, QuestStage_Mask<R>>> l = new List<MaskItemIndexed<R, QuestStage_Mask<R>>>();
@@ -2820,12 +2813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, QuestStage_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, QuestStage_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2833,8 +2821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Targets != null)
             {
-                obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget_Mask<R>>>>();
-                obj.Targets.Overall = eval(this.Targets.Overall);
+                obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget_Mask<R>>>>(eval(this.Targets.Overall), default);
                 if (Targets.Specific != null)
                 {
                     List<MaskItemIndexed<R, QuestTarget_Mask<R>>> l = new List<MaskItemIndexed<R, QuestTarget_Mask<R>>>();
@@ -2845,12 +2832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, QuestTarget_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, QuestTarget_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

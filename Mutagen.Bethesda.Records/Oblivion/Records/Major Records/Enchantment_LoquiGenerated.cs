@@ -2340,8 +2340,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Effects != null)
             {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>>>>();
-                obj.Effects.Overall = eval(this.Effects.Overall);
+                obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect_Mask<R>>>>(eval(this.Effects.Overall), default);
                 if (Effects.Specific != null)
                 {
                     List<MaskItemIndexed<R, Effect_Mask<R>>> l = new List<MaskItemIndexed<R, Effect_Mask<R>>>();
@@ -2352,12 +2351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Effect_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Effect_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

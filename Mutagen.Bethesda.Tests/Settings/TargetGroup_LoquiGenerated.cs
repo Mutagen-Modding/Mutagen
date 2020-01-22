@@ -1564,8 +1564,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.Do = eval(this.Do);
             if (Targets != null)
             {
-                obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target_Mask<R>>>>();
-                obj.Targets.Overall = eval(this.Targets.Overall);
+                obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target_Mask<R>>>>(eval(this.Targets.Overall), default);
                 if (Targets.Specific != null)
                 {
                     List<MaskItemIndexed<R, Target_Mask<R>>> l = new List<MaskItemIndexed<R, Target_Mask<R>>>();
@@ -1576,12 +1575,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Target_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Target_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -1834,10 +1828,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

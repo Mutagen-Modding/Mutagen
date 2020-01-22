@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Description_Unset();
             item.Spells.Unset();
             item.Relations.Unset();
-            item.SkillBoosts.Clear();
+            item.SkillBoosts.ResetToNull();
             item.Fluff = default(Byte[]);
             item.MaleHeight = default(Single);
             item.FemaleHeight = default(Single);
@@ -4027,7 +4027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.SkillBoosts.Clear();
+                            item.SkillBoosts.ResetToNull();
                         }
                     }
                     catch (Exception ex)
@@ -4766,8 +4766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (Spells != null)
             {
-                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Spells.Overall = eval(this.Spells.Overall);
+                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), default);
                 if (Spells.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -4783,8 +4782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation_Mask<R>>>>();
-                obj.Relations.Overall = eval(this.Relations.Overall);
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation_Mask<R>>>>(eval(this.Relations.Overall), default);
                 if (Relations.Specific != null)
                 {
                     List<MaskItemIndexed<R, RaceRelation_Mask<R>>> l = new List<MaskItemIndexed<R, RaceRelation_Mask<R>>>();
@@ -4795,12 +4793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, RaceRelation_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, RaceRelation_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -4808,8 +4801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (SkillBoosts != null)
             {
-                obj.SkillBoosts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SkillBoost_Mask<R>>>>();
-                obj.SkillBoosts.Overall = eval(this.SkillBoosts.Overall);
+                obj.SkillBoosts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SkillBoost_Mask<R>>>>(eval(this.SkillBoosts.Overall), default);
                 if (SkillBoosts.Specific != null)
                 {
                     List<MaskItemIndexed<R, SkillBoost_Mask<R>>> l = new List<MaskItemIndexed<R, SkillBoost_Mask<R>>>();
@@ -4820,12 +4812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, SkillBoost_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, SkillBoost_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -4839,38 +4826,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (this.Voices != null)
             {
-                obj.Voices = new MaskItem<R, RaceVoices_Mask<R>>();
-                obj.Voices.Overall = eval(this.Voices.Overall);
-                if (this.Voices.Specific != null)
-                {
-                    obj.Voices.Specific = this.Voices.Specific.Translate(eval);
-                }
+                obj.Voices = new MaskItem<R, RaceVoices_Mask<R>>(eval(this.Voices.Overall), this.Voices.Specific?.Translate(eval));
             }
             if (this.DefaultHair != null)
             {
-                obj.DefaultHair = new MaskItem<R, RaceHair_Mask<R>>();
-                obj.DefaultHair.Overall = eval(this.DefaultHair.Overall);
-                if (this.DefaultHair.Specific != null)
-                {
-                    obj.DefaultHair.Specific = this.DefaultHair.Specific.Translate(eval);
-                }
+                obj.DefaultHair = new MaskItem<R, RaceHair_Mask<R>>(eval(this.DefaultHair.Overall), this.DefaultHair.Specific?.Translate(eval));
             }
             obj.DefaultHairColor = eval(this.DefaultHairColor);
             obj.FaceGenMainClamp = eval(this.FaceGenMainClamp);
             obj.FaceGenFaceClamp = eval(this.FaceGenFaceClamp);
             if (this.RaceStats != null)
             {
-                obj.RaceStats = new MaskItem<R, RaceStatsGendered_Mask<R>>();
-                obj.RaceStats.Overall = eval(this.RaceStats.Overall);
-                if (this.RaceStats.Specific != null)
-                {
-                    obj.RaceStats.Specific = this.RaceStats.Specific.Translate(eval);
-                }
+                obj.RaceStats = new MaskItem<R, RaceStatsGendered_Mask<R>>(eval(this.RaceStats.Overall), this.RaceStats.Specific?.Translate(eval));
             }
             if (FaceData != null)
             {
-                obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePart_Mask<R>>>>();
-                obj.FaceData.Overall = eval(this.FaceData.Overall);
+                obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePart_Mask<R>>>>(eval(this.FaceData.Overall), default);
                 if (FaceData.Specific != null)
                 {
                     List<MaskItemIndexed<R, FacePart_Mask<R>>> l = new List<MaskItemIndexed<R, FacePart_Mask<R>>>();
@@ -4881,12 +4852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, FacePart_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, FacePart_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -4894,17 +4860,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (this.BodyData != null)
             {
-                obj.BodyData = new MaskItem<R, GenderedBodyData_Mask<R>>();
-                obj.BodyData.Overall = eval(this.BodyData.Overall);
-                if (this.BodyData.Specific != null)
-                {
-                    obj.BodyData.Specific = this.BodyData.Specific.Translate(eval);
-                }
+                obj.BodyData = new MaskItem<R, GenderedBodyData_Mask<R>>(eval(this.BodyData.Overall), this.BodyData.Specific?.Translate(eval));
             }
             if (Hairs != null)
             {
-                obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Hairs.Overall = eval(this.Hairs.Overall);
+                obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Hairs.Overall), default);
                 if (Hairs.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -4920,8 +4880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Eyes != null)
             {
-                obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Eyes.Overall = eval(this.Eyes.Overall);
+                obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Eyes.Overall), default);
                 if (Eyes.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -4937,12 +4896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (this.FaceGenData != null)
             {
-                obj.FaceGenData = new MaskItem<R, FaceGenData_Mask<R>>();
-                obj.FaceGenData.Overall = eval(this.FaceGenData.Overall);
-                if (this.FaceGenData.Specific != null)
-                {
-                    obj.FaceGenData.Specific = this.FaceGenData.Specific.Translate(eval);
-                }
+                obj.FaceGenData = new MaskItem<R, FaceGenData_Mask<R>>(eval(this.FaceGenData.Overall), this.FaceGenData.Specific?.Translate(eval));
             }
             obj.Unknown = eval(this.Unknown);
             obj.DATADataTypeState = eval(this.DATADataTypeState);

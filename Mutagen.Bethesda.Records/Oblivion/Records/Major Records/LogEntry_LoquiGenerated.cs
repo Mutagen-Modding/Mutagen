@@ -2116,8 +2116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
-                obj.Conditions.Overall = eval(this.Conditions.Overall);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
                 if (Conditions.Specific != null)
                 {
                     List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
@@ -2128,12 +2127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2142,12 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Entry = eval(this.Entry);
             if (this.ResultScript != null)
             {
-                obj.ResultScript = new MaskItem<R, ScriptFields_Mask<R>>();
-                obj.ResultScript.Overall = eval(this.ResultScript.Overall);
-                if (this.ResultScript.Specific != null)
-                {
-                    obj.ResultScript.Specific = this.ResultScript.Specific.Translate(eval);
-                }
+                obj.ResultScript = new MaskItem<R, ScriptFields_Mask<R>>(eval(this.ResultScript.Overall), this.ResultScript.Specific?.Translate(eval));
             }
         }
         #endregion
@@ -2432,10 +2421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

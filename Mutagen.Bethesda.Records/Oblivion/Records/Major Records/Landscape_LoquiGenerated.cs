@@ -2514,8 +2514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.VertexColors = eval(this.VertexColors);
             if (Layers != null)
             {
-                obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer_Mask<R>>>>();
-                obj.Layers.Overall = eval(this.Layers.Overall);
+                obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer_Mask<R>>>>(eval(this.Layers.Overall), default);
                 if (Layers.Specific != null)
                 {
                     List<MaskItemIndexed<R, BaseLayer_Mask<R>>> l = new List<MaskItemIndexed<R, BaseLayer_Mask<R>>>();
@@ -2526,12 +2525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, BaseLayer_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, BaseLayer_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2539,8 +2533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Textures != null)
             {
-                obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Textures.Overall = eval(this.Textures.Overall);
+                obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Textures.Overall), default);
                 if (Textures.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

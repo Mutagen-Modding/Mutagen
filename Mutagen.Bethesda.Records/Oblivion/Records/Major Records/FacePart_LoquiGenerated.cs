@@ -1915,12 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Index = eval(this.Index);
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.Icon = eval(this.Icon);
         }
@@ -2145,10 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

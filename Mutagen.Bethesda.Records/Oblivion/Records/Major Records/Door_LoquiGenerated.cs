@@ -2618,12 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Name = eval(this.Name);
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.Script = eval(this.Script);
             obj.OpenSound = eval(this.OpenSound);
@@ -2632,8 +2627,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (RandomTeleportDestinations != null)
             {
-                obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.RandomTeleportDestinations.Overall = eval(this.RandomTeleportDestinations.Overall);
+                obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RandomTeleportDestinations.Overall), default);
                 if (RandomTeleportDestinations.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

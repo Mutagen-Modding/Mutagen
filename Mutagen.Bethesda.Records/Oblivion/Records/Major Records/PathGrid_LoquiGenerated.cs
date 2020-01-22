@@ -2272,8 +2272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (PointToPointConnections != null)
             {
-                obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint_Mask<R>>>>();
-                obj.PointToPointConnections.Overall = eval(this.PointToPointConnections.Overall);
+                obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint_Mask<R>>>>(eval(this.PointToPointConnections.Overall), default);
                 if (PointToPointConnections.Specific != null)
                 {
                     List<MaskItemIndexed<R, PathGridPoint_Mask<R>>> l = new List<MaskItemIndexed<R, PathGridPoint_Mask<R>>>();
@@ -2284,12 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, PathGridPoint_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, PathGridPoint_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2298,8 +2292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Unknown = eval(this.Unknown);
             if (InterCellConnections != null)
             {
-                obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint_Mask<R>>>>();
-                obj.InterCellConnections.Overall = eval(this.InterCellConnections.Overall);
+                obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint_Mask<R>>>>(eval(this.InterCellConnections.Overall), default);
                 if (InterCellConnections.Specific != null)
                 {
                     List<MaskItemIndexed<R, InterCellPoint_Mask<R>>> l = new List<MaskItemIndexed<R, InterCellPoint_Mask<R>>>();
@@ -2310,12 +2303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, InterCellPoint_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, InterCellPoint_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2323,8 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (PointToReferenceMappings != null)
             {
-                obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>>>();
-                obj.PointToReferenceMappings.Overall = eval(this.PointToReferenceMappings.Overall);
+                obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>>>(eval(this.PointToReferenceMappings.Overall), default);
                 if (PointToReferenceMappings.Specific != null)
                 {
                     List<MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>> l = new List<MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>>();
@@ -2335,12 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, PointToReferenceMapping_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

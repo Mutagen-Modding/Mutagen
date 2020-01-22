@@ -2929,8 +2929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Worldspace = eval(this.Worldspace);
             if (Areas != null)
             {
-                obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea_Mask<R>>>>();
-                obj.Areas.Overall = eval(this.Areas.Overall);
+                obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea_Mask<R>>>>(eval(this.Areas.Overall), default);
                 if (Areas.Specific != null)
                 {
                     List<MaskItemIndexed<R, RegionArea_Mask<R>>> l = new List<MaskItemIndexed<R, RegionArea_Mask<R>>>();
@@ -2941,12 +2940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, RegionArea_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, RegionArea_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2954,48 +2948,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (this.Objects != null)
             {
-                obj.Objects = new MaskItem<R, RegionDataObjects_Mask<R>>();
-                obj.Objects.Overall = eval(this.Objects.Overall);
-                if (this.Objects.Specific != null)
-                {
-                    obj.Objects.Specific = this.Objects.Specific.Translate(eval);
-                }
+                obj.Objects = new MaskItem<R, RegionDataObjects_Mask<R>>(eval(this.Objects.Overall), this.Objects.Specific?.Translate(eval));
             }
             if (this.Weather != null)
             {
-                obj.Weather = new MaskItem<R, RegionDataWeather_Mask<R>>();
-                obj.Weather.Overall = eval(this.Weather.Overall);
-                if (this.Weather.Specific != null)
-                {
-                    obj.Weather.Specific = this.Weather.Specific.Translate(eval);
-                }
+                obj.Weather = new MaskItem<R, RegionDataWeather_Mask<R>>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
             }
             if (this.MapName != null)
             {
-                obj.MapName = new MaskItem<R, RegionDataMapName_Mask<R>>();
-                obj.MapName.Overall = eval(this.MapName.Overall);
-                if (this.MapName.Specific != null)
-                {
-                    obj.MapName.Specific = this.MapName.Specific.Translate(eval);
-                }
+                obj.MapName = new MaskItem<R, RegionDataMapName_Mask<R>>(eval(this.MapName.Overall), this.MapName.Specific?.Translate(eval));
             }
             if (this.Grasses != null)
             {
-                obj.Grasses = new MaskItem<R, RegionDataGrasses_Mask<R>>();
-                obj.Grasses.Overall = eval(this.Grasses.Overall);
-                if (this.Grasses.Specific != null)
-                {
-                    obj.Grasses.Specific = this.Grasses.Specific.Translate(eval);
-                }
+                obj.Grasses = new MaskItem<R, RegionDataGrasses_Mask<R>>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
             }
             if (this.Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, RegionDataSounds_Mask<R>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
-                if (this.Sounds.Specific != null)
-                {
-                    obj.Sounds.Specific = this.Sounds.Specific.Translate(eval);
-                }
+                obj.Sounds = new MaskItem<R, RegionDataSounds_Mask<R>>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
         }
         #endregion

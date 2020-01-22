@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "using ReactiveUI";
+            string testString = "bj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, OblivionMajorRecord_Mask<R>>>>();";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

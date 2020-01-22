@@ -1685,8 +1685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Reference = eval(this.Reference);
             if (Points != null)
             {
-                obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Points.Overall = eval(this.Points.Overall);
+                obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Points.Overall), default);
                 if (Points.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -1947,10 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

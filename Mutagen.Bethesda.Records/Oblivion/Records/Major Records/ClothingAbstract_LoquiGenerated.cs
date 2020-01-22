@@ -3310,40 +3310,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (this.MaleBipedModel != null)
             {
-                obj.MaleBipedModel = new MaskItem<R, Model_Mask<R>>();
-                obj.MaleBipedModel.Overall = eval(this.MaleBipedModel.Overall);
-                if (this.MaleBipedModel.Specific != null)
-                {
-                    obj.MaleBipedModel.Specific = this.MaleBipedModel.Specific.Translate(eval);
-                }
+                obj.MaleBipedModel = new MaskItem<R, Model_Mask<R>>(eval(this.MaleBipedModel.Overall), this.MaleBipedModel.Specific?.Translate(eval));
             }
             if (this.MaleWorldModel != null)
             {
-                obj.MaleWorldModel = new MaskItem<R, Model_Mask<R>>();
-                obj.MaleWorldModel.Overall = eval(this.MaleWorldModel.Overall);
-                if (this.MaleWorldModel.Specific != null)
-                {
-                    obj.MaleWorldModel.Specific = this.MaleWorldModel.Specific.Translate(eval);
-                }
+                obj.MaleWorldModel = new MaskItem<R, Model_Mask<R>>(eval(this.MaleWorldModel.Overall), this.MaleWorldModel.Specific?.Translate(eval));
             }
             obj.MaleIcon = eval(this.MaleIcon);
             if (this.FemaleBipedModel != null)
             {
-                obj.FemaleBipedModel = new MaskItem<R, Model_Mask<R>>();
-                obj.FemaleBipedModel.Overall = eval(this.FemaleBipedModel.Overall);
-                if (this.FemaleBipedModel.Specific != null)
-                {
-                    obj.FemaleBipedModel.Specific = this.FemaleBipedModel.Specific.Translate(eval);
-                }
+                obj.FemaleBipedModel = new MaskItem<R, Model_Mask<R>>(eval(this.FemaleBipedModel.Overall), this.FemaleBipedModel.Specific?.Translate(eval));
             }
             if (this.FemaleWorldModel != null)
             {
-                obj.FemaleWorldModel = new MaskItem<R, Model_Mask<R>>();
-                obj.FemaleWorldModel.Overall = eval(this.FemaleWorldModel.Overall);
-                if (this.FemaleWorldModel.Specific != null)
-                {
-                    obj.FemaleWorldModel.Specific = this.FemaleWorldModel.Specific.Translate(eval);
-                }
+                obj.FemaleWorldModel = new MaskItem<R, Model_Mask<R>>(eval(this.FemaleWorldModel.Overall), this.FemaleWorldModel.Specific?.Translate(eval));
             }
             obj.FemaleIcon = eval(this.FemaleIcon);
             obj.BMDTDataTypeState = eval(this.BMDTDataTypeState);

@@ -1678,8 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Objects != null)
             {
-                obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionDataObject_Mask<R>>>>();
-                obj.Objects.Overall = eval(this.Objects.Overall);
+                obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionDataObject_Mask<R>>>>(eval(this.Objects.Overall), default);
                 if (Objects.Specific != null)
                 {
                     List<MaskItemIndexed<R, RegionDataObject_Mask<R>>> l = new List<MaskItemIndexed<R, RegionDataObject_Mask<R>>>();
@@ -1690,12 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, RegionDataObject_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, RegionDataObject_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

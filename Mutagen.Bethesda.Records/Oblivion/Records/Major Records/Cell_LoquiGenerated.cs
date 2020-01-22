@@ -4507,17 +4507,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Grid = eval(this.Grid);
             if (this.Lighting != null)
             {
-                obj.Lighting = new MaskItem<R, CellLighting_Mask<R>>();
-                obj.Lighting.Overall = eval(this.Lighting.Overall);
-                if (this.Lighting.Specific != null)
-                {
-                    obj.Lighting.Specific = this.Lighting.Specific.Translate(eval);
-                }
+                obj.Lighting = new MaskItem<R, CellLighting_Mask<R>>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
             }
             if (Regions != null)
             {
-                obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Regions.Overall = eval(this.Regions.Overall);
+                obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Regions.Overall), default);
                 if (Regions.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -4540,28 +4534,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.GlobalVariable = eval(this.GlobalVariable);
             if (this.PathGrid != null)
             {
-                obj.PathGrid = new MaskItem<R, PathGrid_Mask<R>>();
-                obj.PathGrid.Overall = eval(this.PathGrid.Overall);
-                if (this.PathGrid.Specific != null)
-                {
-                    obj.PathGrid.Specific = this.PathGrid.Specific.Translate(eval);
-                }
+                obj.PathGrid = new MaskItem<R, PathGrid_Mask<R>>(eval(this.PathGrid.Overall), this.PathGrid.Specific?.Translate(eval));
             }
             if (this.Landscape != null)
             {
-                obj.Landscape = new MaskItem<R, Landscape_Mask<R>>();
-                obj.Landscape.Overall = eval(this.Landscape.Overall);
-                if (this.Landscape.Specific != null)
-                {
-                    obj.Landscape.Specific = this.Landscape.Specific.Translate(eval);
-                }
+                obj.Landscape = new MaskItem<R, Landscape_Mask<R>>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
             }
             obj.Timestamp = eval(this.Timestamp);
             obj.PersistentTimestamp = eval(this.PersistentTimestamp);
             if (Persistent != null)
             {
-                obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
-                obj.Persistent.Overall = eval(this.Persistent.Overall);
+                obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>(eval(this.Persistent.Overall), default);
                 if (Persistent.Specific != null)
                 {
                     List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
@@ -4572,8 +4555,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);
@@ -4583,8 +4564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
             if (Temporary != null)
             {
-                obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
-                obj.Temporary.Overall = eval(this.Temporary.Overall);
+                obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>(eval(this.Temporary.Overall), default);
                 if (Temporary.Specific != null)
                 {
                     List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
@@ -4595,8 +4575,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);
@@ -4606,8 +4584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
             if (VisibleWhenDistant != null)
             {
-                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>();
-                obj.VisibleWhenDistant.Overall = eval(this.VisibleWhenDistant.Overall);
+                obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>>>>(eval(this.VisibleWhenDistant.Overall), default);
                 if (VisibleWhenDistant.Specific != null)
                 {
                     List<MaskItemIndexed<R, IMask<R>>> l = new List<MaskItemIndexed<R, IMask<R>>>();
@@ -4618,8 +4595,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, IMask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
                             throw new NotImplementedException();
                         }
                         l.Add(mask);

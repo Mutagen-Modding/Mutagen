@@ -2733,12 +2733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.GlobalVariable = eval(this.GlobalVariable);
             if (this.EnableParent != null)
             {
-                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>();
-                obj.EnableParent.Overall = eval(this.EnableParent.Overall);
-                if (this.EnableParent.Specific != null)
-                {
-                    obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
-                }
+                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
             }
             obj.RagdollData = eval(this.RagdollData);
             obj.Scale = eval(this.Scale);

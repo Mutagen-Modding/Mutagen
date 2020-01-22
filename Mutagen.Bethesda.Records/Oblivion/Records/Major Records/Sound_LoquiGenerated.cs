@@ -1907,12 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.File = eval(this.File);
             if (this.Data != null)
             {
-                obj.Data = new MaskItem<R, SoundData_Mask<R>>();
-                obj.Data.Overall = eval(this.Data.Overall);
-                if (this.Data.Specific != null)
-                {
-                    obj.Data.Specific = this.Data.Specific.Translate(eval);
-                }
+                obj.Data = new MaskItem<R, SoundData_Mask<R>>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
         }
         #endregion

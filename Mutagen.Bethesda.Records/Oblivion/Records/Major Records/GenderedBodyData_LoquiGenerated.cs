@@ -1798,21 +1798,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (this.Male != null)
             {
-                obj.Male = new MaskItem<R, BodyData_Mask<R>>();
-                obj.Male.Overall = eval(this.Male.Overall);
-                if (this.Male.Specific != null)
-                {
-                    obj.Male.Specific = this.Male.Specific.Translate(eval);
-                }
+                obj.Male = new MaskItem<R, BodyData_Mask<R>>(eval(this.Male.Overall), this.Male.Specific?.Translate(eval));
             }
             if (this.Female != null)
             {
-                obj.Female = new MaskItem<R, BodyData_Mask<R>>();
-                obj.Female.Overall = eval(this.Female.Overall);
-                if (this.Female.Specific != null)
-                {
-                    obj.Female.Specific = this.Female.Specific.Translate(eval);
-                }
+                obj.Female = new MaskItem<R, BodyData_Mask<R>>(eval(this.Female.Overall), this.Female.Specific?.Translate(eval));
             }
         }
         #endregion
@@ -2018,10 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

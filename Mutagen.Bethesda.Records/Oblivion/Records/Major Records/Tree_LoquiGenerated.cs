@@ -3021,18 +3021,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.Icon = eval(this.Icon);
             if (SpeedTreeSeeds != null)
             {
-                obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.SpeedTreeSeeds.Overall = eval(this.SpeedTreeSeeds.Overall);
+                obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SpeedTreeSeeds.Overall), default);
                 if (SpeedTreeSeeds.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

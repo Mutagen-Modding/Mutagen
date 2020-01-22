@@ -1930,8 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Name = eval(this.Name);
             if (Types != null)
             {
-                obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Types.Overall = eval(this.Types.Overall);
+                obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Types.Overall), default);
                 if (Types.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2210,10 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

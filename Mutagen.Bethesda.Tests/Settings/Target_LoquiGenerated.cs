@@ -1863,12 +1863,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.ExpectedBaseGroupCount = eval(this.ExpectedBaseGroupCount);
             if (this.Interest != null)
             {
-                obj.Interest = new MaskItem<R, RecordInterest_Mask<R>>();
-                obj.Interest.Overall = eval(this.Interest.Overall);
-                if (this.Interest.Specific != null)
-                {
-                    obj.Interest.Specific = this.Interest.Specific.Translate(eval);
-                }
+                obj.Interest = new MaskItem<R, RecordInterest_Mask<R>>(eval(this.Interest.Overall), this.Interest.Specific?.Translate(eval));
             }
         }
         #endregion
@@ -2146,10 +2141,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

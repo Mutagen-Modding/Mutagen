@@ -5088,17 +5088,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.TextureUpperLayer = eval(this.TextureUpperLayer);
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             if (WeatherTypes != null)
             {
-                obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType_Mask<R>>>>();
-                obj.WeatherTypes.Overall = eval(this.WeatherTypes.Overall);
+                obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType_Mask<R>>>>(eval(this.WeatherTypes.Overall), default);
                 if (WeatherTypes.Specific != null)
                 {
                     List<MaskItemIndexed<R, WeatherType_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherType_Mask<R>>>();
@@ -5109,12 +5103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, WeatherType_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, WeatherType_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -5153,8 +5142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.LightningColor = eval(this.LightningColor);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound_Mask<R>>>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound_Mask<R>>>>(eval(this.Sounds.Overall), default);
                 if (Sounds.Specific != null)
                 {
                     List<MaskItemIndexed<R, WeatherSound_Mask<R>>> l = new List<MaskItemIndexed<R, WeatherSound_Mask<R>>>();
@@ -5165,12 +5153,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, WeatherSound_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, WeatherSound_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

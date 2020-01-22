@@ -2221,30 +2221,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.Translate_InternalFill(obj, eval);
             if (this.ObjectBounds != null)
             {
-                obj.ObjectBounds = new MaskItem<R, ObjectBounds_Mask<R>>();
-                obj.ObjectBounds.Overall = eval(this.ObjectBounds.Overall);
-                if (this.ObjectBounds.Specific != null)
-                {
-                    obj.ObjectBounds.Specific = this.ObjectBounds.Specific.Translate(eval);
-                }
+                obj.ObjectBounds = new MaskItem<R, ObjectBounds_Mask<R>>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
             }
             if (this.Textures != null)
             {
-                obj.Textures = new MaskItem<R, Textures_Mask<R>>();
-                obj.Textures.Overall = eval(this.Textures.Overall);
-                if (this.Textures.Specific != null)
-                {
-                    obj.Textures.Specific = this.Textures.Specific.Translate(eval);
-                }
+                obj.Textures = new MaskItem<R, Textures_Mask<R>>(eval(this.Textures.Overall), this.Textures.Specific?.Translate(eval));
             }
             if (this.Decal != null)
             {
-                obj.Decal = new MaskItem<R, Decal_Mask<R>>();
-                obj.Decal.Overall = eval(this.Decal.Overall);
-                if (this.Decal.Specific != null)
-                {
-                    obj.Decal.Specific = this.Decal.Specific.Translate(eval);
-                }
+                obj.Decal = new MaskItem<R, Decal_Mask<R>>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
             }
             obj.Flags = eval(this.Flags);
         }

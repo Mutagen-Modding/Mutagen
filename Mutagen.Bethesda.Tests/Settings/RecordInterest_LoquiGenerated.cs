@@ -1602,8 +1602,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (InterestingTypes != null)
             {
-                obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.InterestingTypes.Overall = eval(this.InterestingTypes.Overall);
+                obj.InterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.InterestingTypes.Overall), default);
                 if (InterestingTypes.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -1619,8 +1618,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if (UninterestingTypes != null)
             {
-                obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.UninterestingTypes.Overall = eval(this.UninterestingTypes.Overall);
+                obj.UninterestingTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.UninterestingTypes.Overall), default);
                 if (UninterestingTypes.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -1924,10 +1922,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

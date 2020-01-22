@@ -2191,8 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (Spells != null)
             {
-                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Spells.Overall = eval(this.Spells.Overall);
+                obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Spells.Overall), default);
                 if (Spells.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

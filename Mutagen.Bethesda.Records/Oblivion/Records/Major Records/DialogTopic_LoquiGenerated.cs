@@ -2405,8 +2405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Quests != null)
             {
-                obj.Quests = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Quests.Overall = eval(this.Quests.Overall);
+                obj.Quests = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Quests.Overall), default);
                 if (Quests.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2425,8 +2424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Timestamp = eval(this.Timestamp);
             if (Items != null)
             {
-                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem_Mask<R>>>>();
-                obj.Items.Overall = eval(this.Items.Overall);
+                obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem_Mask<R>>>>(eval(this.Items.Overall), default);
                 if (Items.Specific != null)
                 {
                     List<MaskItemIndexed<R, DialogItem_Mask<R>>> l = new List<MaskItemIndexed<R, DialogItem_Mask<R>>>();
@@ -2437,12 +2435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, DialogItem_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, DialogItem_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

@@ -4467,8 +4467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Name = eval(this.Name);
             if (Relations != null)
             {
-                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation_Mask<R>>>>();
-                obj.Relations.Overall = eval(this.Relations.Overall);
+                obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation_Mask<R>>>>(eval(this.Relations.Overall), default);
                 if (Relations.Specific != null)
                 {
                     List<MaskItemIndexed<R, Relation_Mask<R>>> l = new List<MaskItemIndexed<R, Relation_Mask<R>>>();
@@ -4479,12 +4478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Relation_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Relation_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -4509,8 +4503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.WerewolfCrimeValue = eval(this.WerewolfCrimeValue);
             if (Ranks != null)
             {
-                obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank_Mask<R>>>>();
-                obj.Ranks.Overall = eval(this.Ranks.Overall);
+                obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank_Mask<R>>>>(eval(this.Ranks.Overall), default);
                 if (Ranks.Specific != null)
                 {
                     List<MaskItemIndexed<R, Rank_Mask<R>>> l = new List<MaskItemIndexed<R, Rank_Mask<R>>>();
@@ -4521,12 +4514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Rank_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Rank_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -4536,26 +4524,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.VendorChest = eval(this.VendorChest);
             if (this.VendorValues != null)
             {
-                obj.VendorValues = new MaskItem<R, VendorValues_Mask<R>>();
-                obj.VendorValues.Overall = eval(this.VendorValues.Overall);
-                if (this.VendorValues.Specific != null)
-                {
-                    obj.VendorValues.Specific = this.VendorValues.Specific.Translate(eval);
-                }
+                obj.VendorValues = new MaskItem<R, VendorValues_Mask<R>>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
             }
             if (this.VendorLocation != null)
             {
-                obj.VendorLocation = new MaskItem<R, VendorLocation_Mask<R>>();
-                obj.VendorLocation.Overall = eval(this.VendorLocation.Overall);
-                if (this.VendorLocation.Specific != null)
-                {
-                    obj.VendorLocation.Specific = this.VendorLocation.Specific.Translate(eval);
-                }
+                obj.VendorLocation = new MaskItem<R, VendorLocation_Mask<R>>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
-                obj.Conditions.Overall = eval(this.Conditions.Overall);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
                 if (Conditions.Specific != null)
                 {
                     List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
@@ -4566,12 +4543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

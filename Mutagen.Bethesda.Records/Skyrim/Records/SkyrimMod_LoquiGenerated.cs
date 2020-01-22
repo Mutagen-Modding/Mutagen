@@ -3368,84 +3368,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (this.ModHeader != null)
             {
-                obj.ModHeader = new MaskItem<R, ModHeader_Mask<R>>();
-                obj.ModHeader.Overall = eval(this.ModHeader.Overall);
-                if (this.ModHeader.Specific != null)
-                {
-                    obj.ModHeader.Specific = this.ModHeader.Specific.Translate(eval);
-                }
+                obj.ModHeader = new MaskItem<R, ModHeader_Mask<R>>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
             }
             if (this.GameSettings != null)
             {
-                obj.GameSettings = new MaskItem<R, Group_Mask<R>>();
-                obj.GameSettings.Overall = eval(this.GameSettings.Overall);
-                if (this.GameSettings.Specific != null)
-                {
-                    obj.GameSettings.Specific = this.GameSettings.Specific.Translate(eval);
-                }
+                obj.GameSettings = new MaskItem<R, Group_Mask<R>>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
             }
             if (this.Keywords != null)
             {
-                obj.Keywords = new MaskItem<R, Group_Mask<R>>();
-                obj.Keywords.Overall = eval(this.Keywords.Overall);
-                if (this.Keywords.Specific != null)
-                {
-                    obj.Keywords.Specific = this.Keywords.Specific.Translate(eval);
-                }
+                obj.Keywords = new MaskItem<R, Group_Mask<R>>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
             }
             if (this.LocationReferenceTypes != null)
             {
-                obj.LocationReferenceTypes = new MaskItem<R, Group_Mask<R>>();
-                obj.LocationReferenceTypes.Overall = eval(this.LocationReferenceTypes.Overall);
-                if (this.LocationReferenceTypes.Specific != null)
-                {
-                    obj.LocationReferenceTypes.Specific = this.LocationReferenceTypes.Specific.Translate(eval);
-                }
+                obj.LocationReferenceTypes = new MaskItem<R, Group_Mask<R>>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
             }
             if (this.Actions != null)
             {
-                obj.Actions = new MaskItem<R, Group_Mask<R>>();
-                obj.Actions.Overall = eval(this.Actions.Overall);
-                if (this.Actions.Specific != null)
-                {
-                    obj.Actions.Specific = this.Actions.Specific.Translate(eval);
-                }
+                obj.Actions = new MaskItem<R, Group_Mask<R>>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
             }
             if (this.TextureSets != null)
             {
-                obj.TextureSets = new MaskItem<R, Group_Mask<R>>();
-                obj.TextureSets.Overall = eval(this.TextureSets.Overall);
-                if (this.TextureSets.Specific != null)
-                {
-                    obj.TextureSets.Specific = this.TextureSets.Specific.Translate(eval);
-                }
+                obj.TextureSets = new MaskItem<R, Group_Mask<R>>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
             }
             if (this.Globals != null)
             {
-                obj.Globals = new MaskItem<R, Group_Mask<R>>();
-                obj.Globals.Overall = eval(this.Globals.Overall);
-                if (this.Globals.Specific != null)
-                {
-                    obj.Globals.Specific = this.Globals.Specific.Translate(eval);
-                }
+                obj.Globals = new MaskItem<R, Group_Mask<R>>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
             }
             if (this.Classes != null)
             {
-                obj.Classes = new MaskItem<R, Group_Mask<R>>();
-                obj.Classes.Overall = eval(this.Classes.Overall);
-                if (this.Classes.Specific != null)
-                {
-                    obj.Classes.Specific = this.Classes.Specific.Translate(eval);
-                }
+                obj.Classes = new MaskItem<R, Group_Mask<R>>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
             }
             if (this.Factions != null)
             {
-                obj.Factions = new MaskItem<R, Group_Mask<R>>();
-                obj.Factions.Overall = eval(this.Factions.Overall);
-                if (this.Factions.Specific != null)
-                {
-                    obj.Factions.Specific = this.Factions.Specific.Translate(eval);
-                }
+                obj.Factions = new MaskItem<R, Group_Mask<R>>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
             }
         }
         #endregion
@@ -3777,10 +3732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

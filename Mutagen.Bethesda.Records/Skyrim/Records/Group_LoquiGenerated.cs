@@ -2069,8 +2069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Unknown = eval(this.Unknown);
             if (RecordCache != null)
             {
-                obj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>>();
-                obj.RecordCache.Overall = eval(this.RecordCache.Overall);
+                obj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>>(eval(this.RecordCache.Overall), default);
                 if (RecordCache.Specific != null)
                 {
                     List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>> l = new List<MaskItemIndexed<FormKey, R, SkyrimMajorRecord_Mask<R>>>();
@@ -2367,10 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

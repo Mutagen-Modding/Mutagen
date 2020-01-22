@@ -3018,21 +3018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.FULLFluff = eval(this.FULLFluff);
             if (this.DistantLODData != null)
             {
-                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
-                obj.DistantLODData.Overall = eval(this.DistantLODData.Overall);
-                if (this.DistantLODData.Specific != null)
-                {
-                    obj.DistantLODData.Specific = this.DistantLODData.Specific.Translate(eval);
-                }
+                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>(eval(this.DistantLODData.Overall), this.DistantLODData.Specific?.Translate(eval));
             }
             if (this.EnableParent != null)
             {
-                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>();
-                obj.EnableParent.Overall = eval(this.EnableParent.Overall);
-                if (this.EnableParent.Specific != null)
-                {
-                    obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
-                }
+                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
             }
             obj.MerchantContainer = eval(this.MerchantContainer);
             obj.Horse = eval(this.Horse);

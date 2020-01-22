@@ -2243,19 +2243,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (this.MetadataSummary != null)
             {
-                obj.MetadataSummary = new MaskItem<R, ScriptMetaSummary_Mask<R>>();
-                obj.MetadataSummary.Overall = eval(this.MetadataSummary.Overall);
-                if (this.MetadataSummary.Specific != null)
-                {
-                    obj.MetadataSummary.Specific = this.MetadataSummary.Specific.Translate(eval);
-                }
+                obj.MetadataSummary = new MaskItem<R, ScriptMetaSummary_Mask<R>>(eval(this.MetadataSummary.Overall), this.MetadataSummary.Specific?.Translate(eval));
             }
             obj.CompiledScript = eval(this.CompiledScript);
             obj.SourceCode = eval(this.SourceCode);
             if (LocalVariables != null)
             {
-                obj.LocalVariables = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocalVariable_Mask<R>>>>();
-                obj.LocalVariables.Overall = eval(this.LocalVariables.Overall);
+                obj.LocalVariables = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocalVariable_Mask<R>>>>(eval(this.LocalVariables.Overall), default);
                 if (LocalVariables.Specific != null)
                 {
                     List<MaskItemIndexed<R, LocalVariable_Mask<R>>> l = new List<MaskItemIndexed<R, LocalVariable_Mask<R>>>();
@@ -2266,12 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, LocalVariable_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, LocalVariable_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2279,8 +2268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (References != null)
             {
-                obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptReference_Mask<R>>>>();
-                obj.References.Overall = eval(this.References.Overall);
+                obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptReference_Mask<R>>>>(eval(this.References.Overall), default);
                 if (References.Specific != null)
                 {
                     List<MaskItemIndexed<R, ScriptReference_Mask<R>>> l = new List<MaskItemIndexed<R, ScriptReference_Mask<R>>>();
@@ -2291,12 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, ScriptReference_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, ScriptReference_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2646,10 +2629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

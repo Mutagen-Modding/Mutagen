@@ -4691,12 +4691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Damage = eval(this.Damage);
             if (this.RelatedWaters != null)
             {
-                obj.RelatedWaters = new MaskItem<R, RelatedWaters_Mask<R>>();
-                obj.RelatedWaters.Overall = eval(this.RelatedWaters.Overall);
-                if (this.RelatedWaters.Specific != null)
-                {
-                    obj.RelatedWaters.Specific = this.RelatedWaters.Specific.Translate(eval);
-                }
+                obj.RelatedWaters = new MaskItem<R, RelatedWaters_Mask<R>>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
             }
             obj.DATADataTypeState = eval(this.DATADataTypeState);
         }

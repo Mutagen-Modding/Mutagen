@@ -1817,8 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.SoundType = eval(this.SoundType);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem_Mask<R>>>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem_Mask<R>>>>(eval(this.Sounds.Overall), default);
                 if (Sounds.Specific != null)
                 {
                     List<MaskItemIndexed<R, SoundItem_Mask<R>>> l = new List<MaskItemIndexed<R, SoundItem_Mask<R>>>();
@@ -1829,12 +1828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, SoundItem_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, SoundItem_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2087,10 +2081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

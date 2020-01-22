@@ -2068,8 +2068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (Locations != null)
             {
-                obj.Locations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>>>();
-                obj.Locations.Overall = eval(this.Locations.Overall);
+                obj.Locations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>>>(eval(this.Locations.Overall), default);
                 if (Locations.Specific != null)
                 {
                     List<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>> l = new List<MaskItemIndexed<R, LoadScreenLocation_Mask<R>>>();
@@ -2080,12 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, LoadScreenLocation_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, LoadScreenLocation_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

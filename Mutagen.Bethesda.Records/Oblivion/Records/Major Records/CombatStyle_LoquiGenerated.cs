@@ -4796,12 +4796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
             if (this.Advanced != null)
             {
-                obj.Advanced = new MaskItem<R, CombatStyleAdvanced_Mask<R>>();
-                obj.Advanced.Overall = eval(this.Advanced.Overall);
-                if (this.Advanced.Specific != null)
-                {
-                    obj.Advanced.Specific = this.Advanced.Specific.Translate(eval);
-                }
+                obj.Advanced = new MaskItem<R, CombatStyleAdvanced_Mask<R>>(eval(this.Advanced.Overall), this.Advanced.Specific?.Translate(eval));
             }
             obj.CSTDDataTypeState = eval(this.CSTDDataTypeState);
         }

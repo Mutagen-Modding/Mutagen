@@ -3884,12 +3884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Icon = eval(this.Icon);
             if (this.MapData != null)
             {
-                obj.MapData = new MaskItem<R, MapData_Mask<R>>();
-                obj.MapData.Overall = eval(this.MapData.Overall);
-                if (this.MapData.Specific != null)
-                {
-                    obj.MapData.Specific = this.MapData.Specific.Translate(eval);
-                }
+                obj.MapData = new MaskItem<R, MapData_Mask<R>>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
             }
             obj.Flags = eval(this.Flags);
             obj.ObjectBoundsMin = eval(this.ObjectBoundsMin);
@@ -3898,27 +3893,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.OffsetData = eval(this.OffsetData);
             if (this.Road != null)
             {
-                obj.Road = new MaskItem<R, Road_Mask<R>>();
-                obj.Road.Overall = eval(this.Road.Overall);
-                if (this.Road.Specific != null)
-                {
-                    obj.Road.Specific = this.Road.Specific.Translate(eval);
-                }
+                obj.Road = new MaskItem<R, Road_Mask<R>>(eval(this.Road.Overall), this.Road.Specific?.Translate(eval));
             }
             if (this.TopCell != null)
             {
-                obj.TopCell = new MaskItem<R, Cell_Mask<R>>();
-                obj.TopCell.Overall = eval(this.TopCell.Overall);
-                if (this.TopCell.Specific != null)
-                {
-                    obj.TopCell.Specific = this.TopCell.Specific.Translate(eval);
-                }
+                obj.TopCell = new MaskItem<R, Cell_Mask<R>>(eval(this.TopCell.Overall), this.TopCell.Specific?.Translate(eval));
             }
             obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
             if (SubCells != null)
             {
-                obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock_Mask<R>>>>();
-                obj.SubCells.Overall = eval(this.SubCells.Overall);
+                obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock_Mask<R>>>>(eval(this.SubCells.Overall), default);
                 if (SubCells.Specific != null)
                 {
                     List<MaskItemIndexed<R, WorldspaceBlock_Mask<R>>> l = new List<MaskItemIndexed<R, WorldspaceBlock_Mask<R>>>();
@@ -3929,12 +3913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, WorldspaceBlock_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, WorldspaceBlock_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

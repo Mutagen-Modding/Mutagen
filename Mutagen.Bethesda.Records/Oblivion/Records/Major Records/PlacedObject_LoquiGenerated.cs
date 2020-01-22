@@ -4808,44 +4808,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.FULLFluff = eval(this.FULLFluff);
             if (this.TeleportDestination != null)
             {
-                obj.TeleportDestination = new MaskItem<R, TeleportDestination_Mask<R>>();
-                obj.TeleportDestination.Overall = eval(this.TeleportDestination.Overall);
-                if (this.TeleportDestination.Specific != null)
-                {
-                    obj.TeleportDestination.Specific = this.TeleportDestination.Specific.Translate(eval);
-                }
+                obj.TeleportDestination = new MaskItem<R, TeleportDestination_Mask<R>>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
             }
             if (this.Lock != null)
             {
-                obj.Lock = new MaskItem<R, LockInformation_Mask<R>>();
-                obj.Lock.Overall = eval(this.Lock.Overall);
-                if (this.Lock.Specific != null)
-                {
-                    obj.Lock.Specific = this.Lock.Specific.Translate(eval);
-                }
+                obj.Lock = new MaskItem<R, LockInformation_Mask<R>>(eval(this.Lock.Overall), this.Lock.Specific?.Translate(eval));
             }
             obj.Owner = eval(this.Owner);
             obj.FactionRank = eval(this.FactionRank);
             obj.GlobalVariable = eval(this.GlobalVariable);
             if (this.EnableParent != null)
             {
-                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>();
-                obj.EnableParent.Overall = eval(this.EnableParent.Overall);
-                if (this.EnableParent.Specific != null)
-                {
-                    obj.EnableParent.Specific = this.EnableParent.Specific.Translate(eval);
-                }
+                obj.EnableParent = new MaskItem<R, EnableParent_Mask<R>>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
             }
             obj.Target = eval(this.Target);
             obj.SpeedTreeSeed = eval(this.SpeedTreeSeed);
             if (this.DistantLODData != null)
             {
-                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>();
-                obj.DistantLODData.Overall = eval(this.DistantLODData.Overall);
-                if (this.DistantLODData.Specific != null)
-                {
-                    obj.DistantLODData.Specific = this.DistantLODData.Specific.Translate(eval);
-                }
+                obj.DistantLODData = new MaskItem<R, DistantLODData_Mask<R>>(eval(this.DistantLODData.Overall), this.DistantLODData.Specific?.Translate(eval));
             }
             obj.Charge = eval(this.Charge);
             obj.Health = eval(this.Health);
@@ -4855,12 +4835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Count = eval(this.Count);
             if (this.MapMarker != null)
             {
-                obj.MapMarker = new MaskItem<R, MapMarker_Mask<R>>();
-                obj.MapMarker.Overall = eval(this.MapMarker.Overall);
-                if (this.MapMarker.Specific != null)
-                {
-                    obj.MapMarker.Specific = this.MapMarker.Specific.Translate(eval);
-                }
+                obj.MapMarker = new MaskItem<R, MapMarker_Mask<R>>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
             }
             obj.OpenByDefault = eval(this.OpenByDefault);
             obj.RagdollData = eval(this.RagdollData);

@@ -1786,8 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.EdgeFallOff = eval(this.EdgeFallOff);
             if (RegionPoints != null)
             {
-                obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.RegionPoints.Overall = eval(this.RegionPoints.Overall);
+                obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.RegionPoints.Overall), default);
                 if (RegionPoints.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2048,10 +2047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

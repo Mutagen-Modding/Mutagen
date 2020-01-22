@@ -2205,18 +2205,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Icon = eval(this.Icon);
             if (this.Havok != null)
             {
-                obj.Havok = new MaskItem<R, HavokData_Mask<R>>();
-                obj.Havok.Overall = eval(this.Havok.Overall);
-                if (this.Havok.Specific != null)
-                {
-                    obj.Havok.Specific = this.Havok.Specific.Translate(eval);
-                }
+                obj.Havok = new MaskItem<R, HavokData_Mask<R>>(eval(this.Havok.Overall), this.Havok.Specific?.Translate(eval));
             }
             obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
             if (PotentialGrass != null)
             {
-                obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.PotentialGrass.Overall = eval(this.PotentialGrass.Overall);
+                obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PotentialGrass.Overall), default);
                 if (PotentialGrass.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

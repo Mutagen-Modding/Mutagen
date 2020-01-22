@@ -1826,8 +1826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.MusicType = eval(this.MusicType);
             if (Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound_Mask<R>>>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound_Mask<R>>>>(eval(this.Sounds.Overall), default);
                 if (Sounds.Specific != null)
                 {
                     List<MaskItemIndexed<R, RegionSound_Mask<R>>> l = new List<MaskItemIndexed<R, RegionSound_Mask<R>>>();
@@ -1838,12 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, RegionSound_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, RegionSound_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

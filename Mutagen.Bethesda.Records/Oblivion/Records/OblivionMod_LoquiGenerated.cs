@@ -10945,516 +10945,231 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (this.ModHeader != null)
             {
-                obj.ModHeader = new MaskItem<R, ModHeader_Mask<R>>();
-                obj.ModHeader.Overall = eval(this.ModHeader.Overall);
-                if (this.ModHeader.Specific != null)
-                {
-                    obj.ModHeader.Specific = this.ModHeader.Specific.Translate(eval);
-                }
+                obj.ModHeader = new MaskItem<R, ModHeader_Mask<R>>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
             }
             if (this.GameSettings != null)
             {
-                obj.GameSettings = new MaskItem<R, Group_Mask<R>>();
-                obj.GameSettings.Overall = eval(this.GameSettings.Overall);
-                if (this.GameSettings.Specific != null)
-                {
-                    obj.GameSettings.Specific = this.GameSettings.Specific.Translate(eval);
-                }
+                obj.GameSettings = new MaskItem<R, Group_Mask<R>>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
             }
             if (this.Globals != null)
             {
-                obj.Globals = new MaskItem<R, Group_Mask<R>>();
-                obj.Globals.Overall = eval(this.Globals.Overall);
-                if (this.Globals.Specific != null)
-                {
-                    obj.Globals.Specific = this.Globals.Specific.Translate(eval);
-                }
+                obj.Globals = new MaskItem<R, Group_Mask<R>>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
             }
             if (this.Classes != null)
             {
-                obj.Classes = new MaskItem<R, Group_Mask<R>>();
-                obj.Classes.Overall = eval(this.Classes.Overall);
-                if (this.Classes.Specific != null)
-                {
-                    obj.Classes.Specific = this.Classes.Specific.Translate(eval);
-                }
+                obj.Classes = new MaskItem<R, Group_Mask<R>>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
             }
             if (this.Factions != null)
             {
-                obj.Factions = new MaskItem<R, Group_Mask<R>>();
-                obj.Factions.Overall = eval(this.Factions.Overall);
-                if (this.Factions.Specific != null)
-                {
-                    obj.Factions.Specific = this.Factions.Specific.Translate(eval);
-                }
+                obj.Factions = new MaskItem<R, Group_Mask<R>>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
             }
             if (this.Hairs != null)
             {
-                obj.Hairs = new MaskItem<R, Group_Mask<R>>();
-                obj.Hairs.Overall = eval(this.Hairs.Overall);
-                if (this.Hairs.Specific != null)
-                {
-                    obj.Hairs.Specific = this.Hairs.Specific.Translate(eval);
-                }
+                obj.Hairs = new MaskItem<R, Group_Mask<R>>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
             }
             if (this.Eyes != null)
             {
-                obj.Eyes = new MaskItem<R, Group_Mask<R>>();
-                obj.Eyes.Overall = eval(this.Eyes.Overall);
-                if (this.Eyes.Specific != null)
-                {
-                    obj.Eyes.Specific = this.Eyes.Specific.Translate(eval);
-                }
+                obj.Eyes = new MaskItem<R, Group_Mask<R>>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
             }
             if (this.Races != null)
             {
-                obj.Races = new MaskItem<R, Group_Mask<R>>();
-                obj.Races.Overall = eval(this.Races.Overall);
-                if (this.Races.Specific != null)
-                {
-                    obj.Races.Specific = this.Races.Specific.Translate(eval);
-                }
+                obj.Races = new MaskItem<R, Group_Mask<R>>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
             }
             if (this.Sounds != null)
             {
-                obj.Sounds = new MaskItem<R, Group_Mask<R>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
-                if (this.Sounds.Specific != null)
-                {
-                    obj.Sounds.Specific = this.Sounds.Specific.Translate(eval);
-                }
+                obj.Sounds = new MaskItem<R, Group_Mask<R>>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
             if (this.Skills != null)
             {
-                obj.Skills = new MaskItem<R, Group_Mask<R>>();
-                obj.Skills.Overall = eval(this.Skills.Overall);
-                if (this.Skills.Specific != null)
-                {
-                    obj.Skills.Specific = this.Skills.Specific.Translate(eval);
-                }
+                obj.Skills = new MaskItem<R, Group_Mask<R>>(eval(this.Skills.Overall), this.Skills.Specific?.Translate(eval));
             }
             if (this.MagicEffects != null)
             {
-                obj.MagicEffects = new MaskItem<R, Group_Mask<R>>();
-                obj.MagicEffects.Overall = eval(this.MagicEffects.Overall);
-                if (this.MagicEffects.Specific != null)
-                {
-                    obj.MagicEffects.Specific = this.MagicEffects.Specific.Translate(eval);
-                }
+                obj.MagicEffects = new MaskItem<R, Group_Mask<R>>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
             }
             if (this.Scripts != null)
             {
-                obj.Scripts = new MaskItem<R, Group_Mask<R>>();
-                obj.Scripts.Overall = eval(this.Scripts.Overall);
-                if (this.Scripts.Specific != null)
-                {
-                    obj.Scripts.Specific = this.Scripts.Specific.Translate(eval);
-                }
+                obj.Scripts = new MaskItem<R, Group_Mask<R>>(eval(this.Scripts.Overall), this.Scripts.Specific?.Translate(eval));
             }
             if (this.LandTextures != null)
             {
-                obj.LandTextures = new MaskItem<R, Group_Mask<R>>();
-                obj.LandTextures.Overall = eval(this.LandTextures.Overall);
-                if (this.LandTextures.Specific != null)
-                {
-                    obj.LandTextures.Specific = this.LandTextures.Specific.Translate(eval);
-                }
+                obj.LandTextures = new MaskItem<R, Group_Mask<R>>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
             }
             if (this.Enchantments != null)
             {
-                obj.Enchantments = new MaskItem<R, Group_Mask<R>>();
-                obj.Enchantments.Overall = eval(this.Enchantments.Overall);
-                if (this.Enchantments.Specific != null)
-                {
-                    obj.Enchantments.Specific = this.Enchantments.Specific.Translate(eval);
-                }
+                obj.Enchantments = new MaskItem<R, Group_Mask<R>>(eval(this.Enchantments.Overall), this.Enchantments.Specific?.Translate(eval));
             }
             if (this.Spells != null)
             {
-                obj.Spells = new MaskItem<R, Group_Mask<R>>();
-                obj.Spells.Overall = eval(this.Spells.Overall);
-                if (this.Spells.Specific != null)
-                {
-                    obj.Spells.Specific = this.Spells.Specific.Translate(eval);
-                }
+                obj.Spells = new MaskItem<R, Group_Mask<R>>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
             }
             if (this.Birthsigns != null)
             {
-                obj.Birthsigns = new MaskItem<R, Group_Mask<R>>();
-                obj.Birthsigns.Overall = eval(this.Birthsigns.Overall);
-                if (this.Birthsigns.Specific != null)
-                {
-                    obj.Birthsigns.Specific = this.Birthsigns.Specific.Translate(eval);
-                }
+                obj.Birthsigns = new MaskItem<R, Group_Mask<R>>(eval(this.Birthsigns.Overall), this.Birthsigns.Specific?.Translate(eval));
             }
             if (this.Activators != null)
             {
-                obj.Activators = new MaskItem<R, Group_Mask<R>>();
-                obj.Activators.Overall = eval(this.Activators.Overall);
-                if (this.Activators.Specific != null)
-                {
-                    obj.Activators.Specific = this.Activators.Specific.Translate(eval);
-                }
+                obj.Activators = new MaskItem<R, Group_Mask<R>>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
             }
             if (this.AlchemicalApparatus != null)
             {
-                obj.AlchemicalApparatus = new MaskItem<R, Group_Mask<R>>();
-                obj.AlchemicalApparatus.Overall = eval(this.AlchemicalApparatus.Overall);
-                if (this.AlchemicalApparatus.Specific != null)
-                {
-                    obj.AlchemicalApparatus.Specific = this.AlchemicalApparatus.Specific.Translate(eval);
-                }
+                obj.AlchemicalApparatus = new MaskItem<R, Group_Mask<R>>(eval(this.AlchemicalApparatus.Overall), this.AlchemicalApparatus.Specific?.Translate(eval));
             }
             if (this.Armors != null)
             {
-                obj.Armors = new MaskItem<R, Group_Mask<R>>();
-                obj.Armors.Overall = eval(this.Armors.Overall);
-                if (this.Armors.Specific != null)
-                {
-                    obj.Armors.Specific = this.Armors.Specific.Translate(eval);
-                }
+                obj.Armors = new MaskItem<R, Group_Mask<R>>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
             }
             if (this.Books != null)
             {
-                obj.Books = new MaskItem<R, Group_Mask<R>>();
-                obj.Books.Overall = eval(this.Books.Overall);
-                if (this.Books.Specific != null)
-                {
-                    obj.Books.Specific = this.Books.Specific.Translate(eval);
-                }
+                obj.Books = new MaskItem<R, Group_Mask<R>>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
             }
             if (this.Clothes != null)
             {
-                obj.Clothes = new MaskItem<R, Group_Mask<R>>();
-                obj.Clothes.Overall = eval(this.Clothes.Overall);
-                if (this.Clothes.Specific != null)
-                {
-                    obj.Clothes.Specific = this.Clothes.Specific.Translate(eval);
-                }
+                obj.Clothes = new MaskItem<R, Group_Mask<R>>(eval(this.Clothes.Overall), this.Clothes.Specific?.Translate(eval));
             }
             if (this.Containers != null)
             {
-                obj.Containers = new MaskItem<R, Group_Mask<R>>();
-                obj.Containers.Overall = eval(this.Containers.Overall);
-                if (this.Containers.Specific != null)
-                {
-                    obj.Containers.Specific = this.Containers.Specific.Translate(eval);
-                }
+                obj.Containers = new MaskItem<R, Group_Mask<R>>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
             }
             if (this.Doors != null)
             {
-                obj.Doors = new MaskItem<R, Group_Mask<R>>();
-                obj.Doors.Overall = eval(this.Doors.Overall);
-                if (this.Doors.Specific != null)
-                {
-                    obj.Doors.Specific = this.Doors.Specific.Translate(eval);
-                }
+                obj.Doors = new MaskItem<R, Group_Mask<R>>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
             }
             if (this.Ingredients != null)
             {
-                obj.Ingredients = new MaskItem<R, Group_Mask<R>>();
-                obj.Ingredients.Overall = eval(this.Ingredients.Overall);
-                if (this.Ingredients.Specific != null)
-                {
-                    obj.Ingredients.Specific = this.Ingredients.Specific.Translate(eval);
-                }
+                obj.Ingredients = new MaskItem<R, Group_Mask<R>>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
             }
             if (this.Lights != null)
             {
-                obj.Lights = new MaskItem<R, Group_Mask<R>>();
-                obj.Lights.Overall = eval(this.Lights.Overall);
-                if (this.Lights.Specific != null)
-                {
-                    obj.Lights.Specific = this.Lights.Specific.Translate(eval);
-                }
+                obj.Lights = new MaskItem<R, Group_Mask<R>>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
             }
             if (this.Miscellaneous != null)
             {
-                obj.Miscellaneous = new MaskItem<R, Group_Mask<R>>();
-                obj.Miscellaneous.Overall = eval(this.Miscellaneous.Overall);
-                if (this.Miscellaneous.Specific != null)
-                {
-                    obj.Miscellaneous.Specific = this.Miscellaneous.Specific.Translate(eval);
-                }
+                obj.Miscellaneous = new MaskItem<R, Group_Mask<R>>(eval(this.Miscellaneous.Overall), this.Miscellaneous.Specific?.Translate(eval));
             }
             if (this.Statics != null)
             {
-                obj.Statics = new MaskItem<R, Group_Mask<R>>();
-                obj.Statics.Overall = eval(this.Statics.Overall);
-                if (this.Statics.Specific != null)
-                {
-                    obj.Statics.Specific = this.Statics.Specific.Translate(eval);
-                }
+                obj.Statics = new MaskItem<R, Group_Mask<R>>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
             }
             if (this.Grasses != null)
             {
-                obj.Grasses = new MaskItem<R, Group_Mask<R>>();
-                obj.Grasses.Overall = eval(this.Grasses.Overall);
-                if (this.Grasses.Specific != null)
-                {
-                    obj.Grasses.Specific = this.Grasses.Specific.Translate(eval);
-                }
+                obj.Grasses = new MaskItem<R, Group_Mask<R>>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
             }
             if (this.Trees != null)
             {
-                obj.Trees = new MaskItem<R, Group_Mask<R>>();
-                obj.Trees.Overall = eval(this.Trees.Overall);
-                if (this.Trees.Specific != null)
-                {
-                    obj.Trees.Specific = this.Trees.Specific.Translate(eval);
-                }
+                obj.Trees = new MaskItem<R, Group_Mask<R>>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
             }
             if (this.Flora != null)
             {
-                obj.Flora = new MaskItem<R, Group_Mask<R>>();
-                obj.Flora.Overall = eval(this.Flora.Overall);
-                if (this.Flora.Specific != null)
-                {
-                    obj.Flora.Specific = this.Flora.Specific.Translate(eval);
-                }
+                obj.Flora = new MaskItem<R, Group_Mask<R>>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
             }
             if (this.Furnature != null)
             {
-                obj.Furnature = new MaskItem<R, Group_Mask<R>>();
-                obj.Furnature.Overall = eval(this.Furnature.Overall);
-                if (this.Furnature.Specific != null)
-                {
-                    obj.Furnature.Specific = this.Furnature.Specific.Translate(eval);
-                }
+                obj.Furnature = new MaskItem<R, Group_Mask<R>>(eval(this.Furnature.Overall), this.Furnature.Specific?.Translate(eval));
             }
             if (this.Weapons != null)
             {
-                obj.Weapons = new MaskItem<R, Group_Mask<R>>();
-                obj.Weapons.Overall = eval(this.Weapons.Overall);
-                if (this.Weapons.Specific != null)
-                {
-                    obj.Weapons.Specific = this.Weapons.Specific.Translate(eval);
-                }
+                obj.Weapons = new MaskItem<R, Group_Mask<R>>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
             }
             if (this.Ammo != null)
             {
-                obj.Ammo = new MaskItem<R, Group_Mask<R>>();
-                obj.Ammo.Overall = eval(this.Ammo.Overall);
-                if (this.Ammo.Specific != null)
-                {
-                    obj.Ammo.Specific = this.Ammo.Specific.Translate(eval);
-                }
+                obj.Ammo = new MaskItem<R, Group_Mask<R>>(eval(this.Ammo.Overall), this.Ammo.Specific?.Translate(eval));
             }
             if (this.NPCs != null)
             {
-                obj.NPCs = new MaskItem<R, Group_Mask<R>>();
-                obj.NPCs.Overall = eval(this.NPCs.Overall);
-                if (this.NPCs.Specific != null)
-                {
-                    obj.NPCs.Specific = this.NPCs.Specific.Translate(eval);
-                }
+                obj.NPCs = new MaskItem<R, Group_Mask<R>>(eval(this.NPCs.Overall), this.NPCs.Specific?.Translate(eval));
             }
             if (this.Creatures != null)
             {
-                obj.Creatures = new MaskItem<R, Group_Mask<R>>();
-                obj.Creatures.Overall = eval(this.Creatures.Overall);
-                if (this.Creatures.Specific != null)
-                {
-                    obj.Creatures.Specific = this.Creatures.Specific.Translate(eval);
-                }
+                obj.Creatures = new MaskItem<R, Group_Mask<R>>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
             }
             if (this.LeveledCreatures != null)
             {
-                obj.LeveledCreatures = new MaskItem<R, Group_Mask<R>>();
-                obj.LeveledCreatures.Overall = eval(this.LeveledCreatures.Overall);
-                if (this.LeveledCreatures.Specific != null)
-                {
-                    obj.LeveledCreatures.Specific = this.LeveledCreatures.Specific.Translate(eval);
-                }
+                obj.LeveledCreatures = new MaskItem<R, Group_Mask<R>>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
             }
             if (this.SoulGems != null)
             {
-                obj.SoulGems = new MaskItem<R, Group_Mask<R>>();
-                obj.SoulGems.Overall = eval(this.SoulGems.Overall);
-                if (this.SoulGems.Specific != null)
-                {
-                    obj.SoulGems.Specific = this.SoulGems.Specific.Translate(eval);
-                }
+                obj.SoulGems = new MaskItem<R, Group_Mask<R>>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
             }
             if (this.Keys != null)
             {
-                obj.Keys = new MaskItem<R, Group_Mask<R>>();
-                obj.Keys.Overall = eval(this.Keys.Overall);
-                if (this.Keys.Specific != null)
-                {
-                    obj.Keys.Specific = this.Keys.Specific.Translate(eval);
-                }
+                obj.Keys = new MaskItem<R, Group_Mask<R>>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
             }
             if (this.Potions != null)
             {
-                obj.Potions = new MaskItem<R, Group_Mask<R>>();
-                obj.Potions.Overall = eval(this.Potions.Overall);
-                if (this.Potions.Specific != null)
-                {
-                    obj.Potions.Specific = this.Potions.Specific.Translate(eval);
-                }
+                obj.Potions = new MaskItem<R, Group_Mask<R>>(eval(this.Potions.Overall), this.Potions.Specific?.Translate(eval));
             }
             if (this.Subspaces != null)
             {
-                obj.Subspaces = new MaskItem<R, Group_Mask<R>>();
-                obj.Subspaces.Overall = eval(this.Subspaces.Overall);
-                if (this.Subspaces.Specific != null)
-                {
-                    obj.Subspaces.Specific = this.Subspaces.Specific.Translate(eval);
-                }
+                obj.Subspaces = new MaskItem<R, Group_Mask<R>>(eval(this.Subspaces.Overall), this.Subspaces.Specific?.Translate(eval));
             }
             if (this.SigilStones != null)
             {
-                obj.SigilStones = new MaskItem<R, Group_Mask<R>>();
-                obj.SigilStones.Overall = eval(this.SigilStones.Overall);
-                if (this.SigilStones.Specific != null)
-                {
-                    obj.SigilStones.Specific = this.SigilStones.Specific.Translate(eval);
-                }
+                obj.SigilStones = new MaskItem<R, Group_Mask<R>>(eval(this.SigilStones.Overall), this.SigilStones.Specific?.Translate(eval));
             }
             if (this.LeveledItems != null)
             {
-                obj.LeveledItems = new MaskItem<R, Group_Mask<R>>();
-                obj.LeveledItems.Overall = eval(this.LeveledItems.Overall);
-                if (this.LeveledItems.Specific != null)
-                {
-                    obj.LeveledItems.Specific = this.LeveledItems.Specific.Translate(eval);
-                }
+                obj.LeveledItems = new MaskItem<R, Group_Mask<R>>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
             }
             if (this.Weathers != null)
             {
-                obj.Weathers = new MaskItem<R, Group_Mask<R>>();
-                obj.Weathers.Overall = eval(this.Weathers.Overall);
-                if (this.Weathers.Specific != null)
-                {
-                    obj.Weathers.Specific = this.Weathers.Specific.Translate(eval);
-                }
+                obj.Weathers = new MaskItem<R, Group_Mask<R>>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
             }
             if (this.Climates != null)
             {
-                obj.Climates = new MaskItem<R, Group_Mask<R>>();
-                obj.Climates.Overall = eval(this.Climates.Overall);
-                if (this.Climates.Specific != null)
-                {
-                    obj.Climates.Specific = this.Climates.Specific.Translate(eval);
-                }
+                obj.Climates = new MaskItem<R, Group_Mask<R>>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
             }
             if (this.Regions != null)
             {
-                obj.Regions = new MaskItem<R, Group_Mask<R>>();
-                obj.Regions.Overall = eval(this.Regions.Overall);
-                if (this.Regions.Specific != null)
-                {
-                    obj.Regions.Specific = this.Regions.Specific.Translate(eval);
-                }
+                obj.Regions = new MaskItem<R, Group_Mask<R>>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
             }
             if (this.Cells != null)
             {
-                obj.Cells = new MaskItem<R, ListGroup_Mask<R>>();
-                obj.Cells.Overall = eval(this.Cells.Overall);
-                if (this.Cells.Specific != null)
-                {
-                    obj.Cells.Specific = this.Cells.Specific.Translate(eval);
-                }
+                obj.Cells = new MaskItem<R, ListGroup_Mask<R>>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
             }
             if (this.Worldspaces != null)
             {
-                obj.Worldspaces = new MaskItem<R, Group_Mask<R>>();
-                obj.Worldspaces.Overall = eval(this.Worldspaces.Overall);
-                if (this.Worldspaces.Specific != null)
-                {
-                    obj.Worldspaces.Specific = this.Worldspaces.Specific.Translate(eval);
-                }
+                obj.Worldspaces = new MaskItem<R, Group_Mask<R>>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
             }
             if (this.DialogTopics != null)
             {
-                obj.DialogTopics = new MaskItem<R, Group_Mask<R>>();
-                obj.DialogTopics.Overall = eval(this.DialogTopics.Overall);
-                if (this.DialogTopics.Specific != null)
-                {
-                    obj.DialogTopics.Specific = this.DialogTopics.Specific.Translate(eval);
-                }
+                obj.DialogTopics = new MaskItem<R, Group_Mask<R>>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
             }
             if (this.Quests != null)
             {
-                obj.Quests = new MaskItem<R, Group_Mask<R>>();
-                obj.Quests.Overall = eval(this.Quests.Overall);
-                if (this.Quests.Specific != null)
-                {
-                    obj.Quests.Specific = this.Quests.Specific.Translate(eval);
-                }
+                obj.Quests = new MaskItem<R, Group_Mask<R>>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
             }
             if (this.IdleAnimations != null)
             {
-                obj.IdleAnimations = new MaskItem<R, Group_Mask<R>>();
-                obj.IdleAnimations.Overall = eval(this.IdleAnimations.Overall);
-                if (this.IdleAnimations.Specific != null)
-                {
-                    obj.IdleAnimations.Specific = this.IdleAnimations.Specific.Translate(eval);
-                }
+                obj.IdleAnimations = new MaskItem<R, Group_Mask<R>>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
             }
             if (this.AIPackages != null)
             {
-                obj.AIPackages = new MaskItem<R, Group_Mask<R>>();
-                obj.AIPackages.Overall = eval(this.AIPackages.Overall);
-                if (this.AIPackages.Specific != null)
-                {
-                    obj.AIPackages.Specific = this.AIPackages.Specific.Translate(eval);
-                }
+                obj.AIPackages = new MaskItem<R, Group_Mask<R>>(eval(this.AIPackages.Overall), this.AIPackages.Specific?.Translate(eval));
             }
             if (this.CombatStyles != null)
             {
-                obj.CombatStyles = new MaskItem<R, Group_Mask<R>>();
-                obj.CombatStyles.Overall = eval(this.CombatStyles.Overall);
-                if (this.CombatStyles.Specific != null)
-                {
-                    obj.CombatStyles.Specific = this.CombatStyles.Specific.Translate(eval);
-                }
+                obj.CombatStyles = new MaskItem<R, Group_Mask<R>>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
             }
             if (this.LoadScreens != null)
             {
-                obj.LoadScreens = new MaskItem<R, Group_Mask<R>>();
-                obj.LoadScreens.Overall = eval(this.LoadScreens.Overall);
-                if (this.LoadScreens.Specific != null)
-                {
-                    obj.LoadScreens.Specific = this.LoadScreens.Specific.Translate(eval);
-                }
+                obj.LoadScreens = new MaskItem<R, Group_Mask<R>>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
             }
             if (this.LeveledSpells != null)
             {
-                obj.LeveledSpells = new MaskItem<R, Group_Mask<R>>();
-                obj.LeveledSpells.Overall = eval(this.LeveledSpells.Overall);
-                if (this.LeveledSpells.Specific != null)
-                {
-                    obj.LeveledSpells.Specific = this.LeveledSpells.Specific.Translate(eval);
-                }
+                obj.LeveledSpells = new MaskItem<R, Group_Mask<R>>(eval(this.LeveledSpells.Overall), this.LeveledSpells.Specific?.Translate(eval));
             }
             if (this.AnimatedObjects != null)
             {
-                obj.AnimatedObjects = new MaskItem<R, Group_Mask<R>>();
-                obj.AnimatedObjects.Overall = eval(this.AnimatedObjects.Overall);
-                if (this.AnimatedObjects.Specific != null)
-                {
-                    obj.AnimatedObjects.Specific = this.AnimatedObjects.Specific.Translate(eval);
-                }
+                obj.AnimatedObjects = new MaskItem<R, Group_Mask<R>>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
             }
             if (this.Waters != null)
             {
-                obj.Waters = new MaskItem<R, Group_Mask<R>>();
-                obj.Waters.Overall = eval(this.Waters.Overall);
-                if (this.Waters.Specific != null)
-                {
-                    obj.Waters.Specific = this.Waters.Specific.Translate(eval);
-                }
+                obj.Waters = new MaskItem<R, Group_Mask<R>>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
             }
             if (this.EffectShaders != null)
             {
-                obj.EffectShaders = new MaskItem<R, Group_Mask<R>>();
-                obj.EffectShaders.Overall = eval(this.EffectShaders.Overall);
-                if (this.EffectShaders.Specific != null)
-                {
-                    obj.EffectShaders.Specific = this.EffectShaders.Specific.Translate(eval);
-                }
+                obj.EffectShaders = new MaskItem<R, Group_Mask<R>>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
             }
         }
         #endregion
@@ -12650,10 +12365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

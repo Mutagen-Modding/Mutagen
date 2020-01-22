@@ -1808,8 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.FluffBytes = eval(this.FluffBytes);
             if (Connections != null)
             {
-                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Connections.Overall = eval(this.Connections.Overall);
+                obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Connections.Overall), default);
                 if (Connections.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2106,10 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

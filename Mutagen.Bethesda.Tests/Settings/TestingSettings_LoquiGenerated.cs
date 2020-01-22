@@ -2055,26 +2055,15 @@ namespace Mutagen.Bethesda.Tests.Internals
             obj.TestRecordEnumerables = eval(this.TestRecordEnumerables);
             if (this.DataFolderLocations != null)
             {
-                obj.DataFolderLocations = new MaskItem<R, DataFolderLocations_Mask<R>>();
-                obj.DataFolderLocations.Overall = eval(this.DataFolderLocations.Overall);
-                if (this.DataFolderLocations.Specific != null)
-                {
-                    obj.DataFolderLocations.Specific = this.DataFolderLocations.Specific.Translate(eval);
-                }
+                obj.DataFolderLocations = new MaskItem<R, DataFolderLocations_Mask<R>>(eval(this.DataFolderLocations.Overall), this.DataFolderLocations.Specific?.Translate(eval));
             }
             if (this.PassthroughSettings != null)
             {
-                obj.PassthroughSettings = new MaskItem<R, PassthroughSettings_Mask<R>>();
-                obj.PassthroughSettings.Overall = eval(this.PassthroughSettings.Overall);
-                if (this.PassthroughSettings.Specific != null)
-                {
-                    obj.PassthroughSettings.Specific = this.PassthroughSettings.Specific.Translate(eval);
-                }
+                obj.PassthroughSettings = new MaskItem<R, PassthroughSettings_Mask<R>>(eval(this.PassthroughSettings.Overall), this.PassthroughSettings.Specific?.Translate(eval));
             }
             if (TargetGroups != null)
             {
-                obj.TargetGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TargetGroup_Mask<R>>>>();
-                obj.TargetGroups.Overall = eval(this.TargetGroups.Overall);
+                obj.TargetGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TargetGroup_Mask<R>>>>(eval(this.TargetGroups.Overall), default);
                 if (TargetGroups.Specific != null)
                 {
                     List<MaskItemIndexed<R, TargetGroup_Mask<R>>> l = new List<MaskItemIndexed<R, TargetGroup_Mask<R>>>();
@@ -2085,12 +2074,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, TargetGroup_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, TargetGroup_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2451,10 +2435,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

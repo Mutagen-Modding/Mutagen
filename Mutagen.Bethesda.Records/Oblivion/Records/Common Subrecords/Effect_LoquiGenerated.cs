@@ -2213,12 +2213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ActorValue = eval(this.ActorValue);
             if (this.ScriptEffect != null)
             {
-                obj.ScriptEffect = new MaskItem<R, ScriptEffect_Mask<R>>();
-                obj.ScriptEffect.Overall = eval(this.ScriptEffect.Overall);
-                if (this.ScriptEffect.Specific != null)
-                {
-                    obj.ScriptEffect.Specific = this.ScriptEffect.Specific.Translate(eval);
-                }
+                obj.ScriptEffect = new MaskItem<R, ScriptEffect_Mask<R>>(eval(this.ScriptEffect.Overall), this.ScriptEffect.Specific?.Translate(eval));
             }
             obj.EFITDataTypeState = eval(this.EFITDataTypeState);
         }
@@ -2533,10 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

@@ -2000,8 +2000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.LastModified = eval(this.LastModified);
             if (RecordCache != null)
             {
-                obj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, OblivionMajorRecord_Mask<R>>>>();
-                obj.RecordCache.Overall = eval(this.RecordCache.Overall);
+                obj.RecordCache = new MaskItem<R, IEnumerable<MaskItemIndexed<FormKey, R, OblivionMajorRecord_Mask<R>>>>(eval(this.RecordCache.Overall), default);
                 if (RecordCache.Specific != null)
                 {
                     List<MaskItemIndexed<FormKey, R, OblivionMajorRecord_Mask<R>>> l = new List<MaskItemIndexed<FormKey, R, OblivionMajorRecord_Mask<R>>>();
@@ -2280,10 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

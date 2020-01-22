@@ -2,19 +2,19 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>f8ab6752e3549083681bfe0e2f3b6100fd6565a9</Sha>
+         <Sha>d38d07095418bd41eb0cb8e0b8f340d0827658f6</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-19-2020 22:58:00</CommitDate>
-         <Description>Removed some StringCaseAgnostic usages</Description>
+         <CommitDate>01-21-2020 20:13:03</CommitDate>
+         <Description>Nullability work</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>4645fe70dff6b05e4b94d0f223a72acbce0d2a1b</Sha>
+         <Sha>fdcf3505e443e882148f6915925fb224e4806420</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-20-2020 23:28:26</CommitDate>
-         <Description>Removed some StringCaseAgnostic usage</Description>
+         <CommitDate>01-21-2020 23:50:14</CommitDate>
+         <Description>Nullability work</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/Loqui.git</OriginHint>
       </RepoListing>

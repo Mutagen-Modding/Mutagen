@@ -2653,12 +2653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Version = eval(this.Version);
             if (this.Stats != null)
             {
-                obj.Stats = new MaskItem<R, ModStats_Mask<R>>();
-                obj.Stats.Overall = eval(this.Stats.Overall);
-                if (this.Stats.Specific != null)
-                {
-                    obj.Stats.Specific = this.Stats.Specific.Translate(eval);
-                }
+                obj.Stats = new MaskItem<R, ModStats_Mask<R>>(eval(this.Stats.Overall), this.Stats.Specific?.Translate(eval));
             }
             obj.TypeOffsets = eval(this.TypeOffsets);
             obj.Deleted = eval(this.Deleted);
@@ -2666,8 +2661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Description = eval(this.Description);
             if (MasterReferences != null)
             {
-                obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference_Mask<R>>>>();
-                obj.MasterReferences.Overall = eval(this.MasterReferences.Overall);
+                obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference_Mask<R>>>>(eval(this.MasterReferences.Overall), default);
                 if (MasterReferences.Specific != null)
                 {
                     List<MaskItemIndexed<R, MasterReference_Mask<R>>> l = new List<MaskItemIndexed<R, MasterReference_Mask<R>>>();
@@ -2678,12 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, MasterReference_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, MasterReference_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -3081,10 +3070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

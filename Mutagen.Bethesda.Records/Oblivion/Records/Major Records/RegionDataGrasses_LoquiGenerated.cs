@@ -1665,8 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Grasses != null)
             {
-                obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Grasses.Overall = eval(this.Grasses.Overall);
+                obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Grasses.Overall), default);
                 if (Grasses.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

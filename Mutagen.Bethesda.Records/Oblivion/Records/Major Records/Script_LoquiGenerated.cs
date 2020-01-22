@@ -1721,12 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (this.Fields != null)
             {
-                obj.Fields = new MaskItem<R, ScriptFields_Mask<R>>();
-                obj.Fields.Overall = eval(this.Fields.Overall);
-                if (this.Fields.Specific != null)
-                {
-                    obj.Fields.Specific = this.Fields.Specific.Translate(eval);
-                }
+                obj.Fields = new MaskItem<R, ScriptFields_Mask<R>>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
             }
         }
         #endregion

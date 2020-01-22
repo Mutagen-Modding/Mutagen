@@ -1767,8 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Translate_InternalFill(obj, eval);
             if (Points != null)
             {
-                obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint_Mask<R>>>>();
-                obj.Points.Overall = eval(this.Points.Overall);
+                obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint_Mask<R>>>>(eval(this.Points.Overall), default);
                 if (Points.Specific != null)
                 {
                     List<MaskItemIndexed<R, RoadPoint_Mask<R>>> l = new List<MaskItemIndexed<R, RoadPoint_Mask<R>>>();
@@ -1779,12 +1778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, RoadPoint_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, RoadPoint_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

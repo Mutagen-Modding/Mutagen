@@ -3060,8 +3060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.PreviousTopic = eval(this.PreviousTopic);
             if (Topics != null)
             {
-                obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Topics.Overall = eval(this.Topics.Overall);
+                obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Topics.Overall), default);
                 if (Topics.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -3077,8 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Responses != null)
             {
-                obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse_Mask<R>>>>();
-                obj.Responses.Overall = eval(this.Responses.Overall);
+                obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse_Mask<R>>>>(eval(this.Responses.Overall), default);
                 if (Responses.Specific != null)
                 {
                     List<MaskItemIndexed<R, DialogResponse_Mask<R>>> l = new List<MaskItemIndexed<R, DialogResponse_Mask<R>>>();
@@ -3089,12 +3087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, DialogResponse_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, DialogResponse_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -3102,8 +3095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
-                obj.Conditions.Overall = eval(this.Conditions.Overall);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
                 if (Conditions.Specific != null)
                 {
                     List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
@@ -3114,12 +3106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -3127,8 +3114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (Choices != null)
             {
-                obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.Choices.Overall = eval(this.Choices.Overall);
+                obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.Choices.Overall), default);
                 if (Choices.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -3144,8 +3130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (LinkFrom != null)
             {
-                obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.LinkFrom.Overall = eval(this.LinkFrom.Overall);
+                obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.LinkFrom.Overall), default);
                 if (LinkFrom.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -3161,12 +3146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (this.Script != null)
             {
-                obj.Script = new MaskItem<R, ScriptFields_Mask<R>>();
-                obj.Script.Overall = eval(this.Script.Overall);
-                if (this.Script.Specific != null)
-                {
-                    obj.Script.Specific = this.Script.Specific.Translate(eval);
-                }
+                obj.Script = new MaskItem<R, ScriptFields_Mask<R>>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
             }
             obj.DATADataTypeState = eval(this.DATADataTypeState);
         }

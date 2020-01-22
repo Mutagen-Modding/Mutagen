@@ -3258,12 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Icon = eval(this.Icon);
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.Flags = eval(this.Flags);
             obj.BaseCost = eval(this.BaseCost);
@@ -3276,17 +3271,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.EffectShader = eval(this.EffectShader);
             if (this.SubData != null)
             {
-                obj.SubData = new MaskItem<R, MagicEffectSubData_Mask<R>>();
-                obj.SubData.Overall = eval(this.SubData.Overall);
-                if (this.SubData.Specific != null)
-                {
-                    obj.SubData.Specific = this.SubData.Specific.Translate(eval);
-                }
+                obj.SubData = new MaskItem<R, MagicEffectSubData_Mask<R>>(eval(this.SubData.Overall), this.SubData.Specific?.Translate(eval));
             }
             if (CounterEffects != null)
             {
-                obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.CounterEffects.Overall = eval(this.CounterEffects.Overall);
+                obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.CounterEffects.Overall), default);
                 if (CounterEffects.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();

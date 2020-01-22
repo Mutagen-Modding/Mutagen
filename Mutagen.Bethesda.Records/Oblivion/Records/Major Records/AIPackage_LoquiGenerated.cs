@@ -2515,35 +2515,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.GeneralType = eval(this.GeneralType);
             if (this.Location != null)
             {
-                obj.Location = new MaskItem<R, AIPackageLocation_Mask<R>>();
-                obj.Location.Overall = eval(this.Location.Overall);
-                if (this.Location.Specific != null)
-                {
-                    obj.Location.Specific = this.Location.Specific.Translate(eval);
-                }
+                obj.Location = new MaskItem<R, AIPackageLocation_Mask<R>>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
             }
             if (this.Schedule != null)
             {
-                obj.Schedule = new MaskItem<R, AIPackageSchedule_Mask<R>>();
-                obj.Schedule.Overall = eval(this.Schedule.Overall);
-                if (this.Schedule.Specific != null)
-                {
-                    obj.Schedule.Specific = this.Schedule.Specific.Translate(eval);
-                }
+                obj.Schedule = new MaskItem<R, AIPackageSchedule_Mask<R>>(eval(this.Schedule.Overall), this.Schedule.Specific?.Translate(eval));
             }
             if (this.Target != null)
             {
-                obj.Target = new MaskItem<R, AIPackageTarget_Mask<R>>();
-                obj.Target.Overall = eval(this.Target.Overall);
-                if (this.Target.Specific != null)
-                {
-                    obj.Target.Specific = this.Target.Specific.Translate(eval);
-                }
+                obj.Target = new MaskItem<R, AIPackageTarget_Mask<R>>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
             }
             if (Conditions != null)
             {
-                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>();
-                obj.Conditions.Overall = eval(this.Conditions.Overall);
+                obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition_Mask<R>>>>(eval(this.Conditions.Overall), default);
                 if (Conditions.Specific != null)
                 {
                     List<MaskItemIndexed<R, Condition_Mask<R>>> l = new List<MaskItemIndexed<R, Condition_Mask<R>>>();
@@ -2554,12 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, Condition_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }

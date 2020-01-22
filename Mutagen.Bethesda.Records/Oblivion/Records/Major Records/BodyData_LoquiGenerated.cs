@@ -1826,17 +1826,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (this.Model != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
-                {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
-                }
+                obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             if (BodyParts != null)
             {
-                obj.BodyParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart_Mask<R>>>>();
-                obj.BodyParts.Overall = eval(this.BodyParts.Overall);
+                obj.BodyParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart_Mask<R>>>>(eval(this.BodyParts.Overall), default);
                 if (BodyParts.Specific != null)
                 {
                     List<MaskItemIndexed<R, BodyPart_Mask<R>>> l = new List<MaskItemIndexed<R, BodyPart_Mask<R>>>();
@@ -1847,12 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mask.Index = item.Index;
                         if (item.Item != null)
                         {
-                            mask = new MaskItemIndexed<R, BodyPart_Mask<R>>(item.Item.Index);
-                            mask.Overall = eval(item.Item.Overall);
-                            if (item.Item.Specific != null)
-                            {
-                                mask.Specific = item.Item.Specific.Translate(eval);
-                            }
+                            mask = new MaskItemIndexed<R, BodyPart_Mask<R>>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                         }
                         l.Add(mask);
                     }
@@ -2105,10 +2094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (_crystal != null) return _crystal;
             List<(bool On, TranslationCrystal SubCrystal)> ret = new List<(bool On, TranslationCrystal SubCrystal)>();
             GetCrystal(ret);
-            _crystal = new TranslationCrystal()
-            {
-                Crystal = ret.ToArray()
-            };
+            _crystal = new TranslationCrystal(ret.ToArray());
             return _crystal;
         }
 

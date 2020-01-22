@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool ParseNonNullString(string str, out FormKey value, ErrorMaskBuilder errorMask)
+        protected override bool Parse(string str, out FormKey value, ErrorMaskBuilder errorMask)
         {
             if (FormKey.TryFactory(str, out FormKey parsed))
             {
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda
                 return true;
             }
             errorMask.ReportExceptionOrThrow(
-                new ArgumentException($"Could not convert to {NullableName}: {str}"));
+                new ArgumentException($"Could not convert to {ElementName}: {str}"));
             value = FormKey.NULL;
             return false;
         }

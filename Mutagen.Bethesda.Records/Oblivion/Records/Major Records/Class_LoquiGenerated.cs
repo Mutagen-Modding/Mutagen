@@ -1235,9 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name_Unset();
             item.Description_Unset();
             item.Icon_Unset();
-            item.PrimaryAttributes.Clear();
+            item.PrimaryAttributes.Reset();
             item.Specialization = default(Class.SpecializationFlag);
-            item.SecondaryAttributes.Clear();
+            item.SecondaryAttributes.Reset();
             item.Flags = default(ClassFlag);
             item.ClassServices = default(ClassService);
             item.Training = default(ClassTraining);
@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.PrimaryAttributes.Clear();
+                            item.PrimaryAttributes.Reset();
                         }
                     }
                     catch (Exception ex)
@@ -2424,7 +2424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                         else
                         {
-                            item.SecondaryAttributes.Clear();
+                            item.SecondaryAttributes.Reset();
                         }
                     }
                     catch (Exception ex)
@@ -2731,8 +2731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Icon = eval(this.Icon);
             if (PrimaryAttributes != null)
             {
-                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.PrimaryAttributes.Overall = eval(this.PrimaryAttributes.Overall);
+                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.PrimaryAttributes.Overall), default);
                 if (PrimaryAttributes.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2749,8 +2748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Specialization = eval(this.Specialization);
             if (SecondaryAttributes != null)
             {
-                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>();
-                obj.SecondaryAttributes.Overall = eval(this.SecondaryAttributes.Overall);
+                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>>(eval(this.SecondaryAttributes.Overall), default);
                 if (SecondaryAttributes.Specific != null)
                 {
                     List<(int Index, R Item)> l = new List<(int Index, R Item)>();
@@ -2768,12 +2766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ClassServices = eval(this.ClassServices);
             if (this.Training != null)
             {
-                obj.Training = new MaskItem<R, ClassTraining_Mask<R>>();
-                obj.Training.Overall = eval(this.Training.Overall);
-                if (this.Training.Specific != null)
-                {
-                    obj.Training.Specific = this.Training.Specific.Translate(eval);
-                }
+                obj.Training = new MaskItem<R, ClassTraining_Mask<R>>(eval(this.Training.Overall), this.Training.Specific?.Translate(eval));
             }
             obj.DATADataTypeState = eval(this.DATADataTypeState);
         }

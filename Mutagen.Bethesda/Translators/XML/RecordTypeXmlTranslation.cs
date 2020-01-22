@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool ParseNonNullString(string str, out RecordType value, ErrorMaskBuilder errorMask)
+        protected override bool Parse(string str, out RecordType value, ErrorMaskBuilder errorMask)
         {
             if (RecordType.TryFactory(str, out RecordType parsed))
             {
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda
                 return true;
             }
             errorMask.ReportExceptionOrThrow(
-                new ArgumentException($"Could not convert to {NullableName}: {str}"));
+                new ArgumentException($"Could not convert to {ElementName}: {str}"));
             value = default;
             return false;
         }
