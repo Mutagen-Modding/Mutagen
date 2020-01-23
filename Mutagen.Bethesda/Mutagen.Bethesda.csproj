@@ -49,7 +49,6 @@
     <Compile Include="Translators\Binary\Custom Utility\GlobalCustomParsing.cs" /> 
     <Compile Include="Translators\Binary\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Translators\Binary\MetaData.cs" />
-    <Compile Include="Core\Utility.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Preprocessing\BinaryFileProcessor.cs" />
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
