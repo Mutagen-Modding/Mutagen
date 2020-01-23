@@ -11,6 +11,7 @@
       <Group name="Globals" refName="Global" />
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
+      <Group name="HeadParts" refName="HeadPart" />
     </Fields>
   </Object>
 </Loqui>

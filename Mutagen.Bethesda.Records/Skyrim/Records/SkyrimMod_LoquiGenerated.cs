@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);
             _Factions_Object = new Group<Faction>(this);
+            _HeadParts_Object = new Group<HeadPart>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -121,6 +122,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Faction> Factions => _Factions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IFactionGetter> ISkyrimModGetter.Factions => _Factions_Object;
+        #endregion
+        #region HeadParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Group<HeadPart> _HeadParts_Object;
+        public Group<HeadPart> HeadParts => _HeadParts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IHeadPartGetter> ISkyrimModGetter.HeadParts => _HeadParts_Object;
         #endregion
 
         #region To String
@@ -326,6 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -374,6 +383,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Factions ?? true)
             {
                 this.Factions.RecordCache.Set(rhsMod.Factions.RecordCache.Items);
+            }
+            if (mask?.HeadParts ?? true)
+            {
+                this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
             }
         }
 
@@ -438,6 +451,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Faction>());
             }
+            if (mask?.HeadParts ?? true)
+            {
+                this.HeadParts.RecordCache.Set(
+                    rhs.HeadParts.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<HeadPart>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkingPackage();
@@ -471,6 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Globals.RecordCache.Count > 0 ? 1 : 0;
             count += Classes.RecordCache.Count > 0 ? 1 : 0;
             count += Factions.RecordCache.Count > 0 ? 1 : 0;
+            count += HeadParts.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -553,6 +574,11 @@ namespace Mutagen.Bethesda.Skyrim
                 name: nameof(Factions),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.Factions)));
+            tasks.Add(Task.Run(() => item.HeadParts.CreateFromXmlFolder<HeadPart>(
+                dir: dir,
+                name: nameof(HeadParts),
+                errorMask: errorMask,
+                index: (int)SkyrimMod_FieldIndex.HeadParts)));
             await Task.WhenAll(tasks);
             return item;
         }
@@ -610,6 +636,11 @@ namespace Mutagen.Bethesda.Skyrim
                     name: nameof(Factions),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.Factions)));
+                tasks.Add(Task.Run(() => HeadParts.WriteToXmlFolder<HeadPart, HeadPart_ErrorMask>(
+                    dir: dir.Path,
+                    name: nameof(HeadParts),
+                    errorMask: errorMaskBuilder,
+                    index: (int)SkyrimMod_FieldIndex.HeadParts)));
                 await Task.WhenAll(tasks);
             }
             return null;
@@ -784,6 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Global> Globals { get; }
         new Group<Class> Classes { get; }
         new Group<Faction> Factions { get; }
+        new Group<HeadPart> HeadParts { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -825,6 +857,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         IGroupGetter<IFactionGetter> Factions { get; }
+        #endregion
+        #region HeadParts
+        IGroupGetter<IHeadPartGetter> HeadParts { get; }
         #endregion
 
     }
@@ -1307,6 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Globals = 6,
         Classes = 7,
         Factions = 8,
+        HeadParts = 9,
     }
     #endregion
 
@@ -1324,9 +1360,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "61f5127d-406d-41a1-897e-6d17188258ea";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(SkyrimMod_Mask<>);
 
@@ -1374,6 +1410,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Classes;
                 case "FACTIONS":
                     return (ushort)SkyrimMod_FieldIndex.Factions;
+                case "HEADPARTS":
+                    return (ushort)SkyrimMod_FieldIndex.HeadParts;
                 default:
                     return null;
             }
@@ -1393,6 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1413,6 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1433,6 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1462,6 +1503,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Classes";
                 case SkyrimMod_FieldIndex.Factions:
                     return "Factions";
+                case SkyrimMod_FieldIndex.HeadParts:
+                    return "HeadParts";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1481,6 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1502,6 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Globals:
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
+                case SkyrimMod_FieldIndex.HeadParts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1531,6 +1576,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Class>);
                 case SkyrimMod_FieldIndex.Factions:
                     return typeof(Group<Faction>);
+                case SkyrimMod_FieldIndex.HeadParts:
+                    return typeof(Group<HeadPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1546,6 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1561,12 +1609,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         TXST_HEADER,
                         GLOB_HEADER,
                         CLAS_HEADER,
-                        FACT_HEADER
+                        FACT_HEADER,
+                        HDPT_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
+        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1847,6 +1896,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
                 }
+                case 0x54504448: // HDPT
+                {
+                    if (importMask?.HeadParts ?? true)
+                    {
+                        await item.HeadParts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -1908,6 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
+            ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
         }
         
         public string ToString(
@@ -1990,6 +2055,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Factions?.ToString(fg, "Factions");
             }
+            if (printMask?.HeadParts?.Overall ?? true)
+            {
+                item.HeadParts?.ToString(fg, "HeadParts");
+            }
         }
         
         public bool HasBeenSet(
@@ -2012,6 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Globals = new MaskItem<bool, Group_Mask<bool>>(true, item.Globals.GetHasBeenSetMask());
             mask.Classes = new MaskItem<bool, Group_Mask<bool>>(true, item.Classes.GetHasBeenSetMask());
             mask.Factions = new MaskItem<bool, Group_Mask<bool>>(true, item.Factions.GetHasBeenSetMask());
+            mask.HeadParts = new MaskItem<bool, Group_Mask<bool>>(true, item.HeadParts.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2030,6 +2100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
             if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
             if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+            if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
             return true;
         }
         
@@ -2045,6 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.Globals).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.HeadParts).CombineHashCode(ret);
             return ret;
         }
         
@@ -2102,6 +2174,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFaction":
                 case "IFactionInternal":
                     return obj.Factions.RecordCache;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    return obj.HeadParts.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2117,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModHeader.WriteToBinary(
                 new MutagenWriter(stream, MetaDataConstants.Skyrim),
                 masterRefs);
-            Stream[] outputStreams = new Stream[8];
+            Stream[] outputStreams = new Stream[9];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -2127,6 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2186,6 +2264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             outputStreams.Add(WriteGroupAsync(item.Globals, masterRefs));
             outputStreams.Add(WriteGroupAsync(item.Classes, masterRefs));
             outputStreams.Add(WriteGroupAsync(item.Factions, masterRefs));
+            outputStreams.Add(WriteGroupAsync(item.HeadParts, masterRefs));
             await UtilityTranslation.CompileStreamsInto(
                 outputStreams,
                 stream);
@@ -2287,6 +2366,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.HeadParts is ILinkContainer HeadPartslinkCont)
+            {
+                foreach (var item in HeadPartslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2321,6 +2407,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Factions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2410,6 +2500,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFaction":
                 case "IFactionInternal":
                     foreach (var item in obj.Factions.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -2613,6 +2712,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.HeadParts) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.HeadParts);
+                try
+                {
+                    item.HeadParts.DeepCopyFieldsFrom(
+                        rhs: rhs.HeadParts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.HeadParts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -2800,6 +2919,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Factions,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Factions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.HeadParts) ?? true))
+            {
+                var loquiItem = item.HeadParts;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IHeadPartGetter>(
+                    item: loquiItem,
+                    node: node,
+                    name: nameof(item.HeadParts),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.HeadParts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.HeadParts));
             }
         }
 
@@ -3059,6 +3189,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "HeadParts":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.HeadParts);
+                        item.HeadParts.CopyInFromXml<HeadPart>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3251,6 +3400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Globals = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Classes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Factions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.HeadParts = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3264,6 +3414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<T, Group_Mask<T>> Globals { get; set; }
         public MaskItem<T, Group_Mask<T>> Classes { get; set; }
         public MaskItem<T, Group_Mask<T>> Factions { get; set; }
+        public MaskItem<T, Group_Mask<T>> HeadParts { get; set; }
         #endregion
 
         #region Equals
@@ -3285,6 +3436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(this.Globals, rhs.Globals)) return false;
             if (!object.Equals(this.Classes, rhs.Classes)) return false;
             if (!object.Equals(this.Factions, rhs.Factions)) return false;
+            if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3299,6 +3451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = ret.CombineHashCode(this.Globals?.GetHashCode());
             ret = ret.CombineHashCode(this.Classes?.GetHashCode());
             ret = ret.CombineHashCode(this.Factions?.GetHashCode());
+            ret = ret.CombineHashCode(this.HeadParts?.GetHashCode());
             return ret;
         }
 
@@ -3351,6 +3504,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!eval(this.Factions.Overall)) return false;
                 if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
+            }
+            if (HeadParts != null)
+            {
+                if (!eval(this.HeadParts.Overall)) return false;
+                if (this.HeadParts.Specific != null && !this.HeadParts.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -3447,6 +3605,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     obj.Factions.Specific = this.Factions.Specific.Translate(eval);
                 }
             }
+            if (this.HeadParts != null)
+            {
+                obj.HeadParts = new MaskItem<R, Group_Mask<R>>();
+                obj.HeadParts.Overall = eval(this.HeadParts.Overall);
+                if (this.HeadParts.Specific != null)
+                {
+                    obj.HeadParts.Specific = this.HeadParts.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3511,6 +3678,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     Factions?.ToString(fg);
                 }
+                if (printMask?.HeadParts?.Overall ?? true)
+                {
+                    HeadParts?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -3543,6 +3714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> Globals;
         public MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> Classes;
         public MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> Factions;
+        public MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>> HeadParts;
         #endregion
 
         #region IErrorMask
@@ -3569,6 +3741,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return Classes;
                 case SkyrimMod_FieldIndex.Factions:
                     return Factions;
+                case SkyrimMod_FieldIndex.HeadParts:
+                    return HeadParts;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3605,6 +3779,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     break;
                 case SkyrimMod_FieldIndex.Factions:
                     this.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(ex, null);
+                    break;
+                case SkyrimMod_FieldIndex.HeadParts:
+                    this.HeadParts = new MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3643,6 +3820,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Factions:
                     this.Factions = (MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>)obj;
                     break;
+                case SkyrimMod_FieldIndex.HeadParts:
+                    this.HeadParts = (MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3660,6 +3840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (Globals != null) return true;
             if (Classes != null) return true;
             if (Factions != null) return true;
+            if (HeadParts != null) return true;
             return false;
         }
         #endregion
@@ -3703,6 +3884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Globals?.ToString(fg);
             Classes?.ToString(fg);
             Factions?.ToString(fg);
+            HeadParts?.ToString(fg);
         }
         #endregion
 
@@ -3719,6 +3901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
             ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), ((IErrorMask<Group_ErrorMask<Class_ErrorMask>>)this.Classes.Specific).Combine(rhs.Classes.Specific));
             ret.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(this.Factions.Overall.Combine(rhs.Factions.Overall), ((IErrorMask<Group_ErrorMask<Faction_ErrorMask>>)this.Factions.Specific).Combine(rhs.Factions.Specific));
+            ret.HeadParts = new MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>(this.HeadParts.Overall.Combine(rhs.HeadParts.Overall), ((IErrorMask<Group_ErrorMask<HeadPart_ErrorMask>>)this.HeadParts.Specific).Combine(rhs.HeadParts.Specific));
             return ret;
         }
         public static SkyrimMod_ErrorMask Combine(SkyrimMod_ErrorMask lhs, SkyrimMod_ErrorMask rhs)
@@ -3750,6 +3933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_TranslationMask<Global_TranslationMask>> Globals;
         public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>> Classes;
         public MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>> Factions;
+        public MaskItem<bool, Group_TranslationMask<HeadPart_TranslationMask>> HeadParts;
         #endregion
 
         #region Ctors
@@ -3768,6 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Globals = new MaskItem<bool, Group_TranslationMask<Global_TranslationMask>>(defaultOn, null);
             this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>>(defaultOn, null);
             this.Factions = new MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>>(defaultOn, null);
+            this.HeadParts = new MaskItem<bool, Group_TranslationMask<HeadPart_TranslationMask>>(defaultOn, null);
         }
 
         #endregion
@@ -3795,6 +3980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Globals?.Overall ?? true, Globals?.Specific?.GetCrystal()));
             ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
             ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
+            ret.Add((HeadParts?.Overall ?? true, HeadParts?.Specific?.GetCrystal()));
         }
     }
 }
@@ -3813,6 +3999,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Globals;
         public bool Classes;
         public bool Factions;
+        public bool HeadParts;
         public GroupMask()
         {
         }
@@ -3826,6 +4013,7 @@ namespace Mutagen.Bethesda.Skyrim
             Globals = defaultValue;
             Classes = defaultValue;
             Factions = defaultValue;
+            HeadParts = defaultValue;
         }
     }
 }
@@ -3944,6 +4132,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var loquiItem = item.Factions;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+            }
+            if (importMask?.HeadParts ?? true)
+            {
+                if (item.HeadParts.RecordCache.Count > 0)
+                {
+                    var loquiItem = item.HeadParts;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: loquiItem,
                         writer: writer,
                         masterReferences: masterReferences,
@@ -4169,6 +4369,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IFactionGetter> _Factions => _Factions_IsSet ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FactionsLocation.Value.Min, _FactionsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
         #endregion
+        #region HeadParts
+        private RangeInt64? _HeadPartsLocation;
+        private bool _HeadParts_IsSet => _HeadPartsLocation.HasValue;
+        private IGroupGetter<IHeadPartGetter> _HeadParts => _HeadParts_IsSet ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation.Value.Min, _HeadPartsLocation.Value.Max)), _package) : default;
+        public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -4274,6 +4480,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                }
+                case 0x54504448: // HDPT
+                {
+                    _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

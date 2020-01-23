@@ -1557,6 +1557,9 @@
     <Compile Include="Skyrim\Records\Common Enums\Combat.cs" />
     <Compile Include="Skyrim\Records\Common Enums\Skill.cs" />
     <Compile Include="Skyrim\Records\Common Enums\VendorLocation.cs" />
+    <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -1608,8 +1611,14 @@
     <Compile Include="Skyrim\Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HeadPart.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Outfit_LoquiGenerated.cs">
       <DependentUpon>Outfit.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Part.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedObject_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -1716,6 +1725,18 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Condition_LoquiGenerated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Model_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HeadPart_LoquiGenerated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Part_LoquiGenerated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

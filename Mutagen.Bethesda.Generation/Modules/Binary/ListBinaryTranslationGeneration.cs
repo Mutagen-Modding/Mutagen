@@ -15,7 +15,8 @@ namespace Mutagen.Bethesda.Generation
     {
         SubTrigger,
         Trigger,
-        Counter,
+        CounterRecord,
+        PrependCount,
         Frame
     }
 
@@ -26,6 +27,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
+        public const string PrependCountType = "ListPrependCountType";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -53,6 +55,7 @@ namespace Mutagen.Bethesda.Generation
             var listType = field as ListType;
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
+            listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", false);
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
             {
@@ -69,7 +72,13 @@ namespace Mutagen.Bethesda.Generation
                 && counterRecTypeObj is string counterRecType
                 && !string.IsNullOrWhiteSpace(counterRecType))
             {
-                return ListBinaryType.Counter;
+                return ListBinaryType.CounterRecord;
+            }
+            if (list.CustomData.TryGetValue(PrependCountType, out var prependCountRecType)
+                && prependCountRecType is bool prependCount
+                && prependCount)
+            {
+                return ListBinaryType.PrependCount;
             }
             if (subData.HasTrigger)
             {
@@ -225,7 +234,11 @@ namespace Mutagen.Bethesda.Generation
                         case ListBinaryType.Trigger:
                             args.Add($"frame: frame.SpawnWithLength(contentLength)");
                             break;
-                        case ListBinaryType.Counter:
+                        case ListBinaryType.CounterRecord:
+                            break;
+                        case ListBinaryType.PrependCount:
+                            args.Add("amount: frame.ReadInt32()");
+                            args.Add($"frame: frame");
                             break;
                         case ListBinaryType.Frame:
                             args.Add($"frame: frame");
@@ -647,7 +660,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     fg.AppendLine("stream.Position += subLen;");
                     break;
-                case ListBinaryType.Counter:
+                case ListBinaryType.CounterRecord:
                     fg.AppendLine("var subMeta = _package.Meta.ReadSubRecord(stream);");
                     fg.AppendLine("var subLen = subMeta.RecordLength;");
                     if (!subData.HasTrigger)
@@ -697,6 +710,9 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                     fg.AppendLine("stream.Position += subLen;");
+                    break;
+                case ListBinaryType.PrependCount:
+                    fg.AppendLine("throw new NotImplementedException();");
                     break;
                 default:
                     throw new NotImplementedException();

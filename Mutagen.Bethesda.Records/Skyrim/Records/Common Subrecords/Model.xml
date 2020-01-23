@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Model" objType="Subrecord" GUID="b5deaeea-11c5-4c34-94e4-3db4c24be832" ID="42">
+    <Fields>
+      <String name="File" recordType="MODL" hasBeenSet="False" />
+      <ByteArray name="Data" recordType="MODT" />
+      <RefList name="AlternateTextures" refName="AlternateTexture" prependCount="True" recordType="MODS" /> 
+    </Fields>
+  </Object>
+  <Object name="AlternateTexture" objType="Subrecord" GUID="8001a465-c267-45ee-81b5-a51613668e74" ID="43">
+    <Fields>
+      <String name="Name" binaryType="PrependLength" />
+      <FormIDLink name="NexTexture" refName="TextureSet" />
+      <Int32 name="Index" />
+    </Fields>
+  </Object>
+</Loqui>

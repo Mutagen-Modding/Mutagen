@@ -853,6 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -871,6 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
+                        HDPT_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
                         OTFT_HEADER,

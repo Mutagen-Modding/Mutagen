@@ -1057,6 +1057,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
+        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -1139,6 +1140,7 @@ namespace Mutagen.Bethesda.Internals
                         SPEL_HEADER,
                         AACT_HEADER,
                         FLST_HEADER,
+                        HDPT_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
                         OTFT_HEADER,
