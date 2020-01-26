@@ -301,11 +301,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Grass CreateFromXml(
             XElement node,
             out Grass_ErrorMask errorMask,
-            bool doMasks = true,
             Grass_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -719,22 +718,20 @@ namespace Mutagen.Bethesda.Oblivion
             IGrassGetter rhs,
             Grass_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IGrassInternal lhs,
             IGrassGetter rhs,
             out Grass_ErrorMask errorMask,
-            Grass_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Grass_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((GrassSetterTranslationCommon)((IGrassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -808,11 +805,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassInternal item,
             XElement node,
             out Grass_ErrorMask errorMask,
-            bool doMasks = true,
             Grass_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2595,11 +2591,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IGrassGetter item,
             XElement node,
             out Grass_ErrorMask errorMask,
-            bool doMasks = true,
             Grass_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GrassXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2614,7 +2609,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Grass_ErrorMask errorMask,
             Grass_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2623,7 +2617,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2633,7 +2626,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Grass_ErrorMask errorMask,
             Grass_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2642,7 +2634,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2680,6 +2671,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.WavePeriod = initialValue;
             this.Flags = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Grass_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Model,
+            T Density,
+            T MinSlope,
+            T MaxSlope,
+            T Fluff1,
+            T UnitFromWaterAmount,
+            T Fluff2,
+            T UnitFromWaterMode,
+            T PositionRange,
+            T HeightRange,
+            T ColorRange,
+            T WavePeriod,
+            T Flags,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Density = Density;
+            this.MinSlope = MinSlope;
+            this.MaxSlope = MaxSlope;
+            this.Fluff1 = Fluff1;
+            this.UnitFromWaterAmount = UnitFromWaterAmount;
+            this.Fluff2 = Fluff2;
+            this.UnitFromWaterMode = UnitFromWaterMode;
+            this.PositionRange = PositionRange;
+            this.HeightRange = HeightRange;
+            this.ColorRange = ColorRange;
+            this.WavePeriod = WavePeriod;
+            this.Flags = Flags;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -2804,13 +2837,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.WavePeriod = eval(this.WavePeriod);
             obj.Flags = eval(this.Flags);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

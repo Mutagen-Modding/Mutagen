@@ -15,8 +15,8 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Noggog.Utility;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
 #endregion
 
 namespace Mutagen.Bethesda.Oblivion
@@ -293,11 +292,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static ModHeader CreateFromXml(
             XElement node,
             out ModHeader_ErrorMask errorMask,
-            bool doMasks = true,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -693,12 +691,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IModHeader lhs,
             IModHeaderGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -706,22 +703,20 @@ namespace Mutagen.Bethesda.Oblivion
             IModHeaderGetter rhs,
             ModHeader_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IModHeader lhs,
             IModHeaderGetter rhs,
             out ModHeader_ErrorMask errorMask,
-            ModHeader_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ModHeader_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -795,11 +790,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IModHeader item,
             XElement node,
             out ModHeader_ErrorMask errorMask,
-            bool doMasks = true,
             ModHeader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2374,11 +2368,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IModHeaderGetter item,
             XElement node,
             out ModHeader_ErrorMask errorMask,
-            bool doMasks = true,
             ModHeader_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ModHeaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2393,7 +2386,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2402,7 +2394,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2412,7 +2403,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2430,7 +2420,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out ModHeader_ErrorMask errorMask,
             ModHeader_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2439,7 +2428,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2449,7 +2437,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2550,6 +2537,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Description = initialValue;
             this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>>>>(initialValue, null);
             this.VestigialData = initialValue;
+        }
+
+        public ModHeader_Mask(
+            T Flags,
+            T FormID,
+            T Version,
+            T Stats,
+            T TypeOffsets,
+            T Deleted,
+            T Author,
+            T Description,
+            T MasterReferences,
+            T VestigialData)
+        {
+            this.Flags = Flags;
+            this.FormID = FormID;
+            this.Version = Version;
+            this.Stats = new MaskItem<T, ModStats_Mask<T>>(Stats, new ModStats_Mask<T>(Stats));
+            this.TypeOffsets = TypeOffsets;
+            this.Deleted = Deleted;
+            this.Author = Author;
+            this.Description = Description;
+            this.MasterReferences = new MaskItem<T, IEnumerable<MaskItemIndexed<T, MasterReference_Mask<T>>>>(MasterReferences, null);
+            this.VestigialData = VestigialData;
         }
         #endregion
 
@@ -2679,13 +2690,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             obj.VestigialData = eval(this.VestigialData);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.MasterReferences.Specific = null;
         }
         #endregion
 

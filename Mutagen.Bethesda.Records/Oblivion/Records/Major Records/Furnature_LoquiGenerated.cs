@@ -208,11 +208,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Furnature CreateFromXml(
             XElement node,
             out Furnature_ErrorMask errorMask,
-            bool doMasks = true,
             Furnature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -559,22 +558,20 @@ namespace Mutagen.Bethesda.Oblivion
             IFurnatureGetter rhs,
             Furnature_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IFurnatureInternal lhs,
             IFurnatureGetter rhs,
             out Furnature_ErrorMask errorMask,
-            Furnature_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Furnature_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((FurnatureSetterTranslationCommon)((IFurnatureGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -648,11 +645,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureInternal item,
             XElement node,
             out Furnature_ErrorMask errorMask,
-            bool doMasks = true,
             Furnature_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1993,11 +1989,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFurnatureGetter item,
             XElement node,
             out Furnature_ErrorMask errorMask,
-            bool doMasks = true,
             Furnature_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FurnatureXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2012,7 +2007,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Furnature_ErrorMask errorMask,
             Furnature_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2021,7 +2015,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2031,7 +2024,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Furnature_ErrorMask errorMask,
             Furnature_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2040,7 +2032,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2068,6 +2059,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Script = initialValue;
             this.MarkerFlags = initialValue;
+        }
+
+        public Furnature_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Script,
+            T MarkerFlags)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Script = Script;
+            this.MarkerFlags = MarkerFlags;
         }
         #endregion
 
@@ -2142,13 +2155,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Script = eval(this.Script);
             obj.MarkerFlags = eval(this.MarkerFlags);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

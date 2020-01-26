@@ -384,11 +384,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillRecord CreateFromXml(
             XElement node,
             out SkillRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkillRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -819,22 +818,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillRecordGetter rhs,
             SkillRecord_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISkillRecordInternal lhs,
             ISkillRecordGetter rhs,
             out SkillRecord_ErrorMask errorMask,
-            SkillRecord_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SkillRecord_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillRecordSetterTranslationCommon)((ISkillRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -908,11 +905,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordInternal item,
             XElement node,
             out SkillRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkillRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2847,11 +2843,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillRecordGetter item,
             XElement node,
             out SkillRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkillRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2866,7 +2861,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2875,7 +2869,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2885,7 +2878,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out SkillRecord_ErrorMask errorMask,
             SkillRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2894,7 +2886,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2931,6 +2922,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ExpertText = initialValue;
             this.MasterText = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public SkillRecord_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Skill,
+            T Description,
+            T Icon,
+            T Action,
+            T Attribute,
+            T Specialization,
+            T UseValueFirst,
+            T UseValueSecond,
+            T ApprenticeText,
+            T JourneymanText,
+            T ExpertText,
+            T MasterText,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Skill = Skill;
+            this.Description = Description;
+            this.Icon = Icon;
+            this.Action = Action;
+            this.Attribute = Attribute;
+            this.Specialization = Specialization;
+            this.UseValueFirst = UseValueFirst;
+            this.UseValueSecond = UseValueSecond;
+            this.ApprenticeText = ApprenticeText;
+            this.JourneymanText = JourneymanText;
+            this.ExpertText = ExpertText;
+            this.MasterText = MasterText;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -3043,13 +3074,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ExpertText = eval(this.ExpertText);
             obj.MasterText = eval(this.MasterText);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

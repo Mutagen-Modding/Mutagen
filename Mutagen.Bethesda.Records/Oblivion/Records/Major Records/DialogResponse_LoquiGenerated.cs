@@ -235,11 +235,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static DialogResponse CreateFromXml(
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            bool doMasks = true,
             DialogResponse_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -605,12 +604,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse lhs,
             IDialogResponseGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -618,22 +616,20 @@ namespace Mutagen.Bethesda.Oblivion
             IDialogResponseGetter rhs,
             DialogResponse_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IDialogResponse lhs,
             IDialogResponseGetter rhs,
             out DialogResponse_ErrorMask errorMask,
-            DialogResponse_TranslationMask copyMask = null,
-            bool doMasks = true)
+            DialogResponse_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((DialogResponseSetterTranslationCommon)((IDialogResponseGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -707,11 +703,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponse item,
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            bool doMasks = true,
             DialogResponse_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1974,11 +1969,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IDialogResponseGetter item,
             XElement node,
             out DialogResponse_ErrorMask errorMask,
-            bool doMasks = true,
             DialogResponse_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DialogResponseXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1993,7 +1987,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out DialogResponse_ErrorMask errorMask,
             DialogResponse_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2002,7 +1995,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2012,7 +2004,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2030,7 +2021,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out DialogResponse_ErrorMask errorMask,
             DialogResponse_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2039,7 +2029,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2049,7 +2038,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2149,6 +2137,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ActorNotes = initialValue;
             this.TRDTDataTypeState = initialValue;
         }
+
+        public DialogResponse_Mask(
+            T Emotion,
+            T EmotionValue,
+            T Fluff1,
+            T ResponseNumber,
+            T Fluff2,
+            T ResponseText,
+            T ActorNotes,
+            T TRDTDataTypeState)
+        {
+            this.Emotion = Emotion;
+            this.EmotionValue = EmotionValue;
+            this.Fluff1 = Fluff1;
+            this.ResponseNumber = ResponseNumber;
+            this.Fluff2 = Fluff2;
+            this.ResponseText = ResponseText;
+            this.ActorNotes = ActorNotes;
+            this.TRDTDataTypeState = TRDTDataTypeState;
+        }
         #endregion
 
         #region Members
@@ -2231,12 +2239,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ResponseText = eval(this.ResponseText);
             obj.ActorNotes = eval(this.ActorNotes);
             obj.TRDTDataTypeState = eval(this.TRDTDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

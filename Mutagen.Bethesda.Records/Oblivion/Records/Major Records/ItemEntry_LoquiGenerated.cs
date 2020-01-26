@@ -149,11 +149,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static ItemEntry CreateFromXml(
             XElement node,
             out ItemEntry_ErrorMask errorMask,
-            bool doMasks = true,
             ItemEntry_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -469,12 +468,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry lhs,
             IItemEntryGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -482,22 +480,20 @@ namespace Mutagen.Bethesda.Oblivion
             IItemEntryGetter rhs,
             ItemEntry_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IItemEntry lhs,
             IItemEntryGetter rhs,
             out ItemEntry_ErrorMask errorMask,
-            ItemEntry_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ItemEntry_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ItemEntrySetterTranslationCommon)((IItemEntryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -571,11 +567,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntry item,
             XElement node,
             out ItemEntry_ErrorMask errorMask,
-            bool doMasks = true,
             ItemEntry_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1452,11 +1447,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IItemEntryGetter item,
             XElement node,
             out ItemEntry_ErrorMask errorMask,
-            bool doMasks = true,
             ItemEntry_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ItemEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1471,7 +1465,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out ItemEntry_ErrorMask errorMask,
             ItemEntry_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1480,7 +1473,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1490,7 +1482,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1508,7 +1499,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out ItemEntry_ErrorMask errorMask,
             ItemEntry_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1517,7 +1507,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1527,7 +1516,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1621,6 +1609,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Item = initialValue;
             this.Count = initialValue;
         }
+
+        public ItemEntry_Mask(
+            T Item,
+            T Count)
+        {
+            this.Item = Item;
+            this.Count = Count;
+        }
         #endregion
 
         #region Members
@@ -1673,12 +1669,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Item = eval(this.Item);
             obj.Count = eval(this.Count);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

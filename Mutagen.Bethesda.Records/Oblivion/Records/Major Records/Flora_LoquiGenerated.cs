@@ -241,11 +241,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Flora CreateFromXml(
             XElement node,
             out Flora_ErrorMask errorMask,
-            bool doMasks = true,
             Flora_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -627,22 +626,20 @@ namespace Mutagen.Bethesda.Oblivion
             IFloraGetter rhs,
             Flora_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IFloraInternal lhs,
             IFloraGetter rhs,
             out Flora_ErrorMask errorMask,
-            Flora_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Flora_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((FloraSetterTranslationCommon)((IFloraGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -716,11 +713,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraInternal item,
             XElement node,
             out Flora_ErrorMask errorMask,
-            bool doMasks = true,
             Flora_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2341,11 +2337,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFloraGetter item,
             XElement node,
             out Flora_ErrorMask errorMask,
-            bool doMasks = true,
             Flora_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FloraXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2360,7 +2355,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Flora_ErrorMask errorMask,
             Flora_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2369,7 +2363,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2379,7 +2372,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Flora_ErrorMask errorMask,
             Flora_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2388,7 +2380,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2421,6 +2412,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Fall = initialValue;
             this.Winter = initialValue;
             this.PFPCDataTypeState = initialValue;
+        }
+
+        public Flora_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Script,
+            T Ingredient,
+            T Spring,
+            T Summer,
+            T Fall,
+            T Winter,
+            T PFPCDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Script = Script;
+            this.Ingredient = Ingredient;
+            this.Spring = Spring;
+            this.Summer = Summer;
+            this.Fall = Fall;
+            this.Winter = Winter;
+            this.PFPCDataTypeState = PFPCDataTypeState;
         }
         #endregion
 
@@ -2520,13 +2543,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Fall = eval(this.Fall);
             obj.Winter = eval(this.Winter);
             obj.PFPCDataTypeState = eval(this.PFPCDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

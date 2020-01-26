@@ -119,11 +119,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static ObjectBounds CreateFromXml(
             XElement node,
             out ObjectBounds_ErrorMask errorMask,
-            bool doMasks = true,
             ObjectBounds_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -433,12 +432,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -446,22 +444,20 @@ namespace Mutagen.Bethesda.Skyrim
             IObjectBoundsGetter rhs,
             ObjectBounds_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IObjectBounds lhs,
             IObjectBoundsGetter rhs,
             out ObjectBounds_ErrorMask errorMask,
-            ObjectBounds_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ObjectBounds_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ObjectBoundsSetterTranslationCommon)((IObjectBoundsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -535,11 +531,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBounds item,
             XElement node,
             out ObjectBounds_ErrorMask errorMask,
-            bool doMasks = true,
             ObjectBounds_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1381,11 +1376,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IObjectBoundsGetter item,
             XElement node,
             out ObjectBounds_ErrorMask errorMask,
-            bool doMasks = true,
             ObjectBounds_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ObjectBoundsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1400,7 +1394,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out ObjectBounds_ErrorMask errorMask,
             ObjectBounds_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1409,7 +1402,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1419,7 +1411,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1437,7 +1428,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out ObjectBounds_ErrorMask errorMask,
             ObjectBounds_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1446,7 +1436,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1456,7 +1445,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1550,6 +1538,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.First = initialValue;
             this.Second = initialValue;
         }
+
+        public ObjectBounds_Mask(
+            T First,
+            T Second)
+        {
+            this.First = First;
+            this.Second = Second;
+        }
         #endregion
 
         #region Members
@@ -1602,12 +1598,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             obj.First = eval(this.First);
             obj.Second = eval(this.Second);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -148,11 +148,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Decal CreateFromXml(
             XElement node,
             out Decal_ErrorMask errorMask,
-            bool doMasks = true,
             Decal_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -525,12 +524,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal lhs,
             IDecalGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -538,22 +536,20 @@ namespace Mutagen.Bethesda.Skyrim
             IDecalGetter rhs,
             Decal_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IDecal lhs,
             IDecalGetter rhs,
             out Decal_ErrorMask errorMask,
-            Decal_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Decal_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((DecalSetterTranslationCommon)((IDecalGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -627,11 +623,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecal item,
             XElement node,
             out Decal_ErrorMask errorMask,
-            bool doMasks = true,
             Decal_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1952,11 +1947,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IDecalGetter item,
             XElement node,
             out Decal_ErrorMask errorMask,
-            bool doMasks = true,
             Decal_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DecalXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1971,7 +1965,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Decal_ErrorMask errorMask,
             Decal_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1980,7 +1973,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1990,7 +1982,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2008,7 +1999,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Decal_ErrorMask errorMask,
             Decal_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2017,7 +2007,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2027,7 +2016,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2130,6 +2118,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Unknown = initialValue;
             this.Color = initialValue;
         }
+
+        public Decal_Mask(
+            T MinWidth,
+            T MaxWidth,
+            T MinHeight,
+            T MaxHeight,
+            T Depth,
+            T Shininess,
+            T ParallaxScale,
+            T ParallaxPasses,
+            T Flags,
+            T Unknown,
+            T Color)
+        {
+            this.MinWidth = MinWidth;
+            this.MaxWidth = MaxWidth;
+            this.MinHeight = MinHeight;
+            this.MaxHeight = MaxHeight;
+            this.Depth = Depth;
+            this.Shininess = Shininess;
+            this.ParallaxScale = ParallaxScale;
+            this.ParallaxPasses = ParallaxPasses;
+            this.Flags = Flags;
+            this.Unknown = Unknown;
+            this.Color = Color;
+        }
         #endregion
 
         #region Members
@@ -2227,12 +2241,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Flags = eval(this.Flags);
             obj.Unknown = eval(this.Unknown);
             obj.Color = eval(this.Color);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

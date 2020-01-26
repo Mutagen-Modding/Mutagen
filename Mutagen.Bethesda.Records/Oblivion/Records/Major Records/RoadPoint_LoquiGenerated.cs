@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -141,11 +139,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RoadPoint CreateFromXml(
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            bool doMasks = true,
             RoadPoint_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -456,12 +453,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint lhs,
             IRoadPointGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -469,22 +465,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRoadPointGetter rhs,
             RoadPoint_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRoadPoint lhs,
             IRoadPointGetter rhs,
             out RoadPoint_ErrorMask errorMask,
-            RoadPoint_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RoadPoint_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RoadPointSetterTranslationCommon)((IRoadPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -558,11 +552,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPoint item,
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            bool doMasks = true,
             RoadPoint_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1505,11 +1498,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRoadPointGetter item,
             XElement node,
             out RoadPoint_ErrorMask errorMask,
-            bool doMasks = true,
             RoadPoint_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RoadPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1524,7 +1516,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RoadPoint_ErrorMask errorMask,
             RoadPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1533,7 +1524,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1543,7 +1533,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1561,7 +1550,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RoadPoint_ErrorMask errorMask,
             RoadPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1570,7 +1558,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1580,7 +1567,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1675,6 +1661,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.NumConnectionsFluffBytes = initialValue;
             this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
+
+        public RoadPoint_Mask(
+            T Point,
+            T NumConnectionsFluffBytes,
+            T Connections)
+        {
+            this.Point = Point;
+            this.NumConnectionsFluffBytes = NumConnectionsFluffBytes;
+            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, null);
+        }
         #endregion
 
         #region Members
@@ -1757,13 +1753,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.Connections.Specific = null;
         }
         #endregion
 

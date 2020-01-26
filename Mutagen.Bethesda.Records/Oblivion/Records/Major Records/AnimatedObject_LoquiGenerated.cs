@@ -149,11 +149,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AnimatedObject CreateFromXml(
             XElement node,
             out AnimatedObject_ErrorMask errorMask,
-            bool doMasks = true,
             AnimatedObject_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -478,22 +477,20 @@ namespace Mutagen.Bethesda.Oblivion
             IAnimatedObjectGetter rhs,
             AnimatedObject_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IAnimatedObjectInternal lhs,
             IAnimatedObjectGetter rhs,
             out AnimatedObject_ErrorMask errorMask,
-            AnimatedObject_TranslationMask copyMask = null,
-            bool doMasks = true)
+            AnimatedObject_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((AnimatedObjectSetterTranslationCommon)((IAnimatedObjectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -567,11 +564,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectInternal item,
             XElement node,
             out AnimatedObject_ErrorMask errorMask,
-            bool doMasks = true,
             AnimatedObject_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1734,11 +1730,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAnimatedObjectGetter item,
             XElement node,
             out AnimatedObject_ErrorMask errorMask,
-            bool doMasks = true,
             AnimatedObject_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AnimatedObjectXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1753,7 +1748,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1762,7 +1756,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1772,7 +1765,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out AnimatedObject_ErrorMask errorMask,
             AnimatedObject_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1781,7 +1773,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1807,6 +1798,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.IdleAnimation = initialValue;
+        }
+
+        public AnimatedObject_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Model,
+            T IdleAnimation)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.IdleAnimation = IdleAnimation;
         }
         #endregion
 
@@ -1871,13 +1880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.IdleAnimation = eval(this.IdleAnimation);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -236,11 +234,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Container CreateFromXml(
             XElement node,
             out Container_ErrorMask errorMask,
-            bool doMasks = true,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -619,22 +616,20 @@ namespace Mutagen.Bethesda.Oblivion
             IContainerGetter rhs,
             Container_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IContainerInternal lhs,
             IContainerGetter rhs,
             out Container_ErrorMask errorMask,
-            Container_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Container_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -708,11 +703,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerInternal item,
             XElement node,
             out Container_ErrorMask errorMask,
-            bool doMasks = true,
             Container_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2461,11 +2455,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IContainerGetter item,
             XElement node,
             out Container_ErrorMask errorMask,
-            bool doMasks = true,
             Container_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ContainerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2480,7 +2473,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Container_ErrorMask errorMask,
             Container_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2489,7 +2481,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2499,7 +2490,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Container_ErrorMask errorMask,
             Container_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2508,7 +2498,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2541,6 +2530,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.OpenSound = initialValue;
             this.CloseSound = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Container_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Script,
+            T Items,
+            T Flags,
+            T Weight,
+            T OpenSound,
+            T CloseSound,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Script = Script;
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ContainerItem_Mask<T>>>>(Items, null);
+            this.Flags = Flags;
+            this.Weight = Weight;
+            this.OpenSound = OpenSound;
+            this.CloseSound = CloseSound;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -2669,14 +2690,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.OpenSound = eval(this.OpenSound);
             obj.CloseSound = eval(this.CloseSound);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Items.Specific = null;
         }
         #endregion
 

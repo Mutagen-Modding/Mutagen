@@ -127,11 +127,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceHair CreateFromXml(
             XElement node,
             out RaceHair_ErrorMask errorMask,
-            bool doMasks = true,
             RaceHair_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -440,12 +439,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHair lhs,
             IRaceHairGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceHairSetterTranslationCommon)((IRaceHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -453,22 +451,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceHairGetter rhs,
             RaceHair_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceHairSetterTranslationCommon)((IRaceHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRaceHair lhs,
             IRaceHairGetter rhs,
             out RaceHair_ErrorMask errorMask,
-            RaceHair_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RaceHair_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceHairSetterTranslationCommon)((IRaceHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -542,11 +538,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHair item,
             XElement node,
             out RaceHair_ErrorMask errorMask,
-            bool doMasks = true,
             RaceHair_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1398,11 +1393,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceHairGetter item,
             XElement node,
             out RaceHair_ErrorMask errorMask,
-            bool doMasks = true,
             RaceHair_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceHairXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1417,7 +1411,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RaceHair_ErrorMask errorMask,
             RaceHair_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1426,7 +1419,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1436,7 +1428,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1454,7 +1445,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RaceHair_ErrorMask errorMask,
             RaceHair_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1463,7 +1453,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1473,7 +1462,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1567,6 +1555,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Male = initialValue;
             this.Female = initialValue;
         }
+
+        public RaceHair_Mask(
+            T Male,
+            T Female)
+        {
+            this.Male = Male;
+            this.Female = Female;
+        }
         #endregion
 
         #region Members
@@ -1619,12 +1615,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Male = eval(this.Male);
             obj.Female = eval(this.Female);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

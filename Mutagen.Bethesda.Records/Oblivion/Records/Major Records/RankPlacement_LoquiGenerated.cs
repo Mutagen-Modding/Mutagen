@@ -134,11 +134,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RankPlacement CreateFromXml(
             XElement node,
             out RankPlacement_ErrorMask errorMask,
-            bool doMasks = true,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -456,12 +455,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankPlacement lhs,
             IRankPlacementGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -469,22 +467,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRankPlacementGetter rhs,
             RankPlacement_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRankPlacement lhs,
             IRankPlacementGetter rhs,
             out RankPlacement_ErrorMask errorMask,
-            RankPlacement_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RankPlacement_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RankPlacementSetterTranslationCommon)((IRankPlacementGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -558,11 +554,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankPlacement item,
             XElement node,
             out RankPlacement_ErrorMask errorMask,
-            bool doMasks = true,
             RankPlacement_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1462,11 +1457,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankPlacementGetter item,
             XElement node,
             out RankPlacement_ErrorMask errorMask,
-            bool doMasks = true,
             RankPlacement_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RankPlacementXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1481,7 +1475,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1490,7 +1483,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1500,7 +1492,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1518,7 +1509,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RankPlacement_ErrorMask errorMask,
             RankPlacement_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1527,7 +1517,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1537,7 +1526,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1632,6 +1620,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Rank = initialValue;
             this.Fluff = initialValue;
         }
+
+        public RankPlacement_Mask(
+            T Faction,
+            T Rank,
+            T Fluff)
+        {
+            this.Faction = Faction;
+            this.Rank = Rank;
+            this.Fluff = Fluff;
+        }
         #endregion
 
         #region Members
@@ -1689,12 +1687,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Faction = eval(this.Faction);
             obj.Rank = eval(this.Rank);
             obj.Fluff = eval(this.Fluff);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -144,11 +144,10 @@ namespace Mutagen.Bethesda
         public static MasterReference CreateFromXml(
             XElement node,
             out MasterReference_ErrorMask errorMask,
-            bool doMasks = true,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -463,12 +462,11 @@ namespace Mutagen.Bethesda
             this IMasterReference lhs,
             IMasterReferenceGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -476,22 +474,20 @@ namespace Mutagen.Bethesda
             IMasterReferenceGetter rhs,
             MasterReference_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMasterReference lhs,
             IMasterReferenceGetter rhs,
             out MasterReference_ErrorMask errorMask,
-            MasterReference_TranslationMask copyMask = null,
-            bool doMasks = true)
+            MasterReference_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MasterReferenceSetterTranslationCommon)((IMasterReferenceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -565,11 +561,10 @@ namespace Mutagen.Bethesda
             this IMasterReference item,
             XElement node,
             out MasterReference_ErrorMask errorMask,
-            bool doMasks = true,
             MasterReference_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1467,11 +1462,10 @@ namespace Mutagen.Bethesda
             this IMasterReferenceGetter item,
             XElement node,
             out MasterReference_ErrorMask errorMask,
-            bool doMasks = true,
             MasterReference_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MasterReferenceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1486,7 +1480,6 @@ namespace Mutagen.Bethesda
             string path,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1495,7 +1488,6 @@ namespace Mutagen.Bethesda
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1505,7 +1497,6 @@ namespace Mutagen.Bethesda
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1523,7 +1514,6 @@ namespace Mutagen.Bethesda
             Stream stream,
             out MasterReference_ErrorMask errorMask,
             MasterReference_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1532,7 +1522,6 @@ namespace Mutagen.Bethesda
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1542,7 +1531,6 @@ namespace Mutagen.Bethesda
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1636,6 +1624,14 @@ namespace Mutagen.Bethesda.Internals
             this.Master = initialValue;
             this.FileSize = initialValue;
         }
+
+        public MasterReference_Mask(
+            T Master,
+            T FileSize)
+        {
+            this.Master = Master;
+            this.FileSize = FileSize;
+        }
         #endregion
 
         #region Members
@@ -1688,12 +1684,6 @@ namespace Mutagen.Bethesda.Internals
         {
             obj.Master = eval(this.Master);
             obj.FileSize = eval(this.FileSize);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

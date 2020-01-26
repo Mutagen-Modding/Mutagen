@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Drawing;
 using Loqui.Presentation;
 using Mutagen.Bethesda;
@@ -640,11 +638,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Weather CreateFromXml(
             XElement node,
             out Weather_ErrorMask errorMask,
-            bool doMasks = true,
             Weather_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1252,22 +1249,20 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherGetter rhs,
             Weather_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WeatherSetterTranslationCommon)((IWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IWeatherInternal lhs,
             IWeatherGetter rhs,
             out Weather_ErrorMask errorMask,
-            Weather_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Weather_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherSetterTranslationCommon)((IWeatherGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1341,11 +1336,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherInternal item,
             XElement node,
             out Weather_ErrorMask errorMask,
-            bool doMasks = true,
             Weather_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4745,11 +4739,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherGetter item,
             XElement node,
             out Weather_ErrorMask errorMask,
-            bool doMasks = true,
             Weather_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4764,7 +4757,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Weather_ErrorMask errorMask,
             Weather_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4773,7 +4765,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4783,7 +4774,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Weather_ErrorMask errorMask,
             Weather_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4792,7 +4782,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4855,6 +4844,98 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FNAMDataTypeState = initialValue;
             this.HNAMDataTypeState = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Weather_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T TextureLowerLayer,
+            T TextureUpperLayer,
+            T Model,
+            T WeatherTypes,
+            T FogDayNear,
+            T FogDayFar,
+            T FogNightNear,
+            T FogNightFar,
+            T HdrEyeAdaptSpeed,
+            T HdrBlurRadius,
+            T HdrBlurPasses,
+            T HdrEmissiveMult,
+            T HdrTargetLum,
+            T HdrUpperLumClamp,
+            T HdrBrightScale,
+            T HdrBrightClamp,
+            T HdrLumRampNoTex,
+            T HdrLumRampMin,
+            T HdrLumRampMax,
+            T HdrSunlightDimmer,
+            T HdrGrassDimmer,
+            T HdrTreeDimmer,
+            T WindSpeed,
+            T CloudSpeedLower,
+            T CloudSpeedUpper,
+            T TransDelta,
+            T SunGlare,
+            T SunDamage,
+            T PrecipitationBeginFadeIn,
+            T PrecipitationEndFadeOut,
+            T ThunderLightningBeginFadeIn,
+            T ThunderLightningEndFadeOut,
+            T ThunderLightningFrequency,
+            T Classification,
+            T LightningColor,
+            T Sounds,
+            T FNAMDataTypeState,
+            T HNAMDataTypeState,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.TextureLowerLayer = TextureLowerLayer;
+            this.TextureUpperLayer = TextureUpperLayer;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.WeatherTypes = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherType_Mask<T>>>>(WeatherTypes, null);
+            this.FogDayNear = FogDayNear;
+            this.FogDayFar = FogDayFar;
+            this.FogNightNear = FogNightNear;
+            this.FogNightFar = FogNightFar;
+            this.HdrEyeAdaptSpeed = HdrEyeAdaptSpeed;
+            this.HdrBlurRadius = HdrBlurRadius;
+            this.HdrBlurPasses = HdrBlurPasses;
+            this.HdrEmissiveMult = HdrEmissiveMult;
+            this.HdrTargetLum = HdrTargetLum;
+            this.HdrUpperLumClamp = HdrUpperLumClamp;
+            this.HdrBrightScale = HdrBrightScale;
+            this.HdrBrightClamp = HdrBrightClamp;
+            this.HdrLumRampNoTex = HdrLumRampNoTex;
+            this.HdrLumRampMin = HdrLumRampMin;
+            this.HdrLumRampMax = HdrLumRampMax;
+            this.HdrSunlightDimmer = HdrSunlightDimmer;
+            this.HdrGrassDimmer = HdrGrassDimmer;
+            this.HdrTreeDimmer = HdrTreeDimmer;
+            this.WindSpeed = WindSpeed;
+            this.CloudSpeedLower = CloudSpeedLower;
+            this.CloudSpeedUpper = CloudSpeedUpper;
+            this.TransDelta = TransDelta;
+            this.SunGlare = SunGlare;
+            this.SunDamage = SunDamage;
+            this.PrecipitationBeginFadeIn = PrecipitationBeginFadeIn;
+            this.PrecipitationEndFadeOut = PrecipitationEndFadeOut;
+            this.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeIn;
+            this.ThunderLightningEndFadeOut = ThunderLightningEndFadeOut;
+            this.ThunderLightningFrequency = ThunderLightningFrequency;
+            this.Classification = Classification;
+            this.LightningColor = LightningColor;
+            this.Sounds = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherSound_Mask<T>>>>(Sounds, null);
+            this.FNAMDataTypeState = FNAMDataTypeState;
+            this.HNAMDataTypeState = HNAMDataTypeState;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -5162,15 +5243,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
             obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.WeatherTypes.Specific = null;
-            this.Sounds.Specific = null;
         }
         #endregion
 

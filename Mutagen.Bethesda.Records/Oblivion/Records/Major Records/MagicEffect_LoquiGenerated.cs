@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -361,11 +359,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffect CreateFromXml(
             XElement node,
             out MagicEffect_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -803,22 +800,20 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectGetter rhs,
             MagicEffect_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMagicEffectInternal lhs,
             IMagicEffectGetter rhs,
             out MagicEffect_ErrorMask errorMask,
-            MagicEffect_TranslationMask copyMask = null,
-            bool doMasks = true)
+            MagicEffect_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectSetterTranslationCommon)((IMagicEffectGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -892,11 +887,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectInternal item,
             XElement node,
             out MagicEffect_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffect_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -3037,11 +3031,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectGetter item,
             XElement node,
             out MagicEffect_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffect_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -3056,7 +3049,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3065,7 +3057,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -3075,7 +3066,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3084,7 +3074,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -3124,6 +3113,52 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>>(initialValue, new MagicEffectSubData_Mask<T>(initialValue));
             this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.DATADataTypeState = initialValue;
+        }
+
+        public MagicEffect_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Description,
+            T Icon,
+            T Model,
+            T Flags,
+            T BaseCost,
+            T Unused,
+            T MagicSchool,
+            T Resistance,
+            T CounterEffectCount,
+            T Light,
+            T ProjectileSpeed,
+            T EffectShader,
+            T SubData,
+            T CounterEffects,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Description = Description;
+            this.Icon = Icon;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Flags = Flags;
+            this.BaseCost = BaseCost;
+            this.Unused = Unused;
+            this.MagicSchool = MagicSchool;
+            this.Resistance = Resistance;
+            this.CounterEffectCount = CounterEffectCount;
+            this.Light = Light;
+            this.ProjectileSpeed = ProjectileSpeed;
+            this.EffectShader = EffectShader;
+            this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>>(SubData, new MagicEffectSubData_Mask<T>(SubData));
+            this.CounterEffects = new MaskItem<T, IEnumerable<(int Index, T Value)>>(CounterEffects, null);
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -3290,14 +3325,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.CounterEffects.Specific = null;
         }
         #endregion
 

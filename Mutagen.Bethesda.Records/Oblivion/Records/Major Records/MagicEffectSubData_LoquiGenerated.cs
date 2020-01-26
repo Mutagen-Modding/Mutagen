@@ -154,11 +154,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static MagicEffectSubData CreateFromXml(
             XElement node,
             out MagicEffectSubData_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffectSubData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -495,12 +494,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -508,22 +506,20 @@ namespace Mutagen.Bethesda.Oblivion
             IMagicEffectSubDataGetter rhs,
             MagicEffectSubData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMagicEffectSubData lhs,
             IMagicEffectSubDataGetter rhs,
             out MagicEffectSubData_ErrorMask errorMask,
-            MagicEffectSubData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            MagicEffectSubData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectSubDataSetterTranslationCommon)((IMagicEffectSubDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -597,11 +593,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubData item,
             XElement node,
             out MagicEffectSubData_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffectSubData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1728,11 +1723,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMagicEffectSubDataGetter item,
             XElement node,
             out MagicEffectSubData_ErrorMask errorMask,
-            bool doMasks = true,
             MagicEffectSubData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MagicEffectSubDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1747,7 +1741,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1756,7 +1749,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1766,7 +1758,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1784,7 +1775,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out MagicEffectSubData_ErrorMask errorMask,
             MagicEffectSubData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1793,7 +1783,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1803,7 +1792,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1902,6 +1890,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ConstantEffectEnchantmentFactor = initialValue;
             this.ConstantEffectBarterFactor = initialValue;
         }
+
+        public MagicEffectSubData_Mask(
+            T EnchantEffect,
+            T CastingSound,
+            T BoltSound,
+            T HitSound,
+            T AreaSound,
+            T ConstantEffectEnchantmentFactor,
+            T ConstantEffectBarterFactor)
+        {
+            this.EnchantEffect = EnchantEffect;
+            this.CastingSound = CastingSound;
+            this.BoltSound = BoltSound;
+            this.HitSound = HitSound;
+            this.AreaSound = AreaSound;
+            this.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactor;
+            this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
+        }
         #endregion
 
         #region Members
@@ -1979,12 +1985,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.AreaSound = eval(this.AreaSound);
             obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
             obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

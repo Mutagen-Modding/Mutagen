@@ -23,8 +23,6 @@ using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Noggog.Utility;
@@ -188,11 +186,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromXml(
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -905,12 +902,11 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -918,22 +914,20 @@ namespace Mutagen.Bethesda.Skyrim
             ISkyrimModGetter rhs,
             SkyrimMod_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISkyrimMod lhs,
             ISkyrimModGetter rhs,
             out SkyrimMod_ErrorMask errorMask,
-            SkyrimMod_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SkyrimMod_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1007,11 +1001,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -3076,11 +3069,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             XElement node,
             out SkyrimMod_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMod_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SkyrimModXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -3095,7 +3087,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3104,7 +3095,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -3114,7 +3104,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3132,7 +3121,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out SkyrimMod_ErrorMask errorMask,
             SkyrimMod_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3141,7 +3129,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -3151,7 +3138,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3251,6 +3237,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Globals = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Classes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Factions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+        }
+
+        public SkyrimMod_Mask(
+            T ModHeader,
+            T GameSettings,
+            T Keywords,
+            T LocationReferenceTypes,
+            T Actions,
+            T TextureSets,
+            T Globals,
+            T Classes,
+            T Factions)
+        {
+            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>>(ModHeader, new ModHeader_Mask<T>(ModHeader));
+            this.GameSettings = new MaskItem<T, Group_Mask<T>>(GameSettings, new Group_Mask<T>(GameSettings));
+            this.Keywords = new MaskItem<T, Group_Mask<T>>(Keywords, new Group_Mask<T>(Keywords));
+            this.LocationReferenceTypes = new MaskItem<T, Group_Mask<T>>(LocationReferenceTypes, new Group_Mask<T>(LocationReferenceTypes));
+            this.Actions = new MaskItem<T, Group_Mask<T>>(Actions, new Group_Mask<T>(Actions));
+            this.TextureSets = new MaskItem<T, Group_Mask<T>>(TextureSets, new Group_Mask<T>(TextureSets));
+            this.Globals = new MaskItem<T, Group_Mask<T>>(Globals, new Group_Mask<T>(Globals));
+            this.Classes = new MaskItem<T, Group_Mask<T>>(Classes, new Group_Mask<T>(Classes));
+            this.Factions = new MaskItem<T, Group_Mask<T>>(Factions, new Group_Mask<T>(Factions));
         }
         #endregion
 
@@ -3402,12 +3410,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 obj.Factions = new MaskItem<R, Group_Mask<R>>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

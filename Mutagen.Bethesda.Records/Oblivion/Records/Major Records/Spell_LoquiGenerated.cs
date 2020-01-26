@@ -143,11 +143,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Spell CreateFromXml(
             XElement node,
             out Spell_ErrorMask errorMask,
-            bool doMasks = true,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -441,22 +440,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellGetter rhs,
             Spell_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISpellInternal lhs,
             ISpellGetter rhs,
             out Spell_ErrorMask errorMask,
-            Spell_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Spell_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -530,11 +527,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellInternal item,
             XElement node,
             out Spell_ErrorMask errorMask,
-            bool doMasks = true,
             Spell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1665,11 +1661,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISpellGetter item,
             XElement node,
             out Spell_ErrorMask errorMask,
-            bool doMasks = true,
             Spell_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SpellXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1684,7 +1679,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Spell_ErrorMask errorMask,
             Spell_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1693,7 +1687,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1703,7 +1696,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Spell_ErrorMask errorMask,
             Spell_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1712,7 +1704,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1737,6 +1728,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Spell_Mask(T initialValue)
         {
             this.Name = initialValue;
+        }
+
+        public Spell_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
         }
         #endregion
 
@@ -1789,13 +1796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Name = eval(this.Name);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

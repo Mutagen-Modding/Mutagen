@@ -12,8 +12,6 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -136,11 +134,10 @@ namespace Mutagen.Bethesda.Tests
         public static RecordInterest CreateFromXml(
             XElement node,
             out RecordInterest_ErrorMask errorMask,
-            bool doMasks = true,
             RecordInterest_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -381,12 +378,11 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterest lhs,
             IRecordInterestGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -394,22 +390,20 @@ namespace Mutagen.Bethesda.Tests
             IRecordInterestGetter rhs,
             RecordInterest_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRecordInterest lhs,
             IRecordInterestGetter rhs,
             out RecordInterest_ErrorMask errorMask,
-            RecordInterest_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RecordInterest_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RecordInterestSetterTranslationCommon)((IRecordInterestGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -483,11 +477,10 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterest item,
             XElement node,
             out RecordInterest_ErrorMask errorMask,
-            bool doMasks = true,
             RecordInterest_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1361,11 +1354,10 @@ namespace Mutagen.Bethesda.Tests
             this IRecordInterestGetter item,
             XElement node,
             out RecordInterest_ErrorMask errorMask,
-            bool doMasks = true,
             RecordInterest_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RecordInterestXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1380,7 +1372,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             out RecordInterest_ErrorMask errorMask,
             RecordInterest_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1389,7 +1380,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1399,7 +1389,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1417,7 +1406,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             out RecordInterest_ErrorMask errorMask,
             RecordInterest_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1426,7 +1414,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1436,7 +1423,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1529,6 +1515,14 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
             this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+        }
+
+        public RecordInterest_Mask(
+            T InterestingTypes,
+            T UninterestingTypes)
+        {
+            this.InterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(InterestingTypes, null);
+            this.UninterestingTypes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(UninterestingTypes, null);
         }
         #endregion
 
@@ -1632,14 +1626,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.InterestingTypes.Specific = null;
-            this.UninterestingTypes.Specific = null;
         }
         #endregion
 

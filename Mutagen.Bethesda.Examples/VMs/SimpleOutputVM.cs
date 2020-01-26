@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Examples
                     await ToDo();
                     sw.Stop();
                     LastTiming = sw.Elapsed.ToString(@"mm\:ss\.fff");
-                    this.Output.Add(DelayedOutput);
+                    this.Output.AddRange(DelayedOutput);
                     DelayedOutput.Clear();
                 }
                 catch (Exception ex)

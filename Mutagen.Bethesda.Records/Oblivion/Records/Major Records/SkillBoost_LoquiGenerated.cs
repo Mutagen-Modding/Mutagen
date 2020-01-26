@@ -119,11 +119,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SkillBoost CreateFromXml(
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            bool doMasks = true,
             SkillBoost_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -429,12 +428,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost lhs,
             ISkillBoostGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -442,22 +440,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISkillBoostGetter rhs,
             SkillBoost_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISkillBoost lhs,
             ISkillBoostGetter rhs,
             out SkillBoost_ErrorMask errorMask,
-            SkillBoost_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SkillBoost_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -531,11 +527,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoost item,
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            bool doMasks = true,
             SkillBoost_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1372,11 +1367,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISkillBoostGetter item,
             XElement node,
             out SkillBoost_ErrorMask errorMask,
-            bool doMasks = true,
             SkillBoost_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SkillBoostXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1391,7 +1385,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out SkillBoost_ErrorMask errorMask,
             SkillBoost_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1400,7 +1393,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1410,7 +1402,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1428,7 +1419,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out SkillBoost_ErrorMask errorMask,
             SkillBoost_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1437,7 +1427,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1447,7 +1436,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1541,6 +1529,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Skill = initialValue;
             this.Boost = initialValue;
         }
+
+        public SkillBoost_Mask(
+            T Skill,
+            T Boost)
+        {
+            this.Skill = Skill;
+            this.Boost = Boost;
+        }
         #endregion
 
         #region Members
@@ -1593,12 +1589,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Skill = eval(this.Skill);
             obj.Boost = eval(this.Boost);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

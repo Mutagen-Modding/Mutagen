@@ -123,11 +123,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceRelation CreateFromXml(
             XElement node,
             out RaceRelation_ErrorMask errorMask,
-            bool doMasks = true,
             RaceRelation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -438,12 +437,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceRelation lhs,
             IRaceRelationGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -451,22 +449,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceRelationGetter rhs,
             RaceRelation_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRaceRelation lhs,
             IRaceRelationGetter rhs,
             out RaceRelation_ErrorMask errorMask,
-            RaceRelation_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RaceRelation_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceRelationSetterTranslationCommon)((IRaceRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -540,11 +536,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceRelation item,
             XElement node,
             out RaceRelation_ErrorMask errorMask,
-            bool doMasks = true,
             RaceRelation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1391,11 +1386,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceRelationGetter item,
             XElement node,
             out RaceRelation_ErrorMask errorMask,
-            bool doMasks = true,
             RaceRelation_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceRelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1410,7 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RaceRelation_ErrorMask errorMask,
             RaceRelation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1419,7 +1412,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1429,7 +1421,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1447,7 +1438,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RaceRelation_ErrorMask errorMask,
             RaceRelation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1456,7 +1446,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1466,7 +1455,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1560,6 +1548,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Race = initialValue;
             this.Modifier = initialValue;
         }
+
+        public RaceRelation_Mask(
+            T Race,
+            T Modifier)
+        {
+            this.Race = Race;
+            this.Modifier = Modifier;
+        }
         #endregion
 
         #region Members
@@ -1612,12 +1608,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Race = eval(this.Race);
             obj.Modifier = eval(this.Modifier);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -161,11 +161,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionData CreateFromXml(
             XElement node,
             out RegionData_ErrorMask errorMask,
-            bool doMasks = true,
             RegionData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -478,12 +477,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -491,22 +489,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataGetter rhs,
             RegionData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRegionDataInternal lhs,
             IRegionDataGetter rhs,
             out RegionData_ErrorMask errorMask,
-            RegionData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RegionData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataSetterTranslationCommon)((IRegionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -580,11 +576,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataInternal item,
             XElement node,
             out RegionData_ErrorMask errorMask,
-            bool doMasks = true,
             RegionData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1588,11 +1583,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGetter item,
             XElement node,
             out RegionData_ErrorMask errorMask,
-            bool doMasks = true,
             RegionData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1607,7 +1601,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RegionData_ErrorMask errorMask,
             RegionData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1616,7 +1609,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1626,7 +1618,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1644,7 +1635,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RegionData_ErrorMask errorMask,
             RegionData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1653,7 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1663,7 +1652,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1759,6 +1747,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Priority = initialValue;
             this.RDATDataTypeState = initialValue;
         }
+
+        public RegionData_Mask(
+            T DataType,
+            T Flags,
+            T Priority,
+            T RDATDataTypeState)
+        {
+            this.DataType = DataType;
+            this.Flags = Flags;
+            this.Priority = Priority;
+            this.RDATDataTypeState = RDATDataTypeState;
+        }
         #endregion
 
         #region Members
@@ -1821,12 +1821,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             obj.Priority = eval(this.Priority);
             obj.RDATDataTypeState = eval(this.RDATDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public virtual void ClearEnumerables()
-        {
         }
         #endregion
 

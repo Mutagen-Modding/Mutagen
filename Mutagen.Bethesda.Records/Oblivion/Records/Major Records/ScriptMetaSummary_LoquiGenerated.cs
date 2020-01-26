@@ -136,11 +136,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static ScriptMetaSummary CreateFromXml(
             XElement node,
             out ScriptMetaSummary_ErrorMask errorMask,
-            bool doMasks = true,
             ScriptMetaSummary_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -469,12 +468,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -482,22 +480,20 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptMetaSummaryGetter rhs,
             ScriptMetaSummary_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IScriptMetaSummary lhs,
             IScriptMetaSummaryGetter rhs,
             out ScriptMetaSummary_ErrorMask errorMask,
-            ScriptMetaSummary_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ScriptMetaSummary_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptMetaSummarySetterTranslationCommon)((IScriptMetaSummaryGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -571,11 +567,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummary item,
             XElement node,
             out ScriptMetaSummary_ErrorMask errorMask,
-            bool doMasks = true,
             ScriptMetaSummary_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1569,11 +1564,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IScriptMetaSummaryGetter item,
             XElement node,
             out ScriptMetaSummary_ErrorMask errorMask,
-            bool doMasks = true,
             ScriptMetaSummary_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ScriptMetaSummaryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1588,7 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out ScriptMetaSummary_ErrorMask errorMask,
             ScriptMetaSummary_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1597,7 +1590,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1607,7 +1599,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1625,7 +1616,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out ScriptMetaSummary_ErrorMask errorMask,
             ScriptMetaSummary_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1634,7 +1624,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1644,7 +1633,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1741,6 +1729,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VariableCount = initialValue;
             this.Type = initialValue;
         }
+
+        public ScriptMetaSummary_Mask(
+            T Fluff,
+            T RefCount,
+            T CompiledSize,
+            T VariableCount,
+            T Type)
+        {
+            this.Fluff = Fluff;
+            this.RefCount = RefCount;
+            this.CompiledSize = CompiledSize;
+            this.VariableCount = VariableCount;
+            this.Type = Type;
+        }
         #endregion
 
         #region Members
@@ -1808,12 +1810,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.CompiledSize = eval(this.CompiledSize);
             obj.VariableCount = eval(this.VariableCount);
             obj.Type = eval(this.Type);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

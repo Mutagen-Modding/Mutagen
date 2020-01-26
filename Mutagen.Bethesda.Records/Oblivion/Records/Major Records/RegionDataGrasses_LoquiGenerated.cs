@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
@@ -126,11 +124,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RegionDataGrasses CreateFromXml(
             XElement node,
             out RegionDataGrasses_ErrorMask errorMask,
-            bool doMasks = true,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -422,22 +419,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionDataGrassesGetter rhs,
             RegionDataGrasses_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRegionDataGrassesInternal lhs,
             IRegionDataGrassesGetter rhs,
             out RegionDataGrasses_ErrorMask errorMask,
-            RegionDataGrasses_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RegionDataGrasses_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataGrassesSetterTranslationCommon)((IRegionDataGrassesGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -511,11 +506,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesInternal item,
             XElement node,
             out RegionDataGrasses_ErrorMask errorMask,
-            bool doMasks = true,
             RegionDataGrasses_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1530,11 +1524,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionDataGrassesGetter item,
             XElement node,
             out RegionDataGrasses_ErrorMask errorMask,
-            bool doMasks = true,
             RegionDataGrasses_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionDataGrassesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1549,7 +1542,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1558,7 +1550,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1568,7 +1559,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RegionDataGrasses_ErrorMask errorMask,
             RegionDataGrasses_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1577,7 +1567,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1602,6 +1591,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public RegionDataGrasses_Mask(T initialValue)
         {
             this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+        }
+
+        public RegionDataGrasses_Mask(
+            T DataType,
+            T Flags,
+            T Priority,
+            T RDATDataTypeState,
+            T Grasses)
+        {
+            this.DataType = DataType;
+            this.Flags = Flags;
+            this.Priority = Priority;
+            this.RDATDataTypeState = RDATDataTypeState;
+            this.Grasses = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Grasses, null);
         }
         #endregion
 
@@ -1679,14 +1682,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Grasses.Specific = null;
         }
         #endregion
 

@@ -295,11 +295,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoulGem CreateFromXml(
             XElement node,
             out SoulGem_ErrorMask errorMask,
-            bool doMasks = true,
             SoulGem_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -695,22 +694,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISoulGemGetter rhs,
             SoulGem_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SoulGemSetterTranslationCommon)((ISoulGemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISoulGemInternal lhs,
             ISoulGemGetter rhs,
             out SoulGem_ErrorMask errorMask,
-            SoulGem_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SoulGem_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoulGemSetterTranslationCommon)((ISoulGemGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -784,11 +781,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemInternal item,
             XElement node,
             out SoulGem_ErrorMask errorMask,
-            bool doMasks = true,
             SoulGem_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2562,11 +2558,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoulGemGetter item,
             XElement node,
             out SoulGem_ErrorMask errorMask,
-            bool doMasks = true,
             SoulGem_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SoulGemXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2581,7 +2576,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out SoulGem_ErrorMask errorMask,
             SoulGem_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2590,7 +2584,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2600,7 +2593,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out SoulGem_ErrorMask errorMask,
             SoulGem_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2609,7 +2601,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2642,6 +2633,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ContainedSoul = initialValue;
             this.MaximumCapacity = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public SoulGem_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Icon,
+            T Script,
+            T Value,
+            T Weight,
+            T ContainedSoul,
+            T MaximumCapacity,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+            this.Script = Script;
+            this.Value = Value;
+            this.Weight = Weight;
+            this.ContainedSoul = ContainedSoul;
+            this.MaximumCapacity = MaximumCapacity;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -2741,13 +2764,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ContainedSoul = eval(this.ContainedSoul);
             obj.MaximumCapacity = eval(this.MaximumCapacity);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

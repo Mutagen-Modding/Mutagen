@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -255,11 +253,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Landscape CreateFromXml(
             XElement node,
             out Landscape_ErrorMask errorMask,
-            bool doMasks = true,
             Landscape_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -626,22 +623,20 @@ namespace Mutagen.Bethesda.Oblivion
             ILandscapeGetter rhs,
             Landscape_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ILandscapeInternal lhs,
             ILandscapeGetter rhs,
             out Landscape_ErrorMask errorMask,
-            Landscape_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Landscape_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((LandscapeSetterTranslationCommon)((ILandscapeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -715,11 +710,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeInternal item,
             XElement node,
             out Landscape_ErrorMask errorMask,
-            bool doMasks = true,
             Landscape_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2339,11 +2333,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILandscapeGetter item,
             XElement node,
             out Landscape_ErrorMask errorMask,
-            bool doMasks = true,
             Landscape_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((LandscapeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2358,7 +2351,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Landscape_ErrorMask errorMask,
             Landscape_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2367,7 +2359,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2377,7 +2368,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Landscape_ErrorMask errorMask,
             Landscape_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2386,7 +2376,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2416,6 +2405,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.VertexColors = initialValue;
             this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>>>>(initialValue, null);
             this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+        }
+
+        public Landscape_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Unknown,
+            T VertexNormals,
+            T VertexHeightMap,
+            T VertexColors,
+            T Layers,
+            T Textures)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Unknown = Unknown;
+            this.VertexNormals = VertexNormals;
+            this.VertexHeightMap = VertexHeightMap;
+            this.VertexColors = VertexColors;
+            this.Layers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, BaseLayer_Mask<T>>>>(Layers, null);
+            this.Textures = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Textures, null);
         }
         #endregion
 
@@ -2547,15 +2562,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Layers.Specific = null;
-            this.Textures.Specific = null;
         }
         #endregion
 

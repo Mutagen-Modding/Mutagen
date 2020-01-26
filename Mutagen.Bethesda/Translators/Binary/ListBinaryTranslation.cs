@@ -7,7 +7,6 @@ using Noggog;
 using Loqui;
 using System.IO;
 using Loqui.Internal;
-using DynamicData;
 
 namespace Mutagen.Bethesda.Binary
 {

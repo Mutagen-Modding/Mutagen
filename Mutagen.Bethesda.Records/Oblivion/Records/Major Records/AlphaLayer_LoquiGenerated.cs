@@ -141,11 +141,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AlphaLayer CreateFromXml(
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
-            bool doMasks = true,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -451,22 +450,20 @@ namespace Mutagen.Bethesda.Oblivion
             IAlphaLayerGetter rhs,
             AlphaLayer_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IAlphaLayerInternal lhs,
             IAlphaLayerGetter rhs,
             out AlphaLayer_ErrorMask errorMask,
-            AlphaLayer_TranslationMask copyMask = null,
-            bool doMasks = true)
+            AlphaLayer_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((AlphaLayerSetterTranslationCommon)((IAlphaLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -540,11 +537,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerInternal item,
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
-            bool doMasks = true,
             AlphaLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1507,11 +1503,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAlphaLayerGetter item,
             XElement node,
             out AlphaLayer_ErrorMask errorMask,
-            bool doMasks = true,
             AlphaLayer_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AlphaLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1526,7 +1521,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1535,7 +1529,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1545,7 +1538,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out AlphaLayer_ErrorMask errorMask,
             AlphaLayer_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1554,7 +1546,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1579,6 +1570,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AlphaLayer_Mask(T initialValue)
         {
             this.AlphaLayerData = initialValue;
+        }
+
+        public AlphaLayer_Mask(
+            T Texture,
+            T Quadrant,
+            T LayerNumber,
+            T BTXTDataTypeState,
+            T AlphaLayerData)
+        {
+            this.Texture = Texture;
+            this.Quadrant = Quadrant;
+            this.LayerNumber = LayerNumber;
+            this.BTXTDataTypeState = BTXTDataTypeState;
+            this.AlphaLayerData = AlphaLayerData;
         }
         #endregion
 
@@ -1631,13 +1636,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.AlphaLayerData = eval(this.AlphaLayerData);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

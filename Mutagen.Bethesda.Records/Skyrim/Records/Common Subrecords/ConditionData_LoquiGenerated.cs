@@ -112,11 +112,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static ConditionData CreateFromXml(
             XElement node,
             out ConditionData_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -377,12 +376,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionData lhs,
             IConditionDataGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ConditionDataSetterTranslationCommon)((IConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -390,22 +388,20 @@ namespace Mutagen.Bethesda.Skyrim
             IConditionDataGetter rhs,
             ConditionData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ConditionDataSetterTranslationCommon)((IConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IConditionData lhs,
             IConditionDataGetter rhs,
             out ConditionData_ErrorMask errorMask,
-            ConditionData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ConditionData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionDataSetterTranslationCommon)((IConditionDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -479,11 +475,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionData item,
             XElement node,
             out ConditionData_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1195,11 +1190,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionDataGetter item,
             XElement node,
             out ConditionData_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1214,7 +1208,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out ConditionData_ErrorMask errorMask,
             ConditionData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1223,7 +1216,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1233,7 +1225,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1251,7 +1242,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out ConditionData_ErrorMask errorMask,
             ConditionData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1260,7 +1250,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1270,7 +1259,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1362,6 +1350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ConditionData_Mask(T initialValue)
         {
         }
+
         #endregion
 
         #region Equals
@@ -1400,12 +1389,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         protected void Translate_InternalFill<R>(ConditionData_Mask<R> obj, Func<T, R> eval)
-        {
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public virtual void ClearEnumerables()
         {
         }
         #endregion

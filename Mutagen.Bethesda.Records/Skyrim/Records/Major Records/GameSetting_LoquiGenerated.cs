@@ -113,11 +113,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static GameSetting CreateFromXml(
             XElement node,
             out GameSetting_ErrorMask errorMask,
-            bool doMasks = true,
             GameSetting_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -388,22 +387,20 @@ namespace Mutagen.Bethesda.Skyrim
             IGameSettingGetter rhs,
             GameSetting_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IGameSettingInternal lhs,
             IGameSettingGetter rhs,
             out GameSetting_ErrorMask errorMask,
-            GameSetting_TranslationMask copyMask = null,
-            bool doMasks = true)
+            GameSetting_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((GameSettingSetterTranslationCommon)((IGameSettingGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -477,11 +474,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingInternal item,
             XElement node,
             out GameSetting_ErrorMask errorMask,
-            bool doMasks = true,
             GameSetting_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1409,11 +1405,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IGameSettingGetter item,
             XElement node,
             out GameSetting_ErrorMask errorMask,
-            bool doMasks = true,
             GameSetting_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GameSettingXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1428,7 +1423,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out GameSetting_ErrorMask errorMask,
             GameSetting_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1437,7 +1431,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1447,7 +1440,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out GameSetting_ErrorMask errorMask,
             GameSetting_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1456,7 +1448,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1480,6 +1471,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public GameSetting_Mask(T initialValue)
         {
+        }
+
+        public GameSetting_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T SkyrimMajorRecordFlags,
+            T FormVersion,
+            T Version2)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
+            this.FormVersion = FormVersion;
+            this.Version2 = Version2;
         }
         #endregion
 
@@ -1524,13 +1533,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected void Translate_InternalFill<R>(GameSetting_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

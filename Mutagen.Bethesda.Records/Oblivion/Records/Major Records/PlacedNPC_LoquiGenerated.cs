@@ -337,11 +337,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static PlacedNPC CreateFromXml(
             XElement node,
             out PlacedNPC_ErrorMask errorMask,
-            bool doMasks = true,
             PlacedNPC_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -760,22 +759,20 @@ namespace Mutagen.Bethesda.Oblivion
             IPlacedNPCGetter rhs,
             PlacedNPC_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IPlacedNPCInternal lhs,
             IPlacedNPCGetter rhs,
             out PlacedNPC_ErrorMask errorMask,
-            PlacedNPC_TranslationMask copyMask = null,
-            bool doMasks = true)
+            PlacedNPC_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((PlacedNPCSetterTranslationCommon)((IPlacedNPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -849,11 +846,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCInternal item,
             XElement node,
             out PlacedNPC_ErrorMask errorMask,
-            bool doMasks = true,
             PlacedNPC_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2827,11 +2823,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPlacedNPCGetter item,
             XElement node,
             out PlacedNPC_ErrorMask errorMask,
-            bool doMasks = true,
             PlacedNPC_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((PlacedNPCXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2846,7 +2841,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out PlacedNPC_ErrorMask errorMask,
             PlacedNPC_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2855,7 +2849,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2865,7 +2858,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out PlacedNPC_ErrorMask errorMask,
             PlacedNPC_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2874,7 +2866,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2910,6 +2901,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Position = initialValue;
             this.Rotation = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public PlacedNPC_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Base,
+            T XPCIFluff,
+            T FULLFluff,
+            T DistantLODData,
+            T EnableParent,
+            T MerchantContainer,
+            T Horse,
+            T RagdollData,
+            T Scale,
+            T Position,
+            T Rotation,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Base = Base;
+            this.XPCIFluff = XPCIFluff;
+            this.FULLFluff = FULLFluff;
+            this.DistantLODData = new MaskItem<T, DistantLODData_Mask<T>>(DistantLODData, new DistantLODData_Mask<T>(DistantLODData));
+            this.EnableParent = new MaskItem<T, EnableParent_Mask<T>>(EnableParent, new EnableParent_Mask<T>(EnableParent));
+            this.MerchantContainer = MerchantContainer;
+            this.Horse = Horse;
+            this.RagdollData = RagdollData;
+            this.Scale = Scale;
+            this.Position = Position;
+            this.Rotation = Rotation;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -3031,13 +3060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Position = eval(this.Position);
             obj.Rotation = eval(this.Rotation);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -180,11 +178,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGrid CreateFromXml(
             XElement node,
             out PathGrid_ErrorMask errorMask,
-            bool doMasks = true,
             PathGrid_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -522,22 +519,20 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridGetter rhs,
             PathGrid_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IPathGridInternal lhs,
             IPathGridGetter rhs,
             out PathGrid_ErrorMask errorMask,
-            PathGrid_TranslationMask copyMask = null,
-            bool doMasks = true)
+            PathGrid_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((PathGridSetterTranslationCommon)((IPathGridGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -611,11 +606,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridInternal item,
             XElement node,
             out PathGrid_ErrorMask errorMask,
-            bool doMasks = true,
             PathGrid_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2099,11 +2093,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridGetter item,
             XElement node,
             out PathGrid_ErrorMask errorMask,
-            bool doMasks = true,
             PathGrid_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((PathGridXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2118,7 +2111,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out PathGrid_ErrorMask errorMask,
             PathGrid_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2127,7 +2119,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2137,7 +2128,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out PathGrid_ErrorMask errorMask,
             PathGrid_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2146,7 +2136,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2174,6 +2163,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Unknown = initialValue;
             this.InterCellConnections = new MaskItem<T, IEnumerable<MaskItemIndexed<T, InterCellPoint_Mask<T>>>>(initialValue, null);
             this.PointToReferenceMappings = new MaskItem<T, IEnumerable<MaskItemIndexed<T, PointToReferenceMapping_Mask<T>>>>(initialValue, null);
+        }
+
+        public PathGrid_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T PointToPointConnections,
+            T Unknown,
+            T InterCellConnections,
+            T PointToReferenceMappings)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.PointToPointConnections = new MaskItem<T, IEnumerable<MaskItemIndexed<T, PathGridPoint_Mask<T>>>>(PointToPointConnections, null);
+            this.Unknown = Unknown;
+            this.InterCellConnections = new MaskItem<T, IEnumerable<MaskItemIndexed<T, InterCellPoint_Mask<T>>>>(InterCellConnections, null);
+            this.PointToReferenceMappings = new MaskItem<T, IEnumerable<MaskItemIndexed<T, PointToReferenceMapping_Mask<T>>>>(PointToReferenceMappings, null);
         }
         #endregion
 
@@ -2328,16 +2339,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.PointToPointConnections.Specific = null;
-            this.InterCellConnections.Specific = null;
-            this.PointToReferenceMappings.Specific = null;
         }
         #endregion
 

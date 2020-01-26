@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -243,11 +241,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackage CreateFromXml(
             XElement node,
             out AIPackage_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackage_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -622,22 +619,20 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageGetter rhs,
             AIPackage_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((AIPackageSetterTranslationCommon)((IAIPackageGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IAIPackageInternal lhs,
             IAIPackageGetter rhs,
             out AIPackage_ErrorMask errorMask,
-            AIPackage_TranslationMask copyMask = null,
-            bool doMasks = true)
+            AIPackage_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageSetterTranslationCommon)((IAIPackageGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -711,11 +706,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageInternal item,
             XElement node,
             out AIPackage_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackage_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2335,11 +2329,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageGetter item,
             XElement node,
             out AIPackage_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackage_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2354,7 +2347,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out AIPackage_ErrorMask errorMask,
             AIPackage_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2363,7 +2355,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2373,7 +2364,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out AIPackage_ErrorMask errorMask,
             AIPackage_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2382,7 +2372,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2413,6 +2402,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Target = new MaskItem<T, AIPackageTarget_Mask<T>>(initialValue, new AIPackageTarget_Mask<T>(initialValue));
             this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
             this.PKDTDataTypeState = initialValue;
+        }
+
+        public AIPackage_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Flags,
+            T GeneralType,
+            T Location,
+            T Schedule,
+            T Target,
+            T Conditions,
+            T PKDTDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Flags = Flags;
+            this.GeneralType = GeneralType;
+            this.Location = new MaskItem<T, AIPackageLocation_Mask<T>>(Location, new AIPackageLocation_Mask<T>(Location));
+            this.Schedule = new MaskItem<T, AIPackageSchedule_Mask<T>>(Schedule, new AIPackageSchedule_Mask<T>(Schedule));
+            this.Target = new MaskItem<T, AIPackageTarget_Mask<T>>(Target, new AIPackageTarget_Mask<T>(Target));
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(Conditions, null);
+            this.PKDTDataTypeState = PKDTDataTypeState;
         }
         #endregion
 
@@ -2545,14 +2562,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             obj.PKDTDataTypeState = eval(this.PKDTDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Conditions.Specific = null;
         }
         #endregion
 

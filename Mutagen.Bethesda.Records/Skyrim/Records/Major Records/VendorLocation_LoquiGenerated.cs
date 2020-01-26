@@ -126,11 +126,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static VendorLocation CreateFromXml(
             XElement node,
             out VendorLocation_ErrorMask errorMask,
-            bool doMasks = true,
             VendorLocation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -448,12 +447,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocation lhs,
             IVendorLocationGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -461,22 +459,20 @@ namespace Mutagen.Bethesda.Skyrim
             IVendorLocationGetter rhs,
             VendorLocation_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IVendorLocation lhs,
             IVendorLocationGetter rhs,
             out VendorLocation_ErrorMask errorMask,
-            VendorLocation_TranslationMask copyMask = null,
-            bool doMasks = true)
+            VendorLocation_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -550,11 +546,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocation item,
             XElement node,
             out VendorLocation_ErrorMask errorMask,
-            bool doMasks = true,
             VendorLocation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1454,11 +1449,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IVendorLocationGetter item,
             XElement node,
             out VendorLocation_ErrorMask errorMask,
-            bool doMasks = true,
             VendorLocation_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1473,7 +1467,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out VendorLocation_ErrorMask errorMask,
             VendorLocation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1482,7 +1475,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1492,7 +1484,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1510,7 +1501,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out VendorLocation_ErrorMask errorMask,
             VendorLocation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1519,7 +1509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1529,7 +1518,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1624,6 +1612,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Reference = initialValue;
             this.Radius = initialValue;
         }
+
+        public VendorLocation_Mask(
+            T Type,
+            T Reference,
+            T Radius)
+        {
+            this.Type = Type;
+            this.Reference = Reference;
+            this.Radius = Radius;
+        }
         #endregion
 
         #region Members
@@ -1681,12 +1679,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Type = eval(this.Type);
             obj.Reference = eval(this.Reference);
             obj.Radius = eval(this.Radius);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

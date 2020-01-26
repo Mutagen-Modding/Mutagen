@@ -155,11 +155,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static BaseLayer CreateFromXml(
             XElement node,
             out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true,
             BaseLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -494,12 +493,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -507,22 +505,20 @@ namespace Mutagen.Bethesda.Oblivion
             IBaseLayerGetter rhs,
             BaseLayer_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IBaseLayerInternal lhs,
             IBaseLayerGetter rhs,
             out BaseLayer_ErrorMask errorMask,
-            BaseLayer_TranslationMask copyMask = null,
-            bool doMasks = true)
+            BaseLayer_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -596,11 +592,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerInternal item,
             XElement node,
             out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true,
             BaseLayer_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1630,11 +1625,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IBaseLayerGetter item,
             XElement node,
             out BaseLayer_ErrorMask errorMask,
-            bool doMasks = true,
             BaseLayer_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1649,7 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out BaseLayer_ErrorMask errorMask,
             BaseLayer_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1658,7 +1651,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1668,7 +1660,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1686,7 +1677,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out BaseLayer_ErrorMask errorMask,
             BaseLayer_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1695,7 +1685,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1705,7 +1694,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1801,6 +1789,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LayerNumber = initialValue;
             this.BTXTDataTypeState = initialValue;
         }
+
+        public BaseLayer_Mask(
+            T Texture,
+            T Quadrant,
+            T LayerNumber,
+            T BTXTDataTypeState)
+        {
+            this.Texture = Texture;
+            this.Quadrant = Quadrant;
+            this.LayerNumber = LayerNumber;
+            this.BTXTDataTypeState = BTXTDataTypeState;
+        }
         #endregion
 
         #region Members
@@ -1863,12 +1863,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Quadrant = eval(this.Quadrant);
             obj.LayerNumber = eval(this.LayerNumber);
             obj.BTXTDataTypeState = eval(this.BTXTDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public virtual void ClearEnumerables()
-        {
         }
         #endregion
 

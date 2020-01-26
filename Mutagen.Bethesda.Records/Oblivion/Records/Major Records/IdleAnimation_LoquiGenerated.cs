@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -197,11 +195,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static IdleAnimation CreateFromXml(
             XElement node,
             out IdleAnimation_ErrorMask errorMask,
-            bool doMasks = true,
             IdleAnimation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -544,22 +541,20 @@ namespace Mutagen.Bethesda.Oblivion
             IIdleAnimationGetter rhs,
             IdleAnimation_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IIdleAnimationInternal lhs,
             IIdleAnimationGetter rhs,
             out IdleAnimation_ErrorMask errorMask,
-            IdleAnimation_TranslationMask copyMask = null,
-            bool doMasks = true)
+            IdleAnimation_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((IdleAnimationSetterTranslationCommon)((IIdleAnimationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -633,11 +628,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationInternal item,
             XElement node,
             out IdleAnimation_ErrorMask errorMask,
-            bool doMasks = true,
             IdleAnimation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2082,11 +2076,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IIdleAnimationGetter item,
             XElement node,
             out IdleAnimation_ErrorMask errorMask,
-            bool doMasks = true,
             IdleAnimation_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((IdleAnimationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2101,7 +2094,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out IdleAnimation_ErrorMask errorMask,
             IdleAnimation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2110,7 +2102,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2120,7 +2111,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out IdleAnimation_ErrorMask errorMask,
             IdleAnimation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2129,7 +2119,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2157,6 +2146,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
             this.AnimationGroupSection = initialValue;
             this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+        }
+
+        public IdleAnimation_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Model,
+            T Conditions,
+            T AnimationGroupSection,
+            T RelatedIdleAnimations)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(Conditions, null);
+            this.AnimationGroupSection = AnimationGroupSection;
+            this.RelatedIdleAnimations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RelatedIdleAnimations, null);
         }
         #endregion
 
@@ -2285,15 +2296,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Conditions.Specific = null;
-            this.RelatedIdleAnimations.Specific = null;
         }
         #endregion
 

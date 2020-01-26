@@ -145,11 +145,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Condition CreateFromXml(
             XElement node,
             out Condition_ErrorMask errorMask,
-            bool doMasks = true,
             Condition_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -512,12 +511,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ICondition lhs,
             IConditionGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -525,22 +523,20 @@ namespace Mutagen.Bethesda.Oblivion
             IConditionGetter rhs,
             Condition_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ICondition lhs,
             IConditionGetter rhs,
             out Condition_ErrorMask errorMask,
-            Condition_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Condition_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionSetterTranslationCommon)((IConditionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -614,11 +610,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICondition item,
             XElement node,
             out Condition_ErrorMask errorMask,
-            bool doMasks = true,
             Condition_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1792,11 +1787,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IConditionGetter item,
             XElement node,
             out Condition_ErrorMask errorMask,
-            bool doMasks = true,
             Condition_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1811,7 +1805,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1820,7 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1830,7 +1822,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1848,7 +1839,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Condition_ErrorMask errorMask,
             Condition_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1857,7 +1847,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1867,7 +1856,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1967,6 +1955,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.SecondParameter = initialValue;
             this.ThirdParameter = initialValue;
         }
+
+        public Condition_Mask(
+            T CompareOperator,
+            T Flags,
+            T Fluff,
+            T ComparisonValue,
+            T Function,
+            T FirstParameter,
+            T SecondParameter,
+            T ThirdParameter)
+        {
+            this.CompareOperator = CompareOperator;
+            this.Flags = Flags;
+            this.Fluff = Fluff;
+            this.ComparisonValue = ComparisonValue;
+            this.Function = Function;
+            this.FirstParameter = FirstParameter;
+            this.SecondParameter = SecondParameter;
+            this.ThirdParameter = ThirdParameter;
+        }
         #endregion
 
         #region Members
@@ -2049,12 +2057,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.FirstParameter = eval(this.FirstParameter);
             obj.SecondParameter = eval(this.SecondParameter);
             obj.ThirdParameter = eval(this.ThirdParameter);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -586,11 +584,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Race CreateFromXml(
             XElement node,
             out Race_ErrorMask errorMask,
-            bool doMasks = true,
             Race_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1110,22 +1107,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceGetter rhs,
             Race_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRaceInternal lhs,
             IRaceGetter rhs,
             out Race_ErrorMask errorMask,
-            Race_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Race_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1199,11 +1194,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceInternal item,
             XElement node,
             out Race_ErrorMask errorMask,
-            bool doMasks = true,
             Race_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4441,11 +4435,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceGetter item,
             XElement node,
             out Race_ErrorMask errorMask,
-            bool doMasks = true,
             Race_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4460,7 +4453,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Race_ErrorMask errorMask,
             Race_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4469,7 +4461,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4479,7 +4470,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Race_ErrorMask errorMask,
             Race_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4488,7 +4478,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4536,6 +4525,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FaceGenData = new MaskItem<T, FaceGenData_Mask<T>>(initialValue, new FaceGenData_Mask<T>(initialValue));
             this.Unknown = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Race_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Description,
+            T Spells,
+            T Relations,
+            T SkillBoosts,
+            T Fluff,
+            T MaleHeight,
+            T FemaleHeight,
+            T MaleWeight,
+            T FemaleWeight,
+            T Flags,
+            T Voices,
+            T DefaultHair,
+            T DefaultHairColor,
+            T FaceGenMainClamp,
+            T FaceGenFaceClamp,
+            T RaceStats,
+            T FaceData,
+            T BodyData,
+            T Hairs,
+            T Eyes,
+            T FaceGenData,
+            T Unknown,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Description = Description;
+            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, null);
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RaceRelation_Mask<T>>>>(Relations, null);
+            this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItemIndexed<T, SkillBoost_Mask<T>>>>(SkillBoosts, null);
+            this.Fluff = Fluff;
+            this.MaleHeight = MaleHeight;
+            this.FemaleHeight = FemaleHeight;
+            this.MaleWeight = MaleWeight;
+            this.FemaleWeight = FemaleWeight;
+            this.Flags = Flags;
+            this.Voices = new MaskItem<T, RaceVoices_Mask<T>>(Voices, new RaceVoices_Mask<T>(Voices));
+            this.DefaultHair = new MaskItem<T, RaceHair_Mask<T>>(DefaultHair, new RaceHair_Mask<T>(DefaultHair));
+            this.DefaultHairColor = DefaultHairColor;
+            this.FaceGenMainClamp = FaceGenMainClamp;
+            this.FaceGenFaceClamp = FaceGenFaceClamp;
+            this.RaceStats = new MaskItem<T, RaceStatsGendered_Mask<T>>(RaceStats, new RaceStatsGendered_Mask<T>(RaceStats));
+            this.FaceData = new MaskItem<T, IEnumerable<MaskItemIndexed<T, FacePart_Mask<T>>>>(FaceData, null);
+            this.BodyData = new MaskItem<T, GenderedBodyData_Mask<T>>(BodyData, new GenderedBodyData_Mask<T>(BodyData));
+            this.Hairs = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Hairs, null);
+            this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, null);
+            this.FaceGenData = new MaskItem<T, FaceGenData_Mask<T>>(FaceGenData, new FaceGenData_Mask<T>(FaceGenData));
+            this.Unknown = Unknown;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -4900,19 +4951,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Unknown = eval(this.Unknown);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Spells.Specific = null;
-            this.Relations.Specific = null;
-            this.SkillBoosts.Specific = null;
-            this.FaceData.Specific = null;
-            this.Hairs.Specific = null;
-            this.Eyes.Specific = null;
         }
         #endregion
 

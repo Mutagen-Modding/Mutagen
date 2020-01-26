@@ -7,7 +7,6 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Linq;
 using Noggog;
-using DynamicData;
 using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
 using System.IO;

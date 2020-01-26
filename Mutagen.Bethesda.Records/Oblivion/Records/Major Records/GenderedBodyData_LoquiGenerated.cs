@@ -172,11 +172,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static GenderedBodyData CreateFromXml(
             XElement node,
             out GenderedBodyData_ErrorMask errorMask,
-            bool doMasks = true,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -490,12 +489,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -503,22 +501,20 @@ namespace Mutagen.Bethesda.Oblivion
             IGenderedBodyDataGetter rhs,
             GenderedBodyData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IGenderedBodyData lhs,
             IGenderedBodyDataGetter rhs,
             out GenderedBodyData_ErrorMask errorMask,
-            GenderedBodyData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            GenderedBodyData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((GenderedBodyDataSetterTranslationCommon)((IGenderedBodyDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -592,11 +588,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyData item,
             XElement node,
             out GenderedBodyData_ErrorMask errorMask,
-            bool doMasks = true,
             GenderedBodyData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1569,11 +1564,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IGenderedBodyDataGetter item,
             XElement node,
             out GenderedBodyData_ErrorMask errorMask,
-            bool doMasks = true,
             GenderedBodyData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GenderedBodyDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1588,7 +1582,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1597,7 +1590,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1607,7 +1599,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1625,7 +1616,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1634,7 +1624,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1644,7 +1633,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1738,6 +1726,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Male = new MaskItem<T, BodyData_Mask<T>>(initialValue, new BodyData_Mask<T>(initialValue));
             this.Female = new MaskItem<T, BodyData_Mask<T>>(initialValue, new BodyData_Mask<T>(initialValue));
         }
+
+        public GenderedBodyData_Mask(
+            T Male,
+            T Female)
+        {
+            this.Male = new MaskItem<T, BodyData_Mask<T>>(Male, new BodyData_Mask<T>(Male));
+            this.Female = new MaskItem<T, BodyData_Mask<T>>(Female, new BodyData_Mask<T>(Female));
+        }
         #endregion
 
         #region Members
@@ -1804,12 +1800,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 obj.Female = new MaskItem<R, BodyData_Mask<R>>(eval(this.Female.Overall), this.Female.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

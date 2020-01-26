@@ -123,11 +123,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherChance CreateFromXml(
             XElement node,
             out WeatherChance_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherChance_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -437,12 +436,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -450,22 +448,20 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherChanceGetter rhs,
             WeatherChance_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IWeatherChance lhs,
             IWeatherChanceGetter rhs,
             out WeatherChance_ErrorMask errorMask,
-            WeatherChance_TranslationMask copyMask = null,
-            bool doMasks = true)
+            WeatherChance_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherChanceSetterTranslationCommon)((IWeatherChanceGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -539,11 +535,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChance item,
             XElement node,
             out WeatherChance_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherChance_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1385,11 +1380,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherChanceGetter item,
             XElement node,
             out WeatherChance_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherChance_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherChanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1404,7 +1398,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1413,7 +1406,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1423,7 +1415,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1441,7 +1432,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out WeatherChance_ErrorMask errorMask,
             WeatherChance_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1450,7 +1440,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1460,7 +1449,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1554,6 +1542,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Weather = initialValue;
             this.Chance = initialValue;
         }
+
+        public WeatherChance_Mask(
+            T Weather,
+            T Chance)
+        {
+            this.Weather = Weather;
+            this.Chance = Chance;
+        }
         #endregion
 
         #region Members
@@ -1606,12 +1602,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.Weather = eval(this.Weather);
             obj.Chance = eval(this.Chance);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

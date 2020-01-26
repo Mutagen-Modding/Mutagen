@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -144,11 +142,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static PathGridPoint CreateFromXml(
             XElement node,
             out PathGridPoint_ErrorMask errorMask,
-            bool doMasks = true,
             PathGridPoint_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -466,12 +463,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint lhs,
             IPathGridPointGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -479,22 +475,20 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridPointGetter rhs,
             PathGridPoint_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IPathGridPoint lhs,
             IPathGridPointGetter rhs,
             out PathGridPoint_ErrorMask errorMask,
-            PathGridPoint_TranslationMask copyMask = null,
-            bool doMasks = true)
+            PathGridPoint_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((PathGridPointSetterTranslationCommon)((IPathGridPointGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -568,11 +562,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPoint item,
             XElement node,
             out PathGridPoint_ErrorMask errorMask,
-            bool doMasks = true,
             PathGridPoint_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1564,11 +1557,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IPathGridPointGetter item,
             XElement node,
             out PathGridPoint_ErrorMask errorMask,
-            bool doMasks = true,
             PathGridPoint_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((PathGridPointXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1583,7 +1575,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1592,7 +1583,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1602,7 +1592,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1620,7 +1609,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out PathGridPoint_ErrorMask errorMask,
             PathGridPoint_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1629,7 +1617,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1639,7 +1626,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1735,6 +1721,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FluffBytes = initialValue;
             this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
+
+        public PathGridPoint_Mask(
+            T Point,
+            T NumConnections,
+            T FluffBytes,
+            T Connections)
+        {
+            this.Point = Point;
+            this.NumConnections = NumConnections;
+            this.FluffBytes = FluffBytes;
+            this.Connections = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Connections, null);
+        }
         #endregion
 
         #region Members
@@ -1822,13 +1820,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.Connections.Specific = null;
         }
         #endregion
 

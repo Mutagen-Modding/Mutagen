@@ -230,11 +230,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Hair CreateFromXml(
             XElement node,
             out Hair_ErrorMask errorMask,
-            bool doMasks = true,
             Hair_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -584,22 +583,20 @@ namespace Mutagen.Bethesda.Oblivion
             IHairGetter rhs,
             Hair_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IHairInternal lhs,
             IHairGetter rhs,
             out Hair_ErrorMask errorMask,
-            Hair_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Hair_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((HairSetterTranslationCommon)((IHairGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -673,11 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IHairInternal item,
             XElement node,
             out Hair_ErrorMask errorMask,
-            bool doMasks = true,
             Hair_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2022,11 +2018,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IHairGetter item,
             XElement node,
             out Hair_ErrorMask errorMask,
-            bool doMasks = true,
             Hair_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((HairXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2041,7 +2036,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Hair_ErrorMask errorMask,
             Hair_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2050,7 +2044,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2060,7 +2053,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Hair_ErrorMask errorMask,
             Hair_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2069,7 +2061,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2097,6 +2088,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Icon = initialValue;
             this.Flags = initialValue;
+        }
+
+        public Hair_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Icon,
+            T Flags)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+            this.Flags = Flags;
         }
         #endregion
 
@@ -2171,13 +2184,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Icon = eval(this.Icon);
             obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

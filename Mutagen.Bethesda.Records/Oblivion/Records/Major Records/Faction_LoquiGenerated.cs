@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -228,11 +226,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Faction CreateFromXml(
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -586,22 +583,20 @@ namespace Mutagen.Bethesda.Oblivion
             IFactionGetter rhs,
             Faction_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IFactionInternal lhs,
             IFactionGetter rhs,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Faction_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -675,11 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionInternal item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2215,11 +2209,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFactionGetter item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2234,7 +2227,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2243,7 +2235,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2253,7 +2244,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2262,7 +2252,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2291,6 +2280,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = initialValue;
             this.CrimeGoldMultiplier = initialValue;
             this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>>(initialValue, null);
+        }
+
+        public Faction_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Relations,
+            T Flags,
+            T CrimeGoldMultiplier,
+            T Ranks)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>>>>(Relations, null);
+            this.Flags = Flags;
+            this.CrimeGoldMultiplier = CrimeGoldMultiplier;
+            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>>(Ranks, null);
         }
         #endregion
 
@@ -2421,15 +2434,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Relations.Specific = null;
-            this.Ranks.Specific = null;
         }
         #endregion
 

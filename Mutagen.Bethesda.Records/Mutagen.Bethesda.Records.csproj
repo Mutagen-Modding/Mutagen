@@ -15,7 +15,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj" />
-    <ProjectReference Include="..\..\DynamicData\src\DynamicData\DynamicData.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj" />
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
@@ -1719,6 +1718,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="11.1.12" />
+    <PackageReference Include="ReactiveUI" Version="11.1.23" />
   </ItemGroup>
 </Project>

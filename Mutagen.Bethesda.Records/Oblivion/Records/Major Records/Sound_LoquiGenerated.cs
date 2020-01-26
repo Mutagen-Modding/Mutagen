@@ -171,11 +171,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Sound CreateFromXml(
             XElement node,
             out Sound_ErrorMask errorMask,
-            bool doMasks = true,
             Sound_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -503,22 +502,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundGetter rhs,
             Sound_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SoundSetterTranslationCommon)((ISoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISoundInternal lhs,
             ISoundGetter rhs,
             out Sound_ErrorMask errorMask,
-            Sound_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Sound_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundSetterTranslationCommon)((ISoundGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -592,11 +589,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundInternal item,
             XElement node,
             out Sound_ErrorMask errorMask,
-            bool doMasks = true,
             Sound_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1772,11 +1768,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundGetter item,
             XElement node,
             out Sound_ErrorMask errorMask,
-            bool doMasks = true,
             Sound_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1791,7 +1786,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Sound_ErrorMask errorMask,
             Sound_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1800,7 +1794,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1810,7 +1803,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Sound_ErrorMask errorMask,
             Sound_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1819,7 +1811,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1845,6 +1836,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.File = initialValue;
             this.Data = new MaskItem<T, SoundData_Mask<T>>(initialValue, new SoundData_Mask<T>(initialValue));
+        }
+
+        public Sound_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T File,
+            T Data)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.File = File;
+            this.Data = new MaskItem<T, SoundData_Mask<T>>(Data, new SoundData_Mask<T>(Data));
         }
         #endregion
 
@@ -1909,13 +1918,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 obj.Data = new MaskItem<R, SoundData_Mask<R>>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

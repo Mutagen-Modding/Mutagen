@@ -647,11 +647,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static CombatStyle CreateFromXml(
             XElement node,
             out CombatStyle_ErrorMask errorMask,
-            bool doMasks = true,
             CombatStyle_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1238,22 +1237,20 @@ namespace Mutagen.Bethesda.Oblivion
             ICombatStyleGetter rhs,
             CombatStyle_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ICombatStyleInternal lhs,
             ICombatStyleGetter rhs,
             out CombatStyle_ErrorMask errorMask,
-            CombatStyle_TranslationMask copyMask = null,
-            bool doMasks = true)
+            CombatStyle_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((CombatStyleSetterTranslationCommon)((ICombatStyleGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1327,11 +1324,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleInternal item,
             XElement node,
             out CombatStyle_ErrorMask errorMask,
-            bool doMasks = true,
             CombatStyle_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4446,11 +4442,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICombatStyleGetter item,
             XElement node,
             out CombatStyle_ErrorMask errorMask,
-            bool doMasks = true,
             CombatStyle_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((CombatStyleXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4465,7 +4460,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4474,7 +4468,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4484,7 +4477,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out CombatStyle_ErrorMask errorMask,
             CombatStyle_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4493,7 +4485,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4555,6 +4546,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.RushingAttackDistanceMult = initialValue;
             this.Advanced = new MaskItem<T, CombatStyleAdvanced_Mask<T>>(initialValue, new CombatStyleAdvanced_Mask<T>(initialValue));
             this.CSTDDataTypeState = initialValue;
+        }
+
+        public CombatStyle_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T DodgePercentChance,
+            T LeftRightPercentChance,
+            T DodgeLeftRightTimerMin,
+            T DodgeLeftRightTimerMax,
+            T DodgeForwardTimerMin,
+            T DodgeForwardTimerMax,
+            T DodgeBackTimerMin,
+            T DodgeBackTimerMax,
+            T IdleTimerMin,
+            T IdleTimerMax,
+            T BlockPercentChance,
+            T AttackPercentChance,
+            T RecoilStaggerBonusToAttack,
+            T UnconsciousBonusToAttack,
+            T HandToHandBonusToAttack,
+            T PowerAttackPercentChance,
+            T RecoilStaggerBonusToPowerAttack,
+            T UnconsciousBonusToPowerAttack,
+            T PowerAttackNormal,
+            T PowerAttackForward,
+            T PowerAttackBack,
+            T PowerAttackLeft,
+            T PowerAttackRight,
+            T HoldTimerMin,
+            T HoldTimerMax,
+            T Flags,
+            T AcrobaticDodgePercentChance,
+            T RangeMultOptimal,
+            T RangeMultMax,
+            T SwitchDistanceMelee,
+            T SwitchDistanceRanged,
+            T BuffStandoffDistance,
+            T RangedStandoffDistance,
+            T GroupStandoffDistance,
+            T RushingAttackPercentChance,
+            T RushingAttackDistanceMult,
+            T Advanced,
+            T CSTDDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.DodgePercentChance = DodgePercentChance;
+            this.LeftRightPercentChance = LeftRightPercentChance;
+            this.DodgeLeftRightTimerMin = DodgeLeftRightTimerMin;
+            this.DodgeLeftRightTimerMax = DodgeLeftRightTimerMax;
+            this.DodgeForwardTimerMin = DodgeForwardTimerMin;
+            this.DodgeForwardTimerMax = DodgeForwardTimerMax;
+            this.DodgeBackTimerMin = DodgeBackTimerMin;
+            this.DodgeBackTimerMax = DodgeBackTimerMax;
+            this.IdleTimerMin = IdleTimerMin;
+            this.IdleTimerMax = IdleTimerMax;
+            this.BlockPercentChance = BlockPercentChance;
+            this.AttackPercentChance = AttackPercentChance;
+            this.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttack;
+            this.UnconsciousBonusToAttack = UnconsciousBonusToAttack;
+            this.HandToHandBonusToAttack = HandToHandBonusToAttack;
+            this.PowerAttackPercentChance = PowerAttackPercentChance;
+            this.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttack;
+            this.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttack;
+            this.PowerAttackNormal = PowerAttackNormal;
+            this.PowerAttackForward = PowerAttackForward;
+            this.PowerAttackBack = PowerAttackBack;
+            this.PowerAttackLeft = PowerAttackLeft;
+            this.PowerAttackRight = PowerAttackRight;
+            this.HoldTimerMin = HoldTimerMin;
+            this.HoldTimerMax = HoldTimerMax;
+            this.Flags = Flags;
+            this.AcrobaticDodgePercentChance = AcrobaticDodgePercentChance;
+            this.RangeMultOptimal = RangeMultOptimal;
+            this.RangeMultMax = RangeMultMax;
+            this.SwitchDistanceMelee = SwitchDistanceMelee;
+            this.SwitchDistanceRanged = SwitchDistanceRanged;
+            this.BuffStandoffDistance = BuffStandoffDistance;
+            this.RangedStandoffDistance = RangedStandoffDistance;
+            this.GroupStandoffDistance = GroupStandoffDistance;
+            this.RushingAttackPercentChance = RushingAttackPercentChance;
+            this.RushingAttackDistanceMult = RushingAttackDistanceMult;
+            this.Advanced = new MaskItem<T, CombatStyleAdvanced_Mask<T>>(Advanced, new CombatStyleAdvanced_Mask<T>(Advanced));
+            this.CSTDDataTypeState = CSTDDataTypeState;
         }
         #endregion
 
@@ -4799,13 +4880,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 obj.Advanced = new MaskItem<R, CombatStyleAdvanced_Mask<R>>(eval(this.Advanced.Overall), this.Advanced.Specific?.Translate(eval));
             }
             obj.CSTDDataTypeState = eval(this.CSTDDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

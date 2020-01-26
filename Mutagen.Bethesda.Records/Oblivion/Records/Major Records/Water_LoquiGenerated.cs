@@ -666,11 +666,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Water CreateFromXml(
             XElement node,
             out Water_ErrorMask errorMask,
-            bool doMasks = true,
             Water_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1238,22 +1237,20 @@ namespace Mutagen.Bethesda.Oblivion
             IWaterGetter rhs,
             Water_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IWaterInternal lhs,
             IWaterGetter rhs,
             out Water_ErrorMask errorMask,
-            Water_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Water_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1327,11 +1324,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterInternal item,
             XElement node,
             out Water_ErrorMask errorMask,
-            bool doMasks = true,
             Water_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4371,11 +4367,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWaterGetter item,
             XElement node,
             out Water_ErrorMask errorMask,
-            bool doMasks = true,
             Water_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WaterXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4390,7 +4385,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Water_ErrorMask errorMask,
             Water_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4399,7 +4393,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4409,7 +4402,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Water_ErrorMask errorMask,
             Water_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4418,7 +4410,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4475,6 +4466,86 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Damage = initialValue;
             this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>>(initialValue, new RelatedWaters_Mask<T>(initialValue));
             this.DATADataTypeState = initialValue;
+        }
+
+        public Water_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Texture,
+            T Opacity,
+            T Flags,
+            T MaterialID,
+            T Sound,
+            T WindVelocity,
+            T WindDirection,
+            T WaveAmplitude,
+            T WaveFrequency,
+            T SunPower,
+            T ReflectivityAmount,
+            T FresnelAmount,
+            T ScrollXSpeed,
+            T ScrollYSpeed,
+            T FogDistanceNearPlane,
+            T FogDistanceFarPlane,
+            T ShallowColor,
+            T DeepColor,
+            T ReflectionColor,
+            T TextureBlend,
+            T RainSimulatorForce,
+            T RainSimulatorVelocity,
+            T RainSimulatorFalloff,
+            T RainSimulatorDampner,
+            T RainSimulatorStartingSize,
+            T DisplacementSimulatorForce,
+            T DisplacementSimulatorVelocity,
+            T DisplacementSimulatorFalloff,
+            T DisplacementSimulatorDampner,
+            T DisplacementSimulatorStartingSize,
+            T Damage,
+            T RelatedWaters,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Texture = Texture;
+            this.Opacity = Opacity;
+            this.Flags = Flags;
+            this.MaterialID = MaterialID;
+            this.Sound = Sound;
+            this.WindVelocity = WindVelocity;
+            this.WindDirection = WindDirection;
+            this.WaveAmplitude = WaveAmplitude;
+            this.WaveFrequency = WaveFrequency;
+            this.SunPower = SunPower;
+            this.ReflectivityAmount = ReflectivityAmount;
+            this.FresnelAmount = FresnelAmount;
+            this.ScrollXSpeed = ScrollXSpeed;
+            this.ScrollYSpeed = ScrollYSpeed;
+            this.FogDistanceNearPlane = FogDistanceNearPlane;
+            this.FogDistanceFarPlane = FogDistanceFarPlane;
+            this.ShallowColor = ShallowColor;
+            this.DeepColor = DeepColor;
+            this.ReflectionColor = ReflectionColor;
+            this.TextureBlend = TextureBlend;
+            this.RainSimulatorForce = RainSimulatorForce;
+            this.RainSimulatorVelocity = RainSimulatorVelocity;
+            this.RainSimulatorFalloff = RainSimulatorFalloff;
+            this.RainSimulatorDampner = RainSimulatorDampner;
+            this.RainSimulatorStartingSize = RainSimulatorStartingSize;
+            this.DisplacementSimulatorForce = DisplacementSimulatorForce;
+            this.DisplacementSimulatorVelocity = DisplacementSimulatorVelocity;
+            this.DisplacementSimulatorFalloff = DisplacementSimulatorFalloff;
+            this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
+            this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
+            this.Damage = Damage;
+            this.RelatedWaters = new MaskItem<T, RelatedWaters_Mask<T>>(RelatedWaters, new RelatedWaters_Mask<T>(RelatedWaters));
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -4694,13 +4765,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 obj.RelatedWaters = new MaskItem<R, RelatedWaters_Mask<R>>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
             }
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

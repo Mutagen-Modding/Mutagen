@@ -125,11 +125,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SoundData CreateFromXml(
             XElement node,
             out SoundData_ErrorMask errorMask,
-            bool doMasks = true,
             SoundData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -460,12 +459,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternal lhs,
             ISoundDataInternalGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -473,22 +471,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISoundDataInternalGetter rhs,
             SoundData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISoundDataInternal lhs,
             ISoundDataInternalGetter rhs,
             out SoundData_ErrorMask errorMask,
-            SoundData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SoundData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -562,11 +558,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternal item,
             XElement node,
             out SoundData_ErrorMask errorMask,
-            bool doMasks = true,
             SoundData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1546,11 +1541,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISoundDataInternalGetter item,
             XElement node,
             out SoundData_ErrorMask errorMask,
-            bool doMasks = true,
             SoundData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SoundDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1565,7 +1559,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out SoundData_ErrorMask errorMask,
             SoundData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1574,7 +1567,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1584,7 +1576,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1602,7 +1593,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out SoundData_ErrorMask errorMask,
             SoundData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1611,7 +1601,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1621,7 +1610,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1717,6 +1705,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FrequencyAdjustment = initialValue;
             this.Flags = initialValue;
         }
+
+        public SoundData_Mask(
+            T MinimumAttenuationDistance,
+            T MaximumAttenuationDistance,
+            T FrequencyAdjustment,
+            T Flags)
+        {
+            this.MinimumAttenuationDistance = MinimumAttenuationDistance;
+            this.MaximumAttenuationDistance = MaximumAttenuationDistance;
+            this.FrequencyAdjustment = FrequencyAdjustment;
+            this.Flags = Flags;
+        }
         #endregion
 
         #region Members
@@ -1779,12 +1779,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.MaximumAttenuationDistance = eval(this.MaximumAttenuationDistance);
             obj.FrequencyAdjustment = eval(this.FrequencyAdjustment);
             obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public virtual void ClearEnumerables()
-        {
         }
         #endregion
 

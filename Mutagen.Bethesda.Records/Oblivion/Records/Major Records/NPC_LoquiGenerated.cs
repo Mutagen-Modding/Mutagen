@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Drawing;
 using Loqui.Presentation;
 using Mutagen.Bethesda;
@@ -1057,11 +1055,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPC CreateFromXml(
             XElement node,
             out NPC_ErrorMask errorMask,
-            bool doMasks = true,
             NPC_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1876,22 +1873,20 @@ namespace Mutagen.Bethesda.Oblivion
             INPCGetter rhs,
             NPC_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this INPCInternal lhs,
             INPCGetter rhs,
             out NPC_ErrorMask errorMask,
-            NPC_TranslationMask copyMask = null,
-            bool doMasks = true)
+            NPC_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCSetterTranslationCommon)((INPCGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1965,11 +1960,10 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCInternal item,
             XElement node,
             out NPC_ErrorMask errorMask,
-            bool doMasks = true,
             NPC_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -7767,11 +7761,10 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCGetter item,
             XElement node,
             out NPC_ErrorMask errorMask,
-            bool doMasks = true,
             NPC_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -7786,7 +7779,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -7795,7 +7787,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -7805,7 +7796,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out NPC_ErrorMask errorMask,
             NPC_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -7814,7 +7804,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -7906,6 +7895,156 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ACBSDataTypeState = initialValue;
             this.AIDTDataTypeState = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public NPC_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Flags,
+            T BaseSpellPoints,
+            T Fatigue,
+            T BarterGold,
+            T LevelOffset,
+            T CalcMin,
+            T CalcMax,
+            T Factions,
+            T DeathItem,
+            T Race,
+            T Spells,
+            T Script,
+            T Items,
+            T Aggression,
+            T Confidence,
+            T EnergyLevel,
+            T Responsibility,
+            T BuySellServices,
+            T Teaches,
+            T MaximumTrainingLevel,
+            T Fluff,
+            T AIPackages,
+            T Animations,
+            T Class,
+            T Armorer,
+            T Athletics,
+            T Blade,
+            T Block,
+            T Blunt,
+            T HandToHand,
+            T HeavyArmor,
+            T Alchemy,
+            T Alteration,
+            T Conjuration,
+            T Destruction,
+            T Illusion,
+            T Mysticism,
+            T Restoration,
+            T Acrobatics,
+            T LightArmor,
+            T Marksman,
+            T Mercantile,
+            T Security,
+            T Sneak,
+            T Speechcraft,
+            T Health,
+            T Strength,
+            T Intelligence,
+            T Willpower,
+            T Agility,
+            T Speed,
+            T Endurance,
+            T Personality,
+            T Luck,
+            T Hair,
+            T HairLength,
+            T Eyes,
+            T HairColor,
+            T CombatStyle,
+            T FaceGenGeometrySymmetric,
+            T FaceGenGeometryAsymmetric,
+            T FaceGenTextureSymmetric,
+            T Unknown,
+            T ACBSDataTypeState,
+            T AIDTDataTypeState,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Flags = Flags;
+            this.BaseSpellPoints = BaseSpellPoints;
+            this.Fatigue = Fatigue;
+            this.BarterGold = BarterGold;
+            this.LevelOffset = LevelOffset;
+            this.CalcMin = CalcMin;
+            this.CalcMax = CalcMax;
+            this.Factions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RankPlacement_Mask<T>>>>(Factions, null);
+            this.DeathItem = DeathItem;
+            this.Race = Race;
+            this.Spells = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Spells, null);
+            this.Script = Script;
+            this.Items = new MaskItem<T, IEnumerable<MaskItemIndexed<T, ItemEntry_Mask<T>>>>(Items, null);
+            this.Aggression = Aggression;
+            this.Confidence = Confidence;
+            this.EnergyLevel = EnergyLevel;
+            this.Responsibility = Responsibility;
+            this.BuySellServices = BuySellServices;
+            this.Teaches = Teaches;
+            this.MaximumTrainingLevel = MaximumTrainingLevel;
+            this.Fluff = Fluff;
+            this.AIPackages = new MaskItem<T, IEnumerable<(int Index, T Value)>>(AIPackages, null);
+            this.Animations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Animations, null);
+            this.Class = Class;
+            this.Armorer = Armorer;
+            this.Athletics = Athletics;
+            this.Blade = Blade;
+            this.Block = Block;
+            this.Blunt = Blunt;
+            this.HandToHand = HandToHand;
+            this.HeavyArmor = HeavyArmor;
+            this.Alchemy = Alchemy;
+            this.Alteration = Alteration;
+            this.Conjuration = Conjuration;
+            this.Destruction = Destruction;
+            this.Illusion = Illusion;
+            this.Mysticism = Mysticism;
+            this.Restoration = Restoration;
+            this.Acrobatics = Acrobatics;
+            this.LightArmor = LightArmor;
+            this.Marksman = Marksman;
+            this.Mercantile = Mercantile;
+            this.Security = Security;
+            this.Sneak = Sneak;
+            this.Speechcraft = Speechcraft;
+            this.Health = Health;
+            this.Strength = Strength;
+            this.Intelligence = Intelligence;
+            this.Willpower = Willpower;
+            this.Agility = Agility;
+            this.Speed = Speed;
+            this.Endurance = Endurance;
+            this.Personality = Personality;
+            this.Luck = Luck;
+            this.Hair = Hair;
+            this.HairLength = HairLength;
+            this.Eyes = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Eyes, null);
+            this.HairColor = HairColor;
+            this.CombatStyle = CombatStyle;
+            this.FaceGenGeometrySymmetric = FaceGenGeometrySymmetric;
+            this.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetric;
+            this.FaceGenTextureSymmetric = FaceGenTextureSymmetric;
+            this.Unknown = Unknown;
+            this.ACBSDataTypeState = ACBSDataTypeState;
+            this.AIDTDataTypeState = AIDTDataTypeState;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -8458,19 +8597,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
             obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Factions.Specific = null;
-            this.Spells.Specific = null;
-            this.Items.Specific = null;
-            this.AIPackages.Specific = null;
-            this.Animations.Specific = null;
-            this.Eyes.Specific = null;
         }
         #endregion
 

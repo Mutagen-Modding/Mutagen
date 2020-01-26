@@ -156,11 +156,10 @@ namespace Mutagen.Bethesda
         public static MajorRecord CreateFromXml(
             XElement node,
             out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -505,12 +504,11 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -518,22 +516,20 @@ namespace Mutagen.Bethesda
             IMajorRecordGetter rhs,
             MajorRecord_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             out MajorRecord_ErrorMask errorMask,
-            MajorRecord_TranslationMask copyMask = null,
-            bool doMasks = true)
+            MajorRecord_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -607,11 +603,10 @@ namespace Mutagen.Bethesda
             this IMajorRecordInternal item,
             XElement node,
             out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1884,11 +1879,10 @@ namespace Mutagen.Bethesda
             this IMajorRecordGetter item,
             XElement node,
             out MajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             MajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MajorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1903,7 +1897,6 @@ namespace Mutagen.Bethesda
             string path,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1912,7 +1905,6 @@ namespace Mutagen.Bethesda
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1922,7 +1914,6 @@ namespace Mutagen.Bethesda
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1940,7 +1931,6 @@ namespace Mutagen.Bethesda
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1949,7 +1939,6 @@ namespace Mutagen.Bethesda
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1959,7 +1948,6 @@ namespace Mutagen.Bethesda
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2055,6 +2043,18 @@ namespace Mutagen.Bethesda.Internals
             this.Version = initialValue;
             this.EditorID = initialValue;
         }
+
+        public MajorRecord_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+        }
         #endregion
 
         #region Members
@@ -2117,12 +2117,6 @@ namespace Mutagen.Bethesda.Internals
             obj.FormKey = eval(this.FormKey);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public virtual void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -201,11 +201,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static FacePart CreateFromXml(
             XElement node,
             out FacePart_ErrorMask errorMask,
-            bool doMasks = true,
             FacePart_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -530,12 +529,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePart lhs,
             IFacePartGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -543,22 +541,20 @@ namespace Mutagen.Bethesda.Oblivion
             IFacePartGetter rhs,
             FacePart_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IFacePart lhs,
             IFacePartGetter rhs,
             out FacePart_ErrorMask errorMask,
-            FacePart_TranslationMask copyMask = null,
-            bool doMasks = true)
+            FacePart_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((FacePartSetterTranslationCommon)((IFacePartGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -632,11 +628,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePart item,
             XElement node,
             out FacePart_ErrorMask errorMask,
-            bool doMasks = true,
             FacePart_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1684,11 +1679,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IFacePartGetter item,
             XElement node,
             out FacePart_ErrorMask errorMask,
-            bool doMasks = true,
             FacePart_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FacePartXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1703,7 +1697,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1712,7 +1705,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1722,7 +1714,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1740,7 +1731,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out FacePart_ErrorMask errorMask,
             FacePart_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1749,7 +1739,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1759,7 +1748,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1854,6 +1842,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Icon = initialValue;
         }
+
+        public FacePart_Mask(
+            T Index,
+            T Model,
+            T Icon)
+        {
+            this.Index = Index;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+        }
         #endregion
 
         #region Members
@@ -1918,12 +1916,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 obj.Model = new MaskItem<R, Model_Mask<R>>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             obj.Icon = eval(this.Icon);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

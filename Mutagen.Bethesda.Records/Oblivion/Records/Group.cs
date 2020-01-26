@@ -12,10 +12,9 @@ using Loqui.Internal;
 using System.Collections;
 using Noggog.Utility;
 using Mutagen.Bethesda.Folder;
-using System.Xml.Linq;
-using DynamicData;
 using Loqui.Xml;
 using Mutagen.Bethesda.Oblivion.Internals;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {

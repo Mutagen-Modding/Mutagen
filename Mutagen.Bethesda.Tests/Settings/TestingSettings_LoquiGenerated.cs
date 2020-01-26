@@ -13,8 +13,6 @@ using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
 using Mutagen.Bethesda.Tests;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -151,11 +149,10 @@ namespace Mutagen.Bethesda.Tests
         public static TestingSettings CreateFromXml(
             XElement node,
             out TestingSettings_ErrorMask errorMask,
-            bool doMasks = true,
             TestingSettings_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -452,12 +449,11 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettings lhs,
             ITestingSettingsGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -465,22 +461,20 @@ namespace Mutagen.Bethesda.Tests
             ITestingSettingsGetter rhs,
             TestingSettings_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ITestingSettings lhs,
             ITestingSettingsGetter rhs,
             out TestingSettings_ErrorMask errorMask,
-            TestingSettings_TranslationMask copyMask = null,
-            bool doMasks = true)
+            TestingSettings_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((TestingSettingsSetterTranslationCommon)((ITestingSettingsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -554,11 +548,10 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettings item,
             XElement node,
             out TestingSettings_ErrorMask errorMask,
-            bool doMasks = true,
             TestingSettings_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1780,11 +1773,10 @@ namespace Mutagen.Bethesda.Tests
             this ITestingSettingsGetter item,
             XElement node,
             out TestingSettings_ErrorMask errorMask,
-            bool doMasks = true,
             TestingSettings_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TestingSettingsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1799,7 +1791,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             out TestingSettings_ErrorMask errorMask,
             TestingSettings_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1808,7 +1799,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1818,7 +1808,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1836,7 +1825,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             out TestingSettings_ErrorMask errorMask,
             TestingSettings_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1845,7 +1833,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1855,7 +1842,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1954,6 +1940,26 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.DataFolderLocations = new MaskItem<T, DataFolderLocations_Mask<T>>(initialValue, new DataFolderLocations_Mask<T>(initialValue));
             this.PassthroughSettings = new MaskItem<T, PassthroughSettings_Mask<T>>(initialValue, new PassthroughSettings_Mask<T>(initialValue));
             this.TargetGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup_Mask<T>>>>(initialValue, null);
+        }
+
+        public TestingSettings_Mask(
+            T TestGroupMasks,
+            T TestFlattenedMod,
+            T TestBenchmarks,
+            T TestLocators,
+            T TestRecordEnumerables,
+            T DataFolderLocations,
+            T PassthroughSettings,
+            T TargetGroups)
+        {
+            this.TestGroupMasks = TestGroupMasks;
+            this.TestFlattenedMod = TestFlattenedMod;
+            this.TestBenchmarks = TestBenchmarks;
+            this.TestLocators = TestLocators;
+            this.TestRecordEnumerables = TestRecordEnumerables;
+            this.DataFolderLocations = new MaskItem<T, DataFolderLocations_Mask<T>>(DataFolderLocations, new DataFolderLocations_Mask<T>(DataFolderLocations));
+            this.PassthroughSettings = new MaskItem<T, PassthroughSettings_Mask<T>>(PassthroughSettings, new PassthroughSettings_Mask<T>(PassthroughSettings));
+            this.TargetGroups = new MaskItem<T, IEnumerable<MaskItemIndexed<T, TargetGroup_Mask<T>>>>(TargetGroups, null);
         }
         #endregion
 
@@ -2080,13 +2086,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.TargetGroups.Specific = null;
         }
         #endregion
 

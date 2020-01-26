@@ -122,11 +122,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static HavokData CreateFromXml(
             XElement node,
             out HavokData_ErrorMask errorMask,
-            bool doMasks = true,
             HavokData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -443,12 +442,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData lhs,
             IHavokDataGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -456,22 +454,20 @@ namespace Mutagen.Bethesda.Oblivion
             IHavokDataGetter rhs,
             HavokData_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IHavokData lhs,
             IHavokDataGetter rhs,
             out HavokData_ErrorMask errorMask,
-            HavokData_TranslationMask copyMask = null,
-            bool doMasks = true)
+            HavokData_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((HavokDataSetterTranslationCommon)((IHavokDataGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -545,11 +541,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokData item,
             XElement node,
             out HavokData_ErrorMask errorMask,
-            bool doMasks = true,
             HavokData_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1444,11 +1439,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IHavokDataGetter item,
             XElement node,
             out HavokData_ErrorMask errorMask,
-            bool doMasks = true,
             HavokData_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((HavokDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1463,7 +1457,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1472,7 +1465,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1482,7 +1474,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1500,7 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out HavokData_ErrorMask errorMask,
             HavokData_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1509,7 +1499,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1519,7 +1508,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1614,6 +1602,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Friction = initialValue;
             this.Restitution = initialValue;
         }
+
+        public HavokData_Mask(
+            T Material,
+            T Friction,
+            T Restitution)
+        {
+            this.Material = Material;
+            this.Friction = Friction;
+            this.Restitution = Restitution;
+        }
         #endregion
 
         #region Members
@@ -1671,12 +1669,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Material = eval(this.Material);
             obj.Friction = eval(this.Friction);
             obj.Restitution = eval(this.Restitution);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

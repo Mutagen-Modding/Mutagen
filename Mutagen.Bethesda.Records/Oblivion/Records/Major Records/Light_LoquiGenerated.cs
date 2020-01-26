@@ -358,11 +358,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Light CreateFromXml(
             XElement node,
             out Light_ErrorMask errorMask,
-            bool doMasks = true,
             Light_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -795,22 +794,20 @@ namespace Mutagen.Bethesda.Oblivion
             ILightGetter rhs,
             Light_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ILightInternal lhs,
             ILightGetter rhs,
             out Light_ErrorMask errorMask,
-            Light_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Light_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -884,11 +881,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightInternal item,
             XElement node,
             out Light_ErrorMask errorMask,
-            bool doMasks = true,
             Light_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2994,11 +2990,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILightGetter item,
             XElement node,
             out Light_ErrorMask errorMask,
-            bool doMasks = true,
             Light_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((LightXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -3013,7 +3008,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Light_ErrorMask errorMask,
             Light_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3022,7 +3016,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -3032,7 +3025,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Light_ErrorMask errorMask,
             Light_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3041,7 +3033,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -3080,6 +3071,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Fade = initialValue;
             this.Sound = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Light_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Model,
+            T Script,
+            T Name,
+            T Icon,
+            T Time,
+            T Radius,
+            T Color,
+            T Flags,
+            T FalloffExponent,
+            T FOV,
+            T Value,
+            T Weight,
+            T Fade,
+            T Sound,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Script = Script;
+            this.Name = Name;
+            this.Icon = Icon;
+            this.Time = Time;
+            this.Radius = Radius;
+            this.Color = Color;
+            this.Flags = Flags;
+            this.FalloffExponent = FalloffExponent;
+            this.FOV = FOV;
+            this.Value = Value;
+            this.Weight = Weight;
+            this.Fade = Fade;
+            this.Sound = Sound;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -3209,13 +3244,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Fade = eval(this.Fade);
             obj.Sound = eval(this.Sound);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

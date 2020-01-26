@@ -16,8 +16,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Drawing;
 using Loqui.Presentation;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -339,11 +337,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Region CreateFromXml(
             XElement node,
             out Region_ErrorMask errorMask,
-            bool doMasks = true,
             Region_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -740,22 +737,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionGetter rhs,
             Region_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRegionInternal lhs,
             IRegionGetter rhs,
             out Region_ErrorMask errorMask,
-            Region_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Region_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionSetterTranslationCommon)((IRegionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -829,11 +824,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionInternal item,
             XElement node,
             out Region_ErrorMask errorMask,
-            bool doMasks = true,
             Region_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2730,11 +2724,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRegionGetter item,
             XElement node,
             out Region_ErrorMask errorMask,
-            bool doMasks = true,
             Region_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RegionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2749,7 +2742,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Region_ErrorMask errorMask,
             Region_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2758,7 +2750,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2768,7 +2759,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Region_ErrorMask errorMask,
             Region_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2777,7 +2767,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2810,6 +2799,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.MapName = new MaskItem<T, RegionDataMapName_Mask<T>>(initialValue, new RegionDataMapName_Mask<T>(initialValue));
             this.Grasses = new MaskItem<T, RegionDataGrasses_Mask<T>>(initialValue, new RegionDataGrasses_Mask<T>(initialValue));
             this.Sounds = new MaskItem<T, RegionDataSounds_Mask<T>>(initialValue, new RegionDataSounds_Mask<T>(initialValue));
+        }
+
+        public Region_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Icon,
+            T MapColor,
+            T Worldspace,
+            T Areas,
+            T Objects,
+            T Weather,
+            T MapName,
+            T Grasses,
+            T Sounds)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Icon = Icon;
+            this.MapColor = MapColor;
+            this.Worldspace = Worldspace;
+            this.Areas = new MaskItem<T, IEnumerable<MaskItemIndexed<T, RegionArea_Mask<T>>>>(Areas, null);
+            this.Objects = new MaskItem<T, RegionDataObjects_Mask<T>>(Objects, new RegionDataObjects_Mask<T>(Objects));
+            this.Weather = new MaskItem<T, RegionDataWeather_Mask<T>>(Weather, new RegionDataWeather_Mask<T>(Weather));
+            this.MapName = new MaskItem<T, RegionDataMapName_Mask<T>>(MapName, new RegionDataMapName_Mask<T>(MapName));
+            this.Grasses = new MaskItem<T, RegionDataGrasses_Mask<T>>(Grasses, new RegionDataGrasses_Mask<T>(Grasses));
+            this.Sounds = new MaskItem<T, RegionDataSounds_Mask<T>>(Sounds, new RegionDataSounds_Mask<T>(Sounds));
         }
         #endregion
 
@@ -2966,14 +2987,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 obj.Sounds = new MaskItem<R, RegionDataSounds_Mask<R>>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Areas.Specific = null;
         }
         #endregion
 

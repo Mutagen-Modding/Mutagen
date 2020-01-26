@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -321,11 +319,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Tree CreateFromXml(
             XElement node,
             out Tree_ErrorMask errorMask,
-            bool doMasks = true,
             Tree_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -754,22 +751,20 @@ namespace Mutagen.Bethesda.Oblivion
             ITreeGetter rhs,
             Tree_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ITreeInternal lhs,
             ITreeGetter rhs,
             out Tree_ErrorMask errorMask,
-            Tree_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Tree_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((TreeSetterTranslationCommon)((ITreeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -843,11 +838,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeInternal item,
             XElement node,
             out Tree_ErrorMask errorMask,
-            bool doMasks = true,
             Tree_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2812,11 +2806,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ITreeGetter item,
             XElement node,
             out Tree_ErrorMask errorMask,
-            bool doMasks = true,
             Tree_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TreeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2831,7 +2824,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Tree_ErrorMask errorMask,
             Tree_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2840,7 +2832,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2850,7 +2841,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Tree_ErrorMask errorMask,
             Tree_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2859,7 +2849,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2898,6 +2887,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.BillboardHeight = initialValue;
             this.CNAMDataTypeState = initialValue;
             this.BNAMDataTypeState = initialValue;
+        }
+
+        public Tree_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Model,
+            T Icon,
+            T SpeedTreeSeeds,
+            T LeafCurvature,
+            T MinimumLeafAngle,
+            T MaximumLeafAngle,
+            T BranchDimmingValue,
+            T LeafDimmingValue,
+            T ShadowRadius,
+            T RockingSpeed,
+            T RustleSpeed,
+            T BillboardWidth,
+            T BillboardHeight,
+            T CNAMDataTypeState,
+            T BNAMDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+            this.SpeedTreeSeeds = new MaskItem<T, IEnumerable<(int Index, T Value)>>(SpeedTreeSeeds, null);
+            this.LeafCurvature = LeafCurvature;
+            this.MinimumLeafAngle = MinimumLeafAngle;
+            this.MaximumLeafAngle = MaximumLeafAngle;
+            this.BranchDimmingValue = BranchDimmingValue;
+            this.LeafDimmingValue = LeafDimmingValue;
+            this.ShadowRadius = ShadowRadius;
+            this.RockingSpeed = RockingSpeed;
+            this.RustleSpeed = RustleSpeed;
+            this.BillboardWidth = BillboardWidth;
+            this.BillboardHeight = BillboardHeight;
+            this.CNAMDataTypeState = CNAMDataTypeState;
+            this.BNAMDataTypeState = BNAMDataTypeState;
         }
         #endregion
 
@@ -3052,14 +3085,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.BillboardHeight = eval(this.BillboardHeight);
             obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.SpeedTreeSeeds.Specific = null;
         }
         #endregion
 

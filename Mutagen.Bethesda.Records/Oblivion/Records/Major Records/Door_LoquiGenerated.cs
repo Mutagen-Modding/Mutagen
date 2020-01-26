@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -243,11 +241,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Door CreateFromXml(
             XElement node,
             out Door_ErrorMask errorMask,
-            bool doMasks = true,
             Door_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -615,22 +612,20 @@ namespace Mutagen.Bethesda.Oblivion
             IDoorGetter rhs,
             Door_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IDoorInternal lhs,
             IDoorGetter rhs,
             out Door_ErrorMask errorMask,
-            Door_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Door_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((DoorSetterTranslationCommon)((IDoorGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -704,11 +699,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorInternal item,
             XElement node,
             out Door_ErrorMask errorMask,
-            bool doMasks = true,
             Door_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2443,11 +2437,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IDoorGetter item,
             XElement node,
             out Door_ErrorMask errorMask,
-            bool doMasks = true,
             Door_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DoorXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2462,7 +2455,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Door_ErrorMask errorMask,
             Door_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2471,7 +2463,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2481,7 +2472,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Door_ErrorMask errorMask,
             Door_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2490,7 +2480,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2522,6 +2511,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LoopSound = initialValue;
             this.Flags = initialValue;
             this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
+        }
+
+        public Door_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Script,
+            T OpenSound,
+            T CloseSound,
+            T LoopSound,
+            T Flags,
+            T RandomTeleportDestinations)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Script = Script;
+            this.OpenSound = OpenSound;
+            this.CloseSound = CloseSound;
+            this.LoopSound = LoopSound;
+            this.Flags = Flags;
+            this.RandomTeleportDestinations = new MaskItem<T, IEnumerable<(int Index, T Value)>>(RandomTeleportDestinations, null);
         }
         #endregion
 
@@ -2641,14 +2660,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.RandomTeleportDestinations.Specific = null;
         }
         #endregion
 

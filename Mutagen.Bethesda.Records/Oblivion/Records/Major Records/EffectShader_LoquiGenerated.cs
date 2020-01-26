@@ -936,11 +936,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static EffectShader CreateFromXml(
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            bool doMasks = true,
             EffectShader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1674,22 +1673,20 @@ namespace Mutagen.Bethesda.Oblivion
             IEffectShaderGetter rhs,
             EffectShader_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IEffectShaderInternal lhs,
             IEffectShaderGetter rhs,
             out EffectShader_ErrorMask errorMask,
-            EffectShader_TranslationMask copyMask = null,
-            bool doMasks = true)
+            EffectShader_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((EffectShaderSetterTranslationCommon)((IEffectShaderGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1763,11 +1760,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderInternal item,
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            bool doMasks = true,
             EffectShader_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -5981,11 +5977,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IEffectShaderGetter item,
             XElement node,
             out EffectShader_ErrorMask errorMask,
-            bool doMasks = true,
             EffectShader_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((EffectShaderXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -6000,7 +5995,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -6009,7 +6003,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -6019,7 +6012,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out EffectShader_ErrorMask errorMask,
             EffectShader_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -6028,7 +6020,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -6111,6 +6102,138 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ColorKey2ColorKeyTime = initialValue;
             this.ColorKey3ColorKeyTime = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public EffectShader_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T FillTexture,
+            T ParticleShaderTexture,
+            T Flags,
+            T MembraneShaderSourceBlendMode,
+            T MembraneShaderBlendOperation,
+            T MembraneShaderZTestFunction,
+            T FillTextureEffectColor,
+            T FillTextureEffectAlphaFadeInTime,
+            T FillTextureEffectFullAlphaTime,
+            T FillTextureEffectAlphaFadeOutTime,
+            T FillTextureEffectPersistentAlphaRatio,
+            T FillTextureEffectAlphaPulseAmplitude,
+            T FillTextureEffectAlphaPulseFrequency,
+            T FillTextureEffectTextureAnimationSpeedU,
+            T FillTextureEffectTextureAnimationSpeedV,
+            T EdgeEffectFallOff,
+            T EdgeEffectColor,
+            T EdgeEffectAlphaFadeInTime,
+            T EdgeEffectFullAlphaTime,
+            T EdgeEffectAlphaFadeOutTime,
+            T EdgeEffectPersistentAlphaRatio,
+            T EdgeEffectAlphaPulseAmplitude,
+            T EdgeEffectAlphaPulseFrequency,
+            T FillTextureEffectFullAlphaRatio,
+            T EdgeEffectFullAlphaRatio,
+            T MembraneShaderDestBlendMode,
+            T ParticleShaderSourceBlendMode,
+            T ParticleShaderBlendOperation,
+            T ParticleShaderZTestFunction,
+            T ParticleShaderDestBlendMode,
+            T ParticleShaderParticleBirthRampUpTime,
+            T ParticleShaderFullParticleBirthTime,
+            T ParticleShaderParticleBirthRampDownTime,
+            T ParticleShaderFullParticleBirthRatio,
+            T ParticleShaderPersistentParticleBirthRatio,
+            T ParticleShaderParticleLifetime,
+            T ParticleShaderParticleLifetimePlusMinus,
+            T ParticleShaderInitialSpeedAlongNormal,
+            T ParticleShaderAccelerationAlongNormal,
+            T ParticleShaderInitialVelocity1,
+            T ParticleShaderInitialVelocity2,
+            T ParticleShaderInitialVelocity3,
+            T ParticleShaderAcceleration1,
+            T ParticleShaderAcceleration2,
+            T ParticleShaderAcceleration3,
+            T ParticleShaderScaleKey1,
+            T ParticleShaderScaleKey2,
+            T ParticleShaderScaleKey1Time,
+            T ParticleShaderScaleKey2Time,
+            T ColorKey1Color,
+            T ColorKey2Color,
+            T ColorKey3Color,
+            T ColorKey1ColorAlpha,
+            T ColorKey2ColorAlpha,
+            T ColorKey3ColorAlpha,
+            T ColorKey1ColorKeyTime,
+            T ColorKey2ColorKeyTime,
+            T ColorKey3ColorKeyTime,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.FillTexture = FillTexture;
+            this.ParticleShaderTexture = ParticleShaderTexture;
+            this.Flags = Flags;
+            this.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendMode;
+            this.MembraneShaderBlendOperation = MembraneShaderBlendOperation;
+            this.MembraneShaderZTestFunction = MembraneShaderZTestFunction;
+            this.FillTextureEffectColor = FillTextureEffectColor;
+            this.FillTextureEffectAlphaFadeInTime = FillTextureEffectAlphaFadeInTime;
+            this.FillTextureEffectFullAlphaTime = FillTextureEffectFullAlphaTime;
+            this.FillTextureEffectAlphaFadeOutTime = FillTextureEffectAlphaFadeOutTime;
+            this.FillTextureEffectPersistentAlphaRatio = FillTextureEffectPersistentAlphaRatio;
+            this.FillTextureEffectAlphaPulseAmplitude = FillTextureEffectAlphaPulseAmplitude;
+            this.FillTextureEffectAlphaPulseFrequency = FillTextureEffectAlphaPulseFrequency;
+            this.FillTextureEffectTextureAnimationSpeedU = FillTextureEffectTextureAnimationSpeedU;
+            this.FillTextureEffectTextureAnimationSpeedV = FillTextureEffectTextureAnimationSpeedV;
+            this.EdgeEffectFallOff = EdgeEffectFallOff;
+            this.EdgeEffectColor = EdgeEffectColor;
+            this.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTime;
+            this.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTime;
+            this.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTime;
+            this.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatio;
+            this.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitude;
+            this.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequency;
+            this.FillTextureEffectFullAlphaRatio = FillTextureEffectFullAlphaRatio;
+            this.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatio;
+            this.MembraneShaderDestBlendMode = MembraneShaderDestBlendMode;
+            this.ParticleShaderSourceBlendMode = ParticleShaderSourceBlendMode;
+            this.ParticleShaderBlendOperation = ParticleShaderBlendOperation;
+            this.ParticleShaderZTestFunction = ParticleShaderZTestFunction;
+            this.ParticleShaderDestBlendMode = ParticleShaderDestBlendMode;
+            this.ParticleShaderParticleBirthRampUpTime = ParticleShaderParticleBirthRampUpTime;
+            this.ParticleShaderFullParticleBirthTime = ParticleShaderFullParticleBirthTime;
+            this.ParticleShaderParticleBirthRampDownTime = ParticleShaderParticleBirthRampDownTime;
+            this.ParticleShaderFullParticleBirthRatio = ParticleShaderFullParticleBirthRatio;
+            this.ParticleShaderPersistentParticleBirthRatio = ParticleShaderPersistentParticleBirthRatio;
+            this.ParticleShaderParticleLifetime = ParticleShaderParticleLifetime;
+            this.ParticleShaderParticleLifetimePlusMinus = ParticleShaderParticleLifetimePlusMinus;
+            this.ParticleShaderInitialSpeedAlongNormal = ParticleShaderInitialSpeedAlongNormal;
+            this.ParticleShaderAccelerationAlongNormal = ParticleShaderAccelerationAlongNormal;
+            this.ParticleShaderInitialVelocity1 = ParticleShaderInitialVelocity1;
+            this.ParticleShaderInitialVelocity2 = ParticleShaderInitialVelocity2;
+            this.ParticleShaderInitialVelocity3 = ParticleShaderInitialVelocity3;
+            this.ParticleShaderAcceleration1 = ParticleShaderAcceleration1;
+            this.ParticleShaderAcceleration2 = ParticleShaderAcceleration2;
+            this.ParticleShaderAcceleration3 = ParticleShaderAcceleration3;
+            this.ParticleShaderScaleKey1 = ParticleShaderScaleKey1;
+            this.ParticleShaderScaleKey2 = ParticleShaderScaleKey2;
+            this.ParticleShaderScaleKey1Time = ParticleShaderScaleKey1Time;
+            this.ParticleShaderScaleKey2Time = ParticleShaderScaleKey2Time;
+            this.ColorKey1Color = ColorKey1Color;
+            this.ColorKey2Color = ColorKey2Color;
+            this.ColorKey3Color = ColorKey3Color;
+            this.ColorKey1ColorAlpha = ColorKey1ColorAlpha;
+            this.ColorKey2ColorAlpha = ColorKey2ColorAlpha;
+            this.ColorKey3ColorAlpha = ColorKey3ColorAlpha;
+            this.ColorKey1ColorKeyTime = ColorKey1ColorKeyTime;
+            this.ColorKey2ColorKeyTime = ColorKey2ColorKeyTime;
+            this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -6453,13 +6576,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
             obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

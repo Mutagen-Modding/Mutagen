@@ -137,11 +137,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static RaceStats CreateFromXml(
             XElement node,
             out RaceStats_ErrorMask errorMask,
-            bool doMasks = true,
             RaceStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -489,12 +488,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats lhs,
             IRaceStatsGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -502,22 +500,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRaceStatsGetter rhs,
             RaceStats_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRaceStats lhs,
             IRaceStatsGetter rhs,
             out RaceStats_ErrorMask errorMask,
-            RaceStats_TranslationMask copyMask = null,
-            bool doMasks = true)
+            RaceStats_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceStatsSetterTranslationCommon)((IRaceStatsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -591,11 +587,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStats item,
             XElement node,
             out RaceStats_ErrorMask errorMask,
-            bool doMasks = true,
             RaceStats_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1750,11 +1745,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRaceStatsGetter item,
             XElement node,
             out RaceStats_ErrorMask errorMask,
-            bool doMasks = true,
             RaceStats_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RaceStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1769,7 +1763,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out RaceStats_ErrorMask errorMask,
             RaceStats_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1778,7 +1771,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1788,7 +1780,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1806,7 +1797,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out RaceStats_ErrorMask errorMask,
             RaceStats_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1815,7 +1805,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1825,7 +1814,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1925,6 +1913,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Personality = initialValue;
             this.Luck = initialValue;
         }
+
+        public RaceStats_Mask(
+            T Strength,
+            T Intelligence,
+            T Willpower,
+            T Agility,
+            T Speed,
+            T Endurance,
+            T Personality,
+            T Luck)
+        {
+            this.Strength = Strength;
+            this.Intelligence = Intelligence;
+            this.Willpower = Willpower;
+            this.Agility = Agility;
+            this.Speed = Speed;
+            this.Endurance = Endurance;
+            this.Personality = Personality;
+            this.Luck = Luck;
+        }
         #endregion
 
         #region Members
@@ -2007,12 +2015,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Endurance = eval(this.Endurance);
             obj.Personality = eval(this.Personality);
             obj.Luck = eval(this.Luck);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

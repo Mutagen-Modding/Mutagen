@@ -229,11 +229,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Rank CreateFromXml(
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -569,12 +568,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IRank lhs,
             IRankGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -582,22 +580,20 @@ namespace Mutagen.Bethesda.Oblivion
             IRankGetter rhs,
             Rank_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
             IRankGetter rhs,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Rank_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -671,11 +667,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRank item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1800,11 +1795,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IRankGetter item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1819,7 +1813,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1828,7 +1821,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1838,7 +1830,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1856,7 +1847,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1865,7 +1855,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1875,7 +1864,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1971,6 +1959,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.FemaleName = initialValue;
             this.Insignia = initialValue;
         }
+
+        public Rank_Mask(
+            T RankNumber,
+            T MaleName,
+            T FemaleName,
+            T Insignia)
+        {
+            this.RankNumber = RankNumber;
+            this.MaleName = MaleName;
+            this.FemaleName = FemaleName;
+            this.Insignia = Insignia;
+        }
         #endregion
 
         #region Members
@@ -2033,12 +2033,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.MaleName = eval(this.MaleName);
             obj.FemaleName = eval(this.FemaleName);
             obj.Insignia = eval(this.Insignia);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

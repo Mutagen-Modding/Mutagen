@@ -555,11 +555,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Class CreateFromXml(
             XElement node,
             out Class_ErrorMask errorMask,
-            bool doMasks = true,
             Class_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -1100,22 +1099,20 @@ namespace Mutagen.Bethesda.Skyrim
             IClassGetter rhs,
             Class_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IClassInternal lhs,
             IClassGetter rhs,
             out Class_ErrorMask errorMask,
-            Class_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Class_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ClassSetterTranslationCommon)((IClassGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1189,11 +1186,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassInternal item,
             XElement node,
             out Class_ErrorMask errorMask,
-            bool doMasks = true,
             Class_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -3942,11 +3938,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IClassGetter item,
             XElement node,
             out Class_ErrorMask errorMask,
-            bool doMasks = true,
             Class_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ClassXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -3961,7 +3956,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Class_ErrorMask errorMask,
             Class_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3970,7 +3964,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -3980,7 +3973,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Class_ErrorMask errorMask,
             Class_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -3989,7 +3981,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4044,6 +4035,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.StaminaWeight = initialValue;
             this.Unknown2 = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Class_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T SkyrimMajorRecordFlags,
+            T FormVersion,
+            T Version2,
+            T Name,
+            T Description,
+            T Icon,
+            T Unknown,
+            T Teaches,
+            T MaxTrainingLevel,
+            T OneHandedWeight,
+            T TwoHandedWeight,
+            T MarksmanWeight,
+            T BlockWeight,
+            T SmithingWeight,
+            T HeavyArmorWeight,
+            T LightArmorWeight,
+            T PickpocketWeight,
+            T LockpickingWeight,
+            T SneakWeight,
+            T AlchemyWeight,
+            T SpeechcraftWeight,
+            T AlterationWeight,
+            T ConjurationWeight,
+            T DestructionWeight,
+            T IllusionWeight,
+            T RestorationWeight,
+            T EnchantingWeight,
+            T BleedoutDefault,
+            T VoicePoints,
+            T HealthWeight,
+            T MagickaWeight,
+            T StaminaWeight,
+            T Unknown2,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
+            this.FormVersion = FormVersion;
+            this.Version2 = Version2;
+            this.Name = Name;
+            this.Description = Description;
+            this.Icon = Icon;
+            this.Unknown = Unknown;
+            this.Teaches = Teaches;
+            this.MaxTrainingLevel = MaxTrainingLevel;
+            this.OneHandedWeight = OneHandedWeight;
+            this.TwoHandedWeight = TwoHandedWeight;
+            this.MarksmanWeight = MarksmanWeight;
+            this.BlockWeight = BlockWeight;
+            this.SmithingWeight = SmithingWeight;
+            this.HeavyArmorWeight = HeavyArmorWeight;
+            this.LightArmorWeight = LightArmorWeight;
+            this.PickpocketWeight = PickpocketWeight;
+            this.LockpickingWeight = LockpickingWeight;
+            this.SneakWeight = SneakWeight;
+            this.AlchemyWeight = AlchemyWeight;
+            this.SpeechcraftWeight = SpeechcraftWeight;
+            this.AlterationWeight = AlterationWeight;
+            this.ConjurationWeight = ConjurationWeight;
+            this.DestructionWeight = DestructionWeight;
+            this.IllusionWeight = IllusionWeight;
+            this.RestorationWeight = RestorationWeight;
+            this.EnchantingWeight = EnchantingWeight;
+            this.BleedoutDefault = BleedoutDefault;
+            this.VoicePoints = VoicePoints;
+            this.HealthWeight = HealthWeight;
+            this.MagickaWeight = MagickaWeight;
+            this.StaminaWeight = StaminaWeight;
+            this.Unknown2 = Unknown2;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -4246,13 +4317,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.StaminaWeight = eval(this.StaminaWeight);
             obj.Unknown2 = eval(this.Unknown2);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

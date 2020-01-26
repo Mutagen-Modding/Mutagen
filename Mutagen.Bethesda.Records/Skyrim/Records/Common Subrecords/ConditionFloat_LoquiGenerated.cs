@@ -120,11 +120,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static ConditionFloat CreateFromXml(
             XElement node,
             out ConditionFloat_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionFloat_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -428,22 +427,20 @@ namespace Mutagen.Bethesda.Skyrim
             IConditionFloatGetter rhs,
             ConditionFloat_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ConditionFloatSetterTranslationCommon)((IConditionFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IConditionFloat lhs,
             IConditionFloatGetter rhs,
             out ConditionFloat_ErrorMask errorMask,
-            ConditionFloat_TranslationMask copyMask = null,
-            bool doMasks = true)
+            ConditionFloat_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionFloatSetterTranslationCommon)((IConditionFloatGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -517,11 +514,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionFloat item,
             XElement node,
             out ConditionFloat_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionFloat_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1476,11 +1472,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IConditionFloatGetter item,
             XElement node,
             out ConditionFloat_ErrorMask errorMask,
-            bool doMasks = true,
             ConditionFloat_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ConditionFloatXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1495,7 +1490,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out ConditionFloat_ErrorMask errorMask,
             ConditionFloat_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1504,7 +1498,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1514,7 +1507,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out ConditionFloat_ErrorMask errorMask,
             ConditionFloat_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1523,7 +1515,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1549,6 +1540,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ComparisonValue = initialValue;
             this.Data = new MaskItem<T, ConditionData_Mask<T>>(initialValue, new ConditionData_Mask<T>(initialValue));
+        }
+
+        public ConditionFloat_Mask(
+            T CompareOperator,
+            T Flags,
+            T Unknown1,
+            T ComparisonValue,
+            T Data)
+        {
+            this.CompareOperator = CompareOperator;
+            this.Flags = Flags;
+            this.Unknown1 = Unknown1;
+            this.ComparisonValue = ComparisonValue;
+            this.Data = new MaskItem<T, ConditionData_Mask<T>>(Data, new ConditionData_Mask<T>(Data));
         }
         #endregion
 
@@ -1613,13 +1618,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 obj.Data = new MaskItem<R, ConditionData_Mask<R>>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

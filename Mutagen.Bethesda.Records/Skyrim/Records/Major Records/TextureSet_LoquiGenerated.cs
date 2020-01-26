@@ -229,11 +229,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static TextureSet CreateFromXml(
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            bool doMasks = true,
             TextureSet_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -583,22 +582,20 @@ namespace Mutagen.Bethesda.Skyrim
             ITextureSetGetter rhs,
             TextureSet_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ITextureSetInternal lhs,
             ITextureSetGetter rhs,
             out TextureSet_ErrorMask errorMask,
-            TextureSet_TranslationMask copyMask = null,
-            bool doMasks = true)
+            TextureSet_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -672,11 +669,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetInternal item,
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            bool doMasks = true,
             TextureSet_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2069,11 +2065,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ITextureSetGetter item,
             XElement node,
             out TextureSet_ErrorMask errorMask,
-            bool doMasks = true,
             TextureSet_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TextureSetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2088,7 +2083,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out TextureSet_ErrorMask errorMask,
             TextureSet_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2097,7 +2091,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2107,7 +2100,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out TextureSet_ErrorMask errorMask,
             TextureSet_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2116,7 +2108,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2144,6 +2135,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Textures = new MaskItem<T, Textures_Mask<T>>(initialValue, new Textures_Mask<T>(initialValue));
             this.Decal = new MaskItem<T, Decal_Mask<T>>(initialValue, new Decal_Mask<T>(initialValue));
             this.Flags = initialValue;
+        }
+
+        public TextureSet_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T SkyrimMajorRecordFlags,
+            T FormVersion,
+            T Version2,
+            T ObjectBounds,
+            T Textures,
+            T Decal,
+            T Flags)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
+            this.FormVersion = FormVersion;
+            this.Version2 = Version2;
+            this.ObjectBounds = new MaskItem<T, ObjectBounds_Mask<T>>(ObjectBounds, new ObjectBounds_Mask<T>(ObjectBounds));
+            this.Textures = new MaskItem<T, Textures_Mask<T>>(Textures, new Textures_Mask<T>(Textures));
+            this.Decal = new MaskItem<T, Decal_Mask<T>>(Decal, new Decal_Mask<T>(Decal));
+            this.Flags = Flags;
         }
         #endregion
 
@@ -2232,13 +2249,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 obj.Decal = new MaskItem<R, Decal_Mask<R>>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
             }
             obj.Flags = eval(this.Flags);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

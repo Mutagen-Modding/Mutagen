@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -309,11 +307,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Climate CreateFromXml(
             XElement node,
             out Climate_ErrorMask errorMask,
-            bool doMasks = true,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -723,22 +720,20 @@ namespace Mutagen.Bethesda.Oblivion
             IClimateGetter rhs,
             Climate_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IClimateInternal lhs,
             IClimateGetter rhs,
             out Climate_ErrorMask errorMask,
-            Climate_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Climate_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((ClimateSetterTranslationCommon)((IClimateGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -812,11 +807,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateInternal item,
             XElement node,
             out Climate_ErrorMask errorMask,
-            bool doMasks = true,
             Climate_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2679,11 +2673,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IClimateGetter item,
             XElement node,
             out Climate_ErrorMask errorMask,
-            bool doMasks = true,
             Climate_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((ClimateXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2698,7 +2691,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2707,7 +2699,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2717,7 +2708,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Climate_ErrorMask errorMask,
             Climate_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2726,7 +2716,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2762,6 +2751,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Phase = initialValue;
             this.PhaseLength = initialValue;
             this.TNAMDataTypeState = initialValue;
+        }
+
+        public Climate_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Weathers,
+            T SunTexture,
+            T SunGlareTexture,
+            T Model,
+            T SunriseBegin,
+            T SunriseEnd,
+            T SunsetBegin,
+            T SunsetEnd,
+            T Volatility,
+            T Phase,
+            T PhaseLength,
+            T TNAMDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Weathers = new MaskItem<T, IEnumerable<MaskItemIndexed<T, WeatherChance_Mask<T>>>>(Weathers, null);
+            this.SunTexture = SunTexture;
+            this.SunGlareTexture = SunGlareTexture;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.SunriseBegin = SunriseBegin;
+            this.SunriseEnd = SunriseEnd;
+            this.SunsetBegin = SunsetBegin;
+            this.SunsetEnd = SunsetEnd;
+            this.Volatility = Volatility;
+            this.Phase = Phase;
+            this.PhaseLength = PhaseLength;
+            this.TNAMDataTypeState = TNAMDataTypeState;
         }
         #endregion
 
@@ -2905,14 +2932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Phase = eval(this.Phase);
             obj.PhaseLength = eval(this.PhaseLength);
             obj.TNAMDataTypeState = eval(this.TNAMDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Weathers.Specific = null;
         }
         #endregion
 

@@ -117,11 +117,10 @@ namespace Mutagen.Bethesda.Tests
         public static DataFolderLocations CreateFromXml(
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
-            bool doMasks = true,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -380,12 +379,11 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -393,22 +391,20 @@ namespace Mutagen.Bethesda.Tests
             IDataFolderLocationsGetter rhs,
             DataFolderLocations_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             out DataFolderLocations_ErrorMask errorMask,
-            DataFolderLocations_TranslationMask copyMask = null,
-            bool doMasks = true)
+            DataFolderLocations_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -482,11 +478,10 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocations item,
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
-            bool doMasks = true,
             DataFolderLocations_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1262,11 +1257,10 @@ namespace Mutagen.Bethesda.Tests
             this IDataFolderLocationsGetter item,
             XElement node,
             out DataFolderLocations_ErrorMask errorMask,
-            bool doMasks = true,
             DataFolderLocations_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((DataFolderLocationsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1281,7 +1275,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1290,7 +1283,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1300,7 +1292,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1318,7 +1309,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             out DataFolderLocations_ErrorMask errorMask,
             DataFolderLocations_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1327,7 +1317,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1337,7 +1326,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1431,6 +1419,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.Oblivion = initialValue;
             this.Skyrim = initialValue;
         }
+
+        public DataFolderLocations_Mask(
+            T Oblivion,
+            T Skyrim)
+        {
+            this.Oblivion = Oblivion;
+            this.Skyrim = Skyrim;
+        }
         #endregion
 
         #region Members
@@ -1483,12 +1479,6 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             obj.Oblivion = eval(this.Oblivion);
             obj.Skyrim = eval(this.Skyrim);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

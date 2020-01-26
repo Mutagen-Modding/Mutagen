@@ -200,11 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Rank CreateFromXml(
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -529,12 +528,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank lhs,
             IRankGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -542,22 +540,20 @@ namespace Mutagen.Bethesda.Skyrim
             IRankGetter rhs,
             Rank_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRank lhs,
             IRankGetter rhs,
             out Rank_ErrorMask errorMask,
-            Rank_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Rank_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RankSetterTranslationCommon)((IRankGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -631,11 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IRank item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1668,11 +1663,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IRankGetter item,
             XElement node,
             out Rank_ErrorMask errorMask,
-            bool doMasks = true,
             Rank_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RankXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1687,7 +1681,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1696,7 +1689,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1706,7 +1698,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1724,7 +1715,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Rank_ErrorMask errorMask,
             Rank_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1733,7 +1723,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1743,7 +1732,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1838,6 +1826,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.MaleRankTitle = initialValue;
             this.FemaleRankTitle = initialValue;
         }
+
+        public Rank_Mask(
+            T RankID,
+            T MaleRankTitle,
+            T FemaleRankTitle)
+        {
+            this.RankID = RankID;
+            this.MaleRankTitle = MaleRankTitle;
+            this.FemaleRankTitle = FemaleRankTitle;
+        }
         #endregion
 
         #region Members
@@ -1895,12 +1893,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.RankID = eval(this.RankID);
             obj.MaleRankTitle = eval(this.MaleRankTitle);
             obj.FemaleRankTitle = eval(this.FemaleRankTitle);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

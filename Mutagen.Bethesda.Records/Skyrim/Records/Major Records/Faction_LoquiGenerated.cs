@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -462,11 +460,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Faction CreateFromXml(
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -962,22 +959,20 @@ namespace Mutagen.Bethesda.Skyrim
             IFactionGetter rhs,
             Faction_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IFactionInternal lhs,
             IFactionGetter rhs,
             out Faction_ErrorMask errorMask,
-            Faction_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Faction_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionSetterTranslationCommon)((IFactionGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1051,11 +1046,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionInternal item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4175,11 +4169,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IFactionGetter item,
             XElement node,
             out Faction_ErrorMask errorMask,
-            bool doMasks = true,
             Faction_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((FactionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4194,7 +4187,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4203,7 +4195,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4213,7 +4204,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Faction_ErrorMask errorMask,
             Faction_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4222,7 +4212,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4272,6 +4261,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>>(initialValue, new VendorLocation_Mask<T>(initialValue));
             this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(initialValue, null);
             this.CRVADataTypeState = initialValue;
+        }
+
+        public Faction_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T SkyrimMajorRecordFlags,
+            T FormVersion,
+            T Version2,
+            T Name,
+            T Relations,
+            T Flags,
+            T PrisonMarker,
+            T FollowerWaitMarker,
+            T EvidenceChest,
+            T PlayerBelongingsChest,
+            T CrimeGroup,
+            T JailOutfit,
+            T ArrestCrimeValue,
+            T AttackOnSightCrimeValue,
+            T MurderCrimeValue,
+            T AssaultCrimeValue,
+            T TrespassCrimeValue,
+            T PickpocketCrimeValue,
+            T UnknownCrimeValue,
+            T StealMultCrimeValue,
+            T EscapeCrimeValue,
+            T WerewolfCrimeValue,
+            T Ranks,
+            T VendorList,
+            T VendorChest,
+            T VendorValues,
+            T VendorLocation,
+            T Conditions,
+            T CRVADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
+            this.FormVersion = FormVersion;
+            this.Version2 = Version2;
+            this.Name = Name;
+            this.Relations = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Relation_Mask<T>>>>(Relations, null);
+            this.Flags = Flags;
+            this.PrisonMarker = PrisonMarker;
+            this.FollowerWaitMarker = FollowerWaitMarker;
+            this.EvidenceChest = EvidenceChest;
+            this.PlayerBelongingsChest = PlayerBelongingsChest;
+            this.CrimeGroup = CrimeGroup;
+            this.JailOutfit = JailOutfit;
+            this.ArrestCrimeValue = ArrestCrimeValue;
+            this.AttackOnSightCrimeValue = AttackOnSightCrimeValue;
+            this.MurderCrimeValue = MurderCrimeValue;
+            this.AssaultCrimeValue = AssaultCrimeValue;
+            this.TrespassCrimeValue = TrespassCrimeValue;
+            this.PickpocketCrimeValue = PickpocketCrimeValue;
+            this.UnknownCrimeValue = UnknownCrimeValue;
+            this.StealMultCrimeValue = StealMultCrimeValue;
+            this.EscapeCrimeValue = EscapeCrimeValue;
+            this.WerewolfCrimeValue = WerewolfCrimeValue;
+            this.Ranks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Rank_Mask<T>>>>(Ranks, null);
+            this.VendorList = VendorList;
+            this.VendorChest = VendorChest;
+            this.VendorValues = new MaskItem<T, VendorValues_Mask<T>>(VendorValues, new VendorValues_Mask<T>(VendorValues));
+            this.VendorLocation = new MaskItem<T, VendorLocation_Mask<T>>(VendorLocation, new VendorLocation_Mask<T>(VendorLocation));
+            this.Conditions = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Condition_Mask<T>>>>(Conditions, null);
+            this.CRVADataTypeState = CRVADataTypeState;
         }
         #endregion
 
@@ -4550,16 +4609,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
             obj.CRVADataTypeState = eval(this.CRVADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Relations.Specific = null;
-            this.Ranks.Specific = null;
-            this.Conditions.Specific = null;
         }
         #endregion
 

@@ -12,8 +12,7 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
-using DynamicData;
-using CSharpExt.Rx;
+using Mutagen.Bethesda.Tests;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -128,11 +127,10 @@ namespace Mutagen.Bethesda.Tests
         public static TargetGroup CreateFromXml(
             XElement node,
             out TargetGroup_ErrorMask errorMask,
-            bool doMasks = true,
             TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -389,12 +387,11 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGroup lhs,
             ITargetGroupGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -402,22 +399,20 @@ namespace Mutagen.Bethesda.Tests
             ITargetGroupGetter rhs,
             TargetGroup_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ITargetGroup lhs,
             ITargetGroupGetter rhs,
             out TargetGroup_ErrorMask errorMask,
-            TargetGroup_TranslationMask copyMask = null,
-            bool doMasks = true)
+            TargetGroup_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -491,11 +486,10 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGroup item,
             XElement node,
             out TargetGroup_ErrorMask errorMask,
-            bool doMasks = true,
             TargetGroup_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1331,11 +1325,10 @@ namespace Mutagen.Bethesda.Tests
             this ITargetGroupGetter item,
             XElement node,
             out TargetGroup_ErrorMask errorMask,
-            bool doMasks = true,
             TargetGroup_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((TargetGroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1350,7 +1343,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             out TargetGroup_ErrorMask errorMask,
             TargetGroup_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1359,7 +1351,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1369,7 +1360,6 @@ namespace Mutagen.Bethesda.Tests
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1387,7 +1377,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             out TargetGroup_ErrorMask errorMask,
             TargetGroup_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1396,7 +1385,6 @@ namespace Mutagen.Bethesda.Tests
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1406,7 +1394,6 @@ namespace Mutagen.Bethesda.Tests
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1500,6 +1487,14 @@ namespace Mutagen.Bethesda.Tests.Internals
             this.Do = initialValue;
             this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Target_Mask<T>>>>(initialValue, null);
         }
+
+        public TargetGroup_Mask(
+            T Do,
+            T Targets)
+        {
+            this.Do = Do;
+            this.Targets = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Target_Mask<T>>>>(Targets, null);
+        }
         #endregion
 
         #region Members
@@ -1581,13 +1576,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.Targets.Specific = null;
         }
         #endregion
 

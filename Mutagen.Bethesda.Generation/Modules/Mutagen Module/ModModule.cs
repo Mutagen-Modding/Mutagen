@@ -16,8 +16,6 @@ namespace Mutagen.Bethesda.Generation
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return EnumerableExt<string>.Empty;
             return new string[]
             {
-                "DynamicData",
-                "CSharpExt.Rx",
                 "System.Collections.Concurrent"
             };
         }

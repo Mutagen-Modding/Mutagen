@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -264,11 +262,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static SigilStone CreateFromXml(
             XElement node,
             out SigilStone_ErrorMask errorMask,
-            bool doMasks = true,
             SigilStone_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -655,22 +652,20 @@ namespace Mutagen.Bethesda.Oblivion
             ISigilStoneGetter rhs,
             SigilStone_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISigilStoneInternal lhs,
             ISigilStoneGetter rhs,
             out SigilStone_ErrorMask errorMask,
-            SigilStone_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SigilStone_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SigilStoneSetterTranslationCommon)((ISigilStoneGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -744,11 +739,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneInternal item,
             XElement node,
             out SigilStone_ErrorMask errorMask,
-            bool doMasks = true,
             SigilStone_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2547,11 +2541,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ISigilStoneGetter item,
             XElement node,
             out SigilStone_ErrorMask errorMask,
-            bool doMasks = true,
             SigilStone_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SigilStoneXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2566,7 +2559,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out SigilStone_ErrorMask errorMask,
             SigilStone_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2575,7 +2567,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2585,7 +2576,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out SigilStone_ErrorMask errorMask,
             SigilStone_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2594,7 +2584,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2627,6 +2616,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Value = initialValue;
             this.Weight = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public SigilStone_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Icon,
+            T Script,
+            T Effects,
+            T Uses,
+            T Value,
+            T Weight,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+            this.Script = Script;
+            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(Effects, null);
+            this.Uses = Uses;
+            this.Value = Value;
+            this.Weight = Weight;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -2755,14 +2776,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Value = eval(this.Value);
             obj.Weight = eval(this.Weight);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Effects.Specific = null;
         }
         #endregion
 

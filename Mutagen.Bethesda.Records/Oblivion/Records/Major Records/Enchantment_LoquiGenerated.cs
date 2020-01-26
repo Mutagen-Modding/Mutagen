@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -212,11 +210,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Enchantment CreateFromXml(
             XElement node,
             out Enchantment_ErrorMask errorMask,
-            bool doMasks = true,
             Enchantment_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -583,22 +580,20 @@ namespace Mutagen.Bethesda.Oblivion
             IEnchantmentGetter rhs,
             Enchantment_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IEnchantmentInternal lhs,
             IEnchantmentGetter rhs,
             out Enchantment_ErrorMask errorMask,
-            Enchantment_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Enchantment_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((EnchantmentSetterTranslationCommon)((IEnchantmentGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -672,11 +667,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentInternal item,
             XElement node,
             out Enchantment_ErrorMask errorMask,
-            bool doMasks = true,
             Enchantment_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2169,11 +2163,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IEnchantmentGetter item,
             XElement node,
             out Enchantment_ErrorMask errorMask,
-            bool doMasks = true,
             Enchantment_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((EnchantmentXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2188,7 +2181,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Enchantment_ErrorMask errorMask,
             Enchantment_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2197,7 +2189,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2207,7 +2198,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Enchantment_ErrorMask errorMask,
             Enchantment_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2216,7 +2206,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2247,6 +2236,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flags = initialValue;
             this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(initialValue, null);
             this.ENITDataTypeState = initialValue;
+        }
+
+        public Enchantment_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Type,
+            T ChargeAmount,
+            T EnchantCost,
+            T Flags,
+            T Effects,
+            T ENITDataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Type = Type;
+            this.ChargeAmount = ChargeAmount;
+            this.EnchantCost = EnchantCost;
+            this.Flags = Flags;
+            this.Effects = new MaskItem<T, IEnumerable<MaskItemIndexed<T, Effect_Mask<T>>>>(Effects, null);
+            this.ENITDataTypeState = ENITDataTypeState;
         }
         #endregion
 
@@ -2358,14 +2375,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             obj.ENITDataTypeState = eval(this.ENITDataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Effects.Specific = null;
         }
         #endregion
 

@@ -113,11 +113,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static NPCAbstract CreateFromXml(
             XElement node,
             out NPCAbstract_ErrorMask errorMask,
-            bool doMasks = true,
             NPCAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -390,22 +389,20 @@ namespace Mutagen.Bethesda.Oblivion
             INPCAbstractGetter rhs,
             NPCAbstract_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this INPCAbstractInternal lhs,
             INPCAbstractGetter rhs,
             out NPCAbstract_ErrorMask errorMask,
-            NPCAbstract_TranslationMask copyMask = null,
-            bool doMasks = true)
+            NPCAbstract_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCAbstractSetterTranslationCommon)((INPCAbstractGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -479,11 +476,10 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractInternal item,
             XElement node,
             out NPCAbstract_ErrorMask errorMask,
-            bool doMasks = true,
             NPCAbstract_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1496,11 +1492,10 @@ namespace Mutagen.Bethesda.Oblivion
             this INPCAbstractGetter item,
             XElement node,
             out NPCAbstract_ErrorMask errorMask,
-            bool doMasks = true,
             NPCAbstract_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((NPCAbstractXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1515,7 +1510,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out NPCAbstract_ErrorMask errorMask,
             NPCAbstract_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1524,7 +1518,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1534,7 +1527,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out NPCAbstract_ErrorMask errorMask,
             NPCAbstract_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1543,7 +1535,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1567,6 +1558,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public NPCAbstract_Mask(T initialValue)
         {
+        }
+
+        public NPCAbstract_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
         }
         #endregion
 
@@ -1611,13 +1616,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(NPCAbstract_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

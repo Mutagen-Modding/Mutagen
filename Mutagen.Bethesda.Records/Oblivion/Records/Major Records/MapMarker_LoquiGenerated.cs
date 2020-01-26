@@ -14,8 +14,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -186,11 +184,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static MapMarker CreateFromXml(
             XElement node,
             out MapMarker_ErrorMask errorMask,
-            bool doMasks = true,
             MapMarker_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -510,12 +507,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarker lhs,
             IMapMarkerGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -523,22 +519,20 @@ namespace Mutagen.Bethesda.Oblivion
             IMapMarkerGetter rhs,
             MapMarker_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMapMarker lhs,
             IMapMarkerGetter rhs,
             out MapMarker_ErrorMask errorMask,
-            MapMarker_TranslationMask copyMask = null,
-            bool doMasks = true)
+            MapMarker_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MapMarkerSetterTranslationCommon)((IMapMarkerGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -612,11 +606,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarker item,
             XElement node,
             out MapMarker_ErrorMask errorMask,
-            bool doMasks = true,
             MapMarker_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1692,11 +1685,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMapMarkerGetter item,
             XElement node,
             out MapMarker_ErrorMask errorMask,
-            bool doMasks = true,
             MapMarker_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MapMarkerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1711,7 +1703,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out MapMarker_ErrorMask errorMask,
             MapMarker_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1720,7 +1711,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1730,7 +1720,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1748,7 +1737,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out MapMarker_ErrorMask errorMask,
             MapMarker_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1757,7 +1745,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1767,7 +1754,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1862,6 +1848,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Name = initialValue;
             this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>>(initialValue, null);
         }
+
+        public MapMarker_Mask(
+            T Flags,
+            T Name,
+            T Types)
+        {
+            this.Flags = Flags;
+            this.Name = Name;
+            this.Types = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Types, null);
+        }
         #endregion
 
         #region Members
@@ -1944,13 +1940,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.Types.Specific = null;
         }
         #endregion
 

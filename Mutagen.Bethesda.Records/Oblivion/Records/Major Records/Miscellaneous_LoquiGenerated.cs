@@ -237,11 +237,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Miscellaneous CreateFromXml(
             XElement node,
             out Miscellaneous_ErrorMask errorMask,
-            bool doMasks = true,
             Miscellaneous_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -615,22 +614,20 @@ namespace Mutagen.Bethesda.Oblivion
             IMiscellaneousGetter rhs,
             Miscellaneous_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((MiscellaneousSetterTranslationCommon)((IMiscellaneousGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IMiscellaneousInternal lhs,
             IMiscellaneousGetter rhs,
             out Miscellaneous_ErrorMask errorMask,
-            Miscellaneous_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Miscellaneous_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((MiscellaneousSetterTranslationCommon)((IMiscellaneousGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -704,11 +701,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousInternal item,
             XElement node,
             out Miscellaneous_ErrorMask errorMask,
-            bool doMasks = true,
             Miscellaneous_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -2306,11 +2302,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IMiscellaneousGetter item,
             XElement node,
             out Miscellaneous_ErrorMask errorMask,
-            bool doMasks = true,
             Miscellaneous_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((MiscellaneousXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -2325,7 +2320,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Miscellaneous_ErrorMask errorMask,
             Miscellaneous_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2334,7 +2328,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -2344,7 +2337,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Miscellaneous_ErrorMask errorMask,
             Miscellaneous_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -2353,7 +2345,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -2384,6 +2375,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Value = initialValue;
             this.Weight = initialValue;
             this.DATADataTypeState = initialValue;
+        }
+
+        public Miscellaneous_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Model,
+            T Icon,
+            T Script,
+            T Value,
+            T Weight,
+            T DATADataTypeState)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Model = new MaskItem<T, Model_Mask<T>>(Model, new Model_Mask<T>(Model));
+            this.Icon = Icon;
+            this.Script = Script;
+            this.Value = Value;
+            this.Weight = Weight;
+            this.DATADataTypeState = DATADataTypeState;
         }
         #endregion
 
@@ -2473,13 +2492,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Value = eval(this.Value);
             obj.Weight = eval(this.Weight);
             obj.DATADataTypeState = eval(this.DATADataTypeState);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 

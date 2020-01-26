@@ -14,8 +14,7 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using CSharpExt.Rx;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -144,11 +143,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static CellBlock CreateFromXml(
             XElement node,
             out CellBlock_ErrorMask errorMask,
-            bool doMasks = true,
             CellBlock_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -484,12 +482,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlock lhs,
             ICellBlockGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((CellBlockSetterTranslationCommon)((ICellBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -497,22 +494,20 @@ namespace Mutagen.Bethesda.Oblivion
             ICellBlockGetter rhs,
             CellBlock_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((CellBlockSetterTranslationCommon)((ICellBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ICellBlock lhs,
             ICellBlockGetter rhs,
             out CellBlock_ErrorMask errorMask,
-            CellBlock_TranslationMask copyMask = null,
-            bool doMasks = true)
+            CellBlock_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((CellBlockSetterTranslationCommon)((ICellBlockGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -586,11 +581,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlock item,
             XElement node,
             out CellBlock_ErrorMask errorMask,
-            bool doMasks = true,
             CellBlock_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1739,11 +1733,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellBlockGetter item,
             XElement node,
             out CellBlock_ErrorMask errorMask,
-            bool doMasks = true,
             CellBlock_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((CellBlockXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1758,7 +1751,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out CellBlock_ErrorMask errorMask,
             CellBlock_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1767,7 +1759,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1777,7 +1768,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1795,7 +1785,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out CellBlock_ErrorMask errorMask,
             CellBlock_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1804,7 +1793,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1814,7 +1802,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1910,6 +1897,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LastModified = initialValue;
             this.SubBlocks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellSubBlock_Mask<T>>>>(initialValue, null);
         }
+
+        public CellBlock_Mask(
+            T BlockNumber,
+            T GroupType,
+            T LastModified,
+            T SubBlocks)
+        {
+            this.BlockNumber = BlockNumber;
+            this.GroupType = GroupType;
+            this.LastModified = LastModified;
+            this.SubBlocks = new MaskItem<T, IEnumerable<MaskItemIndexed<T, CellSubBlock_Mask<T>>>>(SubBlocks, null);
+        }
         #endregion
 
         #region Members
@@ -2001,13 +2000,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.SubBlocks.Specific = null;
         }
         #endregion
 

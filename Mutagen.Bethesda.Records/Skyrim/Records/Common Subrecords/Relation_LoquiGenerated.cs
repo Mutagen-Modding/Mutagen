@@ -126,11 +126,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static Relation CreateFromXml(
             XElement node,
             out Relation_ErrorMask errorMask,
-            bool doMasks = true,
             Relation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -448,12 +447,11 @@ namespace Mutagen.Bethesda.Skyrim
             this IRelation lhs,
             IRelationGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -461,22 +459,20 @@ namespace Mutagen.Bethesda.Skyrim
             IRelationGetter rhs,
             Relation_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IRelation lhs,
             IRelationGetter rhs,
             out Relation_ErrorMask errorMask,
-            Relation_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Relation_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((RelationSetterTranslationCommon)((IRelationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -550,11 +546,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IRelation item,
             XElement node,
             out Relation_ErrorMask errorMask,
-            bool doMasks = true,
             Relation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1454,11 +1449,10 @@ namespace Mutagen.Bethesda.Skyrim
             this IRelationGetter item,
             XElement node,
             out Relation_ErrorMask errorMask,
-            bool doMasks = true,
             Relation_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((RelationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1473,7 +1467,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Relation_ErrorMask errorMask,
             Relation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1482,7 +1475,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1492,7 +1484,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1510,7 +1501,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Relation_ErrorMask errorMask,
             Relation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1519,7 +1509,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1529,7 +1518,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1624,6 +1612,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Modifier = initialValue;
             this.GroupCombatReaction = initialValue;
         }
+
+        public Relation_Mask(
+            T Faction,
+            T Modifier,
+            T GroupCombatReaction)
+        {
+            this.Faction = Faction;
+            this.Modifier = Modifier;
+            this.GroupCombatReaction = GroupCombatReaction;
+        }
         #endregion
 
         #region Members
@@ -1681,12 +1679,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.Faction = eval(this.Faction);
             obj.Modifier = eval(this.Modifier);
             obj.GroupCombatReaction = eval(this.GroupCombatReaction);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

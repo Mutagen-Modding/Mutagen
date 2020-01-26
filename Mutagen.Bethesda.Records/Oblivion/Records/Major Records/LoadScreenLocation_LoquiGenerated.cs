@@ -130,11 +130,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static LoadScreenLocation CreateFromXml(
             XElement node,
             out LoadScreenLocation_ErrorMask errorMask,
-            bool doMasks = true,
             LoadScreenLocation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -450,12 +449,11 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -463,22 +461,20 @@ namespace Mutagen.Bethesda.Oblivion
             ILoadScreenLocationGetter rhs,
             LoadScreenLocation_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
             out LoadScreenLocation_ErrorMask errorMask,
-            LoadScreenLocation_TranslationMask copyMask = null,
-            bool doMasks = true)
+            LoadScreenLocation_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -552,11 +548,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocation item,
             XElement node,
             out LoadScreenLocation_ErrorMask errorMask,
-            bool doMasks = true,
             LoadScreenLocation_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1461,11 +1456,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ILoadScreenLocationGetter item,
             XElement node,
             out LoadScreenLocation_ErrorMask errorMask,
-            bool doMasks = true,
             LoadScreenLocation_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((LoadScreenLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1480,7 +1474,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1489,7 +1482,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1499,7 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1517,7 +1508,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out LoadScreenLocation_ErrorMask errorMask,
             LoadScreenLocation_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1526,7 +1516,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1536,7 +1525,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1631,6 +1619,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Indirect = initialValue;
             this.GridPoint = initialValue;
         }
+
+        public LoadScreenLocation_Mask(
+            T Direct,
+            T Indirect,
+            T GridPoint)
+        {
+            this.Direct = Direct;
+            this.Indirect = Indirect;
+            this.GridPoint = GridPoint;
+        }
         #endregion
 
         #region Members
@@ -1688,12 +1686,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Direct = eval(this.Direct);
             obj.Indirect = eval(this.Indirect);
             obj.GridPoint = eval(this.GridPoint);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

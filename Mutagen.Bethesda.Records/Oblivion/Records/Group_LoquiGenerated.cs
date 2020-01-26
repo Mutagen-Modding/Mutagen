@@ -12,8 +12,6 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
-using CSharpExt.Rx;
-using DynamicData;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Xml;
@@ -140,13 +138,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -496,12 +493,11 @@ namespace Mutagen.Bethesda.Oblivion
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            DeepCopyFieldsFrom<T, TGetter, OblivionMajorRecord_ErrorMask, T_TranslMask>(
-                lhs: lhs,
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
@@ -512,26 +508,24 @@ namespace Mutagen.Bethesda.Oblivion
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            DeepCopyFieldsFrom<T, TGetter, OblivionMajorRecord_ErrorMask, T_TranslMask>(
-                lhs: lhs,
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            Group_TranslationMask<T_TranslMask> copyMask = null,
-            bool doMasks = true)
+            Group_TranslationMask<T_TranslMask> copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
@@ -619,14 +613,13 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroup<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
             where T : OblivionMajorRecord, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1038,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Group_FieldIndex.LastModified:
                     return typeof(Int32);
                 case Group_FieldIndex.RecordCache:
-                    return typeof(SourceSetCache<T, FormKey>);
+                    return typeof(ICache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1742,14 +1735,13 @@ namespace Mutagen.Bethesda.Oblivion
             this IGroupGetter<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : OblivionMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1764,7 +1756,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -1776,7 +1767,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1786,7 +1776,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1805,7 +1794,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : OblivionMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -1817,7 +1805,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1827,7 +1814,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1931,6 +1917,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LastModified = initialValue;
             this.RecordCache = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, OblivionMajorRecord_Mask<T>>>>(initialValue, null);
         }
+
+        public Group_Mask(
+            T GroupType,
+            T LastModified,
+            T RecordCache)
+        {
+            this.GroupType = GroupType;
+            this.LastModified = LastModified;
+            this.RecordCache = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, OblivionMajorRecord_Mask<T>>>>(RecordCache, null);
+        }
         #endregion
 
         #region Members
@@ -2012,13 +2008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.RecordCache.Specific = null;
         }
         #endregion
 

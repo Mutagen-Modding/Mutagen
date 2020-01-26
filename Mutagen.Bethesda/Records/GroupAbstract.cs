@@ -1,4 +1,3 @@
-using DynamicData;
 using Ionic.Zlib;
 using Loqui;
 using Loqui.Xml;

@@ -15,8 +15,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using DynamicData;
-using CSharpExt.Rx;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -498,11 +496,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static Cell CreateFromXml(
             XElement node,
             out Cell_ErrorMask errorMask,
-            bool doMasks = true,
             Cell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -993,22 +990,20 @@ namespace Mutagen.Bethesda.Oblivion
             ICellGetter rhs,
             Cell_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ICellInternal lhs,
             ICellGetter rhs,
             out Cell_ErrorMask errorMask,
-            Cell_TranslationMask copyMask = null,
-            bool doMasks = true)
+            Cell_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -1082,11 +1077,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellInternal item,
             XElement node,
             out Cell_ErrorMask errorMask,
-            bool doMasks = true,
             Cell_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -4224,11 +4218,10 @@ namespace Mutagen.Bethesda.Oblivion
             this ICellGetter item,
             XElement node,
             out Cell_ErrorMask errorMask,
-            bool doMasks = true,
             Cell_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((CellXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -4243,7 +4236,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out Cell_ErrorMask errorMask,
             Cell_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4252,7 +4244,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -4262,7 +4253,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out Cell_ErrorMask errorMask,
             Cell_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -4271,7 +4261,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -4316,6 +4305,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
             this.VisibleWhenDistantTimestamp = initialValue;
             this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(initialValue, null);
+        }
+
+        public Cell_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T OblivionMajorRecordFlags,
+            T Name,
+            T Flags,
+            T Grid,
+            T Lighting,
+            T Regions,
+            T MusicType,
+            T WaterHeight,
+            T Climate,
+            T Water,
+            T Owner,
+            T FactionRank,
+            T GlobalVariable,
+            T PathGrid,
+            T Landscape,
+            T Timestamp,
+            T PersistentTimestamp,
+            T Persistent,
+            T TemporaryTimestamp,
+            T Temporary,
+            T VisibleWhenDistantTimestamp,
+            T VisibleWhenDistant)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.OblivionMajorRecordFlags = OblivionMajorRecordFlags;
+            this.Name = Name;
+            this.Flags = Flags;
+            this.Grid = Grid;
+            this.Lighting = new MaskItem<T, CellLighting_Mask<T>>(Lighting, new CellLighting_Mask<T>(Lighting));
+            this.Regions = new MaskItem<T, IEnumerable<(int Index, T Value)>>(Regions, null);
+            this.MusicType = MusicType;
+            this.WaterHeight = WaterHeight;
+            this.Climate = Climate;
+            this.Water = Water;
+            this.Owner = Owner;
+            this.FactionRank = FactionRank;
+            this.GlobalVariable = GlobalVariable;
+            this.PathGrid = new MaskItem<T, PathGrid_Mask<T>>(PathGrid, new PathGrid_Mask<T>(PathGrid));
+            this.Landscape = new MaskItem<T, Landscape_Mask<T>>(Landscape, new Landscape_Mask<T>(Landscape));
+            this.Timestamp = Timestamp;
+            this.PersistentTimestamp = PersistentTimestamp;
+            this.Persistent = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(Persistent, null);
+            this.TemporaryTimestamp = TemporaryTimestamp;
+            this.Temporary = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(Temporary, null);
+            this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
+            this.VisibleWhenDistant = new MaskItem<T, IEnumerable<MaskItemIndexed<T, IMask<T>>>>(VisibleWhenDistant, null);
         }
         #endregion
 
@@ -4601,17 +4646,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
-            this.Regions.Specific = null;
-            this.Persistent.Specific = null;
-            this.Temporary.Specific = null;
-            this.VisibleWhenDistant.Specific = null;
         }
         #endregion
 

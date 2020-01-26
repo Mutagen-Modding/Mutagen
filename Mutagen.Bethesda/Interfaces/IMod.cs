@@ -1,4 +1,4 @@
-using DynamicData;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,17 +24,5 @@ namespace Mutagen.Bethesda
         ICache<T, FormKey> GetGroup<T>() where T : IMajorRecordCommon;
         FormKey GetNextFormKey();
         void SyncRecordCount();
-    }
-
-    public interface IModObservableGetter : IModGetter
-    {
-        IObservableList<IMasterReferenceGetter> MasterReferencesObservableList { get; }
-        IObservable<ChangeSet<IMajorRecordCommonGetter, FormKey>> MajorRecordsObservable { get; }
-    }
-
-    public interface IModObservable : IMod, IModObservableGetter
-    {
-        new ISourceList<MasterReference> MasterReferencesObservableList { get; }
-        new IObservable<ChangeSet<IMajorRecordCommon, FormKey>> MajorRecordsObservable { get; }
     }
 }

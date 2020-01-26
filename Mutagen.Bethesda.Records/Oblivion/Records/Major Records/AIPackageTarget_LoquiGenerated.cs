@@ -122,11 +122,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static AIPackageTarget CreateFromXml(
             XElement node,
             out AIPackageTarget_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackageTarget_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -443,12 +442,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -456,22 +454,20 @@ namespace Mutagen.Bethesda.Oblivion
             IAIPackageTargetGetter rhs,
             AIPackageTarget_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IAIPackageTarget lhs,
             IAIPackageTargetGetter rhs,
             out AIPackageTarget_ErrorMask errorMask,
-            AIPackageTarget_TranslationMask copyMask = null,
-            bool doMasks = true)
+            AIPackageTarget_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageTargetSetterTranslationCommon)((IAIPackageTargetGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -545,11 +541,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTarget item,
             XElement node,
             out AIPackageTarget_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackageTarget_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1444,11 +1439,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IAIPackageTargetGetter item,
             XElement node,
             out AIPackageTarget_ErrorMask errorMask,
-            bool doMasks = true,
             AIPackageTarget_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((AIPackageTargetXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1463,7 +1457,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1472,7 +1465,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1482,7 +1474,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1500,7 +1491,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out AIPackageTarget_ErrorMask errorMask,
             AIPackageTarget_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1509,7 +1499,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1519,7 +1508,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1614,6 +1602,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Object = initialValue;
             this.Count = initialValue;
         }
+
+        public AIPackageTarget_Mask(
+            T ObjectType,
+            T Object,
+            T Count)
+        {
+            this.ObjectType = ObjectType;
+            this.Object = Object;
+            this.Count = Count;
+        }
         #endregion
 
         #region Members
@@ -1671,12 +1669,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.ObjectType = eval(this.ObjectType);
             obj.Object = eval(this.Object);
             obj.Count = eval(this.Count);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

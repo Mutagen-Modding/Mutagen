@@ -12,8 +12,6 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
-using CSharpExt.Rx;
-using DynamicData;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Xml;
@@ -143,13 +141,12 @@ namespace Mutagen.Bethesda.Skyrim
         public static Group<T> CreateFromXml<T_ErrMask, T_TranslMask>(
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -506,12 +503,11 @@ namespace Mutagen.Bethesda.Skyrim
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            DeepCopyFieldsFrom<T, TGetter, SkyrimMajorRecord_ErrorMask, T_TranslMask>(
-                lhs: lhs,
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom<T, TGetter, T_TranslMask>(
@@ -522,26 +518,24 @@ namespace Mutagen.Bethesda.Skyrim
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            DeepCopyFieldsFrom<T, TGetter, SkyrimMajorRecord_ErrorMask, T_TranslMask>(
-                lhs: lhs,
+            ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom<T, TGetter, T_ErrMask, T_TranslMask>(
             this IGroup<T> lhs,
             IGroupGetter<TGetter> rhs,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            Group_TranslationMask<T_TranslMask> copyMask = null,
-            bool doMasks = true)
+            Group_TranslationMask<T_TranslMask> copyMask = null)
             where T : class, ISkyrimMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((GroupSetterTranslationCommon)((IGroupGetter<T>)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom<T, TGetter>(
                 item: lhs,
                 rhs: rhs,
@@ -629,14 +623,13 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroup<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             MissingCreate missing = MissingCreate.New)
             where T : SkyrimMajorRecord, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1060,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Group_FieldIndex.Unknown:
                     return typeof(Int32);
                 case Group_FieldIndex.RecordCache:
-                    return typeof(SourceSetCache<T, FormKey>);
+                    return typeof(ICache<T, FormKey>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1805,14 +1798,13 @@ namespace Mutagen.Bethesda.Skyrim
             this IGroupGetter<T> item,
             XElement node,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            bool doMasks = true,
             Group_TranslationMask<T_TranslMask> translationMask = null,
             string name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_TranslMask : SkyrimMajorRecord_TranslationMask, ITranslationMask, new()
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((GroupXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1827,7 +1819,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -1839,7 +1830,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1849,7 +1839,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1868,7 +1857,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_TranslationMask<T_TranslMask> translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
             where T_ErrMask : SkyrimMajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -1880,7 +1868,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1890,7 +1877,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
         {
@@ -1995,6 +1981,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Unknown = initialValue;
             this.RecordCache = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>>(initialValue, null);
         }
+
+        public Group_Mask(
+            T GroupType,
+            T LastModified,
+            T Unknown,
+            T RecordCache)
+        {
+            this.GroupType = GroupType;
+            this.LastModified = LastModified;
+            this.Unknown = Unknown;
+            this.RecordCache = new MaskItem<T, IEnumerable<MaskItemIndexed<FormKey, T, SkyrimMajorRecord_Mask<T>>>>(RecordCache, null);
+        }
         #endregion
 
         #region Members
@@ -2081,13 +2079,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
-            this.RecordCache.Specific = null;
         }
         #endregion
 

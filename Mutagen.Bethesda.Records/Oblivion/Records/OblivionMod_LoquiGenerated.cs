@@ -23,8 +23,6 @@ using Loqui.Xml;
 using Loqui.Internal;
 using System.Diagnostics;
 using System.Collections.Specialized;
-using DynamicData;
-using CSharpExt.Rx;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Noggog.Utility;
@@ -571,11 +569,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromXml(
             XElement node,
             out OblivionMod_ErrorMask errorMask,
-            bool doMasks = true,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -2587,12 +2584,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod lhs,
             IOblivionModGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -2600,22 +2596,20 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionModGetter rhs,
             OblivionMod_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IOblivionMod lhs,
             IOblivionModGetter rhs,
             out OblivionMod_ErrorMask errorMask,
-            OblivionMod_TranslationMask copyMask = null,
-            bool doMasks = true)
+            OblivionMod_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((OblivionModSetterTranslationCommon)((IOblivionModGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -2689,11 +2683,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             XElement node,
             out OblivionMod_ErrorMask errorMask,
-            bool doMasks = true,
             OblivionMod_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -10221,11 +10214,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionModGetter item,
             XElement node,
             out OblivionMod_ErrorMask errorMask,
-            bool doMasks = true,
             OblivionMod_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((OblivionModXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -10240,7 +10232,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -10249,7 +10240,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -10259,7 +10249,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -10277,7 +10266,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -10286,7 +10274,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -10296,7 +10283,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -10444,6 +10430,124 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.AnimatedObjects = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Waters = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.EffectShaders = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+        }
+
+        public OblivionMod_Mask(
+            T ModHeader,
+            T GameSettings,
+            T Globals,
+            T Classes,
+            T Factions,
+            T Hairs,
+            T Eyes,
+            T Races,
+            T Sounds,
+            T Skills,
+            T MagicEffects,
+            T Scripts,
+            T LandTextures,
+            T Enchantments,
+            T Spells,
+            T Birthsigns,
+            T Activators,
+            T AlchemicalApparatus,
+            T Armors,
+            T Books,
+            T Clothes,
+            T Containers,
+            T Doors,
+            T Ingredients,
+            T Lights,
+            T Miscellaneous,
+            T Statics,
+            T Grasses,
+            T Trees,
+            T Flora,
+            T Furnature,
+            T Weapons,
+            T Ammo,
+            T NPCs,
+            T Creatures,
+            T LeveledCreatures,
+            T SoulGems,
+            T Keys,
+            T Potions,
+            T Subspaces,
+            T SigilStones,
+            T LeveledItems,
+            T Weathers,
+            T Climates,
+            T Regions,
+            T Cells,
+            T Worldspaces,
+            T DialogTopics,
+            T Quests,
+            T IdleAnimations,
+            T AIPackages,
+            T CombatStyles,
+            T LoadScreens,
+            T LeveledSpells,
+            T AnimatedObjects,
+            T Waters,
+            T EffectShaders)
+        {
+            this.ModHeader = new MaskItem<T, ModHeader_Mask<T>>(ModHeader, new ModHeader_Mask<T>(ModHeader));
+            this.GameSettings = new MaskItem<T, Group_Mask<T>>(GameSettings, new Group_Mask<T>(GameSettings));
+            this.Globals = new MaskItem<T, Group_Mask<T>>(Globals, new Group_Mask<T>(Globals));
+            this.Classes = new MaskItem<T, Group_Mask<T>>(Classes, new Group_Mask<T>(Classes));
+            this.Factions = new MaskItem<T, Group_Mask<T>>(Factions, new Group_Mask<T>(Factions));
+            this.Hairs = new MaskItem<T, Group_Mask<T>>(Hairs, new Group_Mask<T>(Hairs));
+            this.Eyes = new MaskItem<T, Group_Mask<T>>(Eyes, new Group_Mask<T>(Eyes));
+            this.Races = new MaskItem<T, Group_Mask<T>>(Races, new Group_Mask<T>(Races));
+            this.Sounds = new MaskItem<T, Group_Mask<T>>(Sounds, new Group_Mask<T>(Sounds));
+            this.Skills = new MaskItem<T, Group_Mask<T>>(Skills, new Group_Mask<T>(Skills));
+            this.MagicEffects = new MaskItem<T, Group_Mask<T>>(MagicEffects, new Group_Mask<T>(MagicEffects));
+            this.Scripts = new MaskItem<T, Group_Mask<T>>(Scripts, new Group_Mask<T>(Scripts));
+            this.LandTextures = new MaskItem<T, Group_Mask<T>>(LandTextures, new Group_Mask<T>(LandTextures));
+            this.Enchantments = new MaskItem<T, Group_Mask<T>>(Enchantments, new Group_Mask<T>(Enchantments));
+            this.Spells = new MaskItem<T, Group_Mask<T>>(Spells, new Group_Mask<T>(Spells));
+            this.Birthsigns = new MaskItem<T, Group_Mask<T>>(Birthsigns, new Group_Mask<T>(Birthsigns));
+            this.Activators = new MaskItem<T, Group_Mask<T>>(Activators, new Group_Mask<T>(Activators));
+            this.AlchemicalApparatus = new MaskItem<T, Group_Mask<T>>(AlchemicalApparatus, new Group_Mask<T>(AlchemicalApparatus));
+            this.Armors = new MaskItem<T, Group_Mask<T>>(Armors, new Group_Mask<T>(Armors));
+            this.Books = new MaskItem<T, Group_Mask<T>>(Books, new Group_Mask<T>(Books));
+            this.Clothes = new MaskItem<T, Group_Mask<T>>(Clothes, new Group_Mask<T>(Clothes));
+            this.Containers = new MaskItem<T, Group_Mask<T>>(Containers, new Group_Mask<T>(Containers));
+            this.Doors = new MaskItem<T, Group_Mask<T>>(Doors, new Group_Mask<T>(Doors));
+            this.Ingredients = new MaskItem<T, Group_Mask<T>>(Ingredients, new Group_Mask<T>(Ingredients));
+            this.Lights = new MaskItem<T, Group_Mask<T>>(Lights, new Group_Mask<T>(Lights));
+            this.Miscellaneous = new MaskItem<T, Group_Mask<T>>(Miscellaneous, new Group_Mask<T>(Miscellaneous));
+            this.Statics = new MaskItem<T, Group_Mask<T>>(Statics, new Group_Mask<T>(Statics));
+            this.Grasses = new MaskItem<T, Group_Mask<T>>(Grasses, new Group_Mask<T>(Grasses));
+            this.Trees = new MaskItem<T, Group_Mask<T>>(Trees, new Group_Mask<T>(Trees));
+            this.Flora = new MaskItem<T, Group_Mask<T>>(Flora, new Group_Mask<T>(Flora));
+            this.Furnature = new MaskItem<T, Group_Mask<T>>(Furnature, new Group_Mask<T>(Furnature));
+            this.Weapons = new MaskItem<T, Group_Mask<T>>(Weapons, new Group_Mask<T>(Weapons));
+            this.Ammo = new MaskItem<T, Group_Mask<T>>(Ammo, new Group_Mask<T>(Ammo));
+            this.NPCs = new MaskItem<T, Group_Mask<T>>(NPCs, new Group_Mask<T>(NPCs));
+            this.Creatures = new MaskItem<T, Group_Mask<T>>(Creatures, new Group_Mask<T>(Creatures));
+            this.LeveledCreatures = new MaskItem<T, Group_Mask<T>>(LeveledCreatures, new Group_Mask<T>(LeveledCreatures));
+            this.SoulGems = new MaskItem<T, Group_Mask<T>>(SoulGems, new Group_Mask<T>(SoulGems));
+            this.Keys = new MaskItem<T, Group_Mask<T>>(Keys, new Group_Mask<T>(Keys));
+            this.Potions = new MaskItem<T, Group_Mask<T>>(Potions, new Group_Mask<T>(Potions));
+            this.Subspaces = new MaskItem<T, Group_Mask<T>>(Subspaces, new Group_Mask<T>(Subspaces));
+            this.SigilStones = new MaskItem<T, Group_Mask<T>>(SigilStones, new Group_Mask<T>(SigilStones));
+            this.LeveledItems = new MaskItem<T, Group_Mask<T>>(LeveledItems, new Group_Mask<T>(LeveledItems));
+            this.Weathers = new MaskItem<T, Group_Mask<T>>(Weathers, new Group_Mask<T>(Weathers));
+            this.Climates = new MaskItem<T, Group_Mask<T>>(Climates, new Group_Mask<T>(Climates));
+            this.Regions = new MaskItem<T, Group_Mask<T>>(Regions, new Group_Mask<T>(Regions));
+            this.Cells = new MaskItem<T, ListGroup_Mask<T>>(Cells, new ListGroup_Mask<T>(Cells));
+            this.Worldspaces = new MaskItem<T, Group_Mask<T>>(Worldspaces, new Group_Mask<T>(Worldspaces));
+            this.DialogTopics = new MaskItem<T, Group_Mask<T>>(DialogTopics, new Group_Mask<T>(DialogTopics));
+            this.Quests = new MaskItem<T, Group_Mask<T>>(Quests, new Group_Mask<T>(Quests));
+            this.IdleAnimations = new MaskItem<T, Group_Mask<T>>(IdleAnimations, new Group_Mask<T>(IdleAnimations));
+            this.AIPackages = new MaskItem<T, Group_Mask<T>>(AIPackages, new Group_Mask<T>(AIPackages));
+            this.CombatStyles = new MaskItem<T, Group_Mask<T>>(CombatStyles, new Group_Mask<T>(CombatStyles));
+            this.LoadScreens = new MaskItem<T, Group_Mask<T>>(LoadScreens, new Group_Mask<T>(LoadScreens));
+            this.LeveledSpells = new MaskItem<T, Group_Mask<T>>(LeveledSpells, new Group_Mask<T>(LeveledSpells));
+            this.AnimatedObjects = new MaskItem<T, Group_Mask<T>>(AnimatedObjects, new Group_Mask<T>(AnimatedObjects));
+            this.Waters = new MaskItem<T, Group_Mask<T>>(Waters, new Group_Mask<T>(Waters));
+            this.EffectShaders = new MaskItem<T, Group_Mask<T>>(EffectShaders, new Group_Mask<T>(EffectShaders));
         }
         #endregion
 
@@ -11171,12 +11275,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 obj.EffectShaders = new MaskItem<R, Group_Mask<R>>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
             }
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

@@ -127,11 +127,10 @@ namespace Mutagen.Bethesda.Oblivion
         public static WeatherType CreateFromXml(
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherType_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -451,12 +450,11 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType lhs,
             IWeatherTypeGetter rhs)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: null);
+                errorMask: default,
+                copyMask: default);
         }
 
         public static void DeepCopyFieldsFrom(
@@ -464,22 +462,20 @@ namespace Mutagen.Bethesda.Oblivion
             IWeatherTypeGetter rhs,
             WeatherType_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this IWeatherType lhs,
             IWeatherTypeGetter rhs,
             out WeatherType_ErrorMask errorMask,
-            WeatherType_TranslationMask copyMask = null,
-            bool doMasks = true)
+            WeatherType_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherTypeSetterTranslationCommon)((IWeatherTypeGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -553,11 +549,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherType item,
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherType_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1508,11 +1503,10 @@ namespace Mutagen.Bethesda.Oblivion
             this IWeatherTypeGetter item,
             XElement node,
             out WeatherType_ErrorMask errorMask,
-            bool doMasks = true,
             WeatherType_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((WeatherTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1527,7 +1521,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             out WeatherType_ErrorMask errorMask,
             WeatherType_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1536,7 +1529,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1546,7 +1538,6 @@ namespace Mutagen.Bethesda.Oblivion
             string path,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1564,7 +1555,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             out WeatherType_ErrorMask errorMask,
             WeatherType_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1573,7 +1563,6 @@ namespace Mutagen.Bethesda.Oblivion
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1583,7 +1572,6 @@ namespace Mutagen.Bethesda.Oblivion
             Stream stream,
             ErrorMaskBuilder errorMask,
             TranslationCrystal translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1679,6 +1667,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Sunset = initialValue;
             this.Night = initialValue;
         }
+
+        public WeatherType_Mask(
+            T Sunrise,
+            T Day,
+            T Sunset,
+            T Night)
+        {
+            this.Sunrise = Sunrise;
+            this.Day = Day;
+            this.Sunset = Sunset;
+            this.Night = Night;
+        }
         #endregion
 
         #region Members
@@ -1741,12 +1741,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Day = eval(this.Day);
             obj.Sunset = eval(this.Sunset);
             obj.Night = eval(this.Night);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public void ClearEnumerables()
-        {
         }
         #endregion
 

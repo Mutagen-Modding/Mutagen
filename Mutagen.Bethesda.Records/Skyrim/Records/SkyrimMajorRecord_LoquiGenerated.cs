@@ -118,11 +118,10 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMajorRecord CreateFromXml(
             XElement node,
             out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 missing: missing,
                 node: node,
@@ -426,22 +425,20 @@ namespace Mutagen.Bethesda.Skyrim
             ISkyrimMajorRecordGetter rhs,
             SkyrimMajorRecord_TranslationMask copyMask)
         {
-            DeepCopyFieldsFrom(
-                lhs: lhs,
+            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
+                item: lhs,
                 rhs: rhs,
-                doMasks: false,
-                errorMask: out var errMask,
-                copyMask: copyMask);
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyFieldsFrom(
             this ISkyrimMajorRecordInternal lhs,
             ISkyrimMajorRecordGetter rhs,
             out SkyrimMajorRecord_ErrorMask errorMask,
-            SkyrimMajorRecord_TranslationMask copyMask = null,
-            bool doMasks = true)
+            SkyrimMajorRecord_TranslationMask copyMask = null)
         {
-            var errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            var errorMaskBuilder = new ErrorMaskBuilder();
             ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)lhs).CommonSetterTranslationInstance()).DeepCopyFieldsFrom(
                 item: lhs,
                 rhs: rhs,
@@ -515,11 +512,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMajorRecordInternal item,
             XElement node,
             out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             MissingCreate missing = MissingCreate.New)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
                 item: item,
                 missing: missing,
@@ -1565,11 +1561,10 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMajorRecordGetter item,
             XElement node,
             out SkyrimMajorRecord_ErrorMask errorMask,
-            bool doMasks = true,
             SkyrimMajorRecord_TranslationMask translationMask = null,
             string name = null)
         {
-            ErrorMaskBuilder errorMaskBuilder = doMasks ? new ErrorMaskBuilder() : null;
+            ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             ((SkyrimMajorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
@@ -1584,7 +1579,6 @@ namespace Mutagen.Bethesda.Skyrim
             string path,
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1593,7 +1587,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().SaveIfChanged(path);
         }
@@ -1603,7 +1596,6 @@ namespace Mutagen.Bethesda.Skyrim
             Stream stream,
             out SkyrimMajorRecord_ErrorMask errorMask,
             SkyrimMajorRecord_TranslationMask translationMask = null,
-            bool doMasks = true,
             string name = null)
         {
             var node = new XElement("topnode");
@@ -1612,7 +1604,6 @@ namespace Mutagen.Bethesda.Skyrim
                 name: name,
                 node: node,
                 errorMask: out errorMask,
-                doMasks: doMasks,
                 translationMask: translationMask);
             node.Elements().First().Save(stream);
         }
@@ -1639,6 +1630,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.SkyrimMajorRecordFlags = initialValue;
             this.FormVersion = initialValue;
             this.Version2 = initialValue;
+        }
+
+        public SkyrimMajorRecord_Mask(
+            T MajorRecordFlagsRaw,
+            T FormKey,
+            T Version,
+            T EditorID,
+            T SkyrimMajorRecordFlags,
+            T FormVersion,
+            T Version2)
+        {
+            this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
+            this.FormKey = FormKey;
+            this.Version = Version;
+            this.EditorID = EditorID;
+            this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
+            this.FormVersion = FormVersion;
+            this.Version2 = Version2;
         }
         #endregion
 
@@ -1701,13 +1710,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.SkyrimMajorRecordFlags = eval(this.SkyrimMajorRecordFlags);
             obj.FormVersion = eval(this.FormVersion);
             obj.Version2 = eval(this.Version2);
-        }
-        #endregion
-
-        #region Clear Enumerables
-        public override void ClearEnumerables()
-        {
-            base.ClearEnumerables();
         }
         #endregion
 
