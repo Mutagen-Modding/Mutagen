@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>f8ab6752e3549083681bfe0e2f3b6100fd6565a9</Sha>
+         <Sha>9a6801877f395c3f52fca3587a5b00e6b7a43019</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-19-2020 22:58:00</CommitDate>
-         <Description>Removed some StringCaseAgnostic usages</Description>
+         <CommitDate>01-27-2020 17:50:39</CommitDate>
+         <Description>SortingListDictionary ctor that takes enumerable</Description>
          <Author>Justin Swanson</Author>
          <OriginHint>https://github.com/Noggog/CSharpExt.git</OriginHint>
       </RepoListing>

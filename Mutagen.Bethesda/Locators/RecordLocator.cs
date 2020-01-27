@@ -51,7 +51,8 @@ namespace Mutagen.Bethesda
             private readonly Dictionary<FormID, (RangeInt64 Range, IEnumerable<long> GroupPositions, RecordType Record)> _fromFormIDs;
             private readonly SortingListDictionary<long, (FormID FormID, RecordType Record)> _fromStart;
             private readonly SortingListDictionary<long, (FormID FormID, RecordType Record)> _fromEnd;
-            public readonly SortingList<long> GrupLocations;
+            private readonly SortingListDictionary<long, long> _grupLocations;
+            public ISortedListGetter<long> GrupLocations => _grupLocations.Keys;
             public SortingListDictionary<long, (FormID FormID, RecordType Record)> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
 
@@ -64,7 +65,8 @@ namespace Mutagen.Bethesda
                 _fromEnd = SortingListDictionary<long, (FormID FormID, RecordType Record)>.Factory_Wrap_AssumeSorted(
                     constructor.FromEndPositions,
                     constructor.IDs);
-                GrupLocations = SortingList<long>.Factory_Wrap_AssumeSorted(constructor.GrupLocations);
+                var set = new HashSet<long>();
+                _grupLocations = new SortingListDictionary<long, long>(constructor.GrupLocations.Select(i => new KeyValuePair<long, long>(i, i)));
             }
 
             public bool TryGetSection(FormID id, out RangeInt64 section)
