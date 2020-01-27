@@ -1738,6 +1738,9 @@
     <Compile Include="Skyrim\Records\Major Records\Part_LoquiGenerated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Hair_LoquiGenerated.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ReactiveUI" Version="11.1.12" />

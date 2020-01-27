@@ -12,6 +12,7 @@
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
       <Group name="HeadParts" refName="HeadPart" />
+      <Group name="Hairs" refName="Hair" />
     </Fields>
   </Object>
 </Loqui>

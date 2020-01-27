@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Classes_Object = new Group<Class>(this);
             _Factions_Object = new Group<Faction>(this);
             _HeadParts_Object = new Group<HeadPart>(this);
+            _Hairs_Object = new Group<Hair>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -129,6 +130,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<HeadPart> HeadParts => _HeadParts_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IHeadPartGetter> ISkyrimModGetter.HeadParts => _HeadParts_Object;
+        #endregion
+        #region Hairs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Group<Hair> _Hairs_Object;
+        public Group<Hair> Hairs => _Hairs_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IHairGetter> ISkyrimModGetter.Hairs => _Hairs_Object;
         #endregion
 
         #region To String
@@ -335,6 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return true;
                 default:
                     throw new ArgumentException($"Unknown field index: {index}");
@@ -387,6 +396,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.HeadParts ?? true)
             {
                 this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
+            }
+            if (mask?.Hairs ?? true)
+            {
+                this.Hairs.RecordCache.Set(rhsMod.Hairs.RecordCache.Items);
             }
         }
 
@@ -458,6 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<HeadPart>());
             }
+            if (mask?.Hairs ?? true)
+            {
+                this.Hairs.RecordCache.Set(
+                    rhs.Hairs.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Hair>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkingPackage();
@@ -492,6 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Classes.RecordCache.Count > 0 ? 1 : 0;
             count += Factions.RecordCache.Count > 0 ? 1 : 0;
             count += HeadParts.RecordCache.Count > 0 ? 1 : 0;
+            count += Hairs.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -579,6 +600,11 @@ namespace Mutagen.Bethesda.Skyrim
                 name: nameof(HeadParts),
                 errorMask: errorMask,
                 index: (int)SkyrimMod_FieldIndex.HeadParts)));
+            tasks.Add(Task.Run(() => item.Hairs.CreateFromXmlFolder<Hair>(
+                dir: dir,
+                name: nameof(Hairs),
+                errorMask: errorMask,
+                index: (int)SkyrimMod_FieldIndex.Hairs)));
             await Task.WhenAll(tasks);
             return item;
         }
@@ -641,6 +667,11 @@ namespace Mutagen.Bethesda.Skyrim
                     name: nameof(HeadParts),
                     errorMask: errorMaskBuilder,
                     index: (int)SkyrimMod_FieldIndex.HeadParts)));
+                tasks.Add(Task.Run(() => Hairs.WriteToXmlFolder<Hair, Hair_ErrorMask>(
+                    dir: dir.Path,
+                    name: nameof(Hairs),
+                    errorMask: errorMaskBuilder,
+                    index: (int)SkyrimMod_FieldIndex.Hairs)));
                 await Task.WhenAll(tasks);
             }
             return null;
@@ -816,6 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Class> Classes { get; }
         new Group<Faction> Factions { get; }
         new Group<HeadPart> HeadParts { get; }
+        new Group<Hair> Hairs { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -860,6 +892,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region HeadParts
         IGroupGetter<IHeadPartGetter> HeadParts { get; }
+        #endregion
+        #region Hairs
+        IGroupGetter<IHairGetter> Hairs { get; }
         #endregion
 
     }
@@ -1343,6 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Classes = 7,
         Factions = 8,
         HeadParts = 9,
+        Hairs = 10,
     }
     #endregion
 
@@ -1360,9 +1396,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "61f5127d-406d-41a1-897e-6d17188258ea";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(SkyrimMod_Mask<>);
 
@@ -1412,6 +1448,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Factions;
                 case "HEADPARTS":
                     return (ushort)SkyrimMod_FieldIndex.HeadParts;
+                case "HAIRS":
+                    return (ushort)SkyrimMod_FieldIndex.Hairs;
                 default:
                     return null;
             }
@@ -1432,6 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1453,6 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1474,6 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1505,6 +1546,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Factions";
                 case SkyrimMod_FieldIndex.HeadParts:
                     return "HeadParts";
+                case SkyrimMod_FieldIndex.Hairs:
+                    return "Hairs";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1525,6 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1547,6 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Classes:
                 case SkyrimMod_FieldIndex.Factions:
                 case SkyrimMod_FieldIndex.HeadParts:
+                case SkyrimMod_FieldIndex.Hairs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1578,6 +1623,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Faction>);
                 case SkyrimMod_FieldIndex.HeadParts:
                     return typeof(Group<HeadPart>);
+                case SkyrimMod_FieldIndex.Hairs:
+                    return typeof(Group<Hair>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1594,6 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1610,12 +1658,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         GLOB_HEADER,
                         CLAS_HEADER,
                         FACT_HEADER,
-                        HDPT_HEADER
+                        HDPT_HEADER,
+                        HAIR_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
+        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1911,6 +1960,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
                 }
+                case 0x52494148: // HAIR
+                {
+                    if (importMask?.Hairs ?? true)
+                    {
+                        await item.Hairs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null,
+                            masterReferences: masterReferences);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -1973,6 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
+            ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
         }
         
         public string ToString(
@@ -2059,6 +2124,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.HeadParts?.ToString(fg, "HeadParts");
             }
+            if (printMask?.Hairs?.Overall ?? true)
+            {
+                item.Hairs?.ToString(fg, "Hairs");
+            }
         }
         
         public bool HasBeenSet(
@@ -2082,6 +2151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Classes = new MaskItem<bool, Group_Mask<bool>>(true, item.Classes.GetHasBeenSetMask());
             mask.Factions = new MaskItem<bool, Group_Mask<bool>>(true, item.Factions.GetHasBeenSetMask());
             mask.HeadParts = new MaskItem<bool, Group_Mask<bool>>(true, item.HeadParts.GetHasBeenSetMask());
+            mask.Hairs = new MaskItem<bool, Group_Mask<bool>>(true, item.Hairs.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -2101,6 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
             if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
             if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
+            if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
             return true;
         }
         
@@ -2117,6 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = HashHelper.GetHashCode(item.Classes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.Factions).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(item.HeadParts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(item.Hairs).CombineHashCode(ret);
             return ret;
         }
         
@@ -2179,6 +2251,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPart":
                 case "IHeadPartInternal":
                     return obj.HeadParts.RecordCache;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    return obj.Hairs.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -2194,7 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModHeader.WriteToBinary(
                 new MutagenWriter(stream, MetaDataConstants.Skyrim),
                 masterRefs);
-            Stream[] outputStreams = new Stream[9];
+            Stream[] outputStreams = new Stream[10];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -2205,6 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2265,6 +2343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             outputStreams.Add(WriteGroupAsync(item.Classes, masterRefs));
             outputStreams.Add(WriteGroupAsync(item.Factions, masterRefs));
             outputStreams.Add(WriteGroupAsync(item.HeadParts, masterRefs));
+            outputStreams.Add(WriteGroupAsync(item.Hairs, masterRefs));
             await UtilityTranslation.CompileStreamsInto(
                 outputStreams,
                 stream);
@@ -2373,6 +2452,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Hairs is ILinkContainer HairslinkCont)
+            {
+                foreach (var item in HairslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2411,6 +2497,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.HeadParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hairs.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2509,6 +2599,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHeadPart":
                 case "IHeadPartInternal":
                     foreach (var item in obj.HeadParts.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -2732,6 +2831,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hairs) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hairs);
+                try
+                {
+                    item.Hairs.DeepCopyFieldsFrom(
+                        rhs: rhs.Hairs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hairs));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -2930,6 +3049,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.HeadParts,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.HeadParts));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hairs) ?? true))
+            {
+                var loquiItem = item.Hairs;
+                ((GroupXmlWriteTranslation)((IXmlItem)loquiItem).XmlWriteTranslator).Write<IHairGetter>(
+                    item: loquiItem,
+                    node: node,
+                    name: nameof(item.Hairs),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Hairs,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hairs));
             }
         }
 
@@ -3208,6 +3338,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Hairs":
+                    try
+                    {
+                        errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hairs);
+                        item.Hairs.CopyInFromXml<Hair>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -3401,6 +3550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Classes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Factions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.HeadParts = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Hairs = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3415,6 +3565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<T, Group_Mask<T>> Classes { get; set; }
         public MaskItem<T, Group_Mask<T>> Factions { get; set; }
         public MaskItem<T, Group_Mask<T>> HeadParts { get; set; }
+        public MaskItem<T, Group_Mask<T>> Hairs { get; set; }
         #endregion
 
         #region Equals
@@ -3437,6 +3588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(this.Classes, rhs.Classes)) return false;
             if (!object.Equals(this.Factions, rhs.Factions)) return false;
             if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
+            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3452,6 +3604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret = ret.CombineHashCode(this.Classes?.GetHashCode());
             ret = ret.CombineHashCode(this.Factions?.GetHashCode());
             ret = ret.CombineHashCode(this.HeadParts?.GetHashCode());
+            ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
             return ret;
         }
 
@@ -3509,6 +3662,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!eval(this.HeadParts.Overall)) return false;
                 if (this.HeadParts.Specific != null && !this.HeadParts.Specific.AllEqual(eval)) return false;
+            }
+            if (Hairs != null)
+            {
+                if (!eval(this.Hairs.Overall)) return false;
+                if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -3614,6 +3772,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     obj.HeadParts.Specific = this.HeadParts.Specific.Translate(eval);
                 }
             }
+            if (this.Hairs != null)
+            {
+                obj.Hairs = new MaskItem<R, Group_Mask<R>>();
+                obj.Hairs.Overall = eval(this.Hairs.Overall);
+                if (this.Hairs.Specific != null)
+                {
+                    obj.Hairs.Specific = this.Hairs.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3682,6 +3849,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     HeadParts?.ToString(fg);
                 }
+                if (printMask?.Hairs?.Overall ?? true)
+                {
+                    Hairs?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -3715,6 +3886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> Classes;
         public MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> Factions;
         public MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>> HeadParts;
+        public MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> Hairs;
         #endregion
 
         #region IErrorMask
@@ -3743,6 +3915,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return Factions;
                 case SkyrimMod_FieldIndex.HeadParts:
                     return HeadParts;
+                case SkyrimMod_FieldIndex.Hairs:
+                    return Hairs;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3782,6 +3956,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     break;
                 case SkyrimMod_FieldIndex.HeadParts:
                     this.HeadParts = new MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>(ex, null);
+                    break;
+                case SkyrimMod_FieldIndex.Hairs:
+                    this.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3823,6 +4000,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.HeadParts:
                     this.HeadParts = (MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>)obj;
                     break;
+                case SkyrimMod_FieldIndex.Hairs:
+                    this.Hairs = (MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3841,6 +4021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (Classes != null) return true;
             if (Factions != null) return true;
             if (HeadParts != null) return true;
+            if (Hairs != null) return true;
             return false;
         }
         #endregion
@@ -3885,6 +4066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Classes?.ToString(fg);
             Factions?.ToString(fg);
             HeadParts?.ToString(fg);
+            Hairs?.ToString(fg);
         }
         #endregion
 
@@ -3902,6 +4084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), ((IErrorMask<Group_ErrorMask<Class_ErrorMask>>)this.Classes.Specific).Combine(rhs.Classes.Specific));
             ret.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(this.Factions.Overall.Combine(rhs.Factions.Overall), ((IErrorMask<Group_ErrorMask<Faction_ErrorMask>>)this.Factions.Specific).Combine(rhs.Factions.Specific));
             ret.HeadParts = new MaskItem<Exception, Group_ErrorMask<HeadPart_ErrorMask>>(this.HeadParts.Overall.Combine(rhs.HeadParts.Overall), ((IErrorMask<Group_ErrorMask<HeadPart_ErrorMask>>)this.HeadParts.Specific).Combine(rhs.HeadParts.Specific));
+            ret.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), ((IErrorMask<Group_ErrorMask<Hair_ErrorMask>>)this.Hairs.Specific).Combine(rhs.Hairs.Specific));
             return ret;
         }
         public static SkyrimMod_ErrorMask Combine(SkyrimMod_ErrorMask lhs, SkyrimMod_ErrorMask rhs)
@@ -3934,6 +4117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public MaskItem<bool, Group_TranslationMask<Class_TranslationMask>> Classes;
         public MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>> Factions;
         public MaskItem<bool, Group_TranslationMask<HeadPart_TranslationMask>> HeadParts;
+        public MaskItem<bool, Group_TranslationMask<Hair_TranslationMask>> Hairs;
         #endregion
 
         #region Ctors
@@ -3953,6 +4137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.Classes = new MaskItem<bool, Group_TranslationMask<Class_TranslationMask>>(defaultOn, null);
             this.Factions = new MaskItem<bool, Group_TranslationMask<Faction_TranslationMask>>(defaultOn, null);
             this.HeadParts = new MaskItem<bool, Group_TranslationMask<HeadPart_TranslationMask>>(defaultOn, null);
+            this.Hairs = new MaskItem<bool, Group_TranslationMask<Hair_TranslationMask>>(defaultOn, null);
         }
 
         #endregion
@@ -3981,6 +4166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Add((Classes?.Overall ?? true, Classes?.Specific?.GetCrystal()));
             ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
             ret.Add((HeadParts?.Overall ?? true, HeadParts?.Specific?.GetCrystal()));
+            ret.Add((Hairs?.Overall ?? true, Hairs?.Specific?.GetCrystal()));
         }
     }
 }
@@ -4000,6 +4186,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Classes;
         public bool Factions;
         public bool HeadParts;
+        public bool Hairs;
         public GroupMask()
         {
         }
@@ -4014,6 +4201,7 @@ namespace Mutagen.Bethesda.Skyrim
             Classes = defaultValue;
             Factions = defaultValue;
             HeadParts = defaultValue;
+            Hairs = defaultValue;
         }
     }
 }
@@ -4144,6 +4332,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var loquiItem = item.HeadParts;
                     ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                        item: loquiItem,
+                        writer: writer,
+                        masterReferences: masterReferences,
+                        recordTypeConverter: null);
+                }
+            }
+            if (importMask?.Hairs ?? true)
+            {
+                if (item.Hairs.RecordCache.Count > 0)
+                {
+                    var loquiItem = item.Hairs;
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write<IHairGetter>(
                         item: loquiItem,
                         writer: writer,
                         masterReferences: masterReferences,
@@ -4375,6 +4575,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IHeadPartGetter> _HeadParts => _HeadParts_IsSet ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation.Value.Min, _HeadPartsLocation.Value.Max)), _package) : default;
         public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
         #endregion
+        #region Hairs
+        private RangeInt64? _HairsLocation;
+        private bool _Hairs_IsSet => _HairsLocation.HasValue;
+        private IGroupGetter<IHairGetter> _Hairs => _Hairs_IsSet ? GroupBinaryOverlay<IHairGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HairsLocation.Value.Min, _HairsLocation.Value.Max)), _package) : default;
+        public IGroupGetter<IHairGetter> Hairs => _Hairs ?? new Group<Hair>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -4485,6 +4691,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                }
+                case 0x52494148: // HAIR
+                {
+                    _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);
