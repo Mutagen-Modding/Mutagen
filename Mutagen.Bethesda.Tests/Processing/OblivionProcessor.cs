@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Tests
         protected override void PreProcessorJobs(
             IMutagenReadStream stream)
         {
+            base.PreProcessorJobs(stream);
             foreach (var rec in this._SourceFileLocs.ListedRecords)
             {
                 LookForMagicEffects(
