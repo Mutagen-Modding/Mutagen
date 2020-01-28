@@ -849,6 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
@@ -869,6 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         AACT_HEADER,
                         CLAS_HEADER,
+                        EYES_HEADER,
                         FACT_HEADER,
                         FLST_HEADER,
                         GMST_HEADER,

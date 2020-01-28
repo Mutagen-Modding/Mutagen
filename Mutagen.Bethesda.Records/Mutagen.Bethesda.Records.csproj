@@ -1575,6 +1575,9 @@
     <Compile Include="Skyrim\Records\Major Records\Decal.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Eye.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
@@ -1740,6 +1743,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Hair_LoquiGenerated.cs">
       <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Eye_LoquiGenerated.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
