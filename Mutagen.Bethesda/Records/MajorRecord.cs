@@ -33,6 +33,36 @@ namespace Mutagen.Bethesda
             set => this.MajorRecordFlagsRaw = (int)value;
         }
 
+        #region EditorID
+        public bool EditorID_IsSet
+        {
+            get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
+            set => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String _EditorID;
+        public String EditorID
+        {
+            get => this._EditorID;
+            set => EditorID_Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String IMajorRecordGetter.EditorID => this.EditorID;
+        public virtual void EditorID_Set(
+            String value,
+            bool markSet = true)
+        {
+            _EditorID = value;
+            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = markSet;
+        }
+        public void EditorID_Unset()
+        {
+            this.EditorID_Set(default(String), false);
+        }
+        #endregion
+
         [Flags]
         public enum MajorRecordFlag
         {

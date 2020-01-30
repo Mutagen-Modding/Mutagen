@@ -13,15 +13,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public abstract GameSettingType SettingType { get; }
 
-        partial void CustomCtor()
+        public override void EditorID_Set(string value, bool markSet = true)
         {
-            this.WhenAny(x => x.EditorID)
-                .Skip(1)
-                .DistinctUntilChanged()
-                .Subscribe(edid =>
-                {
-                    this.EditorID = GameSettingUtility.CorrectEDID(edid, this.SettingType);
-                });
+            base.EditorID_Set(GameSettingUtility.CorrectEDID(value, this.SettingType), markSet);
         }
 
         public static GameSetting CreateFromBinary(

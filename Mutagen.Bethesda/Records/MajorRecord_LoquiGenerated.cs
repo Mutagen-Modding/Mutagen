@@ -61,35 +61,6 @@ namespace Mutagen.Bethesda
         #region Version
         public UInt32 Version { get; set; }
         #endregion
-        #region EditorID
-        public bool EditorID_IsSet
-        {
-            get => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID];
-            set => _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordGetter.EditorID_IsSet => EditorID_IsSet;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String _EditorID;
-        public String EditorID
-        {
-            get => this._EditorID;
-            set => EditorID_Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String IMajorRecordGetter.EditorID => this.EditorID;
-        public void EditorID_Set(
-            String value,
-            bool markSet = true)
-        {
-            _EditorID = value;
-            _hasBeenSetTracker[(int)MajorRecord_FieldIndex.EditorID] = markSet;
-        }
-        public void EditorID_Unset()
-        {
-            this.EditorID_Set(default(String), false);
-        }
-        #endregion
 
         #region To String
 

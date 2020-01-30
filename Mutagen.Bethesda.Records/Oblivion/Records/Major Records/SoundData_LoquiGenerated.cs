@@ -47,12 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region MinimumAttenuationDistance
-        public UInt16 MinimumAttenuationDistance { get; set; }
-        #endregion
-        #region MaximumAttenuationDistance
-        public UInt16 MaximumAttenuationDistance { get; set; }
-        #endregion
         #region FrequencyAdjustment
         public SByte FrequencyAdjustment { get; set; }
         #endregion

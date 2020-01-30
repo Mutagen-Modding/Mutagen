@@ -29,34 +29,43 @@ namespace Mutagen.Bethesda.Oblivion
             LFE360 = 0x80,
         }
 
+        #region MinimumAttenuationDistance
+        private UInt16 _MinimumAttenuationDistance;
+        public UInt16 MinimumAttenuationDistance
+        {
+            get => _MinimumAttenuationDistance;
+            set
+            {
+                if (value % MinAttenuationDistanceMultiplier != 0)
+                {
+                    throw new ArgumentException($"{nameof(MinimumAttenuationDistance)} must be divisible by {MinAttenuationDistanceMultiplier}");
+                }
+                _MinimumAttenuationDistance = value;
+            }
+        }
+        #endregion
+        #region MaximumAttenuationDistance
+        private UInt16 _MaximumAttenuationDistance;
+        public UInt16 MaximumAttenuationDistance
+        {
+            get => _MaximumAttenuationDistance;
+            set
+            {
+                if (value % MaxAttenuationDistanceMultiplier != 0)
+                {
+                    throw new ArgumentException($"{nameof(MaximumAttenuationDistance)} must be divisible by {MaxAttenuationDistanceMultiplier}");
+                }
+                _MaximumAttenuationDistance = value;
+            }
+        }
+        #endregion
+
         public const int MinAttenuationDistanceMultiplier = 5;
         public const int MaxAttenuationDistanceMultiplier = 100;
 
         private static byte[] _marker = new byte[] { 1 };
         public static ReadOnlySpan<byte> SoundDataMarker => _marker;
         public virtual ReadOnlySpan<byte> Marker => SoundDataMarker;
-
-        partial void CustomCtor()
-        {
-            this.WhenAny(x => x.MinimumAttenuationDistance)
-                .Skip(1)
-                .Subscribe((change) =>
-                {
-                    if (change % MinAttenuationDistanceMultiplier != 0)
-                    {
-                        throw new ArgumentException($"{nameof(MinimumAttenuationDistance)} must be divisible by {MinAttenuationDistanceMultiplier}");
-                    }
-                });
-            this.WhenAny(x => x.MaximumAttenuationDistance)
-                .Skip(1)
-                .Subscribe((change) =>
-                {
-                    if (change % MaxAttenuationDistanceMultiplier != 0)
-                    {
-                        throw new ArgumentException($"{nameof(MaximumAttenuationDistance)} must be divisible by {MaxAttenuationDistanceMultiplier}");
-                    }
-                });
-        }
     }
 
     namespace Internals

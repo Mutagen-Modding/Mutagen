@@ -37,20 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return new GlobalInt();
         }
-
-        partial void CustomCtor()
-        {
-            this.WhenAny(x => x.RawFloat)
-                .Skip(1)
-                .DistinctUntilChanged()
-                .Select(x => (int)Math.Round(x))
-                .BindTo(this, x => x.Data);
-            this.WhenAny(x => x.Data)
-                .Skip(1)
-                .DistinctUntilChanged()
-                .Select(i => (float)i)
-                .BindTo(this, x => x.RawFloat);
-        }
     }
 
     namespace Internals
