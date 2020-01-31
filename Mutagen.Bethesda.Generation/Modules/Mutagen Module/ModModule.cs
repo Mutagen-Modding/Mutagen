@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = new MasterReferences(item.MasterReferences, modKey);");
+                fg.AppendLine($"var masterRefs = new MasterReferences(modKey, item.MasterReferences);");
                 using (var args = new ArgsWrapper(fg,
                     "item.ModHeader.WriteToBinary"))
                 {
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = new MasterReferences(item.MasterReferences, modKey);");
+                fg.AppendLine($"var masterRefs = new MasterReferences(modKey, item.MasterReferences);");
                 using (var args = new ArgsWrapper(fg,
                     "item.ModHeader.WriteToBinary"))
                 {

@@ -4946,7 +4946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             GroupMask importMask = null)
         {
-            var masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
+            var masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
             await UtilityAsyncTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -5822,7 +5822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Stream stream,
             ModKey modKey)
         {
-            var masterRefs = new MasterReferences(item.MasterReferences, modKey);
+            var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
                 new MutagenWriter(stream, MetaDataConstants.Oblivion),
                 masterRefs);
@@ -5930,7 +5930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Stream stream,
             ModKey modKey)
         {
-            var masterRefs = new MasterReferences(item.MasterReferences, modKey);
+            var masterRefs = new MasterReferences(modKey, item.MasterReferences);
             item.ModHeader.WriteToBinary(
                 new MutagenWriter(stream, MetaDataConstants.Oblivion),
                 masterRefs);
@@ -12672,7 +12672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey,
             RecordTypeConverter recordTypeConverter)
         {
-            MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);
+            MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);
             {
                 var loquiItem = item.ModHeader;
                 ((ModHeaderBinaryWriteTranslation)((IBinaryItem)loquiItem).BinaryWriteTranslator).Write(
@@ -13919,15 +13919,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos);
                     _package.MasterReferences = new MasterReferences(
+                        this.ModKey,
                         this.ModHeader.MasterReferences.Select(
                             master => new MasterReference()
                             {
                                 Master = master.Master,
                                 FileSize = master.FileSize,
                                  FileSize_IsSet = master.FileSize_IsSet
-                            })
-                            .ToList(),
-                        this.ModKey);
+                            }));
                     return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
                 }
                 case 0x54534D47: // GMST

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 using Noggog;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {

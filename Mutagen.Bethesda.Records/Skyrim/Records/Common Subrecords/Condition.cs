@@ -1,5 +1,6 @@
 ﻿using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;

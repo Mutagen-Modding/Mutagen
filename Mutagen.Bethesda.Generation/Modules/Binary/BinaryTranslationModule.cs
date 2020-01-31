@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (obj.GetObjectType() == ObjectType.Mod)
             {
-                fg.AppendLine($"var masterReferences = new MasterReferences({accessor}.ModHeader.MasterReferences, modKey);");
+                fg.AppendLine($"var masterReferences = new MasterReferences(modKey, {accessor}.ModHeader.MasterReferences);");
             }
 
             if (await obj.IsMajorRecord())
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(item.ModHeader.MasterReferences, modKey);");
+                        fg.AppendLine($"MasterReferences masterReferences = new MasterReferences(modKey, item.ModHeader.MasterReferences);");
                     }
                     if (obj.HasLoquiBaseObject)
                     {
@@ -2006,6 +2006,7 @@ namespace Mutagen.Bethesda.Generation
                                                     using (var args = new ArgsWrapper(fg,
                                                         "_package.MasterReferences = new MasterReferences"))
                                                     {
+                                                        args.Add("this.ModKey");
                                                         args.Add((subFg) =>
                                                         {
                                                             subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
@@ -2021,10 +2022,8 @@ namespace Mutagen.Bethesda.Generation
                                                                     subFg.AppendLine("FileSize = master.FileSize,");
                                                                     subFg.AppendLine(" FileSize_IsSet = master.FileSize_IsSet");
                                                                 }
-                                                                subFg.AppendLine(".ToList()");
                                                             }
                                                         });
-                                                        args.Add("this.ModKey");
                                                     }
                                                 }
                                             });

@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {

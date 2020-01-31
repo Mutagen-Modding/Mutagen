@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Loqui.Internal;
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using Noggog.Utility;
 using System;

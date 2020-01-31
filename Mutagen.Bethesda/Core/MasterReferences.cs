@@ -1,27 +1,34 @@
-﻿using System;
+﻿using Noggog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Internals
 {
     public class MasterReferences
     {
-        public static MasterReferences Empty { get; } = new MasterReferences();
-        public readonly IReadOnlyList<IMasterReferenceGetter> Masters;
+        public static MasterReferences Empty { get; } = new MasterReferences(ModKey.NULL);
+
+        public readonly IList<IMasterReferenceGetter> Masters = new List<IMasterReferenceGetter>();
         public readonly ModKey CurrentMod;
 
-        private MasterReferences()
+        public MasterReferences(ModKey modKey)
         {
+            this.CurrentMod = modKey;
         }
 
-        public MasterReferences(
-            IReadOnlyList<IMasterReferenceGetter> masters,
-            ModKey modKey)
+        public MasterReferences(ModKey modKey, IEnumerable<IMasterReferenceGetter> masters)
         {
-            this.Masters = masters;
             this.CurrentMod = modKey;
+            this.Masters.AddRange(masters);
+        }
+
+        public MasterReferences(ModKey modKey, params IMasterReferenceGetter[] masters)
+        {
+            this.CurrentMod = modKey;
+            this.Masters.AddRange(masters);
         }
     }
 }

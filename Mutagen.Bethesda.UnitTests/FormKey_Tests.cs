@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         public MasterReferences TypicalMasters() => 
             new MasterReferences(
+                ModKey.Dummy,
                 new List<IMasterReferenceGetter>()
                 {
                     new MasterReference()
@@ -85,8 +87,7 @@ namespace Mutagen.Bethesda.UnitTests
                     {
                         Master = new ModKey("Master3", false)
                     },
-                },
-                ModKey.Dummy);
+                });
 
         [Fact]
         public void BinaryTranslation_Typical()

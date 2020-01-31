@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         LoquiBinaryTranslation<Ammo>.CREATE_FUNC _create = LoquiBinaryTranslation<Ammo>.CREATE;
         byte[] _data = new byte[0x14];
         MutagenFrame _frame;
-        MasterReferences _masterRefs = new MasterReferences(new IMasterReferenceGetter[] { }, Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        MasterReferences _masterRefs = new MasterReferences(Mutagen.Bethesda.Oblivion.Constants.Oblivion);
 
         [GlobalSetup]
         public void Setup()

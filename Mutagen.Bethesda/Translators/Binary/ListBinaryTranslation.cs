@@ -7,6 +7,7 @@ using Noggog;
 using Loqui;
 using System.IO;
 using Loqui.Internal;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Binary
 {
