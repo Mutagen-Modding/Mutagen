@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>7.3</LangVersion>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,6 +36,7 @@
     <Compile Include="Core\MajorRecordInstantiator.cs" />
     <Compile Include="Core\Structs\ModIndex.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
+    <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Records\ListGroupAbstract.cs" />
     <Compile Include="Translators\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />

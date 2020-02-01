@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDLink<T> item,
-            MasterReferences masterReferences = null)
+            MasterReferences? masterReferences = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse<T>(
             MutagenFrame frame,
             out IEDIDSetLink<T> item,
-            MasterReferences masterReferences = null)
+            MasterReferences? masterReferences = null)
             where T : class, IMajorRecordCommonGetter
         {
             if (!frame.TryCheckUpcomingRead(4, out var ex))

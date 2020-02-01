@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Mutagen.Bethesda
             public FormID LastParsed;
             public long LastLoc;
             public MetaDataConstants MetaData { get; }
-            public Func<IMutagenReadStream, RecordType, uint, bool> AdditionalCriteria;
+            public Func<IMutagenReadStream, RecordType, uint, bool>? AdditionalCriteria;
 
             public FileLocationConstructor(MetaDataConstants metaData)
             {
@@ -105,7 +106,7 @@ namespace Mutagen.Bethesda
                 return true;
             }
 
-            public bool TryGetRecords(RangeInt64 section, out IEnumerable<(FormID FormID, RecordType Record)> ids)
+            public bool TryGetRecords(RangeInt64 section, [MaybeNullWhen(false)] out IEnumerable<(FormID FormID, RecordType Record)> ids)
             {
                 var gotStart = _fromStart.TryGetIndexInDirection(
                     key: section.Min,
@@ -121,14 +122,14 @@ namespace Mutagen.Bethesda
                     result: out var end);
                 if (!gotStart || !gotEnd || !gotEndStart)
                 {
-                    ids = null;
+                    ids = default!;
                     return false;
                 }
                 var endLocation = _fromEnd.Keys[end];
                 var endStartLocation = _fromStart.Keys[endStart];
                 if (endLocation > endStartLocation)
                 {
-                    ids = null;
+                    ids = default!;
                     return false;
                 }
                 var ret = new HashSet<(FormID FormID, RecordType Record)>();
@@ -149,7 +150,7 @@ namespace Mutagen.Bethesda
         public static FileLocations GetFileLocations(
             string filePath,
             MetaDataConstants meta,
-            RecordInterest interest = null)
+            RecordInterest? interest = null)
         {
             using (var stream = new MutagenBinaryReadStream(filePath, meta))
             {
@@ -170,8 +171,8 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             IMutagenReadStream reader,
-            RecordInterest interest = null,
-            Func<IMutagenReadStream, RecordType, uint, bool> additionalCriteria = null)
+            RecordInterest? interest = null,
+            Func<IMutagenReadStream, RecordType, uint, bool>? additionalCriteria = null)
         {
             FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData)
             {
@@ -179,7 +180,7 @@ namespace Mutagen.Bethesda
             };
             SkipHeader(reader);
 
-            HashSet<RecordType> remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest.InterestingTypes);
+            HashSet<RecordType>? remainingTypes = ((interest?.InterestingTypes?.Count ?? 0) <= 0) ? null : new HashSet<RecordType>(interest!.InterestingTypes);
             Stack<long> grupPositions = new Stack<long>();
             while (!reader.Complete
                 && (remainingTypes?.Count ?? 1) > 0)
@@ -202,7 +203,7 @@ namespace Mutagen.Bethesda
         private static RecordType? ParseTopLevelGRUP(
             IMutagenReadStream reader,
             FileLocationConstructor fileLocs,
-            RecordInterest interest,
+            RecordInterest? interest,
             Stack<long> parentGroupLocations,
             RecordType? grupRecOverride,
             bool checkOverallGrupType)
@@ -303,7 +304,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
             RecordType recordType,
-            RecordInterest interest,
+            RecordInterest? interest,
             Stack<long> parentGroupLocations)
         {
             var grupLoc = frame.Position;
@@ -352,7 +353,7 @@ namespace Mutagen.Bethesda
         private static void HandleCells(
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
-            RecordInterest interest,
+            RecordInterest? interest,
             Stack<long> parentGroupLocations)
         {
             frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;
@@ -390,7 +391,7 @@ namespace Mutagen.Bethesda
         private static void HandleCellSubchildren(
             MutagenFrame frame,
             FileLocationConstructor fileLocs,
-            RecordInterest interest,
+            RecordInterest? interest,
             Stack<long> parentGroupLocations)
         {
             frame.Reader.Position += fileLocs.MetaData.GroupConstants.HeaderLength;

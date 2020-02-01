@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
 
     public static class RecordTypeConverterExt
     {
-        public static RecordType ConvertToCustom(this RecordTypeConverter converter, RecordType rec)
+        public static RecordType ConvertToCustom(this RecordTypeConverter? converter, RecordType rec)
         {
             if (converter == null) return rec;
             if (converter.FromConversions.TryGetValue(rec, out var converted))
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda
             return rec;
         }
 
-        public static RecordType ConvertToStandard(this RecordTypeConverter converter, RecordType rec)
+        public static RecordType ConvertToStandard(this RecordTypeConverter? converter, RecordType rec)
         {
             if (converter == null) return rec;
             if (converter.ToConversions.TryGetValue(rec, out var converted))
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda
             return rec;
         }
 
-        public static RecordTypeConverter Combine(this RecordTypeConverter converter, RecordTypeConverter rhs)
+        public static RecordTypeConverter? Combine(this RecordTypeConverter? converter, RecordTypeConverter? rhs)
         {
             if (converter == null) return rhs;
             if (rhs == null) return null;

@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Preprocessing
             FilePath outputPath,
             GameMode gameMode,
             AlignmentRules alignmentRules,
-            TempFolder temp = null)
+            TempFolder? temp = null)
         {
             var interest = new RecordInterest(alignmentRules.Alignments.Keys)
             {
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 var recType = HeaderTranslation.ReadNextRecordType(
                     inputStream,
                     out var len);
-                IEnumerable<RecordType> stopMarkers;
+                IEnumerable<RecordType>? stopMarkers;
                 if (!alignmentRules.StopMarkers.TryGetValue(recType, out stopMarkers))
                 {
                     stopMarkers = null;
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 inputStream.WriteTo(writer.BaseStream, 12);
                 var endPos = inputStream.Position + len;
                 Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
-                byte[] rest = null;
+                byte[]? rest = null;
                 while (inputStream.Position < endPos)
                 {
                     var subType = HeaderTranslation.GetNextSubRecordType(
@@ -436,8 +436,8 @@ namespace Mutagen.Bethesda.Preprocessing
             MutagenWriter writer)
         {
             reader.WriteTo(writer.BaseStream, 4);
-            byte[] roadStorage = null;
-            byte[] cellStorage = null;
+            byte[]? roadStorage = null;
+            byte[]? cellStorage = null;
             List<byte[]> grupBytes = new List<byte[]>();
             for (int i = 0; i < 3; i++)
             {

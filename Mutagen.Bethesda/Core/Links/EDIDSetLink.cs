@@ -37,14 +37,17 @@ namespace Mutagen.Bethesda
             base.EDID = value;
         }
 
-        public void Set(T value, bool hasBeenSet)
+        public void Set(T? value, bool hasBeenSet)
         {
             if (value?.EditorID == null)
             {
                 this.EDID = UNLINKED;
                 this.HasBeenSet = hasBeenSet;
             }
-            this.Set(new RecordType(value.EditorID), hasBeenSet);
+            else
+            {
+                this.Set(new RecordType(value.EditorID), hasBeenSet);
+            }
         }
 
         public override void Unset()

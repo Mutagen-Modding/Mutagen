@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node,
             out IFormIDLink<T> item,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             if (Parse(node, out FormKey id, errorMask))
@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node,
             out IFormIDLink<T> item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
             return this.Parse(
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node,
             out IFormIDSetLink<T> item,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
             if (Parse(node, out FormKey id, errorMask))
@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda
         public bool Parse<T>(
             XElement node,
             out IFormIDSetLink<T> item,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask)
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
             where T : class, IMajorRecordCommonGetter
         {
             return this.Parse(
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool Parse(string str, out FormKey value, ErrorMaskBuilder errorMask)
+        protected override bool Parse(string str, out FormKey value, ErrorMaskBuilder? errorMask)
         {
             if (FormKey.TryFactory(str, out FormKey parsed))
             {

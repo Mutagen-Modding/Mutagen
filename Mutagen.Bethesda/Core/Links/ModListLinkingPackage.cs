@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -58,7 +59,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
+        public bool TryGetMajorRecord<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
             lock (this._modListMajorRecords)
@@ -94,12 +95,12 @@ namespace Mutagen.Bethesda
                 // Check for record
                 if (cache.Dictionary.TryGetValue(formKey, out var majorRecObj))
                 {
-                    majorRec = majorRecObj as TMajor;
+                    majorRec = (majorRecObj as TMajor)!;
                     return majorRec != null;
                 }
                 if (cache.Depth >= this._modList.Count)
                 {
-                    majorRec = default;
+                    majorRec = default!;
                     return false;
                 }
 
@@ -121,12 +122,12 @@ namespace Mutagen.Bethesda
                     // Check again
                     if (cache.Dictionary.TryGetValue(formKey, out majorRecObj))
                     {
-                        majorRec = majorRecObj as TMajor;
+                        majorRec = (majorRecObj as TMajor)!;
                         return majorRec != null;
                     }
                 }
                 // Record doesn't exist
-                majorRec = default;
+                majorRec = default!;
                 return false;
             }
         }

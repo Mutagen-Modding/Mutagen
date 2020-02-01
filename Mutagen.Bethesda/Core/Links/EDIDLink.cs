@@ -1,6 +1,7 @@
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,13 +33,16 @@ namespace Mutagen.Bethesda
             this.EDID = type;
         }
 
-        public void Set(TMajor value)
+        public void Set(TMajor? value)
         {
             if (value?.EditorID == null)
             {
                 this.EDID = UNLINKED;
             }
-            this.Set(new RecordType(value.EditorID));
+            else
+            {
+                this.Set(new RecordType(value.EditorID));
+            }
         }
 
         public bool Equals(IEDIDLinkGetter<TMajor> other) => this.EDID.Equals(other.EDID);
@@ -49,11 +53,11 @@ namespace Mutagen.Bethesda
 
         private bool TryLinkToMod(
             IModGetter mod,
-            out TMajor item)
+            [MaybeNullWhen(false)]out TMajor item)
         {
             if (this.EDID == UNLINKED)
             {
-                item = default;
+                item = default!;
                 return false;
             }
             // ToDo
@@ -67,7 +71,7 @@ namespace Mutagen.Bethesda
                     return true;
                 }
             }
-            item = default;
+            item = default!;
             return false;
         }
 
@@ -76,7 +80,7 @@ namespace Mutagen.Bethesda
         {
             if (this.EDID == UNLINKED)
             {
-                major = default;
+                major = default!;
                 return false;
             }
             foreach (var mod in package)
@@ -87,7 +91,7 @@ namespace Mutagen.Bethesda
                     return true;
                 }
             }
-            major = default;
+            major = default!;
             return false;
         }
 
@@ -103,14 +107,14 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out TMajor rec))
             {
                 formKey = rec;
                 return true;
             }
-            formKey = default;
+            formKey = default!;
             return false;
         }
 

@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
         public delegate T CREATE_FUNC(
             MutagenFrame reader,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                return null;
+                throw new ArgumentException();
             }
         }
 
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IHasItem<T> item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             if (Parse(
                 frame,
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             out T item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             item = CREATE(
                 reader: frame,
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Binary
         public delegate Task<T> CREATE_FUNC(
             MutagenFrame reader,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
         public static readonly CREATE_FUNC CREATE = GetCreateFunc();
 
         #region Parse
@@ -138,12 +138,12 @@ namespace Mutagen.Bethesda.Binary
                 .FirstOrDefault();
             if (method == null)
             {
-                return null;
+                throw new ArgumentException();
             }
             if (method.ReturnType.Equals(tType))
             {
                 var wrap = LoquiBinaryTranslation<T>.CREATE;
-                return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter recConv) =>
+                return async (MutagenFrame frame, MasterReferences master, RecordTypeConverter? recConv) =>
                 {
                     return wrap(frame, master, recConv);
                 };
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             IHasItem<T> item,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var result = await Parse(
                 frame,
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Binary
         public async Task<TryGet<T>> Parse(
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var item = await CREATE(
                 reader: frame,

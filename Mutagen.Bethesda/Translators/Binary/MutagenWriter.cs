@@ -55,21 +55,32 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(b);
         }
 
+        public void Write(bool? b)
+        {
+            if (!b.HasValue) return;
+            this.Writer.Write(b.Value);
+        }
+
         public void Write(byte b)
         {
             this.Writer.Write(b);
         }
 
-        public void Write(byte[] b)
+        public void Write(byte? b)
         {
+            if (!b.HasValue) return;
+            this.Writer.Write(b.Value);
+        }
+
+        public void Write(byte[]? b)
+        {
+            if (b == null) return;
             this.Writer.Write(b);
         }
 
         public void Write(ReadOnlySpan<byte> b)
         {
-            // ToDo
-            // Remove ToArray call when direct span parameter added in future .NET
-            this.Writer.Write(b.ToArray());
+            this.Writer.Write(b);
         }
 
         public void Write(ushort b)
@@ -77,9 +88,21 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(b);
         }
 
+        public void Write(ushort? b)
+        {
+            if (!b.HasValue) return;
+            this.Writer.Write(b.Value);
+        }
+
         public void Write(uint b)
         {
             this.Writer.Write(b);
+        }
+
+        public void Write(uint? b)
+        {
+            if (!b.HasValue) return;
+            this.Writer.Write(b.Value);
         }
 
         public void Write(ulong b)
@@ -87,9 +110,21 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(b);
         }
 
+        public void Write(ulong? b)
+        {
+            if (!b.HasValue) return;
+            this.Writer.Write(b.Value);
+        }
+
         public void Write(sbyte s)
         {
             this.Writer.Write(s);
+        }
+
+        public void Write(sbyte? s)
+        {
+            if (!s.HasValue) return;
+            this.Writer.Write(s.Value);
         }
 
         public void Write(short s)
@@ -97,9 +132,21 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(s);
         }
 
+        public void Write(short? s)
+        {
+            if (!s.HasValue) return;
+            this.Writer.Write(s.Value);
+        }
+
         public void Write(int i)
         {
             this.Writer.Write(i);
+        }
+
+        public void Write(int? i)
+        {
+            if (!i.HasValue) return;
+            this.Writer.Write(i.Value);
         }
 
         public void Write(long i)
@@ -107,9 +154,21 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(i);
         }
 
+        public void Write(long? i)
+        {
+            if (!i.HasValue) return;
+            this.Writer.Write(i.Value);
+        }
+
         public void Write(float i)
         {
             this.Writer.Write(i);
+        }
+
+        public void Write(float? i)
+        {
+            if (!i.HasValue) return;
+            this.Writer.Write(i.Value);
         }
 
         public void Write(double i)
@@ -117,14 +176,21 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(i);
         }
 
+        public void Write(double? i)
+        {
+            if (!i.HasValue) return;
+            this.Writer.Write(i.Value);
+        }
+
         public void Write(char c)
         {
             this.Writer.Write(c);
         }
 
-        public void Write(char[] c)
+        public void Write(char? c)
         {
-            this.Writer.Write(c);
+            if (!c.HasValue) return;
+            this.Writer.Write(c.Value);
         }
 
         public void WriteZeros(uint num)
@@ -135,7 +201,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public void Write(string str)
+        public void Write(ReadOnlySpan<char> str)
         {
             byte[] bytes = new byte[str.Length];
             for (int i = 0; i < bytes.Length; i++)
@@ -144,6 +210,12 @@ namespace Mutagen.Bethesda.Binary
                 bytes[i] = (byte)c;
             }
             this.Writer.Write(bytes);
+        }
+
+        public void Write(string? str)
+        {
+            if (str == null) return;
+            Write(str.AsSpan());
         }
 
         public void Write(Color color, bool extraByte)

@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Binary
         public static IReadOnlySetList<T> FactoryByArray(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             BinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
@@ -124,12 +124,12 @@ namespace Mutagen.Bethesda.Binary
             private BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
             private BinaryOverlay.SpanRecordFactory<T> _getter;
-            private RecordTypeConverter _recordTypeConverter;
+            private RecordTypeConverter? _recordTypeConverter;
 
             public BinaryOverlayRecordListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
-                RecordTypeConverter recordTypeConverter,
+                RecordTypeConverter? recordTypeConverter,
                 BinaryOverlay.SpanRecordFactory<T> getter,
                 int[] locs)
             {

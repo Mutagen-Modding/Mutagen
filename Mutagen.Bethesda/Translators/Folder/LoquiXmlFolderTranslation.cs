@@ -17,8 +17,8 @@ namespace Mutagen.Bethesda.Folder
         public delegate Task<T> CREATE_FUNC(
             XElement node,
             string path,
-            ErrorMaskBuilder errorMask,
-            TranslationCrystal translationMask);
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask);
         private static readonly Lazy<CREATE_FUNC> create = new Lazy<CREATE_FUNC>(GetCreateFunc);
         public static CREATE_FUNC CREATE
         {

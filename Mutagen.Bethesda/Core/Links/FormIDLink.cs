@@ -2,6 +2,7 @@ using Loqui;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,12 +63,12 @@ namespace Mutagen.Bethesda
 
         public override string ToString() => this.FormKey.ToString();
 
-        public bool TryResolve<M>(ILinkingPackage<M> package, out TMajor major)
+        public bool TryResolve<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out TMajor major)
             where M : IModGetter
         {
             if (this.FormKey.Equals(FormKey.NULL))
             {
-                major = default;
+                major = default!;
                 return false;
             }
             if (package.TryGetMajorRecord<TMajor>(this.FormKey, out var majorRec))
@@ -75,32 +76,32 @@ namespace Mutagen.Bethesda
                 major = majorRec;
                 return true;
             }
-            major = default;
+            major = default!;
             return false;
         }
 
-        public bool TryResolveFormKey<M>(ILinkingPackage<M> package, out FormKey formKey)
+        public bool TryResolveFormKey<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out FormKey formKey)
             where M : IModGetter
         {
             formKey = this.FormKey;
             return true;
         }
 
-        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
         {
-            if (TryResolve(package, out TMajor rec))
+            if (TryResolve(package, out var rec))
             {
                 formKey = rec;
                 return true;
             }
-            formKey = default;
+            formKey = default!;
             return false;
         }
 
         public ITryGetter<TMajor> TryResolve<TMod>(ILinkingPackage<TMod> package)
             where TMod : IModGetter
         {
-            if (TryResolve(package, out TMajor rec))
+            if (TryResolve(package, out var rec))
             {
                 return TryGet<TMajor>.Succeed(rec);
             }

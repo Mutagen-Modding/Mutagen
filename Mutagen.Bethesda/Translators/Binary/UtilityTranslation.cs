@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate TryGet<int?> RecordTypelessStructFill<R>(
             R record,
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate TryGet<int?> ModRecordTypeFill<R, G>(
             R record,
@@ -48,13 +48,13 @@ namespace Mutagen.Bethesda
             int contentLength,
             MasterReferences masterReferences,
             G importMask,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public static M MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
             RecordType recType,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
         {
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
         {
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda
             G record,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             MasterReferences masterReferences,
             G importMask,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             ModRecordTypeFill<M, G> fillTyped)
         {
@@ -345,6 +345,7 @@ namespace Mutagen.Bethesda
             foreach (var item in group)
             {
                 var edid = item.Value.EditorID;
+                if (edid == null) continue;
                 if (edid.Length != Constants.HEADER_LENGTH)
                 {
                     throw new ArgumentException($"EDID link record type {recordType} had an EDID of improper length: {edid}");
@@ -509,7 +510,7 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate Task<TryGet<int?>> RecordTypelessStructFill<R>(
             R record,
@@ -518,7 +519,7 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate Task<TryGet<int?>> ModRecordTypeFill<R, G>(
             R record,
@@ -526,14 +527,15 @@ namespace Mutagen.Bethesda
             RecordType nextRecordType,
             int contentLength,
             MasterReferences masterReferences,
-            G importMask,
-            RecordTypeConverter recordTypeConverter);
+            G? importMask,
+            RecordTypeConverter? recordTypeConverter)
+            where G : class;
 
         public static async Task<M> MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
             RecordType recType,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             MasterReferences masterReferences,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
@@ -580,7 +582,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
@@ -599,7 +601,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
         {
@@ -638,7 +640,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
@@ -657,7 +659,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             bool setFinal,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypelessStructFill<M> fillTyped)
         {
@@ -698,7 +700,7 @@ namespace Mutagen.Bethesda
             G record,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<G> fillStructs,
             RecordTypeFill<G> fillTyped)
         {
@@ -748,10 +750,11 @@ namespace Mutagen.Bethesda
             M record,
             MutagenFrame frame,
             MasterReferences masterReferences,
-            G importMask,
-            RecordTypeConverter recordTypeConverter,
+            G? importMask,
+            RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             ModRecordTypeFill<M, G> fillTyped)
+            where G : class
         {
             fillStructs?.Invoke(
                 record: record,

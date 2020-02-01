@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -28,7 +29,7 @@ namespace Mutagen.Bethesda
             return _untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
         }
 
-        public bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
+        public bool TryGetMajorRecord<TMajor>(FormKey formKey, [MaybeNullWhen(false)]out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
             IReadOnlyCache<object, FormKey> cache;
@@ -46,6 +47,7 @@ namespace Mutagen.Bethesda
                     else
                     {
                         var registration = LoquiRegistration.GetRegister(typeof(TMajor));
+                        if (registration == null) throw new ArgumentException();
                         _majorRecords[registration.ClassType] = cache;
                         _majorRecords[registration.GetterType] = cache;
                         _majorRecords[registration.SetterType] = cache;
@@ -62,10 +64,10 @@ namespace Mutagen.Bethesda
             }
             if (!cache.TryGetValue(formKey, out var majorRecObj))
             {
-                majorRec = default;
+                majorRec = default!;
                 return false;
             }
-            majorRec = majorRecObj as TMajor;
+            majorRec = (majorRecObj as TMajor)!;
             return majorRec != null;
         }
 

@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(
             MutagenFrame frame,
-            out Color item,
+            [MaybeNullWhen(false)]out Color item,
             bool extraByte)
         {
             if (!extraByte)
@@ -36,20 +37,6 @@ namespace Mutagen.Bethesda.Binary
                 throw new NotImplementedException();
             }
             return this.ParseValue(frame);
-        }
-
-        public void ParseInto(
-            MutagenFrame frame,
-            IHasItem<Color> item,
-            bool extraByte)
-        {
-            if (!extraByte)
-            {
-                throw new NotImplementedException();
-            }
-            this.ParseInto(
-                frame: frame,
-                item: item);
         }
 
         public override Color ParseValue(MutagenFrame reader)
@@ -84,22 +71,6 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write(
             MutagenWriter writer,
-            IHasBeenSetItemGetter<Color> item,
-            RecordType header,
-            bool nullable,
-            bool extraByte)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                header,
-                nullable,
-                write: GetWriter(extraByte));
-        }
-
-        public void Write(
-            MutagenWriter writer,
             Color item,
             RecordType header,
             bool nullable,
@@ -110,29 +81,6 @@ namespace Mutagen.Bethesda.Binary
                 item,
                 header,
                 nullable,
-                write: GetWriter(extraByte));
-        }
-
-        public void Write<M>(
-            MutagenWriter writer,
-            IHasBeenSetItemGetter<Color> item,
-            bool extraByte)
-        {
-            if (!item.HasBeenSet) return;
-            this.Write(
-                writer,
-                item.Item,
-                write: GetWriter(extraByte));
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IHasItemGetter<Color> item,
-            bool extraByte)
-        {
-            this.Write(
-                writer,
-                item.Item,
                 write: GetWriter(extraByte));
         }
 

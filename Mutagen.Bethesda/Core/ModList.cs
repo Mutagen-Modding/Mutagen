@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,11 +45,11 @@ namespace Mutagen.Bethesda
             return true;
         }
 
-        public bool TryGetIndex(ModIndex index, out ModListing<TMod> result)
+        public bool TryGetIndex(ModIndex index, [MaybeNullWhen(false)] out ModListing<TMod> result)
         {
             if (!_modsByLoadOrder.InRange(index.ID))
             {
-                result = default(ModListing<TMod>);
+                result = default!;
                 return false;
             }
             result = _modsByLoadOrder[index.ID];

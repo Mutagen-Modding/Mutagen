@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Binary
                 nullable);
         }
 
-        public E ParseValue(MutagenFrame reader, ErrorMaskBuilder errorMask)
+        public E ParseValue(MutagenFrame reader, ErrorMaskBuilder? errorMask)
         {
             int i;
             switch (reader.Remaining)

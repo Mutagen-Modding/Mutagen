@@ -9,7 +9,7 @@ using System.Text;
 namespace Mutagen.Bethesda
 {
     public interface IGroupCommon<out TMajor>
-        where TMajor : IMajorRecordCommonGetter, IXmlItem, IBinaryItem
+        where TMajor : IMajorRecordCommonGetter, IBinaryItem
     {
         IMod SourceMod { get; }
 
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda
     public static class IGroupCommonExt
     {
         public static TMajor AddNew<TMajor>(this GroupAbstract<TMajor> group)
-            where TMajor : IMajorRecordInternal, IXmlItem, IBinaryItem, IEquatable<TMajor>
+            where TMajor : IMajorRecordInternal, IBinaryItem, IEquatable<TMajor>
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(group.SourceMod.GetNextFormKey());
             group.InternalCache.Set(ret);

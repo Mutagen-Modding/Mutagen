@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Oblivion;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
             return true;
         }
 
-        public static bool TryGetUsualLoadOrder(DirectoryPath dataPath, out List<ModKey> loadOrder)
+        public static bool TryGetUsualLoadOrder(DirectoryPath dataPath, [MaybeNullWhen(false)]out List<ModKey> loadOrder)
         {
             if (!TryGetPluginsFile(out var path))
             {
-                loadOrder = null;
+                loadOrder = default!;
                 return false;
             }
             return TryCreateLoadOrder(path, dataPath, out loadOrder);

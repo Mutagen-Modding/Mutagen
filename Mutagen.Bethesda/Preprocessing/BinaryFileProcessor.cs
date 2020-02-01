@@ -170,9 +170,9 @@ namespace Mutagen.Bethesda.Preprocessing
             if (config._moves == null) return;
             int moveDeletions = 0;
 
-            long[] moveFromKeys = null;
+            long[]? moveFromKeys = null;
             List<long> moveToKeys = new List<long>();
-            List<long> additionKeys = null;
+            List<long>? additionKeys = null;
 
             if (_sortedMoves.TryGetEncapsulatedIndices(
                 lowerKey: targetSection.Min,
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Preprocessing
             int additionIndex = 0;
 
             while ((moveFromIndex < moveFromKeys?.Length)
-                || moveToIndex < moveToKeys?.Count
+                || moveToIndex < moveToKeys.Count
                 || additionIndex < additionKeys?.Count)
             {
                 long? moveFromKey = null;

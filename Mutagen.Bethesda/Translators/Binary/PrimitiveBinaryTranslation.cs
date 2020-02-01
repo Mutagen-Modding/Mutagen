@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Mutagen.Bethesda.Binary
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Binary
             return defaultVal;
         }
 
-        public bool Parse(MutagenFrame frame, out T item)
+        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)]out T item)
         {
             item = ParseValue(frame);
             return true;
@@ -99,7 +100,7 @@ namespace Mutagen.Bethesda.Binary
             T? item,
             RecordType header,
             bool nullable,
-            Action<MutagenWriter, T?> write = null)
+            Action<MutagenWriter, T?>? write = null)
         {
             if (item == null)
             {
@@ -115,7 +116,7 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             T? item,
-            Action<MutagenWriter, T?> write = null)
+            Action<MutagenWriter, T?>? write = null)
         {
             write = write ?? WriteValue;
             write(writer, item);

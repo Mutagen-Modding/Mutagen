@@ -14,12 +14,13 @@ namespace Mutagen.Bethesda.Binary
         public delegate T CreateFunc(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
         public static readonly CreateFunc Create = GetCreateFunc();
 
         private static CreateFunc GetCreateFunc()
         {
             var regis = LoquiRegistration.GetRegister(typeof(T));
+            if (regis == null) throw new ArgumentException();
             var className = $"{regis.Namespace}.Internals.{regis.Name}BinaryOverlay";
 
             var tType = regis.ClassType.Assembly.GetType(className);
@@ -43,7 +44,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                return null;
+                throw new ArgumentException();
             }
         }
     }

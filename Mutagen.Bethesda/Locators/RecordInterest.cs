@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda
         public bool EmptyMeansInterested = true;
 
         public RecordInterest(
-            IEnumerable<RecordType> interestingTypes = null,
-            IEnumerable<RecordType> uninterestingTypes = null)
+            IEnumerable<RecordType>? interestingTypes = null,
+            IEnumerable<RecordType>? uninterestingTypes = null)
         {
             this.InterestingTypes = new HashSet<RecordType>(
                 interestingTypes ?? EnumerableExt<RecordType>.Empty);

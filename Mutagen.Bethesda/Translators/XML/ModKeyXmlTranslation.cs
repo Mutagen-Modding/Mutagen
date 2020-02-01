@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
 
         public string ElementName => "ModKey";
 
-        public ModKey Parse(XElement node, ErrorMaskBuilder errorMask)
+        public ModKey Parse(XElement node, ErrorMaskBuilder? errorMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
             {
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
             return item;
         }
 
-        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder errorMask)
+        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder? errorMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask))
             {
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda
             return ModKey.TryFactory(str, out item);
         }
 
-        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder errorMask, TranslationCrystal translationMask)
+        public bool Parse(XElement node, out ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
         {
             if (!StringXmlTranslation.Instance.Parse(node, out var str, errorMask, translationMask))
             {
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda
             return ModKey.TryFactory(str, out item);
         }
 
-        public void Write(XElement node, string name, ModKey item, ErrorMaskBuilder errorMask, TranslationCrystal translationMask)
+        public void Write(XElement node, string name, ModKey item, ErrorMaskBuilder? errorMask, TranslationCrystal? translationMask)
         {
             StringXmlTranslation.Instance.Write(
                 node,
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
             string name,
             ModKey item,
             int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
             using (errorMask?.PushIndex(fieldIndex))
             {
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda
             string name,
             IHasBeenSetItem<ModKey> item,
             int fieldIndex,
-            ErrorMaskBuilder errorMask)
+            ErrorMaskBuilder? errorMask)
         {
             if (!item.HasBeenSet) return;
             this.Write(

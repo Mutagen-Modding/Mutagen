@@ -8,6 +8,6 @@ namespace Mutagen.Bethesda
 {
     public interface INamed
     {
-        String Name { get; set; }
+        String? Name { get; set; }
     }
 }

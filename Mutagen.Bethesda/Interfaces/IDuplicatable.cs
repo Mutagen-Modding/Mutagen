@@ -8,6 +8,6 @@ namespace Mutagen.Bethesda
 {
     public interface IDuplicatable
     {
-        object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)> duplicatedRecordTracker = null);
+        object Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker = null);
     }
 }

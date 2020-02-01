@@ -4,6 +4,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public bool TryCheckUpcomingRead(long length, out Exception ex)
+        public bool TryCheckUpcomingRead(long length, [MaybeNullWhen(false)]out Exception ex)
         {
             if (!TryCheckUpcomingRead(length))
             {
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Binary
                     return false;
                 }
             }
-            ex = null;
+            ex = default!;
             return true;
         }
 

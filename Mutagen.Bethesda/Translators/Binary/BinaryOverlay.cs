@@ -14,14 +14,14 @@ namespace Mutagen.Bethesda.Binary
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
         public delegate TryGet<int?> ModTypeFillWrapper(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryOverlayFactoryPackage _package;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             int finalPos,
             int offset,
-            RecordTypeConverter recordTypeConverter,
+            RecordTypeConverter? recordTypeConverter,
             RecordTypeFillWrapper fill)
         {
             int? lastParsed = null;
@@ -409,13 +409,13 @@ namespace Mutagen.Bethesda.Binary
         public delegate T ConverterFactory<T>(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate T StreamTypedFactory<T>(
             BinaryMemoryReadStream stream,
             RecordType recordType,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public delegate T SpanFactory<T>(
             ReadOnlyMemorySlice<byte> span,
@@ -424,13 +424,13 @@ namespace Mutagen.Bethesda.Binary
         public delegate T SpanRecordFactory<T>(
             ReadOnlyMemorySlice<byte> span,
             BinaryOverlayFactoryPackage package,
-            RecordTypeConverter recordTypeConverter);
+            RecordTypeConverter? recordTypeConverter);
 
         public IReadOnlySetList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             ICollectionGetter<RecordType> trigger,
             StreamTypedFactory<T> factory,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new ReadOnlySetList<T>();
             while (!stream.Complete)
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             ICollectionGetter<RecordType> trigger,
             ConverterFactory<T> factory,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             RecordType trigger,
             StreamTypedFactory<T> factory,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             var ret = new ReadOnlySetList<T>();
             while (!stream.Complete)
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryMemoryReadStream stream,
             RecordType trigger,
             ConverterFactory<T> factory,
-            RecordTypeConverter recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter)
         {
             return ParseRepeatedTypelessSubrecord(
                 stream,

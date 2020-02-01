@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextRecordType(
             IBinaryReadStream reader,
-            RecordTypeConverter recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var header = reader.GetInt32();
             var ret = new RecordType(header);

@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             long lengthLength,
             BinarySubParseRecordDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
+            ICollectionGetter<RecordType>? triggeringRecord = null)
         {
             var ret = new List<T>();
             while (!frame.Complete)
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Binary
             IList<T> item,
             long lengthLength,
             BinarySubParseRecordDelegate transl,
-            ICollectionGetter<RecordType> triggeringRecord = null)
+            ICollectionGetter<RecordType>? triggeringRecord = null)
         {
             var enumer = ParseRepeatedItem(
                 frame,

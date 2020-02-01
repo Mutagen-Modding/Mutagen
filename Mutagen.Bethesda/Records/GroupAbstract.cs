@@ -28,10 +28,12 @@ namespace Mutagen.Bethesda
 
         protected GroupAbstract()
         {
+            this.SourceMod = null!;
         }
 
         public GroupAbstract(IModGetter getter)
         {
+            this.SourceMod = null!;
         }
 
         public GroupAbstract(IMod mod)
@@ -165,7 +167,7 @@ namespace Mutagen.Bethesda
                         {
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                         }
-                        var formKey = FormKey.Factory(package.MasterReferences, majorMeta.FormID.Raw);
+                        var formKey = FormKey.Factory(package.MasterReferences!, majorMeta.FormID.Raw);
                         locationDict.Add(formKey, checked((int)(stream.Position - offset)));
                         stream.Position += checked((int)majorMeta.TotalLength);
                         lastParsed = ObjectType.Record;

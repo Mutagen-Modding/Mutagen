@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Preprocessing
             Func<Stream> streamCreator,
             Stream outputStream,
             GameMode gameMode,
-            RecordInterest interest = null)
+            RecordInterest? interest = null)
         {
             var meta = MetaDataConstants.Get(gameMode);
             using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))

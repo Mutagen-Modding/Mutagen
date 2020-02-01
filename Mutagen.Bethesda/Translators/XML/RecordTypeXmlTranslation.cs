@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
         }
 
-        protected override bool Parse(string str, out RecordType value, ErrorMaskBuilder errorMask)
+        protected override bool Parse(string str, out RecordType value, ErrorMaskBuilder? errorMask)
         {
             if (RecordType.TryFactory(str, out RecordType parsed))
             {
