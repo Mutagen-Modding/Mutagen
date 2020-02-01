@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using Noggog.Utility;
@@ -16,29 +16,21 @@ namespace Mutagen.Bethesda.Preprocessing
         #region Config
         public class Config
         {
-            internal SortedList<long, byte[]> _additions;
-            internal SortedList<long, byte> _substitutions;
-            internal RangeCollection _moveRanges;
-            internal Dictionary<RangeInt64, long> _moves;
-            internal Dictionary<long, List<RangeInt64>> _sameLocMoves;
+            internal readonly SortedList<long, byte[]> _additions = new SortedList<long, byte[]>();
+            internal readonly SortedList<long, byte> _substitutions = new SortedList<long, byte>();
+            internal readonly RangeCollection _moveRanges = new RangeCollection();
+            internal readonly Dictionary<RangeInt64, long> _moves = new Dictionary<RangeInt64, long>();
+            internal readonly Dictionary<long, List<RangeInt64>> _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
 
             public void SetSubstitution(long loc, byte sub)
             {
-                if (_substitutions == null)
-                {
-                    _substitutions = new SortedList<long, byte>();
-                }
                 _substitutions[loc] = sub;
             }
 
             public void SetSubstitution(long loc, byte[] sub)
             {
-                if (_substitutions == null)
-                {
-                    _substitutions = new SortedList<long, byte>();
-                }
                 for (long i = 0; i < sub.Length; i++)
                 {
                     _substitutions[loc + i] = sub[i];
@@ -47,10 +39,6 @@ namespace Mutagen.Bethesda.Preprocessing
 
             public void SetAddition(long loc, byte[] addition)
             {
-                if (_additions == null)
-                {
-                    _additions = new SortedList<long, byte[]>();
-                }
                 _additions[loc] = addition;
             }
 
@@ -68,12 +56,6 @@ namespace Mutagen.Bethesda.Preprocessing
                 if (loc <= section.Max)
                 {
                     throw new NotImplementedException("Cannot move a section earlier in the stream, within the move itself, or into the same spot");
-                }
-                if (_moves == null)
-                {
-                    _moveRanges = new RangeCollection();
-                    _moves = new Dictionary<RangeInt64, long>();
-                    _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
                 }
                 if (_moveRanges.Collides(section))
                 {
@@ -99,8 +81,8 @@ namespace Mutagen.Bethesda.Preprocessing
         private int extraRead;
         private long _position;
         private bool done;
-        private SortedList<long, List<(RangeInt64 Section, byte[] Data)>> _activeMoves;
-        private SortedList<long, RangeInt64> _sortedMoves;
+        private SortedList<long, List<(RangeInt64 Section, byte[] Data)>> _activeMoves = new SortedList<long, List<(RangeInt64 Section, byte[] Data)>>();
+        private SortedList<long, RangeInt64> _sortedMoves = new SortedList<long, RangeInt64>();
         private bool ExpandableBufferActive => _expandableBuffer.Count > 0;
         public bool HasProcessing { get; private set; }
 
@@ -209,11 +191,10 @@ namespace Mutagen.Bethesda.Preprocessing
                 moveToKeys.Sort();
             }
 
-            if (config._additions != null
-                && config._additions.TryGetEncapsulatedIndices(
-                    lowerKey: targetSection.Min,
-                    higherKey: targetSection.Max,
-                    result: out var activeAdditions))
+            if (config._additions.TryGetEncapsulatedIndices(
+                lowerKey: targetSection.Min,
+                higherKey: targetSection.Max,
+                result: out var activeAdditions))
             {
                 additionKeys = activeAdditions.Select((i) => config._additions.Keys[i]).ToList();
                 additionKeys.Sort();
@@ -315,7 +296,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     this._activeMoves.Remove(moveToKey.Value);
                     moveToIndex++;
                 }
-                else
+                else if (additionKey != null)
                 {
                     InitializeExpandableBuffer();
                     var data = config._additions[additionKey.Value];
@@ -324,6 +305,10 @@ namespace Mutagen.Bethesda.Preprocessing
                     moveDeletions -= data.Length;
                     bufferEnd += data.Length;
                     additionIndex++;
+                }
+                else
+                {
+                    throw new ArgumentException();
                 }
             }
         }

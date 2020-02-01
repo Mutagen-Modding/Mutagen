@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda.Binary
         private bool dispose = true;
         public System.IO.BinaryWriter Writer;
         private static byte Zero = 0;
-        public Stream BaseStream { get; private set; }
-        public MetaDataConstants Meta { get; private set; }
+        public Stream BaseStream { get; }
+        public MetaDataConstants Meta { get; }
 
         public long Position
         {
@@ -43,9 +43,10 @@ namespace Mutagen.Bethesda.Binary
             this.Meta = meta;
         }
 
-        public MutagenWriter(System.IO.BinaryWriter reader, MetaDataConstants meta)
+        public MutagenWriter(System.IO.BinaryWriter writer, MetaDataConstants meta)
         {
-            this.Writer = reader;
+            this.BaseStream = writer.BaseStream;
+            this.Writer = writer;
             this.Meta = meta;
         }
 

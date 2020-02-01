@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
-                    fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package = new {nameof(BinaryOverlayFactoryPackage)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                    fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
                     fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
                 }
 
@@ -1627,6 +1627,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine("this.ModKey = modKey;");
                         fg.AppendLine("this._data = stream;");
+                        fg.AppendLine($"this._package = new {nameof(BinaryOverlayFactoryPackage)}(modKey, {nameof(GameMode)}.{obj.GetObjectData().GameMode});");
                     }
                     foreach (var field in obj.IterateFields(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,

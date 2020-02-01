@@ -11,9 +11,10 @@ namespace Mutagen.Bethesda.Binary
         public MetaDataConstants Meta;
         public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
 
-        public BinaryOverlayFactoryPackage(GameMode gameMode)
+        public BinaryOverlayFactoryPackage(ModKey modKey, GameMode gameMode)
         {
             this.Meta = MetaDataConstants.Get(gameMode);
+            this.MasterReferences = new MasterReferences(modKey);
         }
     }
 }

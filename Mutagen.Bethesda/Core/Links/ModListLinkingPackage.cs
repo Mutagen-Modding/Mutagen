@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Noggog;
 using System;
 using System.Collections;
@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda
                     else
                     {
                         var registration = LoquiRegistration.GetRegister(typeof(TMajor));
+                        if (registration == null) throw new ArgumentException();
                         this._modListMajorRecords[registration.ClassType] = cache;
                         this._modListMajorRecords[registration.GetterType] = cache;
                         this._modListMajorRecords[registration.SetterType] = cache;

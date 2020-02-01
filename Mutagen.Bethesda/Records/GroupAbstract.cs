@@ -59,7 +59,14 @@ namespace Mutagen.Bethesda
     {
         public static class GroupRecordTypeGetter<T>
         {
-            public static readonly RecordType GRUP_RECORD_TYPE = (RecordType)LoquiRegistration.GetRegister(typeof(T)).ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
+            public static readonly RecordType GRUP_RECORD_TYPE;
+
+            static GroupRecordTypeGetter()
+            {
+                var regis = LoquiRegistration.GetRegister(typeof(T));
+                if (regis == null) throw new ArgumentException();
+                GRUP_RECORD_TYPE = (RecordType)regis.ClassType.GetField(Mutagen.Bethesda.Constants.GRUP_RECORDTYPE_MEMBER).GetValue(null);
+            }
         }
 
         public class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>

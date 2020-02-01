@@ -60,61 +60,73 @@ namespace Mutagen.Bethesda.Binary
 
     public class MetaDataConstants
     {
-        public GameMode GameMode { get; private set; }
-        public sbyte ModHeaderLength { get; private set; }
-        public sbyte ModHeaderFluffLength { get; private set; }
+        public GameMode GameMode { get; }
+        public sbyte ModHeaderLength { get; }
+        public sbyte ModHeaderFluffLength { get; }
 
-        public RecordConstants GroupConstants { get; private set; }
-        public MajorRecordConstants MajorConstants { get; private set; }
-        public RecordConstants SubConstants { get; private set; }
+        public RecordConstants GroupConstants { get; }
+        public MajorRecordConstants MajorConstants { get; }
+        public RecordConstants SubConstants { get; }
 
-        public static readonly MetaDataConstants Oblivion = new MetaDataConstants()
+        public MetaDataConstants(
+            GameMode gameMode,
+            sbyte modHeaderLength,
+            sbyte modHeaderFluffLength,
+            RecordConstants groupConstants,
+            MajorRecordConstants majorConstants,
+            RecordConstants subConstants)
         {
-            GameMode = GameMode.Oblivion,
-            ModHeaderLength = 20,
-            ModHeaderFluffLength = 12,
-            GroupConstants = new RecordConstants(
+            GameMode = gameMode;
+            ModHeaderLength = modHeaderLength;
+            ModHeaderFluffLength = modHeaderFluffLength;
+            GroupConstants = groupConstants;
+            MajorConstants = majorConstants;
+            SubConstants = subConstants;
+        }
+
+        public static readonly MetaDataConstants Oblivion = new MetaDataConstants(
+            gameMode: GameMode.Oblivion,
+            modHeaderLength: 20,
+            modHeaderFluffLength: 12,
+            groupConstants: new RecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Group,
                 headerLength: 20,
                 lengthLength: 4),
-            MajorConstants = new MajorRecordConstants(
+            majorConstants: new MajorRecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Record,
                 headerLength: 20,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
-            SubConstants = new RecordConstants(
+            subConstants: new RecordConstants(
                 GameMode.Oblivion,
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2)
-        };
+                lengthLength: 2));
 
-        public static readonly MetaDataConstants Skyrim = new MetaDataConstants()
-        {
-            GameMode = GameMode.Skyrim,
-            ModHeaderLength = 24,
-            ModHeaderFluffLength = 16,
-            GroupConstants = new RecordConstants(
+        public static readonly MetaDataConstants Skyrim = new MetaDataConstants(
+            gameMode: GameMode.Skyrim,
+            modHeaderLength: 24,
+            modHeaderFluffLength: 16,
+            groupConstants: new RecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Group,
                 headerLength: 24,
                 lengthLength: 4),
-            MajorConstants = new MajorRecordConstants(
+            majorConstants: new MajorRecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Record,
                 headerLength: 24,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
-            SubConstants = new RecordConstants(
+            subConstants: new RecordConstants(
                 GameMode.Skyrim,
                 ObjectType.Subrecord,
                 headerLength: 6,
-                lengthLength: 2)
-        };
+                lengthLength: 2));
 
         public ModHeaderMeta Header(ReadOnlySpan<byte> span) => new ModHeaderMeta(this, span);
         public ModHeaderMeta GetHeader(IBinaryReadStream stream) => new ModHeaderMeta(this, stream.GetSpan(this.ModHeaderLength));

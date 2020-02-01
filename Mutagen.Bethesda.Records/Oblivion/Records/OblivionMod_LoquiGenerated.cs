@@ -13515,7 +13515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         public ModKey ModKey { get; }
-        private readonly BinaryOverlayFactoryPackage _package = new BinaryOverlayFactoryPackage(GameMode.Oblivion);
+        private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;
 
         #region ModHeader
@@ -13871,6 +13871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.ModKey = modKey;
             this._data = stream;
+            this._package = new BinaryOverlayFactoryPackage(modKey, GameMode.Oblivion);
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(

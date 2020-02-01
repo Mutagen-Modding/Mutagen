@@ -4066,7 +4066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         public ModKey ModKey { get; }
-        private readonly BinaryOverlayFactoryPackage _package = new BinaryOverlayFactoryPackage(GameMode.Skyrim);
+        private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;
 
         #region ModHeader
@@ -4134,6 +4134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             this.ModKey = modKey;
             this._data = stream;
+            this._package = new BinaryOverlayFactoryPackage(modKey, GameMode.Skyrim);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
