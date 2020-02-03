@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static Task TypicalPatch(
             string[] mainArgs,
             ModKey outputMod,
-            Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
+            Func<ModKey, LoadOrder<OblivionMod>, Task<OblivionMod>> processor,
             GroupMask? importMask = null)
         {
             return TypicalPatch(
@@ -26,17 +26,17 @@ namespace Mutagen.Bethesda.Oblivion
         public static Task TypicalPatch(
             DirectoryPath dataFolder,
             ModKey outModKey,
-            Func<ModKey, ModList<OblivionMod>, Task<OblivionMod>> processor,
+            Func<ModKey, LoadOrder<OblivionMod>, Task<OblivionMod>> processor,
             GroupMask? importMask = null)
         {
-            if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
+            if (!LoadOrder.TryGetUsualLoadOrder(GameMode.Oblivion, dataFolder, out var loadOrderListing))
             {
                 throw new ArgumentException("Could not retrieve load order.");
             }
             return Pipeline.TypicalPatch(
                 dataFolder: dataFolder,
                 outModKey: outModKey,
-                loadOrder: loadOrder,
+                loadOrderListing: loadOrderListing,
                 processor: processor,
                 importer: async (p, mk) =>
                 {
@@ -48,23 +48,23 @@ namespace Mutagen.Bethesda.Oblivion
                 });
         }
 
-        public static async Task<TryGet<ModList<OblivionMod>?>> TryImportUsualLoadOrder(
+        public static async Task<TryGet<LoadOrder<OblivionMod>?>> TryImportUsualLoadOrder(
             DirectoryPath dataFolder,
             GroupMask? importMask = null,
             ModKey? modKeyExclusionHint = null)
         {
-            if (!LoadOrder.TryGetUsualLoadOrder(dataFolder, out var loadOrder))
+            if (!LoadOrder.TryGetUsualLoadOrder(GameMode.Oblivion, dataFolder, out var loadOrderListing))
             {
-                return TryGet<ModList<OblivionMod>?>.Fail(null);
+                return TryGet<LoadOrder<OblivionMod>?>.Fail(null);
             }
             if (modKeyExclusionHint != null)
             {
-                loadOrder.Remove(modKeyExclusionHint.Value);
+                loadOrderListing.Remove(modKeyExclusionHint.Value);
             }
-            var modList = new ModList<OblivionMod>();
-            await modList.Import(
+            var loadOrder = new LoadOrder<OblivionMod>();
+            await loadOrder.Import(
                 dataFolder,
-                loadOrder,
+                loadOrderListing,
                 importer: async (path, modKey) =>
                 {
                     var mod = await OblivionMod.CreateFromBinary(
@@ -73,10 +73,10 @@ namespace Mutagen.Bethesda.Oblivion
                         importMask: importMask).ConfigureAwait(false);
                     return TryGet<OblivionMod>.Succeed(mod);
                 }).ConfigureAwait(false);
-            return TryGet<ModList<OblivionMod>?>.Succeed(modList);
+            return TryGet<LoadOrder<OblivionMod>?>.Succeed(loadOrder);
         }
 
-        public static async Task<ModList<OblivionMod>?> ImportUsualLoadOrder(
+        public static async Task<LoadOrder<OblivionMod>?> ImportUsualLoadOrder(
             DirectoryPath dataFolder,
             GroupMask? importMask = null,
             ModKey? modKeyExclusionHint = null)
@@ -88,14 +88,14 @@ namespace Mutagen.Bethesda.Oblivion
             return tg.Value;
         }
 
-        public static OblivionMod Flatten(this ModList<OblivionMod> modList, ModKey? modKey = null)
+        public static OblivionMod Flatten(this LoadOrder<OblivionMod> loadOrder, ModKey? modKey = null)
         {
             if (modKey == null)
             {
                 modKey = new ModKey("Flattened", master: false);
             }
             OblivionMod ret = new OblivionMod(modKey.Value);
-            foreach (var mod in modList)
+            foreach (var mod in loadOrder)
             {
                 ret.AddRecords(mod.Mod);
             }

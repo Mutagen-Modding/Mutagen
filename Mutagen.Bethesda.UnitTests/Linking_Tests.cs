@@ -125,11 +125,11 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
 
-        #region Modlist
+        #region LoadOrder
         [Fact]
-        public void ModList_Empty()
+        public void LoadOrder_Empty()
         {
-            var package = new ModListLinkCache<OblivionMod>(new ModList<OblivionMod>());
+            var package = new LoadOrderLinkCache<OblivionMod>(new LoadOrder<OblivionMod>());
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -141,13 +141,13 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void ModList_NoMatch()
+        public void LoadOrder_NoMatch()
         {
             var mod = new OblivionMod(ModKey.Dummy);
             mod.NPCs.AddNew();
-            var modList = new ModList<OblivionMod>();
-            modList.Add(mod);
-            var package = new ModListLinkCache<OblivionMod>(modList);
+            var loadOrder = new LoadOrder<OblivionMod>();
+            loadOrder.Add(mod);
+            var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -159,14 +159,14 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void ModList_Single()
+        public void LoadOrder_Single()
         {
             var mod = new OblivionMod(ModKey.Dummy);
             var npc1 = mod.NPCs.AddNew();
             var npc2 = mod.NPCs.AddNew();
-            var modList = new ModList<OblivionMod>();
-            modList.Add(mod);
-            var package = new ModListLinkCache<OblivionMod>(modList);
+            var loadOrder = new LoadOrder<OblivionMod>();
+            loadOrder.Add(mod);
+            var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
 
             // Test query successes
             {
@@ -212,16 +212,16 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void ModList_OneInEach()
+        public void LoadOrder_OneInEach()
         {
             var mod1 = new OblivionMod(ModKey.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
             var npc1 = mod1.NPCs.AddNew();
             var npc2 = mod2.NPCs.AddNew();
-            var modList = new ModList<OblivionMod>();
-            modList.Add(mod1);
-            modList.Add(mod2);
-            var package = new ModListLinkCache<OblivionMod>(modList);
+            var loadOrder = new LoadOrder<OblivionMod>();
+            loadOrder.Add(mod1);
+            loadOrder.Add(mod2);
+            var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
 
             // Test query successes
             {
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void ModList_Overridden()
+        public void LoadOrder_Overridden()
         {
             var mod1 = new OblivionMod(ModKey.Dummy);
             var mod2 = new OblivionMod(new ModKey("Dummy2", true));
@@ -276,10 +276,10 @@ namespace Mutagen.Bethesda.UnitTests
             var topModNPC = mod2.NPCs.AddNew();
             var overrideNPC = (NPC)overriddenNPC.DeepCopy();
             mod2.NPCs.RecordCache.Set(overrideNPC);
-            var modList = new ModList<OblivionMod>();
-            modList.Add(mod1);
-            modList.Add(mod2);
-            var package = new ModListLinkCache<OblivionMod>(modList);
+            var loadOrder = new LoadOrder<OblivionMod>();
+            loadOrder.Add(mod1);
+            loadOrder.Add(mod2);
+            var package = new LoadOrderLinkCache<OblivionMod>(loadOrder);
 
             // Test query successes
             {
@@ -330,14 +330,14 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void ModList_ReadOnlyMechanics()
+        public void LoadOrder_ReadOnlyMechanics()
         {
             var wrapper = OblivionMod.CreateFromBinaryOverlay(PathToTestFile);
             var overrideWrapper = OblivionMod.CreateFromBinaryOverlay(PathToOverrideFile);
-            var modlist = new ModList<IOblivionModGetter>();
-            modlist.Add(wrapper);
-            modlist.Add(overrideWrapper);
-            var package = modlist.CreateLinkCache();
+            var loadOrder = new LoadOrder<IOblivionModGetter>();
+            loadOrder.Add(wrapper);
+            loadOrder.Add(overrideWrapper);
+            var package = loadOrder.CreateLinkCache();
             {
                 Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey, out var rec));
                 Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey2, out rec));

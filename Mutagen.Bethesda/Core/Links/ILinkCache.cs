@@ -50,15 +50,15 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Creates a new linking package relative to a modlist.
+        /// Creates a new linking package relative to a load order.
         /// </summary>
         /// <typeparam name="TMod">Mod type</typeparam>
-        /// <param name="modList">ModList to construct the package relative to</param>
-        /// <returns>LinkPackage attached to given ModList</returns>
-        public static ILinkCache<TMod> CreateLinkCache<TMod>(this ModList<TMod> modList)
+        /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
+        /// <returns>LinkPackage attached to given LoadOrder</returns>
+        public static ILinkCache<TMod> CreateLinkCache<TMod>(this LoadOrder<TMod> loadOrder)
             where TMod : IModGetter
         {
-            return new ModListLinkCache<TMod>(modList);
+            return new LoadOrderLinkCache<TMod>(loadOrder);
         }
     }
 }

@@ -13,15 +13,15 @@ namespace Mutagen.Bethesda
         public static Task TypicalPatch<TMod>(
             string[] mainArgs,
             ModKey outputMod,
-            List<ModKey> loadOrder,
+            List<ModKey> loadOrderListing,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModKey, ModList<TMod>, Task<TMod>> processor)
+            Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
             where TMod : IMod
         {
             return TypicalPatch(
                 dataFolder: new Noggog.DirectoryPath(mainArgs[0]),
                 outModKey: outputMod,
-                loadOrder: loadOrder,
+                loadOrderListing: loadOrderListing,
                 processor: processor,
                 importer: importer);
         }
@@ -29,23 +29,23 @@ namespace Mutagen.Bethesda
         public static async Task TypicalPatch<TMod>(
             DirectoryPath dataFolder,
             ModKey outModKey,
-            List<ModKey> loadOrder,
+            List<ModKey> loadOrderListing,
             Func<FilePath, ModKey, Task<TryGet<TMod>>> importer,
-            Func<ModKey, ModList<TMod>, Task<TMod>> processor)
+            Func<ModKey, LoadOrder<TMod>, Task<TMod>> processor)
             where TMod : IMod
         {
-            loadOrder.Remove(outModKey);
-            var modList = new ModList<TMod>();
-            await modList.Import(
+            loadOrderListing.Remove(outModKey);
+            var loadOrder = new LoadOrder<TMod>();
+            await loadOrder.Import(
                 dataFolder,
-                loadOrder,
+                loadOrderListing,
                 importer).ConfigureAwait(false);
-            var outMod = await processor(outModKey, modList).ConfigureAwait(false);
+            var outMod = await processor(outModKey, loadOrder).ConfigureAwait(false);
             foreach (var npc in outMod.EnumerateMajorRecords())
             {
                 npc.IsCompressed = false;
             }
-            var linkCache = modList.CreateLinkCache();
+            var linkCache = loadOrder.CreateLinkCache();
             outMod.MasterReferences.SetTo(
                 outMod.Links
                     .Select(l =>

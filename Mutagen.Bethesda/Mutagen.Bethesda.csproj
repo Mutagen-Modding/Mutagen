@@ -27,7 +27,7 @@
   <ItemGroup>
     <Compile Include="Core\Links\DirectModLinkCache.cs" />
     <Compile Include="Core\Links\ILinkCache.cs" />
-    <Compile Include="Core\Links\ModListLinkCache.cs" />
+    <Compile Include="Core\Links\LoadOrderLinkCache.cs" />
     <Compile Include="Core\LoadOrder.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Core\MajorRecordInstantiator.cs" />
@@ -78,7 +78,6 @@
     <Compile Include="Preprocessing\ModDecompressor.cs" />
     <Compile Include="Core\Structs\ModID.cs" />
     <Compile Include="Core\Structs\ModKey.cs" />
-    <Compile Include="Core\ModList.cs" />
     <Compile Include="Core\ModListing.cs" />
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
