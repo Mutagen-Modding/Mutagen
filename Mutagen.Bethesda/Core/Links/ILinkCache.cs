@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
-        bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec);
+        bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
-        bool TryGetMajorRecord<TMajor>(FormKey formKey, out TMajor majorRec)
+        bool TryLookup<TMajor>(FormKey formKey, out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter;
     }
 

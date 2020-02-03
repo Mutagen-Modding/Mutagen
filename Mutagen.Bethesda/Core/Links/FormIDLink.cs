@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda
                 major = default!;
                 return false;
             }
-            if (package.TryGetMajorRecord<TMajor>(this.FormKey, out var majorRec))
+            if (package.TryLookup<TMajor>(this.FormKey, out var majorRec))
             {
                 major = majorRec;
                 return true;

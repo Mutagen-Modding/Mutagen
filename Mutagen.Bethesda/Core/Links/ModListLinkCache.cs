@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
             this._modListMajorRecords = new Dictionary<Type, InternalTypedCache>();
         }
 
-        public bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec)
+        public bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec)
         {
             lock (this._modListUntypedMajorRecords)
             {
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public bool TryGetMajorRecord<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
+        public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
             lock (this._modListMajorRecords)

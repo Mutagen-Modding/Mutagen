@@ -29,16 +29,16 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
 
             // Test query fails
-            Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<INPCGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<NPC>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<NPC>(FormKey.NULL, out var _));
         }
 
         [Fact]
@@ -49,16 +49,16 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new DirectModLinkCache<OblivionMod>(mod);
 
             // Test query fails
-            Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<INPCGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<INPCGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<NPC>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<NPC>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<INPCGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<NPC>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<NPC>(FormKey.NULL, out var _));
         }
 
         [Fact]
@@ -70,43 +70,43 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new DirectModLinkCache<OblivionMod>(mod);
 
             {
-                Assert.True(package.TryGetMajorRecord(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -117,10 +117,10 @@ namespace Mutagen.Bethesda.UnitTests
             var wrapper = OblivionMod.CreateFromBinaryOverlay(PathToTestFile);
             var package = wrapper.CreateLinkCache();
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey, out var rec));
             }
             {
-                Assert.False(package.TryGetMajorRecord<NPC>(TestFileFormKey, out var rec));
+                Assert.False(package.TryLookup<NPC>(TestFileFormKey, out var rec));
             }
         }
         #endregion
@@ -132,12 +132,12 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new ModListLinkCache<OblivionMod>(new ModList<OblivionMod>());
 
             // Test query fails
-            Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
         }
 
         [Fact]
@@ -150,12 +150,12 @@ namespace Mutagen.Bethesda.UnitTests
             var package = new ModListLinkCache<OblivionMod>(modList);
 
             // Test query fails
-            Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.NULL, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.NULL, out var _));
         }
 
         [Fact]
@@ -170,43 +170,43 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryGetMajorRecord(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -225,43 +225,43 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryGetMajorRecord(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc1.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc1.FormKey, out var rec));
                 Assert.Same(rec, npc1);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(npc2.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(npc2.FormKey, out var rec));
                 Assert.Same(rec, npc2);
             }
         }
@@ -283,48 +283,48 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryGetMajorRecord(overriddenNPC.FormKey, out var rec));
+                Assert.True(package.TryLookup(overriddenNPC.FormKey, out var rec));
                 Assert.Same(rec, overrideNPC);
                 Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryGetMajorRecord(unoverriddenNPC.FormKey, out rec));
+                Assert.True(package.TryLookup(unoverriddenNPC.FormKey, out rec));
                 Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryGetMajorRecord(topModNPC.FormKey, out rec));
+                Assert.True(package.TryLookup(topModNPC.FormKey, out rec));
                 Assert.Same(rec, topModNPC);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(overriddenNPC.FormKey, out var rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenNPC.FormKey, out var rec));
                 Assert.Same(rec, overrideNPC);
                 Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(unoverriddenNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenNPC.FormKey, out rec));
                 Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryGetMajorRecord<IMajorRecordCommonGetter>(topModNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModNPC.FormKey, out rec));
                 Assert.Same(rec, topModNPC);
             }
             {
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(overriddenNPC.FormKey, out var rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(overriddenNPC.FormKey, out var rec));
                 Assert.Same(rec, overrideNPC);
                 Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(unoverriddenNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(unoverriddenNPC.FormKey, out rec));
                 Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryGetMajorRecord<IOblivionMajorRecordGetter>(topModNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<IOblivionMajorRecordGetter>(topModNPC.FormKey, out rec));
                 Assert.Same(rec, topModNPC);
             }
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(overriddenNPC.FormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(overriddenNPC.FormKey, out var rec));
                 Assert.Same(rec, overrideNPC);
                 Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(unoverriddenNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<INPCGetter>(unoverriddenNPC.FormKey, out rec));
                 Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(topModNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<INPCGetter>(topModNPC.FormKey, out rec));
                 Assert.Same(rec, topModNPC);
             }
             {
-                Assert.True(package.TryGetMajorRecord<NPC>(overriddenNPC.FormKey, out var rec));
+                Assert.True(package.TryLookup<NPC>(overriddenNPC.FormKey, out var rec));
                 Assert.Same(rec, overrideNPC);
                 Assert.NotSame(rec, overriddenNPC);
-                Assert.True(package.TryGetMajorRecord<NPC>(unoverriddenNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<NPC>(unoverriddenNPC.FormKey, out rec));
                 Assert.Same(rec, unoverriddenNPC);
-                Assert.True(package.TryGetMajorRecord<NPC>(topModNPC.FormKey, out rec));
+                Assert.True(package.TryLookup<NPC>(topModNPC.FormKey, out rec));
                 Assert.Same(rec, topModNPC);
             }
         }
@@ -339,14 +339,14 @@ namespace Mutagen.Bethesda.UnitTests
             modlist.Add(overrideWrapper);
             var package = modlist.CreateLinkCache();
             {
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey, out var rec));
-                Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey2, out rec));
+                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey, out var rec));
+                Assert.True(package.TryLookup<INPCGetter>(TestFileFormKey2, out rec));
                 Assert.True(rec.Name.TryGet(out var name));
                 Assert.Equal("A Name", name);
             }
             {
-                Assert.False(package.TryGetMajorRecord<NPC>(TestFileFormKey, out var rec));
-                Assert.False(package.TryGetMajorRecord<NPC>(TestFileFormKey2, out rec));
+                Assert.False(package.TryLookup<NPC>(TestFileFormKey, out var rec));
+                Assert.False(package.TryLookup<NPC>(TestFileFormKey2, out rec));
             }
         }
         #endregion

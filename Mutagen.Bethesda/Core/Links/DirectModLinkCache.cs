@@ -24,12 +24,12 @@ namespace Mutagen.Bethesda
                 valueFactory: () => GetCache());
         }
 
-        public bool TryGetMajorRecord(FormKey formKey, out IMajorRecordCommonGetter majorRec)
+        public bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec)
         {
             return _untypedMajorRecords.Value.TryGetValue(formKey, out majorRec);
         }
 
-        public bool TryGetMajorRecord<TMajor>(FormKey formKey, [MaybeNullWhen(false)]out TMajor majorRec)
+        public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)]out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
             IReadOnlyCache<object, FormKey> cache;
