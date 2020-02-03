@@ -16,14 +16,6 @@ using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial interface IOblivionModGetter : IModGetter
-    {
-    }
-
-    public partial interface IOblivionMod : IMod
-    {
-    }
-
     public partial class OblivionMod
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -722,7 +722,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISkyrimMod :
         ISkyrimModGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<ISkyrimMod>
+        ILoquiObjectSetter<ISkyrimMod>,
+        IMod
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -740,6 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordGetterEnumerable,
         ILoquiObject<ISkyrimModGetter>,
         IXmlItem,
+        IModGetter,
         ILinkContainer
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

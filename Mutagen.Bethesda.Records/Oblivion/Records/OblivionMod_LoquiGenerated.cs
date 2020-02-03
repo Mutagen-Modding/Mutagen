@@ -2164,7 +2164,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IOblivionMod :
         IOblivionModGetter,
         IMajorRecordEnumerable,
-        ILoquiObjectSetter<IOblivionMod>
+        ILoquiObjectSetter<IOblivionMod>,
+        IMod
     {
         new ModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
@@ -2230,6 +2231,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IOblivionModGetter>,
         IXmlItem,
+        IModGetter,
         ILinkContainer
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

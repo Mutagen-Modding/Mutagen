@@ -22,6 +22,16 @@ namespace Mutagen.Bethesda.Generation
             };
         }
 
+        public override async Task<IEnumerable<(LoquiInterfaceType Location, string Interface)>> Interfaces(ObjectGeneration obj)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return Enumerable.Empty<(LoquiInterfaceType Location, string Interface)>();
+            return new (LoquiInterfaceType Location, string Interface)[]
+            {
+                (LoquiInterfaceType.IGetter, nameof(IModGetter)),
+                (LoquiInterfaceType.ISetter, nameof(IMod)),
+            };
+        }
+
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;

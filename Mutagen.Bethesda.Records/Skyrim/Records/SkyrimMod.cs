@@ -8,14 +8,6 @@ using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    partial interface ISkyrimMod : IMod
-    {
-    }
-
-    partial interface ISkyrimModGetter : IModGetter
-    {
-    }
-
     public partial class SkyrimMod
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
