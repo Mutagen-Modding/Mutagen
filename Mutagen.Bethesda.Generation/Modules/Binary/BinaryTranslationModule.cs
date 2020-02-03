@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
+                $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"ReadOnlyMemorySlice<byte> bytes");
                 args.Add($"ModKey modKey");
@@ -611,12 +611,13 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"new {nameof(BinaryMemoryReadStream)}(bytes)");
                     args.AddPassArg("modKey");
+                    args.Add("shouldDispose: false");
                 }
             }
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
+                $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"string path");
                 args.Add($"ModKey? modKeyOverride = null");
@@ -624,16 +625,17 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return {CreateFromPrefix}{ModuleNickname}Overlay"))
+                    $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
                     args.Add($"stream: new {nameof(BinaryReadStream)}(path)");
                     args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
+                    args.Add("shouldDispose: true");
                 }
             }
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                $"public{obj.NewOverride()}static {obj.Interface(getter: true, internalInterface: true)} {CreateFromPrefix}{ModuleNickname}Overlay"))
+                $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"{nameof(IBinaryReadStream)} stream");
                 args.Add($"ModKey modKey");
@@ -645,6 +647,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.AddPassArg($"stream");
                     args.AddPassArg("modKey");
+                    args.Add("shouldDispose: false");
                 }
             }
             fg.AppendLine();
@@ -1447,7 +1450,14 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Partial = true;
                 args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (obj.GetObjectType() == ObjectType.Mod ? null : nameof(BinaryOverlay));
-                args.Interfaces.Add(obj.Interface(getter: true, internalInterface: true));
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    args.Interfaces.Add($"I{obj.Name}DisposableGetter");
+                }
+                else
+                {
+                    args.Interfaces.Add(obj.Interface(getter: true, internalInterface: true));
+                }
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
             }
             using (new BraceWrapper(fg))
@@ -1489,6 +1499,14 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"public {nameof(ModKey)} ModKey {{ get; }}");
                     fg.AppendLine($"private readonly {nameof(BinaryOverlayFactoryPackage)} _package;");
                     fg.AppendLine($"private readonly {nameof(IBinaryReadStream)} _data;");
+                    fg.AppendLine($"private readonly bool _shouldDispose;");
+
+                    fg.AppendLine("public void Dispose()");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("if (!_shouldDispose) return;");
+                        fg.AppendLine("_data.Dispose();");
+                    }
                 }
 
                 fg.AppendLine();
@@ -1594,6 +1612,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"{nameof(IBinaryReadStream)} stream");
                         args.Add("ModKey modKey");
+                        args.Add($"bool shouldDispose");
                     }
                     else
                     {
@@ -1620,6 +1639,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("this.ModKey = modKey;");
                         fg.AppendLine("this._data = stream;");
                         fg.AppendLine($"this._package = new {nameof(BinaryOverlayFactoryPackage)}(modKey, {nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                        fg.AppendLine("this._shouldDispose = shouldDispose;");
                     }
                     foreach (var field in obj.IterateFields(
                         expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
@@ -1651,6 +1671,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(data)");
                                 args.AddPassArg("modKey");
+                                args.Add("shouldDispose: false");
                             }
                         }
                         fg.AppendLine();
@@ -1663,6 +1684,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"{nameof(IBinaryReadStream)} stream");
                             args.Add("ModKey modKey");
+                            args.Add("bool shouldDispose");
                         }
                         else
                         {
@@ -1742,6 +1764,7 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.GetObjectType() == ObjectType.Mod)
                             {
                                 args.AddPassArg("modKey");
+                                args.AddPassArg("shouldDispose");
                             }
                             else
                             {

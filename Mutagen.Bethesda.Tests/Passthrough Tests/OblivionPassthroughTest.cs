@@ -25,11 +25,12 @@ namespace Mutagen.Bethesda.Tests
         {
         }
 
-        protected override async Task<IModGetter> ImportBinaryOverlay(FilePath path)
+        protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 new BinaryReadStream(this.FilePath.Path),
-                this.ModKey);
+                this.ModKey,
+                shouldDispose: true);
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)

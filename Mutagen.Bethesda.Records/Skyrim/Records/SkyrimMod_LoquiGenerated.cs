@@ -672,31 +672,34 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public static ISkyrimModGetter CreateFromBinaryOverlay(
+        public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 new BinaryMemoryReadStream(bytes),
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
-        public static ISkyrimModGetter CreateFromBinaryOverlay(
+        public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             string path,
             ModKey? modKeyOverride = null)
         {
-            return CreateFromBinaryOverlay(
+            return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: new BinaryReadStream(path),
-                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
+                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
+                shouldDispose: true);
         }
 
-        public static ISkyrimModGetter CreateFromBinaryOverlay(
+        public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             IBinaryReadStream stream,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: stream,
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
         #endregion
@@ -3671,6 +3674,10 @@ namespace Mutagen.Bethesda.Skyrim
             Factions = defaultValue;
         }
     }
+
+    public interface ISkyrimModDisposableGetter : ISkyrimModGetter, IModDisposeGetter
+    {
+    }
 }
 #endregion
 
@@ -3903,7 +3910,7 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimModBinaryOverlay : ISkyrimModGetter
+    public partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3957,6 +3964,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;
+        private readonly bool _shouldDispose;
+        public void Dispose()
+        {
+            if (!_shouldDispose) return;
+            _data.Dispose();
+        }
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
@@ -4019,11 +4032,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         protected SkyrimModBinaryOverlay(
             IBinaryReadStream stream,
-            ModKey modKey)
+            ModKey modKey,
+            bool shouldDispose)
         {
             this.ModKey = modKey;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(modKey, GameMode.Skyrim);
+            this._shouldDispose = shouldDispose;
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
@@ -4032,16 +4047,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             return SkyrimModFactory(
                 stream: new BinaryMemoryReadStream(data),
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             IBinaryReadStream stream,
-            ModKey modKey)
+            ModKey modKey,
+            bool shouldDispose)
         {
             var ret = new SkyrimModBinaryOverlay(
                 stream: stream,
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: shouldDispose);
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

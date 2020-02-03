@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected abstract Task<IMod> ImportBinary(FilePath path);
-        protected abstract Task<IModGetter> ImportBinaryOverlay(FilePath path);
+        protected abstract Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path);
         //protected abstract Task<IMod> ImportXmlFolder(DirectoryPath dir);
         //protected abstract Task WriteXmlFolder(IModGetter mod, DirectoryPath dir);
         protected abstract Task<IMod> ImportCopyIn(FilePath file);
@@ -198,11 +198,12 @@ namespace Mutagen.Bethesda.Tests
 
                 if (Settings.TestBinaryOverlay)
                 {
-                    var wrapper = await ImportBinaryOverlay(this.FilePath.Path);
-
-                    wrapper.WriteToBinary(
-                        binaryOverlayPath,
-                        Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    using (var wrapper = await ImportBinaryOverlay(this.FilePath.Path))
+                    {
+                        wrapper.WriteToBinary(
+                            binaryOverlayPath,
+                            Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+                    }
 
                     using (var stream = new MutagenBinaryReadStream(processedPath, this.GameMode))
                     {

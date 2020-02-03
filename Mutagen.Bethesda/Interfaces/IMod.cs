@@ -25,4 +25,8 @@ namespace Mutagen.Bethesda
         FormKey GetNextFormKey();
         void SyncRecordCount();
     }
+
+    public interface IModDisposeGetter : IModGetter, IDisposable
+    {
+    }
 }

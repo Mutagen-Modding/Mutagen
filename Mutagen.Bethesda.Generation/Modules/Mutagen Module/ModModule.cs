@@ -208,6 +208,12 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+                fg.AppendLine();
+
+                fg.AppendLine($"public interface I{obj.Name}DisposableGetter : {obj.Interface(getter: true, internalInterface: true)}, IModDisposeGetter");
+                using (new BraceWrapper(fg))
+                {
+                }
             }
         }
 

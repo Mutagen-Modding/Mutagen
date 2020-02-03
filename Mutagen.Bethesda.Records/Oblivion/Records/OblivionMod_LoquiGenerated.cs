@@ -2114,31 +2114,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public static IOblivionModGetter CreateFromBinaryOverlay(
+        public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 new BinaryMemoryReadStream(bytes),
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
-        public static IOblivionModGetter CreateFromBinaryOverlay(
+        public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             string path,
             ModKey? modKeyOverride = null)
         {
-            return CreateFromBinaryOverlay(
+            return OblivionModBinaryOverlay.OblivionModFactory(
                 stream: new BinaryReadStream(path),
-                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)));
+                modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
+                shouldDispose: true);
         }
 
-        public static IOblivionModGetter CreateFromBinaryOverlay(
+        public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             IBinaryReadStream stream,
             ModKey modKey)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 stream: stream,
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
         #endregion
@@ -12303,6 +12306,10 @@ namespace Mutagen.Bethesda.Oblivion
             EffectShaders = defaultValue;
         }
     }
+
+    public interface IOblivionModDisposableGetter : IOblivionModGetter, IModDisposeGetter
+    {
+    }
 }
 #endregion
 
@@ -13111,7 +13118,7 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class OblivionModBinaryOverlay : IOblivionModGetter
+    public partial class OblivionModBinaryOverlay : IOblivionModDisposableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -13165,6 +13172,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ModKey ModKey { get; }
         private readonly BinaryOverlayFactoryPackage _package;
         private readonly IBinaryReadStream _data;
+        private readonly bool _shouldDispose;
+        public void Dispose()
+        {
+            if (!_shouldDispose) return;
+            _data.Dispose();
+        }
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
@@ -13515,11 +13528,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected OblivionModBinaryOverlay(
             IBinaryReadStream stream,
-            ModKey modKey)
+            ModKey modKey,
+            bool shouldDispose)
         {
             this.ModKey = modKey;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(modKey, GameMode.Oblivion);
+            this._shouldDispose = shouldDispose;
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(
@@ -13528,16 +13543,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             return OblivionModFactory(
                 stream: new BinaryMemoryReadStream(data),
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: false);
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(
             IBinaryReadStream stream,
-            ModKey modKey)
+            ModKey modKey,
+            bool shouldDispose)
         {
             var ret = new OblivionModBinaryOverlay(
                 stream: stream,
-                modKey: modKey);
+                modKey: modKey,
+                shouldDispose: shouldDispose);
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

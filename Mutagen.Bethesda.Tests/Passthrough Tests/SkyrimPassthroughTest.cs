@@ -23,11 +23,12 @@ namespace Mutagen.Bethesda.Tests
             return new ModRecordAligner.AlignmentRules();
         }
 
-        protected override async Task<IModGetter> ImportBinaryOverlay(FilePath path)
+        protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 new BinaryReadStream(this.FilePath.Path),
-                this.ModKey);
+                this.ModKey,
+                shouldDispose: true);
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "_package.MasterReferences = new MasterReferences(";
+            string testString = "blic partial class SkyrimModBinaryOverlay : ISkyrimModDisposableGette";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
