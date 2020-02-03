@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public class DirectModLinkingPackage<TMod> : ILinkingPackage<TMod>
+    public class DirectModLinkCache<TMod> : ILinkCache<TMod>
         where TMod : IModGetter
     {
         private readonly TMod _sourceMod;
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
         private readonly Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>> _untypedMajorRecords;
         private readonly Dictionary<Type, IReadOnlyCache<object, FormKey>> _majorRecords = new Dictionary<Type, IReadOnlyCache<object, FormKey>>();
 
-        public DirectModLinkingPackage(TMod sourceMod)
+        public DirectModLinkCache(TMod sourceMod)
         {
             this._sourceMod = sourceMod;
             this._untypedMajorRecords = new Lazy<IReadOnlyCache<IMajorRecordCommonGetter, FormKey>>(

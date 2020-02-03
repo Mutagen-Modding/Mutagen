@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda
 {
-    public class ModListLinkingPackage<TMod> : ILinkingPackage<TMod>
+    public class ModListLinkCache<TMod> : ILinkCache<TMod>
         where TMod : IModGetter
     {
         class InternalTypedCache
@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _modListUntypedMajorRecords;
         private readonly Dictionary<Type, InternalTypedCache> _modListMajorRecords;
 
-        public ModListLinkingPackage(ModList<TMod> modList)
+        public ModListLinkCache(ModList<TMod> modList)
         {
             this._modList = modList;
             this._modListUntypedMajorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(m => m.FormKey);

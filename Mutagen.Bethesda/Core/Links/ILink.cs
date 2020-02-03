@@ -10,14 +10,14 @@ namespace Mutagen.Bethesda
     public interface ILinkGetter
     {
         Type TargetType { get; }
-        bool TryResolveFormKey<M>(ILinkingPackage<M> package, out FormKey formKey) where M : IModGetter;
-        bool TryResolveCommon<M>(ILinkingPackage<M> package, out IMajorRecordCommonGetter majorRecord) where M : IModGetter;
+        bool TryResolveFormKey<M>(ILinkCache<M> package, out FormKey formKey) where M : IModGetter;
+        bool TryResolveCommon<M>(ILinkCache<M> package, out IMajorRecordCommonGetter majorRecord) where M : IModGetter;
     }
 
     public interface ILinkGetter<out TMajor> : ILinkGetter
         where TMajor : IMajorRecordCommonGetter
     {
-        ITryGetter<TMajor> TryResolve<TMod>(ILinkingPackage<TMod> package) where TMod : IModGetter;
+        ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) where TMod : IModGetter;
     }
 
     public interface ISetLinkGetter : ILinkGetter
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkingPackage<TMod> package, out TMajor majorRecord)
+        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, out TMajor majorRecord)
             where TMod : IModGetter
             where TMajor : IMajorRecordCommonGetter
         {
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static TMajor Resolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkingPackage<TMod> package)
+        public static TMajor Resolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package)
             where TMod : IModGetter
             where TMajor : IMajorRecordCommonGetter
         {

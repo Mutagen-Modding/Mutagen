@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda
     /// An interface for retriving records given a FormKey.
     /// </summary>
     /// <typeparam name="TMod">Modtype records are being retrieved from</typeparam>
-    public interface ILinkingPackage<TMod> : IEnumerable<TMod>
+    public interface ILinkCache<TMod> : IEnumerable<TMod>
         where TMod : IModGetter
     {
         /// <summary>
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter;
     }
 
-    public static class ILinkingPackageExt
+    public static class ILinkCacheExt
     {
         /// <summary>
         /// Creates a new linking package relative to a mod.
@@ -43,10 +43,10 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="mod">Mod to construct the package relative to</param>
         /// <returns>LinkPackage attached to given mod</returns>
-        public static DirectModLinkingPackage<TMod> CreateLinkingPackage<TMod>(this TMod mod)
+        public static DirectModLinkCache<TMod> CreateLinkCache<TMod>(this TMod mod)
             where TMod : IModGetter
         {
-            return new DirectModLinkingPackage<TMod>(mod);
+            return new DirectModLinkCache<TMod>(mod);
         }
 
         /// <summary>
@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="modList">ModList to construct the package relative to</param>
         /// <returns>LinkPackage attached to given ModList</returns>
-        public static ILinkingPackage<TMod> CreateLinkingPackage<TMod>(this ModList<TMod> modList)
+        public static ILinkCache<TMod> CreateLinkCache<TMod>(this ModList<TMod> modList)
             where TMod : IModGetter
         {
-            return new ModListLinkingPackage<TMod>(modList);
+            return new ModListLinkCache<TMod>(modList);
         }
     }
 }

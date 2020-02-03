@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_Empty()
         {
-            var package = new DirectModLinkingPackage<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
 
             // Test query fails
             Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(ModKey.Dummy);
             mod.NPCs.AddNew();
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
 
             // Test query fails
             Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(ModKey.Dummy);
             var npc1 = mod.NPCs.AddNew();
             var npc2 = mod.NPCs.AddNew();
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
 
             {
                 Assert.True(package.TryGetMajorRecord(npc1.FormKey, out var rec));
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Direct_ReadOnlyMechanics()
         {
             var wrapper = OblivionMod.CreateFromBinaryOverlay(PathToTestFile);
-            var package = wrapper.CreateLinkingPackage();
+            var package = wrapper.CreateLinkCache();
             {
                 Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey, out var rec));
             }
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void ModList_Empty()
         {
-            var package = new ModListLinkingPackage<OblivionMod>(new ModList<OblivionMod>());
+            var package = new ModListLinkCache<OblivionMod>(new ModList<OblivionMod>());
 
             // Test query fails
             Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.UnitTests
             mod.NPCs.AddNew();
             var modList = new ModList<OblivionMod>();
             modList.Add(mod);
-            var package = new ModListLinkingPackage<OblivionMod>(modList);
+            var package = new ModListLinkCache<OblivionMod>(modList);
 
             // Test query fails
             Assert.False(package.TryGetMajorRecord(UnusedFormKey, out var _));
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.UnitTests
             var npc2 = mod.NPCs.AddNew();
             var modList = new ModList<OblivionMod>();
             modList.Add(mod);
-            var package = new ModListLinkingPackage<OblivionMod>(modList);
+            var package = new ModListLinkCache<OblivionMod>(modList);
 
             // Test query successes
             {
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modList = new ModList<OblivionMod>();
             modList.Add(mod1);
             modList.Add(mod2);
-            var package = new ModListLinkingPackage<OblivionMod>(modList);
+            var package = new ModListLinkCache<OblivionMod>(modList);
 
             // Test query successes
             {
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modList = new ModList<OblivionMod>();
             modList.Add(mod1);
             modList.Add(mod2);
-            var package = new ModListLinkingPackage<OblivionMod>(modList);
+            var package = new ModListLinkCache<OblivionMod>(modList);
 
             // Test query successes
             {
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.UnitTests
             var modlist = new ModList<IOblivionModGetter>();
             modlist.Add(wrapper);
             modlist.Add(overrideWrapper);
-            var package = modlist.CreateLinkingPackage();
+            var package = modlist.CreateLinkCache();
             {
                 Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey, out var rec));
                 Assert.True(package.TryGetMajorRecord<INPCGetter>(TestFileFormKey2, out rec));
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_TryResolve_NoLink()
         {
             FormIDLink<INPC> formLink = new FormIDLink<INPC>(UnusedFormKey);
-            var package = new DirectModLinkingPackage<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.False(formLink.TryResolve(package, out var link));
         }
 
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(ModKey.Dummy);
             var npc = mod.NPCs.AddNew();
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             FormIDLink<INPC> formLink = new FormIDLink<INPC>(npc.FormKey);
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FormLink_Resolve_NoLink()
         {
             FormIDLink<INPC> formLink = new FormIDLink<INPC>(UnusedFormKey);
-            var package = new DirectModLinkingPackage<OblivionMod>(new OblivionMod(ModKey.Dummy));
+            var package = new DirectModLinkCache<OblivionMod>(new OblivionMod(ModKey.Dummy));
             Assert.Null(formLink.Resolve(package));
         }
 
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(ModKey.Dummy);
             var npc = mod.NPCs.AddNew();
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             FormIDLink<INPC> formLink = new FormIDLink<INPC>(npc.FormKey);
             Assert.Same(npc, formLink.Resolve(package));
         }
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.UnitTests
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             Assert.False(link.TryResolve(package, out var _));
         }
 
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(ModKey.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             Assert.True(link.TryResolve(package, out var linkedRec));
             Assert.Same(effect, linkedRec);
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.UnitTests
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "NULL";
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             Assert.Null(link.Resolve(package));
         }
 
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(ModKey.Dummy);
             var effect = mod.MagicEffects.AddNew();
             effect.EditorID = "LINK";
-            var package = new DirectModLinkingPackage<OblivionMod>(mod);
+            var package = new DirectModLinkCache<OblivionMod>(mod);
             EDIDLink<IMagicEffect> link = new EDIDLink<IMagicEffect>(new RecordType("LINK"));
             Assert.Same(effect, link.Resolve(package));
         }

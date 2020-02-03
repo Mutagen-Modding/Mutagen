@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda
 
     public static class IEDIDLinkExt
     {
-        public static bool TryResolve<TMajor, TMod>(this IEDIDLinkGetter<TMajor> edidLink, ILinkingPackage<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor, TMod>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache<TMod> package, out TMajor item)
             where TMajor : IMajorRecordCommonGetter
             where TMod : IMod
         {

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
 
     public static class IFormLinkExt
     {
-        public static bool TryResolve<TMajor, TMod>(this IFormIDLinkGetter<TMajor> formIDLink, ILinkingPackage<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor, TMod>(this IFormIDLinkGetter<TMajor> formIDLink, ILinkCache<TMod> package, out TMajor item)
             where TMajor : IMajorRecordCommonGetter
             where TMod : IMod
         {

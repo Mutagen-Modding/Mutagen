@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda
 
         public override string ToString() => this.FormKey.ToString();
 
-        public bool TryResolve<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out TMajor major)
+        public bool TryResolve<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out TMajor major)
             where M : IModGetter
         {
             if (this.FormKey.Equals(FormKey.NULL))
@@ -80,14 +80,14 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public bool TryResolveFormKey<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out FormKey formKey)
+        public bool TryResolveFormKey<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out FormKey formKey)
             where M : IModGetter
         {
             formKey = this.FormKey;
             return true;
         }
 
-        bool ILinkGetter.TryResolveCommon<M>(ILinkingPackage<M> package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolveCommon<M>(ILinkCache<M> package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out var rec))
             {
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public ITryGetter<TMajor> TryResolve<TMod>(ILinkingPackage<TMod> package)
+        public ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package)
             where TMod : IModGetter
         {
             if (TryResolve(package, out var rec))
